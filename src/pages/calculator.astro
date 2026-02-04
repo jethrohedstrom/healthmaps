@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CostCalculator from '../components/CostCalculator.astro';
+---
+<BaseLayout
+  title="Cost Calculator"
+  description="Estimate your out-of-pocket costs for psychology sessions in Australia, including Medicare rebates and GP fees."
+>
+  <!-- Hero -->
+  <section class="bg-brand-light">
+    <div class="max-w-3xl mx-auto px-4 py-12">
+      <h1 class="text-3xl md:text-4xl font-bold text-brand-blue mb-4">Cost Calculator</h1>
+      <p class="text-lg text-gray-600">
+        Estimate how much you'll pay out-of-pocket for mental health sessions after Medicare rebates.
+      </p>
+    </div>
+  </section>
+
+  <!-- Calculator -->
+  <section class="max-w-xl mx-auto px-4 py-12">
+    <CostCalculator />
+  </section>
+
+  <!-- Explanation -->
+  <section class="bg-brand-light">
+    <div class="max-w-3xl mx-auto px-4 py-12">
+      <h2 class="text-2xl font-bold text-brand-blue mb-6">How Medicare Rebates Work</h2>
+      <div class="space-y-4 text-gray-700 text-sm">
+        <!-- REVIEW -->
+        <p>
+          When you see a psychologist with a valid <strong>Mental Health Care Plan (MHCP)</strong> and GP referral,
+          Medicare pays back a fixed amount per session — this is the <strong>rebate</strong>. The difference between
+          the session fee and the rebate is your <strong>out-of-pocket cost</strong> (also called the "gap").
+        </p>
+        <p>
+          You can receive up to <strong>10 Medicare-rebated sessions per calendar year</strong> (January–December).
+          After your first 6 sessions, your GP needs to do a brief review before you can access sessions 7–10.
+        </p>
+        <p>
+          Some psychologists <strong>bulk-bill</strong>, meaning they charge only the Medicare rebate amount — so your
+          out-of-pocket cost is $0. However, bulk-billing psychologists often have longer wait times.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

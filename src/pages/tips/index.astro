@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const tips = await getCollection('tips');
+
+// Group by category
+const grouped = tips.reduce((acc, tip) => {
+  const cat = tip.data.category || 'General';
+  if (!acc[cat]) acc[cat] = [];
+  acc[cat].push(tip);
+  return acc;
+}, {} as Record<string, typeof tips>);
+---
+<BaseLayout
+  title="Practical Tips"
+  description="Practical tips for navigating Australia's mental health system — what to say to your GP, how to choose a psychologist, and how to reduce costs."
+>
+  <!-- Hero -->
+  <section class="bg-brand-light">
+    <div class="max-w-3xl mx-auto px-4 py-12">
+      <h1 class="text-3xl md:text-4xl font-bold text-brand-blue mb-4">Practical Tips</h1>
+      <p class="text-lg text-gray-600">
+        Useful advice for each stage of the process — from your first GP visit to getting the most out of your sessions.
+      </p>
+    </div>
+  </section>
+
+  <!-- Tips by Category -->
+  <section class="max-w-3xl mx-auto px-4 py-12">
+    {Object.entries(grouped).map(([category, categoryTips]) => (
+      <div class="mb-10">
+        <h2 class="text-xl font-bold text-brand-blue mb-4">{category}</h2>
+        <div class="space-y-4">
+          {categoryTips.map(tip => (
+            <a href={`/tips/${tip.id}/`} class="block group">
+              <article class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-brand-blue/30 hover:shadow-md transition-all">
+                <h3 class="text-lg font-semibold text-brand-blue group-hover:text-brand-blue/80 transition-colors">
+                  {tip.data.title}
+                </h3>
+                <p class="text-gray-600 mt-1">{tip.data.summary}</p>
+              </article>
+            </a>
+          ))}
+        </div>
+      </div>
+    ))}
+  </section>
+</BaseLayout>

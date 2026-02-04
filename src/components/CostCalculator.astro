@@ -1,0 +1,187 @@
+---
+import costsData from '../data/calculator-costs.json';
+
+const practitionerTypes = costsData.practitionerTypes;
+---
+<div id="cost-calculator" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8">
+  <form id="calc-form" class="space-y-6" aria-label="Mental health cost calculator">
+
+    <!-- Practitioner type -->
+    <div>
+      <label for="practitioner-type" class="block text-sm font-semibold text-gray-700 mb-1">
+        Type of practitioner
+      </label>
+      <select
+        id="practitioner-type"
+        name="practitionerType"
+        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 bg-white focus:ring-2 focus:ring-brand-blue focus:border-brand-blue"
+      >
+        {practitionerTypes.map((p) => (
+          <option value={p.id} data-rebate={p.rebatePerSession} data-requires-mhcp={p.requiresMHCP}>
+            {p.label}
+          </option>
+        ))}
+      </select>
+    </div>
+
+    <!-- Session fee -->
+    <div>
+      <label for="session-fee" class="block text-sm font-semibold text-gray-700 mb-1">
+        Session fee ($)
+      </label>
+      <input
+        type="number"
+        id="session-fee"
+        name="sessionFee"
+        min="0"
+        max="1000"
+        step="5"
+        placeholder="e.g. 220"
+        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 bg-white focus:ring-2 focus:ring-brand-blue focus:border-brand-blue"
+      />
+      <p id="fee-hint" class="text-xs text-gray-400 mt-1">Typical range: loading...</p>
+    </div>
+
+    <!-- Number of sessions -->
+    <div>
+      <label for="num-sessions" class="block text-sm font-semibold text-gray-700 mb-1">
+        Number of sessions
+      </label>
+      <select
+        id="num-sessions"
+        name="numSessions"
+        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 bg-white focus:ring-2 focus:ring-brand-blue focus:border-brand-blue"
+      >
+        {[1,2,3,4,5,6,7,8,9,10].map(n => (
+          <option value={n} selected={n === 10}>{n} session{n > 1 ? 's' : ''}{n === 10 ? ' (max Medicare)' : ''}</option>
+        ))}
+      </select>
+    </div>
+
+    <!-- GP bulk-billed? -->
+    <div>
+      <label for="gp-billing" class="block text-sm font-semibold text-gray-700 mb-1">
+        Is your GP bulk-billed?
+      </label>
+      <select
+        id="gp-billing"
+        name="gpBilling"
+        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 bg-white focus:ring-2 focus:ring-brand-blue focus:border-brand-blue"
+      >
+        <option value="yes">Yes — no out-of-pocket cost for GP visits</option>
+        <option value="no">No — I pay a gap fee (~$40)</option>
+      </select>
+    </div>
+
+    <!-- Calculate button -->
+    <button
+      type="submit"
+      class="w-full bg-brand-blue text-white py-3 px-6 rounded-lg font-semibold hover:bg-brand-blue/90 transition-colors"
+    >
+      Calculate My Costs
+    </button>
+  </form>
+
+  <!-- Results -->
+  <div id="calc-results" class="hidden mt-8 pt-6 border-t border-gray-200">
+    <h3 class="text-lg font-bold text-brand-blue mb-4">Estimated Costs</h3>
+
+    <div class="grid grid-cols-2 gap-4 text-sm">
+      <div class="bg-brand-light rounded-lg p-4">
+        <p class="text-gray-500 mb-1">Total session fees</p>
+        <p id="result-total-fees" class="text-2xl font-bold text-gray-800">$0</p>
+      </div>
+      <div class="bg-brand-light rounded-lg p-4">
+        <p class="text-gray-500 mb-1">Total Medicare rebate</p>
+        <p id="result-total-rebate" class="text-2xl font-bold text-brand-green">−$0</p>
+      </div>
+      <div class="bg-brand-light rounded-lg p-4">
+        <p class="text-gray-500 mb-1">GP visit costs</p>
+        <p id="result-gp-cost" class="text-2xl font-bold text-gray-800">$0</p>
+      </div>
+      <div class="bg-brand-blue/10 rounded-lg p-4 border-2 border-brand-blue">
+        <p class="text-brand-blue font-medium mb-1">Your out-of-pocket cost</p>
+        <p id="result-oop" class="text-2xl font-bold text-brand-blue">$0</p>
+      </div>
+    </div>
+
+    <div id="result-breakdown" class="mt-4 text-sm text-gray-600 space-y-1"></div>
+
+    <!-- REVIEW -->
+    <p class="mt-4 text-xs text-gray-400">
+      These are estimates only. Medicare rebate amounts may have changed — check
+      <a href="https://www.servicesaustralia.gov.au/medicare" class="underline hover:text-brand-blue" target="_blank" rel="noopener">Services Australia</a>
+      for current rates. Last updated: {costsData.lastUpdated}.
+    </p>
+  </div>
+</div>
+
+<script is:inline define:vars={{ practitionerTypes: costsData.practitionerTypes, feeRanges: costsData.sessionFeeRanges, gpCostPrivate: costsData.gpCostPrivate }}>
+  const form = document.getElementById('calc-form');
+  const typeSelect = document.getElementById('practitioner-type');
+  const feeInput = document.getElementById('session-fee');
+  const feeHint = document.getElementById('fee-hint');
+  const sessionsSelect = document.getElementById('num-sessions');
+  const gpSelect = document.getElementById('gp-billing');
+  const resultsDiv = document.getElementById('calc-results');
+
+  function updateFeeHint() {
+    const type = typeSelect.value;
+    const range = feeRanges[type];
+    if (range) {
+      feeHint.textContent = `Typical range: $${range.low}–$${range.high}`;
+      if (!feeInput.value) {
+        feeInput.placeholder = `e.g. ${range.mid}`;
+      }
+    }
+  }
+
+  typeSelect.addEventListener('change', updateFeeHint);
+  updateFeeHint();
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const type = typeSelect.value;
+    const sessionFee = parseFloat(feeInput.value);
+    const numSessions = parseInt(sessionsSelect.value);
+    const gpBulkBilled = gpSelect.value === 'yes';
+
+    if (isNaN(sessionFee) || sessionFee <= 0) {
+      feeInput.focus();
+      feeInput.setCustomValidity('Please enter a valid session fee.');
+      feeInput.reportValidity();
+      feeInput.setCustomValidity('');
+      return;
+    }
+
+    const prac = practitionerTypes.find(p => p.id === type);
+    const rebatePerSession = prac ? prac.rebatePerSession : 0;
+
+    const totalFees = sessionFee * numSessions;
+    const totalRebate = rebatePerSession * numSessions;
+
+    // GP costs: initial MHCP appointment + review after 6 sessions
+    let gpVisits = 1; // Initial MHCP
+    if (numSessions > 6) gpVisits = 2; // + review
+    const gpCostPerVisit = gpBulkBilled ? 0 : gpCostPrivate;
+    const totalGpCost = gpVisits * gpCostPerVisit;
+
+    const outOfPocket = totalFees - totalRebate + totalGpCost;
+
+    document.getElementById('result-total-fees').textContent = `$${totalFees.toFixed(2)}`;
+    document.getElementById('result-total-rebate').textContent = `−$${totalRebate.toFixed(2)}`;
+    document.getElementById('result-gp-cost').textContent = `$${totalGpCost.toFixed(2)}`;
+    document.getElementById('result-oop').textContent = `$${Math.max(0, outOfPocket).toFixed(2)}`;
+
+    const gapPerSession = sessionFee - rebatePerSession;
+    const breakdown = document.getElementById('result-breakdown');
+    breakdown.innerHTML = `
+      <p><strong>Per session:</strong> $${sessionFee.toFixed(2)} fee − $${rebatePerSession.toFixed(2)} rebate = <strong>$${Math.max(0, gapPerSession).toFixed(2)} gap</strong></p>
+      <p><strong>GP visits:</strong> ${gpVisits} (MHCP${numSessions > 6 ? ' + review' : ''})${gpBulkBilled ? ' — bulk-billed' : ` × $${gpCostPerVisit}`}</p>
+    `;
+
+    resultsDiv.classList.remove('hidden');
+    resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  });
+</script>

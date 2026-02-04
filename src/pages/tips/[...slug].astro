@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const tips = await getCollection('tips');
+  return tips.map(tip => ({
+    params: { slug: tip.id },
+    props: { tip },
+  }));
+}
+
+const { tip } = Astro.props;
+const { Content } = await render(tip);
+---
+<BaseLayout
+  title={tip.data.title}
+  description={tip.data.summary}
+>
+  <article class="max-w-3xl mx-auto px-4 py-12">
+    <a href="/tips/" class="text-sm text-brand-blue hover:text-brand-blue/80 transition-colors mb-6 inline-block">&larr; All tips</a>
+    <h1 class="text-3xl font-bold text-brand-blue mb-4">{tip.data.title}</h1>
+    <div class="prose max-w-none text-gray-700">
+      <Content />
+    </div>
+    <div class="mt-12 pt-6 border-t border-gray-200 text-center">
+      <a href="/pathway/" class="inline-block bg-brand-blue text-white px-6 py-3 rounded-lg font-medium hover:bg-brand-blue/90 transition-colors">
+        See the Full Getting Started Guide
+      </a>
+    </div>
+  </article>
+</BaseLayout>

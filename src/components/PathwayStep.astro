@@ -1,0 +1,31 @@
+---
+interface Props {
+  step: number;
+  title: string;
+  summary: string;
+  isLast?: boolean;
+}
+
+const { step, title, summary, isLast = false } = Astro.props;
+---
+<div class="relative pl-12 pb-8">
+  <!-- Step connector line -->
+  {!isLast && (
+    <div class="absolute left-[1.15rem] top-10 bottom-0 w-0.5 bg-brand-blue/20" aria-hidden="true"></div>
+  )}
+
+  <!-- Step number circle -->
+  <div class="absolute left-0 top-0 w-10 h-10 rounded-full bg-brand-blue text-white flex items-center justify-center font-bold text-sm" aria-hidden="true">
+    {step}
+  </div>
+
+  <details class="group">
+    <summary class="text-lg font-semibold text-brand-blue hover:text-brand-blue/80 transition-colors py-1">
+      {title}
+    </summary>
+    <p class="text-gray-500 text-sm mt-1 mb-3">{summary}</p>
+    <div class="prose prose-sm max-w-none text-gray-700 mt-4 border-l-2 border-brand-blue/10 pl-4">
+      <slot />
+    </div>
+  </details>
+</div>

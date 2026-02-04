@@ -1,0 +1,39 @@
+{
+  "lastUpdated": "2025-01-01",
+  "note": "Medicare rebate amounts are approximate and may change. Check Services Australia for current rates.",
+  "practitionerTypes": [
+    {
+      "id": "general-psychologist",
+      "label": "General Psychologist",
+      "rebatePerSession": 93.35,
+      "requiresMHCP": true
+    },
+    {
+      "id": "clinical-psychologist",
+      "label": "Clinical Psychologist",
+      "rebatePerSession": 149.25,
+      "requiresMHCP": true
+    },
+    {
+      "id": "psychiatrist",
+      "label": "Psychiatrist (initial consult)",
+      "rebatePerSession": 214.40,
+      "requiresMHCP": false
+    },
+    {
+      "id": "psychiatrist-subsequent",
+      "label": "Psychiatrist (follow-up)",
+      "rebatePerSession": 108.85,
+      "requiresMHCP": false
+    }
+  ],
+  "sessionFeeRanges": {
+    "general-psychologist": { "low": 150, "mid": 220, "high": 300 },
+    "clinical-psychologist": { "low": 180, "mid": 260, "high": 350 },
+    "psychiatrist": { "low": 300, "mid": 450, "high": 600 },
+    "psychiatrist-subsequent": { "low": 200, "mid": 350, "high": 500 }
+  },
+  "maxMedicareSessions": 10,
+  "gpCostBulkBilled": 0,
+  "gpCostPrivate": 40
+}

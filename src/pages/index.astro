@@ -1,0 +1,124 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const stories = await getCollection('stories');
+---
+<BaseLayout title="Navigate Australia's Mental Health System">
+  <!-- Hero -->
+  <section class="bg-brand-light">
+    <div class="max-w-3xl mx-auto px-4 py-16 md:py-24 text-center">
+      <h1 class="text-4xl md:text-5xl font-bold text-brand-blue mb-6 leading-tight">
+        Navigate Australia's Mental Health System
+      </h1>
+      <p class="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+        Clear, step-by-step guidance to access Medicare-funded psychology sessions. No jargon, no confusion — just the information you need.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="/pathway/" class="bg-brand-blue text-white px-8 py-3.5 rounded-lg font-semibold hover:bg-brand-blue/90 transition-colors text-lg">
+          Get Started
+        </a>
+        <a href="/calculator/" class="bg-white text-brand-blue border-2 border-brand-blue px-8 py-3.5 rounded-lg font-semibold hover:bg-brand-light transition-colors text-lg">
+          Estimate Costs
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works (brief) -->
+  <section class="max-w-5xl mx-auto px-4 py-16">
+    <h2 class="text-2xl font-bold text-brand-blue text-center mb-10">How It Works</h2>
+    <div class="grid md:grid-cols-4 gap-6 text-center">
+      <div class="p-6">
+        <div class="w-12 h-12 rounded-full bg-brand-blue text-white flex items-center justify-center font-bold text-lg mx-auto mb-4" aria-hidden="true">1</div>
+        <h3 class="font-semibold text-gray-800 mb-2">Book a GP</h3>
+        <p class="text-sm text-gray-600">Ask for a longer appointment to discuss your mental health.</p>
+      </div>
+      <div class="p-6">
+        <div class="w-12 h-12 rounded-full bg-brand-blue text-white flex items-center justify-center font-bold text-lg mx-auto mb-4" aria-hidden="true">2</div>
+        <h3 class="font-semibold text-gray-800 mb-2">Get an MHCP</h3>
+        <p class="text-sm text-gray-600">Your GP creates a Mental Health Care Plan and writes a referral.</p>
+      </div>
+      <div class="p-6">
+        <div class="w-12 h-12 rounded-full bg-brand-blue text-white flex items-center justify-center font-bold text-lg mx-auto mb-4" aria-hidden="true">3</div>
+        <h3 class="font-semibold text-gray-800 mb-2">Find a Psychologist</h3>
+        <p class="text-sm text-gray-600">Search for a psychologist who suits your needs and budget.</p>
+      </div>
+      <div class="p-6">
+        <div class="w-12 h-12 rounded-full bg-brand-blue text-white flex items-center justify-center font-bold text-lg mx-auto mb-4" aria-hidden="true">4</div>
+        <h3 class="font-semibold text-gray-800 mb-2">Attend Sessions</h3>
+        <p class="text-sm text-gray-600">Up to 10 Medicare-rebated sessions per calendar year.</p>
+      </div>
+    </div>
+    <div class="text-center mt-8">
+      <a href="/pathway/" class="text-brand-blue font-medium hover:text-brand-blue/80 transition-colors">
+        Read the full guide &rarr;
+      </a>
+    </div>
+  </section>
+
+  <!-- Quick Links -->
+  <section class="bg-brand-light">
+    <div class="max-w-5xl mx-auto px-4 py-16">
+      <div class="grid md:grid-cols-3 gap-6">
+        <!-- Compare -->
+        <a href="/practitioners/" class="block group bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-brand-blue/30 hover:shadow-md transition-all">
+          <h3 class="text-lg font-semibold text-brand-blue group-hover:text-brand-blue/80 transition-colors mb-2">
+            Compare Practitioners
+          </h3>
+          <p class="text-sm text-gray-600">Psychologist vs psychiatrist vs counsellor — costs, rebates, and what each one does.</p>
+        </a>
+        <!-- Calculator -->
+        <a href="/calculator/" class="block group bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-brand-blue/30 hover:shadow-md transition-all">
+          <h3 class="text-lg font-semibold text-brand-green group-hover:text-brand-green/80 transition-colors mb-2">
+            Cost Calculator
+          </h3>
+          <p class="text-sm text-gray-600">Estimate your out-of-pocket costs after Medicare rebates.</p>
+        </a>
+        <!-- Tips -->
+        <a href="/tips/" class="block group bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-brand-blue/30 hover:shadow-md transition-all">
+          <h3 class="text-lg font-semibold text-brand-orange group-hover:text-brand-orange/80 transition-colors mb-2">
+            Practical Tips
+          </h3>
+          <p class="text-sm text-gray-600">What to say to your GP, how to choose a psychologist, and how to reduce costs.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stories Preview -->
+  {stories.length > 0 && (
+    <section class="max-w-3xl mx-auto px-4 py-16">
+      <h2 class="text-2xl font-bold text-brand-blue mb-6">Stories from Others</h2>
+      <div class="space-y-4">
+        {stories.slice(0, 2).map(story => (
+          <a href={`/stories/${story.id}/`} class="block group">
+            <article class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-brand-blue/30 hover:shadow-md transition-all">
+              <h3 class="text-lg font-semibold text-brand-blue group-hover:text-brand-blue/80 transition-colors">
+                "{story.data.title}"
+              </h3>
+              <p class="text-sm text-gray-500 mt-1">
+                {story.data.name}{story.data.age ? `, ${story.data.age}` : ''}{story.data.location ? ` — ${story.data.location}` : ''}
+              </p>
+              <p class="text-gray-600 mt-2">{story.data.summary}</p>
+            </article>
+          </a>
+        ))}
+      </div>
+      <div class="text-center mt-6">
+        <a href="/stories/" class="text-brand-blue font-medium hover:text-brand-blue/80 transition-colors">
+          Read all stories &rarr;
+        </a>
+      </div>
+    </section>
+  )}
+
+  <!-- Structured Data for SEO -->
+  <script is:inline type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "HealthMaps",
+    "description": "Navigate Australia's mental health system with clear, step-by-step guidance.",
+    "url": "https://healthmaps.au",
+  })} />
+</BaseLayout>

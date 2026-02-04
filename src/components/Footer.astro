@@ -1,0 +1,32 @@
+---
+const year = new Date().getFullYear();
+---
+<footer class="bg-gray-50 border-t border-gray-200 mt-16">
+  <div class="max-w-5xl mx-auto px-4 py-8">
+    <div class="grid md:grid-cols-3 gap-8 text-sm text-gray-600">
+      <div>
+        <h3 class="font-semibold text-brand-blue mb-2">HealthMaps</h3>
+        <p>Helping Australians navigate the mental health system with clear, practical information.</p>
+      </div>
+      <div>
+        <h3 class="font-semibold text-brand-blue mb-2">Quick Links</h3>
+        <ul class="space-y-1">
+          <li><a href="/pathway/" class="hover:text-brand-blue transition-colors">Getting Started</a></li>
+          <li><a href="/practitioners/" class="hover:text-brand-blue transition-colors">Compare Practitioners</a></li>
+          <li><a href="/calculator/" class="hover:text-brand-blue transition-colors">Cost Calculator</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-brand-blue mb-2">Crisis Support</h3>
+        <ul class="space-y-1">
+          <li><a href="tel:131114" class="hover:text-brand-blue transition-colors">Lifeline: 13 11 14</a></li>
+          <li><a href="tel:1300224636" class="hover:text-brand-blue transition-colors">Beyond Blue: 1300 22 4636</a></li>
+          <li><a href="tel:000" class="hover:text-brand-blue transition-colors font-semibold">Emergency: 000</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-8 pt-4 border-t border-gray-200 text-xs text-gray-400 text-center">
+      <p>&copy; {year} HealthMaps. This site provides general information only and is not a substitute for professional medical advice.</p>
+    </div>
+  </div>
+</footer>
