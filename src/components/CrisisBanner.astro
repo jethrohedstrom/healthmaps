@@ -1,11 +1,114 @@
 ---
-// Crisis helpline banner — displayed on every page. Never remove.
+// Crisis helpline pill + card popup — displayed on every page. Never remove.
 ---
-<div class="bg-brand-blue text-white text-sm" role="complementary" aria-label="Crisis support numbers">
-  <div class="max-w-6xl mx-auto px-4 py-2 flex flex-wrap items-center justify-center gap-x-6 gap-y-1 text-center">
-    <span class="font-semibold">Need help now?</span>
-    <a href="tel:131114" class="underline decoration-white/40 hover:decoration-white transition-colors">Lifeline: 13 11 14</a>
-    <a href="tel:1300224636" class="underline decoration-white/40 hover:decoration-white transition-colors">Beyond Blue: 1300 22 4636</a>
-    <a href="tel:000" class="underline decoration-white/40 hover:decoration-white font-semibold transition-colors">Emergency: 000</a>
+<div role="complementary" aria-label="Crisis support numbers" class="fixed bottom-6 right-24 z-50" id="crisis-widget">
+  <!-- Pill trigger -->
+  <button
+    id="crisis-pill"
+    type="button"
+    aria-expanded="false"
+    aria-controls="crisis-card"
+    class="flex items-center gap-2 rounded-full bg-brand-blue text-white px-5 py-3 shadow-lg hover:scale-105 transition-all text-sm font-semibold cursor-pointer"
+  >
+    <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+    </svg>
+    Need help?
+  </button>
+
+  <!-- Card popup -->
+  <div
+    id="crisis-card"
+    role="region"
+    aria-label="Crisis support phone numbers"
+    class="absolute bottom-full right-0 mb-3 w-72 rounded-xl bg-brand-blue text-white shadow-xl p-5 origin-bottom-right transition-all duration-200 ease-out opacity-0 scale-95 pointer-events-none"
+  >
+    <!-- Close button -->
+    <button
+      id="crisis-close"
+      type="button"
+      class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors cursor-pointer"
+      aria-label="Close crisis support panel"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <h2 class="text-base font-bold mb-4">Crisis Support</h2>
+
+    <ul class="space-y-3 text-sm">
+      <li>
+        <a href="tel:131114" class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-white/15 transition-colors">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+          </svg>
+          <span><strong>Lifeline</strong> 13 11 14</span>
+        </a>
+      </li>
+      <li>
+        <a href="tel:1300224636" class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-white/15 transition-colors">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+          </svg>
+          <span><strong>Beyond Blue</strong> 1300 22 4636</span>
+        </a>
+      </li>
+      <li>
+        <a href="tel:000" class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-white/15 transition-colors font-semibold">
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+          </svg>
+          <span><strong>Emergency</strong> 000</span>
+        </a>
+      </li>
+    </ul>
   </div>
 </div>
+
+<script>
+  const pill = document.getElementById('crisis-pill')!;
+  const card = document.getElementById('crisis-card')!;
+  const closeBtn = document.getElementById('crisis-close')!;
+
+  function open() {
+    card.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
+    card.classList.add('opacity-100', 'scale-100');
+    pill.setAttribute('aria-expanded', 'true');
+  }
+
+  function close() {
+    card.classList.remove('opacity-100', 'scale-100');
+    card.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+    pill.setAttribute('aria-expanded', 'false');
+  }
+
+  function isOpen() {
+    return pill.getAttribute('aria-expanded') === 'true';
+  }
+
+  pill.addEventListener('click', () => {
+    isOpen() ? close() : open();
+  });
+
+  closeBtn.addEventListener('click', () => {
+    close();
+    pill.focus();
+  });
+
+  // Close on outside click
+  document.addEventListener('click', (e) => {
+    const widget = document.getElementById('crisis-widget')!;
+    if (isOpen() && !widget.contains(e.target as Node)) {
+      close();
+    }
+  });
+
+  // Close on Escape
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isOpen()) {
+      close();
+      pill.focus();
+    }
+  });
+</script>

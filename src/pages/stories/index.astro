@@ -9,10 +9,10 @@ const stories = await getCollection('stories');
   description="Real-life experiences of Australians navigating the mental health system — from booking a GP to finding the right psychologist."
 >
   <!-- Hero -->
-  <section class="bg-brand-light">
-    <div class="max-w-3xl mx-auto px-4 py-12">
-      <h1 class="text-3xl md:text-4xl font-bold text-brand-blue mb-4">Stories</h1>
-      <p class="text-lg text-gray-600">
+  <section class="bg-white">
+    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
+      <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-4 tracking-[-0.01em]">Stories</h1>
+      <p class="text-lg text-gray-500">
         Experiences from people who've navigated the mental health system. Every journey is different — these might help you see what to expect.
       </p>
       <!-- REVIEW — Note: these are fictional composite stories for illustrative purposes -->
@@ -20,25 +20,27 @@ const stories = await getCollection('stories');
   </section>
 
   <!-- Story Cards -->
-  <section class="max-w-3xl mx-auto px-4 py-12">
-    {stories.length === 0 ? (
-      <p class="text-gray-500 text-center">Stories coming soon.</p>
-    ) : (
-      <div class="space-y-6">
-        {stories.map(story => (
-          <a href={`/stories/${story.id}/`} class="block group">
-            <article class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:border-brand-blue/30 hover:shadow-md transition-all">
-              <h2 class="text-lg font-semibold text-brand-blue group-hover:text-brand-blue/80 transition-colors">
-                "{story.data.title}"
-              </h2>
-              <p class="text-sm text-gray-500 mt-1">
-                {story.data.name}{story.data.age ? `, ${story.data.age}` : ''}{story.data.location ? ` — ${story.data.location}` : ''}
-              </p>
-              <p class="text-gray-600 mt-2">{story.data.summary}</p>
-            </article>
-          </a>
-        ))}
-      </div>
-    )}
+  <section class="bg-gray-50">
+    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
+      {stories.length === 0 ? (
+        <p class="text-gray-500 text-center">Stories coming soon.</p>
+      ) : (
+        <div class="space-y-6">
+          {stories.map(story => (
+            <a href={`/stories/${story.id}/`} class="card-hover block group">
+              <article class="bg-white rounded-xl border border-gray-200 p-8 transition-colors">
+                <h2 class="text-[1.375rem] font-semibold text-slate-800 group-hover:text-brand-green transition-colors">
+                  "{story.data.title}"
+                </h2>
+                <p class="text-sm text-gray-400 mt-1">
+                  {story.data.name}{story.data.age ? `, ${story.data.age}` : ''}{story.data.location ? ` — ${story.data.location}` : ''}
+                </p>
+                <p class="text-gray-500 mt-3">{story.data.summary}</p>
+              </article>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
   </section>
 </BaseLayout>
