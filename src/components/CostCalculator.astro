@@ -3,7 +3,7 @@ import costsData from '../data/calculator-costs.json';
 
 const practitionerTypes = costsData.practitionerTypes;
 ---
-<div id="cost-calculator" class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 md:p-8">
+<div id="cost-calculator" class="bg-white rounded-xl border border-gray-200 p-8 md:p-10">
   <form id="calc-form" class="space-y-6" aria-label="Mental health cost calculator">
 
     <!-- Practitioner type -->
@@ -14,7 +14,7 @@ const practitionerTypes = costsData.practitionerTypes;
       <select
         id="practitioner-type"
         name="practitionerType"
-        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 bg-white focus:ring-2 focus:ring-brand-blue focus:border-brand-blue"
+        class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-gray-700 bg-white focus:ring-2 focus:ring-brand-green focus:border-brand-green"
       >
         {practitionerTypes.map((p) => (
           <option value={p.id} data-rebate={p.rebatePerSession} data-requires-mhcp={p.requiresMHCP}>
@@ -37,7 +37,7 @@ const practitionerTypes = costsData.practitionerTypes;
         max="1000"
         step="5"
         placeholder="e.g. 220"
-        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 bg-white focus:ring-2 focus:ring-brand-blue focus:border-brand-blue"
+        class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-gray-700 bg-white focus:ring-2 focus:ring-brand-green focus:border-brand-green"
       />
       <p id="fee-hint" class="text-xs text-gray-400 mt-1">Typical range: loading...</p>
     </div>
@@ -50,7 +50,7 @@ const practitionerTypes = costsData.practitionerTypes;
       <select
         id="num-sessions"
         name="numSessions"
-        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 bg-white focus:ring-2 focus:ring-brand-blue focus:border-brand-blue"
+        class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-gray-700 bg-white focus:ring-2 focus:ring-brand-green focus:border-brand-green"
       >
         {[1,2,3,4,5,6,7,8,9,10].map(n => (
           <option value={n} selected={n === 10}>{n} session{n > 1 ? 's' : ''}{n === 10 ? ' (max Medicare)' : ''}</option>
@@ -66,7 +66,7 @@ const practitionerTypes = costsData.practitionerTypes;
       <select
         id="gp-billing"
         name="gpBilling"
-        class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-gray-800 bg-white focus:ring-2 focus:ring-brand-blue focus:border-brand-blue"
+        class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-gray-700 bg-white focus:ring-2 focus:ring-brand-green focus:border-brand-green"
       >
         <option value="yes">Yes — no out-of-pocket cost for GP visits</option>
         <option value="no">No — I pay a gap fee (~$40)</option>
@@ -76,7 +76,7 @@ const practitionerTypes = costsData.practitionerTypes;
     <!-- Calculate button -->
     <button
       type="submit"
-      class="w-full bg-brand-blue text-white py-3 px-6 rounded-lg font-semibold hover:bg-brand-blue/90 transition-colors"
+      class="w-full bg-brand-green text-white py-3 px-6 rounded-lg font-semibold hover:bg-brand-green/90 transition-colors"
     >
       Calculate My Costs
     </button>
@@ -84,33 +84,33 @@ const practitionerTypes = costsData.practitionerTypes;
 
   <!-- Results -->
   <div id="calc-results" class="hidden mt-8 pt-6 border-t border-gray-200">
-    <h3 class="text-lg font-bold text-brand-blue mb-4">Estimated Costs</h3>
+    <h3 class="text-lg font-bold text-slate-800 mb-4">Estimated Costs</h3>
 
     <div class="grid grid-cols-2 gap-4 text-sm">
-      <div class="bg-brand-light rounded-lg p-4">
+      <div class="bg-gray-50 rounded-lg p-4">
         <p class="text-gray-500 mb-1">Total session fees</p>
-        <p id="result-total-fees" class="text-2xl font-bold text-gray-800">$0</p>
+        <p id="result-total-fees" class="text-2xl font-bold text-gray-700">$0</p>
       </div>
-      <div class="bg-brand-light rounded-lg p-4">
+      <div class="bg-gray-50 rounded-lg p-4">
         <p class="text-gray-500 mb-1">Total Medicare rebate</p>
         <p id="result-total-rebate" class="text-2xl font-bold text-brand-green">−$0</p>
       </div>
-      <div class="bg-brand-light rounded-lg p-4">
+      <div class="bg-gray-50 rounded-lg p-4">
         <p class="text-gray-500 mb-1">GP visit costs</p>
-        <p id="result-gp-cost" class="text-2xl font-bold text-gray-800">$0</p>
+        <p id="result-gp-cost" class="text-2xl font-bold text-gray-700">$0</p>
       </div>
-      <div class="bg-brand-blue/10 rounded-lg p-4 border-2 border-brand-blue">
-        <p class="text-brand-blue font-medium mb-1">Your out-of-pocket cost</p>
-        <p id="result-oop" class="text-2xl font-bold text-brand-blue">$0</p>
+      <div class="bg-gray-50 rounded-lg p-4 border-2 border-slate-800">
+        <p class="text-slate-800 font-medium mb-1">Your out-of-pocket cost</p>
+        <p id="result-oop" class="text-2xl font-bold text-slate-800">$0</p>
       </div>
     </div>
 
-    <div id="result-breakdown" class="mt-4 text-sm text-gray-600 space-y-1"></div>
+    <div id="result-breakdown" class="mt-4 text-sm text-gray-500 space-y-1"></div>
 
     <!-- REVIEW -->
     <p class="mt-4 text-xs text-gray-400">
       These are estimates only. Medicare rebate amounts may have changed — check
-      <a href="https://www.servicesaustralia.gov.au/medicare" class="underline hover:text-brand-blue" target="_blank" rel="noopener">Services Australia</a>
+      <a href="https://www.servicesaustralia.gov.au/medicare" class="underline hover:text-brand-green" target="_blank" rel="noopener">Services Australia</a>
       for current rates. Last updated: {costsData.lastUpdated}.
     </p>
   </div>

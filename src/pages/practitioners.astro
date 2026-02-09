@@ -9,86 +9,78 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
   description="Understand the difference between psychologists, psychiatrists, counsellors, and psychotherapists — including costs, Medicare rebates, and referral requirements."
 >
   <!-- Hero -->
-  <section class="bg-brand-light">
-    <div class="max-w-5xl mx-auto px-4 py-12">
-      <h1 class="text-3xl md:text-4xl font-bold text-brand-blue mb-4">Compare Mental Health Practitioners</h1>
-      <p class="text-lg text-gray-600">
+  <section class="bg-white">
+    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
+      <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-4 tracking-[-0.01em]">Compare Mental Health Practitioners</h1>
+      <p class="text-lg text-gray-500">
         Not sure who to see? Here's a clear comparison of the main types of mental health professionals in Australia.
       </p>
     </div>
   </section>
 
   <!-- Quick Comparison Table -->
-  <section class="max-w-5xl mx-auto px-4 py-12">
-    <h2 class="text-2xl font-bold text-brand-blue mb-6">Quick Comparison</h2>
-    <div class="overflow-x-auto">
-      <table class="w-full text-sm text-left border-collapse">
-        <thead>
-          <tr class="border-b-2 border-brand-blue">
-            <th class="py-3 px-4 font-semibold text-brand-blue"></th>
-            <th class="py-3 px-4 font-semibold text-brand-blue">Typical Cost</th>
-            <th class="py-3 px-4 font-semibold text-brand-blue">Medicare Rebate</th>
-            <th class="py-3 px-4 font-semibold text-brand-blue">Referral Needed?</th>
-            <th class="py-3 px-4 font-semibold text-brand-blue">Typical Wait</th>
-          </tr>
-        </thead>
-        <tbody>
-          {practitioners.map((p, i) => (
-            <tr class:list={[i % 2 === 0 ? 'bg-white' : 'bg-gray-50', 'border-b border-gray-200']}>
-              <td class="py-3 px-4 font-semibold text-gray-800">{p.data.title}</td>
-              <td class="py-3 px-4 text-gray-600">{p.data.cost}</td>
-              <td class="py-3 px-4 text-gray-600">{p.data.rebate}</td>
-              <td class="py-3 px-4">
-                {p.data.referralRequired ? (
-                  <span class="text-brand-orange font-medium">Yes</span>
-                ) : (
-                  <span class="text-brand-green font-medium">No</span>
-                )}
-              </td>
-              <td class="py-3 px-4 text-gray-600">{p.data.waitTime}</td>
+  <section class="bg-gray-50">
+    <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
+      <h2 class="text-[1.5rem] font-bold text-slate-800 mb-6 tracking-[-0.01em]">Quick Comparison</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left border-collapse">
+          <thead>
+            <tr class="border-b-2 border-gray-300">
+              <th class="py-3 px-4 font-semibold text-slate-800"></th>
+              <th class="py-3 px-4 font-semibold text-slate-800">Typical Cost</th>
+              <th class="py-3 px-4 font-semibold text-slate-800">Medicare Rebate</th>
+              <th class="py-3 px-4 font-semibold text-slate-800">Referral Needed?</th>
+              <th class="py-3 px-4 font-semibold text-slate-800">Typical Wait</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {practitioners.map((p, i) => (
+              <tr class:list={[i % 2 === 0 ? 'bg-white' : 'bg-gray-50', 'border-b border-gray-200']}>
+                <td class="py-3 px-4 font-semibold text-gray-700">{p.data.title}</td>
+                <td class="py-3 px-4 text-gray-500">{p.data.cost}</td>
+                <td class="py-3 px-4 text-gray-500">{p.data.rebate}</td>
+                <td class="py-3 px-4">
+                  {p.data.referralRequired ? (
+                    <span class="text-brand-orange font-medium">Yes</span>
+                  ) : (
+                    <span class="text-brand-green font-medium">No</span>
+                  )}
+                </td>
+                <td class="py-3 px-4 text-gray-500">{p.data.waitTime}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 
-  <!-- Detailed Cards -->
-  <section class="bg-brand-light">
-    <div class="max-w-5xl mx-auto px-4 py-12">
-      <h2 class="text-2xl font-bold text-brand-blue mb-8">Detailed Breakdown</h2>
-      <div class="grid md:grid-cols-2 gap-6">
+  <!-- Detailed Breakdown — Accordions -->
+  <section class="bg-white">
+    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
+      <h2 class="text-[1.5rem] font-bold text-slate-800 mb-8 tracking-[-0.01em]">Detailed Breakdown</h2>
+      <div>
         {practitioners.map(async (p) => {
           const { Content } = await render(p);
           return (
-            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
-              <div class="px-6 py-4 border-b border-gray-100">
-                <h3 class="text-xl font-bold text-brand-blue">{p.data.title}</h3>
-                <div class="mt-3 grid grid-cols-2 gap-2 text-sm">
-                  <div>
-                    <span class="text-gray-500">Cost:</span>
-                    <span class="ml-1 text-gray-800">{p.data.cost}</span>
-                  </div>
-                  <div>
-                    <span class="text-gray-500">Rebate:</span>
-                    <span class="ml-1 text-gray-800">{p.data.rebate}</span>
-                  </div>
-                  <div>
-                    <span class="text-gray-500">Referral:</span>
-                    <span class:list={['ml-1 font-medium', p.data.referralRequired ? 'text-brand-orange' : 'text-brand-green']}>
-                      {p.data.referralRequired ? 'Required' : 'Not required'}
+            <details class="accordion-item">
+              <summary class="flex items-start justify-between gap-4">
+                <div>
+                  <span class="text-lg font-semibold text-slate-800 block">{p.data.title}</span>
+                  <div class="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500">
+                    <span>{p.data.cost}</span>
+                    <span>Rebate: {p.data.rebate}</span>
+                    <span>{p.data.waitTime}</span>
+                    <span class:list={[p.data.referralRequired ? 'text-brand-orange' : 'text-brand-green', 'font-medium']}>
+                      {p.data.referralRequired ? 'Referral required' : 'No referral needed'}
                     </span>
                   </div>
-                  <div>
-                    <span class="text-gray-500">Wait:</span>
-                    <span class="ml-1 text-gray-800">{p.data.waitTime}</span>
-                  </div>
                 </div>
-              </div>
-              <div class="px-6 py-4 prose prose-sm max-w-none text-gray-700">
+              </summary>
+              <div class="accordion-content prose prose-sm max-w-none text-gray-700">
                 <Content />
               </div>
-            </div>
+            </details>
           );
         })}
       </div>
@@ -96,10 +88,12 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
   </section>
 
   <!-- CTA -->
-  <section class="max-w-3xl mx-auto px-4 py-12 text-center">
-    <h2 class="text-xl font-semibold text-gray-800 mb-3">Want to estimate your out-of-pocket costs?</h2>
-    <a href="/calculator/" class="inline-block bg-brand-green text-white px-6 py-3 rounded-lg font-medium hover:bg-brand-green/90 transition-colors">
-      Use the Cost Calculator
-    </a>
+  <section class="bg-gray-50">
+    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20 text-center">
+      <h2 class="text-xl font-semibold text-slate-800 mb-3">Want to estimate your out-of-pocket costs?</h2>
+      <a href="/calculator/" class="inline-block bg-brand-green text-white px-6 py-3 rounded-lg font-medium hover:bg-brand-green/90 transition-colors">
+        Use the Cost Calculator
+      </a>
+    </div>
   </section>
 </BaseLayout>

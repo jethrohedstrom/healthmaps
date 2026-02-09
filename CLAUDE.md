@@ -61,11 +61,41 @@ src/
 5. **Australian context** — costs in AUD, Medicare/GP/MHCP terminology, Australian crisis numbers.
 
 ## Design Tokens
-- Primary blue: `#1E3A5F` (brand-blue)
-- Green: `#059669` (brand-green)
-- Orange: `#D97706` (brand-orange)
-- Light background: `#F9FAFB` (brand-light)
+
+### Colours
+- Primary blue: `#1E3A5F` (brand-blue) — logo, hero heading only
+- Headings: `text-slate-800` — all h1/h2/h3 headings
+- Body text: `#374151` (text-gray-700) — softer than pure dark
+- Secondary text: `text-gray-500` — descriptions, meta
+- Green: `#059669` (brand-green) — interactive elements ONLY (buttons, links, crisis banner)
+- Orange: `#D97706` (brand-orange) — functional labels only (e.g. "Required")
+- Light background: `#F9FAFB` (bg-gray-50) — alternating sections
+- Card borders: `border-gray-200`
+- Card hover: subtle `border-gray-300` (no lift/shadow)
+
+### Typography
 - Font: Inter (locally bundled via @fontsource)
+- Body: 17px, line-height 1.7, letter-spacing -0.01em, antialiased
+- Hero headings: 56–64px, font-bold, tracking -0.02em
+- Section headings (h2): 36–40px, font-bold, tracking -0.01em
+- Card headings (h3): 22px, font-semibold
+- Small/meta text: 14px, text-gray-500
+
+### Spacing
+- Hero sections: py-32 md:py-40 (homepage), py-16 md:py-20 (inner pages)
+- Section-to-section: py-20 md:py-[120px] (homepage), py-16 md:py-20 (inner pages)
+- Body text max-width: 720px
+- Card grid max-width: 960px
+- Page container: 1280px (max-w-6xl)
+- Card padding: p-8 (32px)
+- Alternating backgrounds: white / gray-50 per section
+
+### Components
+- Buttons: rounded-lg (not pill), bg-brand-green for primary
+- Cards: bg-white border border-gray-200 rounded-xl, hover:border-gray-300
+- Accordions: native `<details>`/`<summary>`, CSS chevron rotation, .accordion-item class
+- Header: opaque white, border-b border-gray-200 (no frosted glass)
+- Details/summary: clean chevron rotation via CSS ::after pseudo-element
 
 ## Commands
 - `npm run dev` — start dev server at localhost:4321

@@ -43,12 +43,14 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://healthma
   </head>
   <body class="min-h-screen flex flex-col bg-white">
     <a href="#main-content" class="skip-link">Skip to main content</a>
-    <CrisisBanner />
     <Header />
     <main id="main-content" class="flex-1">
       <slot />
     </main>
     <Footer />
+
+    <!-- Floating crisis pill — right side, next to chat bubble -->
+    <CrisisBanner />
 
     <!-- Floating chat bubble -->
     <a
