@@ -6,15 +6,13 @@ HealthMaps helps Australians navigate the mental health system. It explains how 
 ## Current Status
 - **All 6 build phases complete** — foundation, pathway, practitioners, calculator, stories/tips, homepage/404
 - **12 pages built**, 0 errors, 0 warnings from `astro check`
-- **Not yet deployed** — needs to be pushed to GitHub and connected to Netlify
+- **Live at healthmaps.com.au** — deployed via Netlify
 - **Health content needs review** — all AI-drafted health claims are marked with `<!-- REVIEW -->` comments
 
 ## Next Steps
-1. Push to GitHub (`git add -A && git commit -m "Initial build" && gh repo create healthmaps --public --source=. --remote=origin --push`)
-2. Connect repo to Netlify (app.netlify.com > Add new site > Import from GitHub)
-3. Review all `<!-- REVIEW -->` comments in `src/content/` Markdown files for health accuracy
-4. Replace fictional user stories with real ones (or verify they're clearly marked as illustrative)
-5. Lighthouse audit once deployed (target 95+ all categories)
+1. Review all `<!-- REVIEW -->` comments in `src/content/` Markdown files for health accuracy
+2. Replace fictional user stories with real ones (or verify they're clearly marked as illustrative)
+3. Lighthouse audit (target 95+ all categories)
 
 ## Tech Stack
 - **Astro v5** — static site generator (file-based routing, Markdown content)
