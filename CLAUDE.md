@@ -60,40 +60,42 @@ src/
 
 ## Design Tokens
 
-### Colours
-- Primary blue: `#1E3A5F` (brand-blue) — logo, hero heading only
-- Headings: `text-slate-800` — all h1/h2/h3 headings
-- Body text: `#374151` (text-gray-700) — softer than pure dark
-- Secondary text: `text-gray-500` — descriptions, meta
-- Green: `#059669` (brand-green) — interactive elements ONLY (buttons, links, crisis banner)
+### Colours (defined in global.css @theme)
+- Heading: `#0f172a` (--color-heading / text-heading) — all headings
+- Body text: `#64748b` (--color-body / text-body) — paragraph text
+- Primary green: `#16a34a` (--color-primary / text-primary) — buttons, links, interactive elements, crisis banner
+- Icon background: `#f0fdf4` (--color-icon-bg / bg-icon-bg) — green-tint square behind icons
+- Light background: `#f8fafc` (--color-bg-light / bg-bg-light)
+- Border: `#e5e7eb` (--color-border / border-border)
 - Orange: `#D97706` (brand-orange) — functional labels only (e.g. "Required")
-- Light background: `#F9FAFB` (bg-gray-50) — alternating sections
-- Card borders: `border-gray-200`
-- Card hover: subtle `border-gray-300` (no lift/shadow)
+- Backward-compatible aliases still work: brand-blue (`#0f172a`), brand-green (`#16a34a`), brand-green-light (`#f0fdf4`)
 
 ### Typography
 - Font: Inter (locally bundled via @fontsource)
-- Body: 17px, line-height 1.7, letter-spacing -0.01em, antialiased
-- Hero headings: 56–64px, font-bold, tracking -0.02em
-- Section headings (h2): 36–40px, font-bold, tracking -0.01em
-- Card headings (h3): 22px, font-semibold
+- Body: 16px, line-height 1.625, antialiased
+- Hero heading: 56px, font-bold, tracking -0.025em, text-heading
+- Section headings (h2): 36–40px, font-bold
+- Card headings (h3): 24px (text-2xl), font-bold, text-heading
 - Small/meta text: 14px, text-gray-500
 
 ### Spacing
-- Hero sections: py-32 md:py-40 (homepage), py-16 md:py-20 (inner pages)
-- Section-to-section: py-20 md:py-[120px] (homepage), py-16 md:py-20 (inner pages)
+- Hero: pt-20 pb-24 md:pt-32 md:pb-40 (homepage), py-16 md:py-20 (inner pages)
+- Section-to-section: py-24 md:py-32 (homepage), py-16 md:py-20 (inner pages)
+- No `<hr>` dividers on homepage (removed)
 - Body text max-width: 720px
 - Card grid max-width: 960px
 - Page container: 1280px (max-w-6xl)
-- Card padding: p-8 (32px)
-- Alternating backgrounds: white / gray-50 per section
+- Feature card padding: p-12 (48px)
+- Feature card grid gap: gap-12 (48px)
+- Icon-to-heading gap: mb-8 (32px)
 
 ### Components
-- Buttons: rounded-lg (not pill), bg-brand-green for primary
-- Cards: bg-white border border-gray-200 rounded-xl, hover:border-gray-300
+- Buttons: rounded-xl, bg-primary for primary (homepage), bg-brand-green on inner pages
+- Feature cards (homepage): bg-white rounded-xl p-12 shadow-sm text-left, no border, FAQ-style question headings
+- Feature card icons: w-16 h-16 rounded-xl bg-icon-bg with text-primary SVG
+- Card hover: subtle shadow only (no lift) via .card-hover class
+- Header: opaque white, no bottom border, wider padding (px-4 sm:px-8 lg:px-20 py-8)
 - Accordions: native `<details>`/`<summary>`, CSS chevron rotation, .accordion-item class
-- Header: opaque white, border-b border-gray-200 (no frosted glass)
-- Details/summary: clean chevron rotation via CSS ::after pseudo-element
 
 ## Commands
 - `npm run dev` — start dev server at localhost:4321
