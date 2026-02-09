@@ -42,7 +42,7 @@
 @theme {
   /* Backward-compatible aliases (used across the site) */
   --color-brand-blue: #0f172a;
-  --color-brand-green: #16a34a;
+  --color-brand-green: #44EE70;
   --color-brand-green-light: #f0fdf4;
   --color-brand-blue-light: #EFF6FF;
   --color-brand-orange: #D97706;
@@ -51,7 +51,7 @@
   /* New semantic tokens for homepage redesign */
   --color-heading: #0f172a;
   --color-body: #64748b;
-  --color-primary: #16a34a;
+  --color-primary: #44EE70;
   --color-icon-bg: #f0fdf4;
   --color-bg-light: #f8fafc;
   --color-border: #e5e7eb;
