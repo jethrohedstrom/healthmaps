@@ -63,12 +63,12 @@ src/
 ### Colours (defined in global.css @theme)
 - Heading: `#0f172a` (--color-heading / text-heading) — all headings
 - Body text: `#64748b` (--color-body / text-body) — paragraph text
-- Primary green: `#16a34a` (--color-primary / text-primary) — buttons, links, interactive elements, crisis banner
+- Primary green: `#44EE70` (--color-primary / text-primary) — buttons, links, interactive elements (dark text on green buttons for contrast)
 - Icon background: `#f0fdf4` (--color-icon-bg / bg-icon-bg) — green-tint square behind icons
 - Light background: `#f8fafc` (--color-bg-light / bg-bg-light)
 - Border: `#e5e7eb` (--color-border / border-border)
 - Orange: `#D97706` (brand-orange) — functional labels only (e.g. "Required")
-- Backward-compatible aliases still work: brand-blue (`#0f172a`), brand-green (`#16a34a`), brand-green-light (`#f0fdf4`)
+- Backward-compatible aliases still work: brand-blue (`#0f172a`), brand-green (`#44EE70`), brand-green-light (`#f0fdf4`)
 
 ### Typography
 - Font: Inter (locally bundled via @fontsource)
