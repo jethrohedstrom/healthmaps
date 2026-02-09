@@ -65,13 +65,13 @@ const navLinks = [
     </div>
 
     <!-- Mobile nav -->
-    <ul id="mobile-menu" class="hidden md:hidden mt-4 space-y-2 text-sm font-medium border-t border-gray-200 pt-4">
+    <ul id="mobile-menu" class="md:hidden mt-4 space-y-1 text-base font-medium border-t border-gray-200 pt-4 max-h-0 opacity-0 overflow-hidden transition-all duration-200 ease-out">
       {navLinks.map(link => (
         <li>
           <a
             href={link.href}
             class:list={[
-              'block py-2 px-2 rounded hover:bg-gray-50 transition-colors',
+              'block py-3.5 px-4 rounded-lg text-center hover:bg-gray-50 transition-colors',
               currentPath === link.href ? 'text-brand-green font-semibold bg-gray-50' : 'text-gray-500',
             ]}
             aria-current={currentPath === link.href ? 'page' : undefined}
@@ -85,7 +85,7 @@ const navLinks = [
           href="https://chat.healthmaps.com.au"
           target="_blank"
           rel="noopener noreferrer"
-          class="block py-2 px-2 rounded hover:bg-gray-50 transition-colors text-gray-500"
+          class="block py-3.5 px-4 rounded-lg text-center hover:bg-gray-50 transition-colors text-gray-500"
         >
           Chat
         </a>
@@ -93,7 +93,7 @@ const navLinks = [
       <li class="pt-2">
         <a
           href="/pathway/"
-          class="block text-center bg-brand-green text-white px-5 py-2.5 rounded-lg text-sm font-semibold hover:bg-brand-green/90 transition-colors"
+          class="block text-center bg-brand-green text-white px-5 py-3.5 rounded-lg font-semibold hover:bg-brand-green/90 transition-colors"
         >
           Get Started
         </a>
@@ -105,11 +105,24 @@ const navLinks = [
 <script>
   const btn = document.getElementById('mobile-menu-btn');
   const menu = document.getElementById('mobile-menu');
+  const icon = document.getElementById('menu-icon');
   if (btn && menu) {
     btn.addEventListener('click', () => {
       const expanded = btn.getAttribute('aria-expanded') === 'true';
       btn.setAttribute('aria-expanded', String(!expanded));
-      menu.classList.toggle('hidden');
+      if (expanded) {
+        menu.classList.remove('max-h-[500px]', 'opacity-100');
+        menu.classList.add('max-h-0', 'opacity-0');
+      } else {
+        menu.classList.remove('max-h-0', 'opacity-0');
+        menu.classList.add('max-h-[500px]', 'opacity-100');
+      }
+      if (icon) {
+        icon.setAttribute('d', expanded
+          ? 'M4 6h16M4 12h16M4 18h16'
+          : 'M6 18L18 6M6 6l12 12'
+        );
+      }
     });
   }
 </script>
