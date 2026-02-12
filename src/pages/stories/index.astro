@@ -11,8 +11,8 @@ const stories = await getCollection('stories');
   <!-- Hero -->
   <section class="bg-white">
     <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
-      <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-4 tracking-[-0.01em]">Stories</h1>
-      <p class="text-lg text-gray-500">
+      <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em]">Stories</h1>
+      <p class="text-lg text-body">
         Experiences from people who've navigated the mental health system. Every journey is different — these might help you see what to expect.
       </p>
       <!-- REVIEW — Note: these are fictional composite stories for illustrative purposes -->
@@ -23,19 +23,19 @@ const stories = await getCollection('stories');
   <section class="bg-gray-50">
     <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
       {stories.length === 0 ? (
-        <p class="text-gray-500 text-center">Stories coming soon.</p>
+        <p class="text-body text-center">Stories coming soon.</p>
       ) : (
         <div class="space-y-6">
           {stories.map(story => (
-            <a href={`/stories/${story.id}/`} class="card-hover block group">
-              <article class="bg-white rounded-xl border border-gray-200 p-8 transition-colors">
-                <h2 class="text-[1.375rem] font-semibold text-slate-800 group-hover:text-brand-green transition-colors">
+            <a href={`/stories/${story.id}/`} class="card-hover block group bg-white rounded-xl p-8 md:p-12 shadow-sm">
+              <article>
+                <h2 class="text-[1.375rem] font-semibold text-heading group-hover:text-primary transition-colors">
                   "{story.data.title}"
                 </h2>
                 <p class="text-sm text-gray-400 mt-1">
                   {story.data.name}{story.data.age ? `, ${story.data.age}` : ''}{story.data.location ? ` — ${story.data.location}` : ''}
                 </p>
-                <p class="text-gray-500 mt-3">{story.data.summary}</p>
+                <p class="text-body mt-3">{story.data.summary}</p>
               </article>
             </a>
           ))}
