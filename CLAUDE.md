@@ -79,7 +79,8 @@ src/
 - Small/meta text: 14px, text-gray-500
 
 ### Spacing
-- Hero: pt-20 pb-24 md:pt-32 md:pb-40 (homepage), py-16 md:py-20 (inner pages)
+- Hero: pt-20 pb-12 md:pt-32 md:pb-16 (homepage), py-16 md:py-20 (inner pages)
+- Explore Tools (below hero): pt-4 pb-24 md:pt-8 md:pb-32
 - Section-to-section: py-24 md:py-32 (homepage), py-16 md:py-20 (inner pages)
 - No `<hr>` dividers on homepage (removed)
 - Body text max-width: 720px
