@@ -2,14 +2,14 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 <BaseLayout title="Page Not Found">
-  <section class="max-w-[720px] mx-auto px-4 py-16 md:py-20 text-center">
-    <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em]">404</h1>
-    <p class="text-lg text-body mb-8">Sorry, this page doesn't exist.</p>
+  <section class="max-w-[720px] mx-auto px-4 py-32 md:py-40 text-center">
+    <h1 class="text-6xl font-bold text-slate-800 mb-4">404</h1>
+    <p class="text-xl text-gray-500 mb-8">Sorry, this page doesn't exist.</p>
     <div class="flex flex-col sm:flex-row gap-4 justify-center">
-      <a href="/" class="bg-primary text-heading px-10 py-4 rounded-xl font-semibold text-base shadow-sm hover:bg-primary/90 transition-colors">
+      <a href="/" class="bg-brand-green text-heading px-6 py-3 rounded-lg font-medium hover:bg-brand-green/90 transition-colors">
         Go Home
       </a>
-      <a href="/pathway/" class="bg-white text-heading border border-border px-10 py-4 rounded-xl font-semibold text-base hover:shadow-sm transition-colors">
+      <a href="/pathway/" class="bg-white text-gray-700 border-2 border-gray-200 px-6 py-3 rounded-lg font-medium hover:border-gray-300 transition-colors">
         Getting Started Guide
       </a>
     </div>

@@ -3,7 +3,7 @@ import costsData from '../data/calculator-costs.json';
 
 const practitionerTypes = costsData.practitionerTypes;
 ---
-<div id="cost-calculator" class="bg-white rounded-xl p-8 md:p-12 shadow-sm">
+<div id="cost-calculator" class="bg-white rounded-xl border border-gray-200 p-8 md:p-10">
   <form id="calc-form" class="space-y-6" aria-label="Mental health cost calculator">
 
     <!-- Practitioner type -->
@@ -14,7 +14,7 @@ const practitionerTypes = costsData.practitionerTypes;
       <select
         id="practitioner-type"
         name="practitionerType"
-        class="w-full border border-border rounded-lg px-4 py-2.5 text-gray-700 bg-white focus:ring-2 focus:ring-primary focus:border-primary"
+        class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-gray-700 bg-white focus:ring-2 focus:ring-brand-green focus:border-brand-green"
       >
         {practitionerTypes.map((p) => (
           <option value={p.id} data-rebate={p.rebatePerSession} data-requires-mhcp={p.requiresMHCP}>
@@ -37,7 +37,7 @@ const practitionerTypes = costsData.practitionerTypes;
         max="1000"
         step="5"
         placeholder="e.g. 220"
-        class="w-full border border-border rounded-lg px-4 py-2.5 text-gray-700 bg-white focus:ring-2 focus:ring-primary focus:border-primary"
+        class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-gray-700 bg-white focus:ring-2 focus:ring-brand-green focus:border-brand-green"
       />
       <p id="fee-hint" class="text-xs text-gray-400 mt-1">Typical range: loading...</p>
     </div>
@@ -50,7 +50,7 @@ const practitionerTypes = costsData.practitionerTypes;
       <select
         id="num-sessions"
         name="numSessions"
-        class="w-full border border-border rounded-lg px-4 py-2.5 text-gray-700 bg-white focus:ring-2 focus:ring-primary focus:border-primary"
+        class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-gray-700 bg-white focus:ring-2 focus:ring-brand-green focus:border-brand-green"
       >
         {[1,2,3,4,5,6,7,8,9,10].map(n => (
           <option value={n} selected={n === 10}>{n} session{n > 1 ? 's' : ''}{n === 10 ? ' (max Medicare)' : ''}</option>
@@ -66,7 +66,7 @@ const practitionerTypes = costsData.practitionerTypes;
       <select
         id="gp-billing"
         name="gpBilling"
-        class="w-full border border-border rounded-lg px-4 py-2.5 text-gray-700 bg-white focus:ring-2 focus:ring-primary focus:border-primary"
+        class="w-full border border-gray-200 rounded-lg px-4 py-2.5 text-gray-700 bg-white focus:ring-2 focus:ring-brand-green focus:border-brand-green"
       >
         <option value="yes">Yes — no out-of-pocket cost for GP visits</option>
         <option value="no">No — I pay a gap fee (~$40)</option>
@@ -76,15 +76,15 @@ const practitionerTypes = costsData.practitionerTypes;
     <!-- Calculate button -->
     <button
       type="submit"
-      class="w-full bg-primary text-heading py-4 px-6 rounded-xl font-semibold shadow-sm hover:bg-primary/90 transition-colors"
+      class="w-full bg-brand-green text-heading py-3 px-6 rounded-lg font-semibold hover:bg-brand-green/90 transition-colors"
     >
       Calculate My Costs
     </button>
   </form>
 
   <!-- Results -->
-  <div id="calc-results" class="hidden mt-8 pt-6 border-t border-border">
-    <h3 class="text-lg font-bold text-heading mb-4">Estimated Costs</h3>
+  <div id="calc-results" class="hidden mt-8 pt-6 border-t border-gray-200">
+    <h3 class="text-lg font-bold text-slate-800 mb-4">Estimated Costs</h3>
 
     <div class="grid grid-cols-2 gap-4 text-sm">
       <div class="bg-gray-50 rounded-lg p-4">
@@ -93,15 +93,15 @@ const practitionerTypes = costsData.practitionerTypes;
       </div>
       <div class="bg-gray-50 rounded-lg p-4">
         <p class="text-gray-500 mb-1">Total Medicare rebate</p>
-        <p id="result-total-rebate" class="text-2xl font-bold text-primary">−$0</p>
+        <p id="result-total-rebate" class="text-2xl font-bold text-brand-green">−$0</p>
       </div>
       <div class="bg-gray-50 rounded-lg p-4">
         <p class="text-gray-500 mb-1">GP visit costs</p>
         <p id="result-gp-cost" class="text-2xl font-bold text-gray-700">$0</p>
       </div>
-      <div class="bg-gray-50 rounded-lg p-4 border-2 border-heading">
-        <p class="text-heading font-medium mb-1">Your out-of-pocket cost</p>
-        <p id="result-oop" class="text-2xl font-bold text-heading">$0</p>
+      <div class="bg-gray-50 rounded-lg p-4 border-2 border-slate-800">
+        <p class="text-slate-800 font-medium mb-1">Your out-of-pocket cost</p>
+        <p id="result-oop" class="text-2xl font-bold text-slate-800">$0</p>
       </div>
     </div>
 
@@ -110,7 +110,7 @@ const practitionerTypes = costsData.practitionerTypes;
     <!-- REVIEW -->
     <p class="mt-4 text-xs text-gray-400">
       These are estimates only. Medicare rebate amounts may have changed — check
-      <a href="https://www.servicesaustralia.gov.au/medicare" class="underline hover:text-primary" target="_blank" rel="noopener">Services Australia</a>
+      <a href="https://www.servicesaustralia.gov.au/medicare" class="underline hover:text-brand-green" target="_blank" rel="noopener">Services Australia</a>
       for current rates. Last updated: {costsData.lastUpdated}.
     </p>
   </div>

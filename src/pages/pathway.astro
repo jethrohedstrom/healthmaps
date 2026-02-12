@@ -14,8 +14,8 @@ const alternatives = (await getCollection('alternatives')).sort((a, b) => (a.dat
   <!-- Hero -->
   <section class="bg-white">
     <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
-      <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em]">Getting Started with Mental Health Support</h1>
-      <p class="text-lg text-body">
+      <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-4 tracking-[-0.01em]">Getting Started with Mental Health Support</h1>
+      <p class="text-lg text-gray-500">
         A clear, step-by-step guide to accessing Medicare-funded psychology sessions in Australia. Click each step to learn more.
       </p>
     </div>
@@ -44,15 +44,15 @@ const alternatives = (await getCollection('alternatives')).sort((a, b) => (a.dat
   <!-- Alternative Pathways -->
   <section class="bg-white">
     <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
-      <h2 class="text-[1.5rem] font-bold text-heading mb-6 tracking-[-0.01em]">Other Ways to Get Support</h2>
-      <p class="text-body mb-8">The Medicare pathway isn't your only option. Here are other ways to access mental health support.</p>
+      <h2 class="text-[1.5rem] font-bold text-slate-800 mb-2 tracking-[-0.01em]">Other Ways to Get Support</h2>
+      <p class="text-gray-500 mb-8">The Medicare pathway isn't your only option. Here are other ways to access mental health support.</p>
 
       <div>
         {alternatives.map(async (alt) => {
           const { Content } = await render(alt);
           return (
             <details class="accordion-item">
-              <summary class="text-lg font-medium text-heading">
+              <summary class="text-lg font-medium text-slate-800">
                 {alt.data.title}
               </summary>
               <div class="accordion-content prose prose-sm max-w-none text-gray-700">
@@ -69,8 +69,8 @@ const alternatives = (await getCollection('alternatives')).sort((a, b) => (a.dat
   <!-- CTA -->
   <section class="bg-gray-50">
     <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20 text-center">
-      <h2 class="text-xl font-semibold text-heading mb-3">Not sure what type of practitioner you need?</h2>
-      <a href="/practitioners/" class="inline-block bg-primary text-heading px-10 py-4 rounded-xl font-semibold text-base shadow-sm hover:bg-primary/90 transition-colors">
+      <h2 class="text-xl font-semibold text-slate-800 mb-3">Not sure what type of practitioner you need?</h2>
+      <a href="/practitioners/" class="inline-block bg-brand-green text-heading px-6 py-3 rounded-lg font-medium hover:bg-brand-green/90 transition-colors">
         Compare Practitioners
       </a>
     </div>
