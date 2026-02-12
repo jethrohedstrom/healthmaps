@@ -40,12 +40,24 @@
 
 /* Design tokens */
 @theme {
-  --color-brand-blue: #1E3A5F;
-  --color-brand-green: #059669;
-  --color-brand-green-light: #ECFDF5;
+  /* Backward-compatible aliases (used across the site) */
+  --color-brand-blue: #0f172a;
+  --color-brand-green: #44EE70;
+  --color-brand-green-light: #f0fdf4;
   --color-brand-blue-light: #EFF6FF;
   --color-brand-orange: #D97706;
-  --color-brand-light: #F9FAFB;
+  --color-brand-light: #f8fafc;
+
+  /* New semantic tokens for homepage redesign */
+  --color-heading: #0f172a;
+  --color-body: #64748b;
+  --color-primary: #44EE70;
+  --color-icon-bg: #f0fdf4;
+  --color-bg-light: #f8fafc;
+  --color-border: #e5e7eb;
+
+  --shadow-sm: 0px 1px 2px rgba(0,0,0,0.05);
+
   --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -56,8 +68,12 @@ html {
 
 body {
   font-family: var(--font-sans);
-  color: #1f2937;
-  line-height: 1.6;
+  color: var(--color-body);
+  font-size: 16px;
+  line-height: 1.625;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Accessible focus styles */
@@ -74,32 +90,67 @@ body {
   margin: 0 auto;
 }
 
-/* Card hover lift effect */
+/* Card hover — subtle shadow only (no lift) */
 .card-hover {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: box-shadow 0.2s ease;
 }
 .card-hover:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-sm);
 }
 
-/* Details/summary progressive disclosure */
+/* Details/summary — clean chevron rotation, CSS-only */
 details summary {
   cursor: pointer;
   list-style: none;
+  position: relative;
+  padding-right: 2rem;
 }
 details summary::-webkit-details-marker {
   display: none;
 }
-details summary::before {
-  content: '▸ ';
-  font-weight: bold;
-  color: var(--color-brand-blue);
-  transition: transform 0.2s;
-  display: inline-block;
+details summary::marker {
+  display: none;
+  content: '';
 }
-details[open] summary::before {
-  content: '▾ ';
+details summary::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) rotate(0deg);
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid #6b7280;
+  border-bottom: 2px solid #6b7280;
+  transform-origin: center;
+  transform: translateY(-60%) rotate(45deg);
+  transition: transform 0.2s ease;
+}
+details[open] summary::after {
+  transform: translateY(-40%) rotate(-135deg);
+}
+
+/* Accordion styles — for practitioners and pathway */
+.accordion-item {
+  border-bottom: 1px solid #e5e7eb;
+}
+.accordion-item:last-child {
+  border-bottom: none;
+}
+.accordion-item summary {
+  padding: 1.125rem 2rem 1.125rem 0;
+  font-weight: 500;
+  color: #1e293b;
+}
+.accordion-item[open] summary {
+  font-weight: 600;
+}
+.accordion-item .accordion-content {
+  padding: 0 0 1.25rem 0;
+  background: #f9fafb;
+  border-radius: 0.5rem;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1rem;
 }
 
 /* Skip link for accessibility */

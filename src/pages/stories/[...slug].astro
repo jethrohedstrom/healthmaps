@@ -17,17 +17,17 @@ const { Content } = await render(story);
   title={story.data.title}
   description={story.data.summary}
 >
-  <article class="max-w-3xl mx-auto px-4 py-12">
-    <a href="/stories/" class="text-sm text-brand-blue hover:text-brand-blue/80 transition-colors mb-6 inline-block">&larr; All stories</a>
-    <h1 class="text-3xl font-bold text-brand-blue mb-2">"{story.data.title}"</h1>
-    <p class="text-gray-500 mb-8">
+  <article class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
+    <a href="/stories/" class="text-sm text-gray-500 hover:text-brand-green transition-colors mb-6 inline-block">&larr; All stories</a>
+    <h1 class="text-[2.25rem] font-bold text-slate-800 mb-2 tracking-[-0.01em]">"{story.data.title}"</h1>
+    <p class="text-gray-400 mb-8">
       {story.data.name}{story.data.age ? `, ${story.data.age}` : ''}{story.data.location ? ` — ${story.data.location}` : ''}
     </p>
     <div class="prose max-w-none text-gray-700">
       <Content />
     </div>
-    <div class="mt-12 pt-6 border-t border-gray-200 text-center">
-      <a href="/pathway/" class="inline-block bg-brand-blue text-white px-6 py-3 rounded-lg font-medium hover:bg-brand-blue/90 transition-colors">
+    <div class="mt-16 pt-8 border-t border-gray-200 text-center">
+      <a href="/pathway/" class="inline-block bg-brand-green text-heading px-6 py-3 rounded-lg font-medium hover:bg-brand-green/90 transition-colors">
         Get Started with Your Own Plan
       </a>
     </div>

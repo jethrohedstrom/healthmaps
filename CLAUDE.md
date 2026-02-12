@@ -6,15 +6,13 @@ HealthMaps helps Australians navigate the mental health system. It explains how 
 ## Current Status
 - **All 6 build phases complete** — foundation, pathway, practitioners, calculator, stories/tips, homepage/404
 - **12 pages built**, 0 errors, 0 warnings from `astro check`
-- **Not yet deployed** — needs to be pushed to GitHub and connected to Netlify
+- **Live at healthmaps.com.au** — deployed via Netlify
 - **Health content needs review** — all AI-drafted health claims are marked with `<!-- REVIEW -->` comments
 
 ## Next Steps
-1. Push to GitHub (`git add -A && git commit -m "Initial build" && gh repo create healthmaps --public --source=. --remote=origin --push`)
-2. Connect repo to Netlify (app.netlify.com > Add new site > Import from GitHub)
-3. Review all `<!-- REVIEW -->` comments in `src/content/` Markdown files for health accuracy
-4. Replace fictional user stories with real ones (or verify they're clearly marked as illustrative)
-5. Lighthouse audit once deployed (target 95+ all categories)
+1. Review all `<!-- REVIEW -->` comments in `src/content/` Markdown files for health accuracy
+2. Replace fictional user stories with real ones (or verify they're clearly marked as illustrative)
+3. Lighthouse audit (target 95+ all categories)
 
 ## Tech Stack
 - **Astro v5** — static site generator (file-based routing, Markdown content)
@@ -61,11 +59,43 @@ src/
 5. **Australian context** — costs in AUD, Medicare/GP/MHCP terminology, Australian crisis numbers.
 
 ## Design Tokens
-- Primary blue: `#1E3A5F` (brand-blue)
-- Green: `#059669` (brand-green)
-- Orange: `#D97706` (brand-orange)
-- Light background: `#F9FAFB` (brand-light)
+
+### Colours (defined in global.css @theme)
+- Heading: `#0f172a` (--color-heading / text-heading) — all headings
+- Body text: `#64748b` (--color-body / text-body) — paragraph text
+- Primary green: `#44EE70` (--color-primary / text-primary) — buttons, links, interactive elements (dark text on green buttons for contrast)
+- Icon background: `#f0fdf4` (--color-icon-bg / bg-icon-bg) — green-tint square behind icons
+- Light background: `#f8fafc` (--color-bg-light / bg-bg-light)
+- Border: `#e5e7eb` (--color-border / border-border)
+- Orange: `#D97706` (brand-orange) — functional labels only (e.g. "Required")
+- Backward-compatible aliases still work: brand-blue (`#0f172a`), brand-green (`#44EE70`), brand-green-light (`#f0fdf4`)
+
+### Typography
 - Font: Inter (locally bundled via @fontsource)
+- Body: 16px, line-height 1.625, antialiased
+- Hero heading: 56px, font-bold, tracking -0.025em, text-heading
+- Section headings (h2): 36–40px, font-bold
+- Card headings (h3): 24px (text-2xl), font-bold, text-heading
+- Small/meta text: 14px, text-gray-500
+
+### Spacing
+- Hero: pt-20 pb-24 md:pt-32 md:pb-40 (homepage), py-16 md:py-20 (inner pages)
+- Section-to-section: py-24 md:py-32 (homepage), py-16 md:py-20 (inner pages)
+- No `<hr>` dividers on homepage (removed)
+- Body text max-width: 720px
+- Card grid max-width: 960px
+- Page container: 1280px (max-w-6xl)
+- Feature card padding: p-12 (48px)
+- Feature card grid gap: gap-12 (48px)
+- Icon-to-heading gap: mb-8 (32px)
+
+### Components
+- Buttons: rounded-xl, bg-primary for primary (homepage), bg-brand-green on inner pages
+- Feature cards (homepage): bg-white rounded-xl p-12 shadow-sm text-left, no border, FAQ-style question headings
+- Feature card icons: w-16 h-16 rounded-xl bg-icon-bg with text-primary SVG
+- Card hover: subtle shadow only (no lift) via .card-hover class
+- Header: opaque white, no bottom border, wider padding (px-4 sm:px-8 lg:px-20 py-8)
+- Accordions: native `<details>`/`<summary>`, CSS chevron rotation, .accordion-item class
 
 ## Commands
 - `npm run dev` — start dev server at localhost:4321
