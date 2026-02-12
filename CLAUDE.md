@@ -68,7 +68,7 @@ src/
 - Light background: `#f8fafc` (--color-bg-light / bg-bg-light)
 - Border: `#e5e7eb` (--color-border / border-border)
 - Orange: `#D97706` (brand-orange) — functional labels only (e.g. "Required")
-- Backward-compatible aliases still work: brand-blue (`#0f172a`), brand-green (`#44EE70`), brand-green-light (`#f0fdf4`)
+- Backward-compatible aliases defined but no longer used in templates: brand-blue, brand-green, brand-green-light
 
 ### Typography
 - Font: Inter (locally bundled via @fontsource)
@@ -91,8 +91,9 @@ src/
 - Icon-to-heading gap: mb-8 (32px)
 
 ### Components
-- Buttons: rounded-xl, bg-primary for primary (homepage), bg-brand-green on inner pages
+- Buttons: rounded-xl, bg-primary text-heading, px-10 py-4, font-semibold, shadow-sm (all pages)
 - Feature cards (homepage): bg-white rounded-xl p-12 shadow-sm text-left, no border, FAQ-style question headings
+- Inner page cards: bg-white rounded-xl p-8 md:p-12 shadow-sm, no border, card-hover on `<a>` wrapper
 - Feature card icons: w-16 h-16 rounded-xl bg-icon-bg with text-primary SVG
 - Card hover: subtle shadow only (no lift) via .card-hover class
 - Header: opaque white, no bottom border, wider padding (px-4 sm:px-8 lg:px-20 py-8)
