@@ -135,3 +135,8 @@ To update calculator costs: edit `src/data/calculator-costs.json`.
 - `practitioners` — title, cost, rebate, referralRequired, waitTime, order
 - `stories` — title, name, age, location, summary, publishedDate
 - `tips` — title, summary, category, publishedDate
+
+## Additional Context
+- **Obsidian vault** with project research, design notes, user testing, meeting notes, and planning docs:
+  `/Users/jethrohedstrom/Library/Mobile Documents/iCloud~md~obsidian/Documents/Healthcare Navigation Project /`
+- Read from this vault when you need background context on design decisions, target audience, information architecture, or project direction.
