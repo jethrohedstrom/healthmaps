@@ -5,15 +5,15 @@ import { getCollection, render } from 'astro:content';
 const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
 ---
 <BaseLayout
-  title="Compare Practitioners"
+  title="Who should I see?"
   description="Understand the difference between psychologists, psychiatrists, counsellors, and psychotherapists — including costs, Medicare rebates, and referral requirements."
 >
   <!-- Hero -->
   <section class="bg-white">
     <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
-      <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-4 tracking-[-0.01em]">Compare Mental Health Practitioners</h1>
+      <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-4 tracking-[-0.01em]">Who should I see?</h1>
       <p class="text-lg text-gray-500">
-        Not sure who to see? Here's a clear comparison of the main types of mental health professionals in Australia.
+        Here's a plain-English guide to the different types of mental health professionals in Australia — what they do, what they cost, and whether Medicare covers them.
       </p>
     </div>
   </section>
