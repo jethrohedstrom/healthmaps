@@ -1,14 +1,14 @@
 ---
 // Crisis helpline pill + card popup — displayed on every page. Never remove.
 ---
-<div role="complementary" aria-label="Crisis support numbers" class="fixed bottom-6 left-24 z-50" id="crisis-widget">
+<div role="complementary" aria-label="Crisis support numbers" class="fixed bottom-6 right-24 z-50" id="crisis-widget">
   <!-- Pill trigger -->
   <button
     id="crisis-pill"
     type="button"
     aria-expanded="false"
     aria-controls="crisis-card"
-    class="flex items-center gap-2 rounded-full bg-brand-blue text-white px-5 py-3 shadow-lg hover:scale-105 transition-all text-sm font-semibold cursor-pointer"
+    class="flex items-center gap-2 rounded-full bg-brand-blue text-white px-5 py-3 shadow-lg transition-colors text-sm font-semibold cursor-pointer"
   >
     <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
       <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
@@ -21,7 +21,7 @@
     id="crisis-card"
     role="region"
     aria-label="Crisis support phone numbers"
-    class="absolute bottom-full left-0 mb-3 w-72 rounded-xl bg-brand-blue text-white shadow-xl p-5 origin-bottom-left transition-all duration-200 ease-out opacity-0 scale-95 pointer-events-none"
+    class="absolute bottom-full right-0 mb-3 w-72 rounded-xl bg-brand-blue text-white shadow-xl p-5 origin-bottom-right transition-all duration-200 ease-out opacity-0 scale-95 pointer-events-none"
   >
     <!-- Close button -->
     <button
