@@ -8,21 +8,17 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
   title="Who should I see?"
   description="Understand the difference between psychologists, psychiatrists, counsellors, and psychotherapists — including costs, Medicare rebates, and referral requirements."
 >
-  <!-- Hero -->
+  <!-- Hero + Start here -->
   <section class="bg-white">
-    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
-      <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-4 tracking-[-0.01em]">Who should I see?</h1>
-      <p class="text-lg text-gray-500">
-        Here's a plain-English guide to the different types of mental health professionals in Australia — what they do, what they cost, and whether Medicare covers them.
-      </p>
-    </div>
-  </section>
-
-  <!-- Start here — situation-based decision helper -->
-  <section class="bg-white">
-    <div class="max-w-[960px] mx-auto px-4 pb-16 md:pb-20">
-      <h2 class="text-[1.5rem] font-bold text-slate-800 mb-2 tracking-[-0.01em] text-center">Start here</h2>
-      <p class="text-gray-500 text-center mb-10">Pick the situation that sounds most like you.</p>
+    <div class="max-w-[960px] mx-auto px-4 pt-16 md:pt-20 pb-16 md:pb-20">
+      <div class="max-w-[720px] mb-12">
+        <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-4 tracking-[-0.01em]">Who should I see?</h1>
+        <p class="text-lg text-gray-500">
+          Here's a plain-English guide to the different types of mental health professionals in Australia — what they do, what they cost, and whether Medicare covers them.
+        </p>
+      </div>
+      <h2 class="text-[1.5rem] font-bold text-slate-800 mb-2 tracking-[-0.01em]">Start here</h2>
+      <p class="text-gray-500 mb-8">Pick the situation that sounds most like you.</p>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
         <!-- Talk through feelings → Psychologist -->
         <a href="#psychologist" class="card-hover block bg-white rounded-xl p-6 md:p-8 shadow-sm text-left">
@@ -68,13 +64,7 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
           <p class="text-xs md:text-sm text-body">Start with your GP — they'll guide you</p>
         </a>
       </div>
-    </div>
-  </section>
-
-  <!-- GP callout tip box -->
-  <section class="bg-white">
-    <div class="max-w-[720px] mx-auto px-4 pb-16 md:pb-20">
-      <div id="gp-tip" class="bg-icon-bg rounded-xl p-8 scroll-mt-24">
+      <div id="gp-tip" class="mt-8 bg-icon-bg rounded-xl p-8 scroll-mt-24">
         <div class="flex items-start gap-4">
           <div class="w-10 h-10 rounded-lg bg-white flex items-center justify-center flex-shrink-0">
             <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
@@ -95,8 +85,8 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
   <!-- At a glance — Comparison Table -->
   <section class="bg-gray-50">
     <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
-      <h2 class="text-[1.5rem] font-bold text-slate-800 mb-2 tracking-[-0.01em] text-center">At a glance</h2>
-      <p class="text-gray-500 text-center mb-8">A quick comparison of the four main types of mental health professionals.</p>
+      <h2 class="text-[1.5rem] font-bold text-slate-800 mb-2 tracking-[-0.01em]">At a glance</h2>
+      <p class="text-gray-500 mb-8">A quick comparison of the four main types of mental health professionals.</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm text-left border-collapse">
           <thead>
@@ -132,7 +122,7 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
 
   <!-- The details — Accordions -->
   <section class="bg-white">
-    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
+    <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
       <h2 class="text-[1.5rem] font-bold text-slate-800 mb-8 tracking-[-0.01em]">The details</h2>
       <div>
         {practitioners.map(async (p) => {
