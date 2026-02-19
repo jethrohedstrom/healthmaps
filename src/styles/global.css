@@ -99,20 +99,20 @@ body {
 }
 
 /* Details/summary — clean chevron rotation, CSS-only */
-details summary {
+details > summary {
   cursor: pointer;
   list-style: none;
   position: relative;
   padding-right: 2rem;
 }
-details summary::-webkit-details-marker {
+details > summary::-webkit-details-marker {
   display: none;
 }
-details summary::marker {
+details > summary::marker {
   display: none;
   content: '';
 }
-details summary::after {
+details > summary::after {
   content: '';
   position: absolute;
   right: 0;
@@ -126,7 +126,7 @@ details summary::after {
   transform: translateY(-60%) rotate(45deg);
   transition: transform 0.2s ease;
 }
-details[open] summary::after {
+details[open] > summary::after {
   transform: translateY(-40%) rotate(-135deg);
 }
 
@@ -137,16 +137,15 @@ details[open] summary::after {
 .accordion-item:last-child {
   border-bottom: none;
 }
-.accordion-item summary {
+.accordion-item > summary {
   padding: 1.125rem 2rem 1.125rem 0;
   font-weight: 500;
   color: #1e293b;
 }
-.accordion-item[open] summary {
+.accordion-item[open] > summary {
   font-weight: 600;
 }
 .accordion-item .accordion-content {
-  padding: 0 0 1.25rem 0;
   background: #f9fafb;
   border-radius: 0.5rem;
   padding: 1rem 1.25rem;
