@@ -152,6 +152,14 @@ details[open] > summary::after {
   margin-bottom: 1rem;
 }
 
+/* Practitioner summary cards — no chevron, no extra padding */
+.practitioner-card > summary::after {
+  display: none;
+}
+.practitioner-card > summary {
+  padding-right: 0;
+}
+
 /* Skip link for accessibility */
 .skip-link {
   position: absolute;
