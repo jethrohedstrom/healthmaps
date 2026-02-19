@@ -8,63 +8,24 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
   title="Who should I see?"
   description="Understand the difference between psychologists, psychiatrists, counsellors, and psychotherapists — including costs, Medicare rebates, and referral requirements."
 >
-  <!-- Hero + Start here -->
+  <!-- Hero -->
   <section class="bg-white">
-    <div class="max-w-[960px] mx-auto px-4 pt-16 md:pt-20 pb-16 md:pb-20">
-      <div class="max-w-[720px] mb-12">
-        <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-4 tracking-[-0.01em]">Who should I see?</h1>
-        <p class="text-lg text-gray-500">
-          Here's a plain-English guide to the different types of mental health professionals in Australia — what they do, what they cost, and whether Medicare covers them.
-        </p>
+    <div class="max-w-[960px] mx-auto px-4 pt-16 md:pt-20 pb-12 md:pb-16">
+      <div class="max-w-[720px]">
+        <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-8 tracking-[-0.01em]">Who should I see?</h1>
+        <div class="space-y-5 text-lg leading-relaxed text-body">
+          <p>If you're reading this, you or someone you care about could probably use some professional support — but now you're staring at a confusing list of titles. Psychologist, psychiatrist, counsellor, psychotherapist. What's the difference? Does it matter?</p>
+          <p>Sometimes it matters less than you'd think — finding someone you trust and can talk to is often the most important thing. But there are real differences worth knowing about. Some professionals can prescribe medication and others can't, and some titles in Australia don't require any formal training at all.</p>
+          <p>If this all feels too hard, <strong class="text-heading font-semibold">just see your GP.</strong> They can assess what's going on, explain your options, and refer you to the right person. If you do want to understand the differences first, the rest of this page breaks it all down.</p>
+        </div>
       </div>
-      <h2 class="text-[1.5rem] font-bold text-slate-800 mb-2 tracking-[-0.01em]">Start here</h2>
-      <p class="text-gray-500 mb-8">Pick the situation that sounds most like you.</p>
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-        <!-- Talk through feelings → Psychologist -->
-        <a href="#psychologist" class="card-hover block bg-white rounded-xl p-6 md:p-8 shadow-sm text-left">
-          <div class="w-12 h-12 rounded-xl bg-icon-bg flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
-            </svg>
-          </div>
-          <h3 class="text-sm md:text-base font-semibold text-heading mb-1">I want to talk through my feelings</h3>
-          <p class="text-xs md:text-sm text-body">A psychologist or counsellor can help</p>
-        </a>
+    </div>
+  </section>
 
-        <!-- Need medication → Psychiatrist -->
-        <a href="#psychiatrist" class="card-hover block bg-white rounded-xl p-6 md:p-8 shadow-sm text-left">
-          <div class="w-12 h-12 rounded-xl bg-icon-bg flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m20.893 13.393-1.135-1.135a2.252 2.252 0 0 1-.421-.585l-1.08-2.16a.414.414 0 0 0-.663-.107.827.827 0 0 1-.812.21l-1.273-.363a.89.89 0 0 0-.738 1.595l.587.39c.59.395.674 1.23.172 1.732l-.2.2c-.212.212-.33.498-.33.796v.41c0 .409-.11.809-.32 1.158l-1.315 2.191a2.11 2.11 0 0 1-1.81 1.025 1.055 1.055 0 0 1-1.055-1.055v-1.172c0-.92-.56-1.747-1.414-2.089l-.655-.261a2.25 2.25 0 0 1-1.383-2.46l.007-.042a2.25 2.25 0 0 1 .29-.787l.09-.15a2.25 2.25 0 0 1 2.37-1.048l1.178.236a1.125 1.125 0 0 0 1.302-.795l.208-.73a1.125 1.125 0 0 0-.578-1.315l-.665-.332-.091.091a2.25 2.25 0 0 1-1.591.659h-.18a.94.94 0 0 0-.662.274.931.931 0 0 1-1.458-1.137l1.411-2.353a2.25 2.25 0 0 0 .286-.76m11.928 9.869A9 9 0 0 0 8.965 3.525m11.928 9.868A9 9 0 1 1 8.965 3.525" />
-            </svg>
-          </div>
-          <h3 class="text-sm md:text-base font-semibold text-heading mb-1">I think I need medication</h3>
-          <p class="text-xs md:text-sm text-body">You'll want to see a psychiatrist</p>
-        </a>
-
-        <!-- Most affordable → Counsellor -->
-        <a href="#counsellor" class="card-hover block bg-white rounded-xl p-6 md:p-8 shadow-sm text-left">
-          <div class="w-12 h-12 rounded-xl bg-icon-bg flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-            </svg>
-          </div>
-          <h3 class="text-sm md:text-base font-semibold text-heading mb-1">I want the most affordable option</h3>
-          <p class="text-xs md:text-sm text-body">Consider a counsellor or bulk-billing psychologist</p>
-        </a>
-
-        <!-- Not sure → GP -->
-        <a href="#gp-tip" class="card-hover block bg-white rounded-xl p-6 md:p-8 shadow-sm text-left">
-          <div class="w-12 h-12 rounded-xl bg-icon-bg flex items-center justify-center mb-4">
-            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z" />
-            </svg>
-          </div>
-          <h3 class="text-sm md:text-base font-semibold text-heading mb-1">I'm not sure yet</h3>
-          <p class="text-xs md:text-sm text-body">Start with your GP — they'll guide you</p>
-        </a>
-      </div>
-      <div id="gp-tip" class="mt-8 bg-icon-bg rounded-xl p-8 scroll-mt-24">
+  <!-- GP callout -->
+  <section class="bg-white">
+    <div class="max-w-[960px] mx-auto px-4 pb-16 md:pb-20">
+      <div class="bg-icon-bg rounded-xl p-8 md:p-10">
         <div class="flex items-start gap-4">
           <div class="w-10 h-10 rounded-lg bg-white flex items-center justify-center flex-shrink-0">
             <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
@@ -72,7 +33,7 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
             </svg>
           </div>
           <div>
-            <h3 class="text-lg font-semibold text-heading mb-2">Not sure? Start with your GP</h3>
+            <h3 class="text-lg font-semibold text-heading mb-2">Not sure where to start? See your GP.</h3>
             <p class="text-body text-sm leading-relaxed">
               Your GP can assess your situation, create a Mental Health Care Plan, and refer you to the right professional. This is the most common first step — and it unlocks Medicare rebates.
             </p>
@@ -82,11 +43,44 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
     </div>
   </section>
 
-  <!-- At a glance — Comparison Table -->
+  <!-- The details — Accordions -->
   <section class="bg-gray-50">
     <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
+      <h2 class="text-[1.5rem] font-bold text-slate-800 mb-2 tracking-[-0.01em]">The details</h2>
+      <p class="text-gray-500 mb-8">What each type of practitioner does, what they cost, and when you might see them.</p>
+      <div>
+        {practitioners.map(async (p) => {
+          const { Content } = await render(p);
+          return (
+            <details id={p.id} class="accordion-item scroll-mt-24">
+              <summary class="flex items-start justify-between gap-4">
+                <div>
+                  <span class="text-lg font-semibold text-slate-800 block">{p.data.title}</span>
+                  <div class="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500">
+                    <span>{p.data.cost}</span>
+                    <span>Rebate: {p.data.rebate}</span>
+                    <span>{p.data.waitTime}</span>
+                    <span class:list={[p.data.referralRequired ? 'text-brand-orange' : 'text-brand-green', 'font-medium']}>
+                      {p.data.referralRequired ? 'Referral required' : 'No referral needed'}
+                    </span>
+                  </div>
+                </div>
+              </summary>
+              <div class="accordion-content prose prose-sm max-w-none text-gray-700">
+                <Content />
+              </div>
+            </details>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- At a glance — Comparison Table -->
+  <section class="bg-white">
+    <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
       <h2 class="text-[1.5rem] font-bold text-slate-800 mb-2 tracking-[-0.01em]">At a glance</h2>
-      <p class="text-gray-500 mb-8">A quick comparison of the four main types of mental health professionals.</p>
+      <p class="text-gray-500 mb-8">Compare costs, rebates, referral requirements, and wait times side-by-side.</p>
       <div class="overflow-x-auto">
         <table class="w-full text-sm text-left border-collapse">
           <thead>
@@ -116,38 +110,6 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
             ))}
           </tbody>
         </table>
-      </div>
-    </div>
-  </section>
-
-  <!-- The details — Accordions -->
-  <section class="bg-white">
-    <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
-      <h2 class="text-[1.5rem] font-bold text-slate-800 mb-8 tracking-[-0.01em]">The details</h2>
-      <div>
-        {practitioners.map(async (p) => {
-          const { Content } = await render(p);
-          return (
-            <details id={p.id} class="accordion-item scroll-mt-24">
-              <summary class="flex items-start justify-between gap-4">
-                <div>
-                  <span class="text-lg font-semibold text-slate-800 block">{p.data.title}</span>
-                  <div class="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500">
-                    <span>{p.data.cost}</span>
-                    <span>Rebate: {p.data.rebate}</span>
-                    <span>{p.data.waitTime}</span>
-                    <span class:list={[p.data.referralRequired ? 'text-brand-orange' : 'text-brand-green', 'font-medium']}>
-                      {p.data.referralRequired ? 'Referral required' : 'No referral needed'}
-                    </span>
-                  </div>
-                </div>
-              </summary>
-              <div class="accordion-content prose prose-sm max-w-none text-gray-700">
-                <Content />
-              </div>
-            </details>
-          );
-        })}
       </div>
     </div>
   </section>
