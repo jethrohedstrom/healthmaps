@@ -14,9 +14,14 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
       <div class="max-w-[720px]">
         <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-8 tracking-[-0.01em]">Who should I see?</h1>
         <div class="space-y-5 text-lg leading-relaxed text-body">
-          <p>If you're reading this, you or someone you care about could probably use some professional support — but now you're staring at a confusing list of titles. Psychologist, psychiatrist, counsellor, psychotherapist. What's the difference? Does it matter?</p>
-          <p>Sometimes it matters less than you'd think — finding someone you trust and can talk to is often the most important thing. But there are real differences worth knowing about. Some professionals can prescribe medication and others can't, and some titles in Australia don't require any formal training at all.</p>
-          <p>If this all feels too hard, <strong class="text-heading font-semibold">just see your GP.</strong> They can assess what's going on, explain your options, and refer you to the right person. If you do want to understand the differences first, the rest of this page breaks it all down.</p>
+          <p>If you're reading this, you or someone you care about could probably use some professional support. But now you're staring at a confusing list of titles. Psychologist, psychiatrist, counsellor, psychotherapist. What's the difference? Does it matter?</p>
+          <details class="accordion-item">
+            <summary class="text-lg font-semibold text-slate-800">Does it actually matter?</summary>
+            <div class="accordion-content space-y-5 text-lg leading-relaxed text-body">
+              <p>Sometimes it matters less than you'd think. Finding someone you trust and can talk to is often the most important thing. But there are real differences worth knowing about. Some professionals can prescribe medication and others can't, and some titles in Australia don't require any formal training at all.</p>
+              <p>If this all feels too hard, <strong class="text-heading font-semibold">just see your GP.</strong> They can assess what's going on, explain your options, and refer you to the right person. If you do want to understand the differences first, the rest of this page breaks it all down.</p>
+            </div>
+          </details>
         </div>
       </div>
     </div>
@@ -46,9 +51,10 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
   <!-- The details — Accordions -->
   <section class="bg-gray-50">
     <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
-      <h2 class="text-[1.5rem] font-bold text-slate-800 mb-2 tracking-[-0.01em]">The details</h2>
-      <p class="text-gray-500 mb-8">What each type of practitioner does, what they cost, and when you might see them.</p>
-      <div>
+      <details class="accordion-item">
+        <summary class="text-[1.5rem] font-bold text-slate-800 tracking-[-0.01em]">The details</summary>
+        <div class="accordion-content">
+          <p class="text-gray-500 mb-8">What each type of practitioner does, what they cost, and when you might see them.</p>
         {practitioners.map(async (p) => {
           const { Content } = await render(p);
           return (
@@ -72,45 +78,43 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
             </details>
           );
         })}
-      </div>
-    </div>
-  </section>
-
-  <!-- At a glance — Comparison Table -->
-  <section class="bg-white">
-    <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
-      <h2 class="text-[1.5rem] font-bold text-slate-800 mb-2 tracking-[-0.01em]">At a glance</h2>
-      <p class="text-gray-500 mb-8">Compare costs, rebates, referral requirements, and wait times side-by-side.</p>
-      <div class="overflow-x-auto">
-        <table class="w-full text-sm text-left border-collapse">
-          <thead>
-            <tr class="border-b-2 border-gray-300">
-              <th class="py-3 px-4 font-semibold text-slate-800"></th>
-              <th class="py-3 px-4 font-semibold text-slate-800">Typical Cost</th>
-              <th class="py-3 px-4 font-semibold text-slate-800">Medicare Rebate</th>
-              <th class="py-3 px-4 font-semibold text-slate-800">Referral Needed?</th>
-              <th class="py-3 px-4 font-semibold text-slate-800">Typical Wait</th>
-            </tr>
-          </thead>
-          <tbody>
-            {practitioners.map((p, i) => (
-              <tr class:list={[i % 2 === 0 ? 'bg-white' : 'bg-gray-50', 'border-b border-gray-200']}>
-                <td class="py-3 px-4 font-semibold text-gray-700">{p.data.title}</td>
-                <td class="py-3 px-4 text-gray-500">{p.data.cost}</td>
-                <td class="py-3 px-4 text-gray-500">{p.data.rebate}</td>
-                <td class="py-3 px-4">
-                  {p.data.referralRequired ? (
-                    <span class="text-brand-orange font-medium">Yes</span>
-                  ) : (
-                    <span class="text-brand-green font-medium">No</span>
-                  )}
-                </td>
-                <td class="py-3 px-4 text-gray-500">{p.data.waitTime}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+        <details class="accordion-item scroll-mt-24">
+          <summary class="text-lg font-semibold text-slate-800">Compare at a glance</summary>
+          <div class="accordion-content">
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left border-collapse">
+                <thead>
+                  <tr class="border-b-2 border-gray-300">
+                    <th class="py-3 px-4 font-semibold text-slate-800"></th>
+                    <th class="py-3 px-4 font-semibold text-slate-800">Typical Cost</th>
+                    <th class="py-3 px-4 font-semibold text-slate-800">Medicare Rebate</th>
+                    <th class="py-3 px-4 font-semibold text-slate-800">Referral Needed?</th>
+                    <th class="py-3 px-4 font-semibold text-slate-800">Typical Wait</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {practitioners.map((p, i) => (
+                    <tr class:list={[i % 2 === 0 ? 'bg-white' : 'bg-gray-50', 'border-b border-gray-200']}>
+                      <td class="py-3 px-4 font-semibold text-gray-700">{p.data.title}</td>
+                      <td class="py-3 px-4 text-gray-500">{p.data.cost}</td>
+                      <td class="py-3 px-4 text-gray-500">{p.data.rebate}</td>
+                      <td class="py-3 px-4">
+                        {p.data.referralRequired ? (
+                          <span class="text-brand-orange font-medium">Yes</span>
+                        ) : (
+                          <span class="text-brand-green font-medium">No</span>
+                        )}
+                      </td>
+                      <td class="py-3 px-4 text-gray-500">{p.data.waitTime}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </details>
+        </div>
+      </details>
     </div>
   </section>
 
@@ -131,6 +135,14 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
       if (!hash) return;
       const target = document.querySelector(hash);
       if (target instanceof HTMLDetailsElement) {
+        // Open ancestor <details> elements first (e.g. the parent "The details" accordion)
+        let ancestor = target.parentElement;
+        while (ancestor) {
+          if (ancestor instanceof HTMLDetailsElement) {
+            ancestor.open = true;
+          }
+          ancestor = ancestor.parentElement;
+        }
         target.open = true;
       }
     }
