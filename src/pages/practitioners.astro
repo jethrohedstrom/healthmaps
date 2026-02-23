@@ -6,7 +6,7 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
 ---
 <BaseLayout
   title="Who should I see?"
-  description="Compare mental health professionals in Australia — psychologists, psychiatrists, counsellors, social workers, and more. Understand costs, Medicare rebates, and referral requirements."
+  description="Compare mental health professionals in Australia, including psychologists, psychiatrists, counsellors, social workers, and more. Understand costs, Medicare rebates, and referral requirements."
 >
   <!-- Hero -->
   <section class="bg-white">
@@ -15,7 +15,7 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
         <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-8 tracking-[-0.01em]">Who should I see?</h1>
         <div class="space-y-5 text-lg leading-relaxed text-body">
           <p>If you're reading this, you or someone you care about could probably use some professional support.</p>
-          <p>But now you're staring at a confusing list of titles. Psychologist, psychiatrist, counsellor, social worker, occupational therapist — what's the difference? Does it matter?</p>
+          <p>But now you're staring at a confusing list of titles. Psychologist, psychiatrist, counsellor, social worker, occupational therapist. What's the difference? Does it matter?</p>
           <details class="accordion-item">
             <summary class="text-lg font-semibold text-slate-800">Does it actually matter?</summary>
             <div class="accordion-content space-y-5 text-lg leading-relaxed text-body">
@@ -80,7 +80,7 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
                         {p.data.referralRequired ? (
                           <div class="text-sm font-semibold text-brand-orange">Yes (GP referral)</div>
                         ) : (
-                          <div class="text-sm font-semibold text-brand-green">No — book directly</div>
+                          <div class="text-sm font-semibold text-brand-green">No, book directly</div>
                         )}
                       </div>
                     </div>
