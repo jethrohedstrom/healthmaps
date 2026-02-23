@@ -10,7 +10,7 @@ order: 1
 <!-- REVIEW -->
 ## What they do
 
-Psychologists are university-trained professionals who use evidence-based therapies (like CBT, ACT, DBT) to treat mental health conditions. They **cannot prescribe medication**.
+Psychologists are university-trained professionals who use evidence-based therapies to treat mental health conditions. Common approaches include Cognitive Behavioural Therapy (CBT), Acceptance and Commitment Therapy (ACT), and Dialectical Behaviour Therapy (DBT). They **cannot prescribe medication**.
 
 ## Types of psychologists
 

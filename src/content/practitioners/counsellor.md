@@ -18,7 +18,7 @@ Counsellors provide **talk therapy** for a range of personal, emotional, and rel
 - Grief and loss
 - Life transitions (career changes, divorce, retirement)
 - Stress and mild anxiety
-- When you want someone to talk to without the MHCP process
+- When you want someone to talk to without needing a GP appointment or Mental Health Care Plan first
 
 ## Medicare access
 

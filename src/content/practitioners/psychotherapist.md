@@ -14,10 +14,10 @@ Psychotherapists provide **in-depth talk therapy**, often focusing on underlying
 
 ## When to see a psychotherapist
 
-- Deep-rooted emotional patterns or recurring relationship issues
+- Patterns you keep falling into — like struggling in relationships, people-pleasing, or difficulty setting boundaries
 - Trauma and complex grief
 - Self-understanding and personal growth
-- When you want longer-term, explorative therapy rather than short-term skill-building
+- When you want to understand *why* you feel the way you do, not just learn coping strategies
 
 ## Medicare access
 
@@ -25,7 +25,7 @@ Psychotherapists provide **in-depth talk therapy**, often focusing on underlying
 
 ## Key differences from psychologists
 
-- "Psychotherapist" is not a protected title in Australia — anyone can use it
-- Look for accreditation with **PACFA** (Psychotherapy and Counselling Federation of Australia)
+- "Psychotherapist" is not a protected title in Australia — qualifications vary widely, so check credentials before booking
+- Look for accreditation with **PACFA** (Psychotherapy and Counselling Federation of Australia) or **ACA** (Australian Counselling Association) — both have online registers where you can verify a practitioner
 - More focus on in-depth exploration vs. structured skill-based approaches
 - Sessions may be longer (50–90 minutes)

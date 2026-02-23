@@ -14,14 +14,14 @@ Psychiatrists are **medical doctors** who specialise in mental health. They can 
 
 ## When to see a psychiatrist
 
-- Complex mental health conditions (bipolar disorder, schizophrenia, severe depression)
+- Complex or long-term mental health conditions that need specialist care
 - When medication may be needed or needs to be reviewed
 - When your GP wants a specialist opinion
 - Conditions that haven't responded to standard psychological therapy
 
 ## Medicare access
 
-Requires a **GP referral** (not an MHCP — psychiatrists are medical specialists, so standard specialist referral rules apply). Medicare rebates are generally higher than for psychologists, but so are the fees. **No cap on number of sessions** under Medicare.
+Requires a **GP referral** — the same kind of referral you'd get for any other specialist. You don't need a Mental Health Care Plan (MHCP) for a psychiatrist. Medicare rebates are generally higher than for psychologists, but so are the fees. **No cap on number of sessions** under Medicare.
 
 ## Key differences from psychologists
 

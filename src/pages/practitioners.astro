@@ -14,7 +14,8 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
       <div class="max-w-[720px]">
         <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-8 tracking-[-0.01em]">Who should I see?</h1>
         <div class="space-y-5 text-lg leading-relaxed text-body">
-          <p>If you're reading this, you or someone you care about could probably use some professional support. But now you're staring at a confusing list of titles. Psychologist, psychiatrist, counsellor, psychotherapist. What's the difference? Does it matter?</p>
+          <p>If you're reading this, you or someone you care about could probably use some professional support.</p>
+          <p>But now you're staring at a confusing list of titles. Psychologist, psychiatrist, counsellor, psychotherapist — what's the difference? Does it matter?</p>
           <details class="accordion-item">
             <summary class="text-lg font-semibold text-slate-800">Does it actually matter?</summary>
             <div class="accordion-content space-y-5 text-lg leading-relaxed text-body">
@@ -65,14 +66,26 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
                 <details id={p.id} class="practitioner-card bg-white rounded-xl p-6 md:p-8 shadow-sm scroll-mt-24">
                   <summary>
                     <h3 class="text-lg font-semibold text-heading mb-3">{p.data.title}</h3>
-                    <div class="space-y-1">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
                       <div>
                         <span class="text-xs uppercase tracking-wide text-gray-400">Typical cost </span>
                         <span class="text-sm font-semibold text-heading">{p.data.cost.replace(' per session', '')}</span>
                       </div>
                       <div>
+                        <span class="text-xs uppercase tracking-wide text-gray-400">Referral needed </span>
+                        {p.data.referralRequired ? (
+                          <span class="text-sm font-semibold text-brand-orange">Yes (GP referral)</span>
+                        ) : (
+                          <span class="text-sm font-semibold text-brand-green">No — book directly</span>
+                        )}
+                      </div>
+                      <div>
                         <span class="text-xs uppercase tracking-wide text-gray-400">Medicare rebate </span>
                         <span class="text-sm font-semibold text-heading">{p.data.rebate}</span>
+                      </div>
+                      <div>
+                        <span class="text-xs uppercase tracking-wide text-gray-400">Typical wait </span>
+                        <span class="text-sm font-semibold text-heading">{p.data.waitTime}</span>
                       </div>
                     </div>
                   </summary>
@@ -128,7 +141,7 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
   <section class="bg-gray-50">
     <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20 text-center">
       <h2 class="text-xl font-semibold text-slate-800 mb-3">Want to estimate your out-of-pocket costs?</h2>
-      <a href="/calculator/" class="inline-block bg-brand-green text-heading px-6 py-3 rounded-lg font-medium hover:bg-brand-green/90 transition-colors">
+      <a href="/calculator/" class="inline-block bg-primary text-heading px-10 py-4 rounded-xl font-semibold shadow-sm hover:bg-primary/90 transition-colors">
         Use the Cost Calculator
       </a>
     </div>
