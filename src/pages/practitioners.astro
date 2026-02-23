@@ -6,7 +6,7 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
 ---
 <BaseLayout
   title="Who should I see?"
-  description="Understand the difference between psychologists, psychiatrists, counsellors, and psychotherapists — including costs, Medicare rebates, and referral requirements."
+  description="Compare mental health professionals in Australia — psychologists, psychiatrists, counsellors, social workers, and more. Understand costs, Medicare rebates, and referral requirements."
 >
   <!-- Hero -->
   <section class="bg-white">
@@ -15,7 +15,7 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
         <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-8 tracking-[-0.01em]">Who should I see?</h1>
         <div class="space-y-5 text-lg leading-relaxed text-body">
           <p>If you're reading this, you or someone you care about could probably use some professional support.</p>
-          <p>But now you're staring at a confusing list of titles. Psychologist, psychiatrist, counsellor, psychotherapist — what's the difference? Does it matter?</p>
+          <p>But now you're staring at a confusing list of titles. Psychologist, psychiatrist, counsellor, social worker, occupational therapist — what's the difference? Does it matter?</p>
           <details class="accordion-item">
             <summary class="text-lg font-semibold text-slate-800">Does it actually matter?</summary>
             <div class="accordion-content space-y-5 text-lg leading-relaxed text-body">
@@ -66,26 +66,22 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
                 <details id={p.id} class="practitioner-card bg-white rounded-xl p-6 md:p-8 shadow-sm scroll-mt-24">
                   <summary>
                     <h3 class="text-lg font-semibold text-heading mb-3">{p.data.title}</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-2">
                       <div>
-                        <span class="text-xs uppercase tracking-wide text-gray-400">Typical cost </span>
-                        <span class="text-sm font-semibold text-heading">{p.data.cost.replace(' per session', '')}</span>
+                        <div class="text-xs uppercase tracking-wide text-gray-400 mb-0.5">Typical cost</div>
+                        <div class="text-sm font-semibold text-heading">{p.data.cost.replace(' per session', '')}</div>
                       </div>
                       <div>
-                        <span class="text-xs uppercase tracking-wide text-gray-400">Referral needed </span>
+                        <div class="text-xs uppercase tracking-wide text-gray-400 mb-0.5">Medicare rebate</div>
+                        <div class="text-sm font-semibold text-heading">{p.data.rebate}</div>
+                      </div>
+                      <div>
+                        <div class="text-xs uppercase tracking-wide text-gray-400 mb-0.5">Referral needed</div>
                         {p.data.referralRequired ? (
-                          <span class="text-sm font-semibold text-brand-orange">Yes (GP referral)</span>
+                          <div class="text-sm font-semibold text-brand-orange">Yes (GP referral)</div>
                         ) : (
-                          <span class="text-sm font-semibold text-brand-green">No — book directly</span>
+                          <div class="text-sm font-semibold text-brand-green">No — book directly</div>
                         )}
-                      </div>
-                      <div>
-                        <span class="text-xs uppercase tracking-wide text-gray-400">Medicare rebate </span>
-                        <span class="text-sm font-semibold text-heading">{p.data.rebate}</span>
-                      </div>
-                      <div>
-                        <span class="text-xs uppercase tracking-wide text-gray-400">Typical wait </span>
-                        <span class="text-sm font-semibold text-heading">{p.data.waitTime}</span>
                       </div>
                     </div>
                   </summary>
@@ -108,7 +104,6 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
                       <th class="py-3 px-4 font-semibold text-slate-800">Typical Cost</th>
                       <th class="py-3 px-4 font-semibold text-slate-800">Medicare Rebate</th>
                       <th class="py-3 px-4 font-semibold text-slate-800">Referral Needed?</th>
-                      <th class="py-3 px-4 font-semibold text-slate-800">Typical Wait</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -124,7 +119,6 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
                             <span class="text-brand-green font-medium">No</span>
                           )}
                         </td>
-                        <td class="py-3 px-4 text-gray-500">{p.data.waitTime}</td>
                       </tr>
                     ))}
                   </tbody>
