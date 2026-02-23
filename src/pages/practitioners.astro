@@ -11,18 +11,25 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
   <!-- Hero -->
   <section class="bg-white">
     <div class="max-w-[960px] mx-auto px-4 pt-16 md:pt-20 pb-12 md:pb-16">
-      <div class="max-w-[720px]">
-        <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-8 tracking-[-0.01em]">Who should I see?</h1>
-        <div class="space-y-5 text-lg leading-relaxed text-body">
-          <p>If you're reading this, you or someone you care about could probably use some professional support.</p>
-          <p>But now you're staring at a confusing list of titles. Psychologist, psychiatrist, counsellor, social worker, occupational therapist. What's the difference? Does it matter?</p>
-          <details class="accordion-item">
-            <summary class="text-lg font-semibold text-slate-800">Does it actually matter?</summary>
-            <div class="accordion-content space-y-5 text-lg leading-relaxed text-body">
-              <p>Sometimes it matters less than you'd think. Finding someone you trust and can talk to is often the most important thing. But there are real differences worth knowing about. Some professionals can prescribe medication and others can't, and some titles in Australia don't require any formal training at all.</p>
-              <p>If this all feels too hard, <strong class="text-heading font-semibold">just see your GP.</strong> They can assess what's going on, explain your options, and refer you to the right person. If you do want to understand the differences first, the rest of this page breaks it all down.</p>
-            </div>
-          </details>
+      <div class="flex flex-col md:flex-row md:items-start md:gap-12">
+        <!-- Text column -->
+        <div class="max-w-[720px] md:flex-1">
+          <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-8 tracking-[-0.01em]">Who should I see?</h1>
+          <div class="space-y-5 text-lg leading-relaxed text-body">
+            <p>If you're reading this, you or someone you care about could probably use some professional support.</p>
+            <p>But now you're staring at a confusing list of titles. Psychologist, psychiatrist, counsellor, social worker, occupational therapist. What's the difference? Does it matter?</p>
+            <details class="accordion-item">
+              <summary class="text-lg font-semibold text-slate-800 w-fit">Does it actually matter?</summary>
+              <div class="accordion-content space-y-5 text-lg leading-relaxed text-body">
+                <p>Sometimes it matters less than you'd think. Finding someone you trust and can talk to is often the most important thing. But there are real differences worth knowing about. Some professionals can prescribe medication and others can't, and some titles in Australia don't require any formal training at all.</p>
+                <p>If this all feels too hard, <strong class="text-heading font-semibold">just see your GP.</strong> They can assess what's going on, explain your options, and refer you to the right person. If you do want to understand the differences first, the rest of this page breaks it all down.</p>
+              </div>
+            </details>
+          </div>
+        </div>
+        <!-- Logo column -->
+        <div class="hidden md:flex md:justify-center md:flex-shrink-0 md:pt-20">
+          <img src="/images/logo-placeholder.png" alt="" class="w-36 lg:w-44 h-auto opacity-80" />
         </div>
       </div>
     </div>
