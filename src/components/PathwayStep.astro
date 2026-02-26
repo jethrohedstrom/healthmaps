@@ -4,27 +4,28 @@ interface Props {
   title: string;
   summary: string;
   isLast?: boolean;
+  open?: boolean;
 }
 
-const { step, title, summary, isLast = false } = Astro.props;
+const { step, title, summary, isLast = false, open = false } = Astro.props;
 ---
-<div class="relative pl-12 pb-8">
+<div class="pathway-step relative pl-16 pb-10">
   <!-- Step connector line -->
   {!isLast && (
-    <div class="absolute left-[1.15rem] top-10 bottom-0 w-0.5 bg-gray-200" aria-hidden="true"></div>
+    <div class="step-connector absolute left-[1.4375rem] top-12 bottom-0 w-px bg-gray-200" aria-hidden="true"></div>
   )}
 
   <!-- Step number circle -->
-  <div class="absolute left-0 top-0 w-10 h-10 rounded-full bg-slate-800 text-white flex items-center justify-center font-bold text-sm" aria-hidden="true">
+  <div class="step-circle absolute left-0 top-0 w-12 h-12 rounded-full bg-white border-2 border-gray-200 text-gray-400 flex items-center justify-center font-bold text-sm transition-all duration-300 ease-out" aria-hidden="true">
     {step}
   </div>
 
-  <details class="group">
+  <details class="group" open={open}>
     <summary class="text-lg font-semibold text-slate-800 hover:text-brand-green transition-colors py-1">
       {title}
     </summary>
     <p class="text-gray-500 text-sm mt-1 mb-3">{summary}</p>
-    <div class="prose prose-sm max-w-none text-gray-700 mt-4 bg-gray-50 rounded-lg p-4">
+    <div class="prose prose-sm max-w-none text-gray-700 mt-4 bg-white rounded-xl p-5 shadow-sm border-l-[3px] border-primary/40">
       <slot />
     </div>
   </details>

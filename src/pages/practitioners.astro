@@ -21,7 +21,7 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
               <summary class="text-lg font-semibold text-slate-800 w-fit">Does it actually matter?</summary>
               <div class="accordion-content space-y-5 text-lg leading-relaxed text-body">
                 <p>For many people, the title and training of the professional (i.e. counsellor, psychologist, psychotherapist) matters less than the sense that they trust and get along with them.</p>
-                <p>There are times when it really does matter: the term 'psychotherapist' is unregulated in Australia, meaning anyone can use it. And only medical doctors, like GPs and psychiatrists, can prescribe medication.</p>
+                <p>There are times when it really does matter: the term 'psychotherapist' is unregulated in Australia, meaning anyone can use it. And only medical doctors, like General Practitioners (GPs) and psychiatrists, can prescribe medication.</p>
               </div>
             </details>
           </div>
@@ -49,6 +49,24 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
             <p class="text-body text-sm leading-relaxed">
               Your GP can assess your situation, create a Mental Health Care Plan, and refer you to the right professional. This is the most common first step, and it unlocks Medicare rebates.
             </p>
+            <div class="flex gap-3 mt-4">
+              <a
+                href="/pathway/"
+                class="inline-flex items-center gap-1.5 text-sm font-semibold text-heading bg-white border border-gray-200 px-5 py-2.5 rounded-lg hover:border-primary hover:text-primary transition-colors"
+              >
+                What's a GP?
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+              </a>
+              <a
+                href="https://www.healthdirect.gov.au/australian-health-services"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-1.5 text-sm font-semibold text-heading bg-white border border-gray-200 px-5 py-2.5 rounded-lg hover:border-primary hover:text-primary transition-colors"
+              >
+                Don't have a GP?
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+              </a>
+            </div>
           </div>
         </div>
       </div>

@@ -173,3 +173,16 @@ details[open] > summary::after {
 .skip-link:focus {
   top: 0;
 }
+
+/* Pathway step — active state via :has() */
+.pathway-step:has(details[open]) .step-circle {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-heading);
+  box-shadow: 0 0 0 4px rgba(68, 238, 112, 0.15);
+}
+
+.pathway-step:has(details[open]) .step-connector {
+  background-color: var(--color-primary);
+  opacity: 0.3;
+}

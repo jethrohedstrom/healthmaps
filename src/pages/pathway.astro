@@ -33,6 +33,7 @@ const alternatives = (await getCollection('alternatives')).sort((a, b) => (a.dat
             title={step.data.title}
             summary={step.data.summary}
             isLast={index === pathwaySteps.length - 1}
+            open={index === 0}
           >
             <Content />
           </PathwayStep>
