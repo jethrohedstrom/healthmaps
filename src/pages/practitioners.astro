@@ -11,7 +11,7 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
   <!-- Hero -->
   <section class="bg-white">
     <div class="max-w-[960px] mx-auto px-4 pt-16 md:pt-20 pb-12 md:pb-16">
-      <div class="flex flex-col md:flex-row md:items-start md:gap-12">
+      <div class="flex flex-col md:flex-row md:items-center md:gap-16">
         <!-- Text column -->
         <div class="max-w-[720px] md:flex-1">
           <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-8 tracking-[-0.01em]">Who should I see?</h1>
@@ -27,9 +27,9 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
             </details>
           </div>
         </div>
-        <!-- Logo column -->
-        <div class="hidden md:flex md:justify-center md:flex-shrink-0 md:pt-20">
-          <img src="/images/logo-placeholder.png" alt="" class="w-36 lg:w-44 h-auto opacity-80" />
+        <!-- Decorative illustration -->
+        <div class="hidden md:flex md:items-center md:justify-center md:flex-shrink-0">
+          <img src="/images/ellipse.svg" alt="" class="w-48 lg:w-56 h-auto opacity-90" />
         </div>
       </div>
     </div>
