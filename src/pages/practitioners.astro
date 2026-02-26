@@ -11,24 +11,23 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
   <!-- Hero -->
   <section class="bg-white">
     <div class="max-w-[960px] mx-auto px-4 pt-16 md:pt-20 pb-12 md:pb-16">
-      <div class="flex flex-col md:flex-row md:items-center md:gap-16">
+      <div id="hero-flex" class="flex flex-col md:flex-row md:items-start md:gap-16">
         <!-- Text column -->
         <div class="max-w-[720px] md:flex-1">
           <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-8 tracking-[-0.01em]">Who should I see?</h1>
           <div class="space-y-5 text-lg leading-relaxed text-body">
-            <p>There are a lot of mental health professionals out there: psychologists, psychiatrists, counsellors, social workers, occupational therapists. The titles can be confusing, and it's not always clear what the differences are or who might be the right fit.</p>
-            <p>This page walks through the main types, what they do, and when you might see each one.</p>
-            <details class="accordion-item">
+            <p>Psychologist?<br />Counsellor?<br />Psychiatrist?<br /><br />If you're not sure what the difference is, you're not alone. Here's a simple breakdown.</p>
+            <details id="hero-accordion" class="accordion-item scroll-mt-24">
               <summary class="text-lg font-semibold text-slate-800 w-fit">Does it actually matter?</summary>
               <div class="accordion-content space-y-5 text-lg leading-relaxed text-body">
-                <p>For most people, several of these professionals could help, and finding someone you trust matters more than their exact title. The differences that do matter are practical: some can prescribe medication and others can't, some specialise in specific conditions, and the cost and Medicare coverage varies. A few titles in Australia don't require formal training at all. This page helps you understand what actually matters for your situation.</p>
-                <p>If this all feels too hard, <strong class="text-heading font-semibold">just see your GP.</strong> They can assess what's going on, explain your options, and refer you to the right person. If you do want to understand the differences first, the rest of this page breaks it all down.</p>
+                <p>For many people, the title and training of the professional (i.e. counsellor, psychologist, psychotherapist) matters less than the sense that they trust and get along with them.</p>
+                <p>There are times when it really does matter: the term 'psychotherapist' is unregulated in Australia, meaning anyone can use it. And only medical doctors, like GPs and psychiatrists, can prescribe medication.</p>
               </div>
             </details>
           </div>
         </div>
-        <!-- Decorative illustration -->
-        <div class="hidden md:flex md:items-center md:justify-center md:flex-shrink-0">
+        <!-- Decorative illustration — aligned with copy on desktop -->
+        <div id="hero-illustration" class="hidden md:flex md:items-center md:justify-center md:flex-shrink-0 md:mt-[76px] md:mr-[-4rem]">
           <img src="/images/ellipse.svg" alt="" class="w-48 lg:w-56 h-auto opacity-90" />
         </div>
       </div>
@@ -180,6 +179,33 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
     const hashTarget = window.location.hash ? document.querySelector<HTMLDetailsElement>(window.location.hash) : null;
     if (hashTarget?.classList.contains('practitioner-card') && hashTarget.open) {
       hashTarget.classList.add('md:col-span-2');
+    }
+
+    // Lock hero illustration position when accordion opens
+    const heroAccordion = document.getElementById('hero-accordion') as HTMLDetailsElement | null;
+    const heroFlex = document.getElementById('hero-flex');
+    const heroIllustration = document.getElementById('hero-illustration');
+    const heroSummary = heroAccordion?.querySelector('summary');
+    if (heroAccordion && heroFlex && heroIllustration && heroSummary) {
+      const lockedOffset = heroIllustration.getBoundingClientRect().top - heroFlex.getBoundingClientRect().top;
+      heroSummary.addEventListener('click', () => {
+        const willOpen = !heroAccordion.open;
+        if (willOpen) {
+          heroIllustration.style.alignSelf = 'flex-start';
+          heroIllustration.style.marginTop = lockedOffset + 'px';
+          requestAnimationFrame(() => {
+            const introP = heroAccordion.previousElementSibling;
+            if (introP) {
+              const headerHeight = 96;
+              const bottomOfIntro = introP.getBoundingClientRect().bottom + window.scrollY;
+              window.scrollTo({ top: bottomOfIntro - headerHeight, behavior: 'smooth' });
+            }
+          });
+        } else {
+          heroIllustration.style.alignSelf = '';
+          heroIllustration.style.marginTop = '';
+        }
+      });
     }
   </script>
 </BaseLayout>
