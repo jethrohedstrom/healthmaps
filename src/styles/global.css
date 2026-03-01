@@ -146,7 +146,6 @@ details[open] > summary::after {
   font-weight: 600;
 }
 .accordion-item .accordion-content {
-  background: #f9fafb;
   border-radius: 0.5rem;
   padding: 1rem 1.25rem;
   margin-bottom: 1rem;
@@ -185,4 +184,18 @@ details[open] > summary::after {
 .pathway-step:has(details[open]) .step-connector {
   background-color: var(--color-primary);
   opacity: 0.3;
+}
+
+/* GP callout buttons — force vertical stack on small screens */
+@media (max-width: 767px) {
+  .gp-callout-buttons {
+    display: grid;
+    grid-template-columns: 1fr;
+    row-gap: 0.75rem;
+  }
+
+  .gp-callout-buttons > a {
+    width: 100%;
+    justify-content: center;
+  }
 }

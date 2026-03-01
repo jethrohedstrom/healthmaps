@@ -17,19 +17,22 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
           <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-8 tracking-[-0.01em]">Who should I see?</h1>
           <div class="space-y-5 text-lg leading-relaxed text-body">
             <p>Psychologist?<br />Counsellor?<br />Psychiatrist?<br /><br />If you're not sure what the difference is, you're not alone. Here's a simple breakdown.</p>
-            <details id="hero-accordion" class="accordion-item scroll-mt-24">
-              <summary class="text-lg font-semibold text-slate-800 w-fit">Does it actually matter?</summary>
-              <div class="accordion-content space-y-5 text-lg leading-relaxed text-body">
-                <p>For many people, the title and training of the professional (i.e. counsellor, psychologist, psychotherapist) matters less than the sense that they trust and get along with them.</p>
-                <p>There are times when it really does matter: the term 'psychotherapist' is unregulated in Australia, meaning anyone can use it. And only medical doctors, like General Practitioners (GPs) and psychiatrists, can prescribe medication.</p>
-              </div>
-            </details>
           </div>
         </div>
         <!-- Decorative illustration — aligned with copy on desktop -->
         <div id="hero-illustration" class="hidden md:flex md:items-center md:justify-center md:flex-shrink-0 md:mt-[76px] md:mr-[-4rem]">
           <img src="/images/ellipse.svg" alt="" class="w-48 lg:w-56 h-auto opacity-90" />
         </div>
+      </div>
+      <!-- "Does it actually matter?" — centered below hero -->
+      <div class="mt-8 flex justify-center">
+        <details id="hero-accordion" class="accordion-item scroll-mt-24 bg-gray-100 rounded-lg px-10 py-4">
+          <summary class="text-lg font-semibold text-slate-800 w-fit mx-auto">Does it actually matter?</summary>
+          <div class="accordion-content space-y-5 text-lg leading-relaxed text-body mt-4">
+            <p>For many people, the title and training of the professional (i.e. counsellor, psychologist, psychotherapist) matters less than the sense that they trust and get along with their professional.</p>
+            <p>But there are times when it really does matter.<br />For example, the term 'psychotherapist' is unregulated in Australia, meaning anyone can use it.<br />And only medical doctors, like General Practitioners (GPs) and psychiatrists, can prescribe medication.</p>
+          </div>
+        </details>
       </div>
     </div>
   </section>
@@ -49,21 +52,21 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
             <p class="text-body text-sm leading-relaxed">
               Your GP can assess your situation, create a Mental Health Care Plan, and refer you to the right professional. This is the most common first step, and it unlocks Medicare rebates.
             </p>
-            <div class="flex gap-3 mt-4">
+            <div class="gp-callout-buttons flex flex-col sm:flex-row gap-3 mt-4">
               <a
                 href="/pathway/"
-                class="inline-flex items-center gap-1.5 text-sm font-semibold text-heading bg-white border border-gray-200 px-5 py-2.5 rounded-lg hover:border-primary hover:text-primary transition-colors"
+                class="inline-flex items-center justify-center gap-1.5 text-sm font-semibold text-heading bg-white border border-gray-200 px-5 py-2.5 rounded-lg hover:border-primary hover:text-primary transition-colors"
               >
-                What's a GP?
+                What is a GP?
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
               </a>
               <a
                 href="https://www.healthdirect.gov.au/australian-health-services"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="inline-flex items-center gap-1.5 text-sm font-semibold text-heading bg-white border border-gray-200 px-5 py-2.5 rounded-lg hover:border-primary hover:text-primary transition-colors"
+                class="inline-flex items-center justify-center gap-1.5 text-sm font-semibold text-heading bg-white border border-gray-200 px-5 py-2.5 rounded-lg hover:border-primary hover:text-primary transition-colors"
               >
-                Don't have a GP?
+                I don't have a GP
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
               </a>
             </div>
