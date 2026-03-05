@@ -1,0 +1,526 @@
+---
+---
+
+<div class="bubble-map">
+  <div class="bm-header">
+    <h3 class="bm-title">Who can help?</h3>
+    <p class="bm-subtitle">Start with the most common professionals. Tap "show more" to see the full picture.</p>
+  </div>
+
+  <div class="bm-map-container">
+    <svg class="bm-map-svg" viewBox="0 0 640 500" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="goo-bm">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
+          <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo"/>
+          <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
+        </filter>
+      </defs>
+
+      <g filter="url(#goo-bm)">
+        {/* Always visible: core professionals */}
+        <ellipse class="bm-blob" cx="200" cy="175" rx="115" ry="108"
+          fill="#4a7fb5" opacity="0.80"
+          data-prof="psychologist" />
+
+        <ellipse class="bm-blob" cx="460" cy="185" rx="100" ry="95"
+          fill="#7e6aad" opacity="0.78"
+          data-prof="psychiatrist" />
+
+        <ellipse class="bm-blob" cx="320" cy="400" rx="115" ry="105"
+          fill="#5aab7b" opacity="0.78"
+          data-prof="counsellor" />
+
+        {/* GP centre */}
+        <ellipse class="bm-blob" cx="320" cy="260" rx="78" ry="72"
+          fill="#5c6670" opacity="0.92"
+          data-prof="gp" />
+
+        {/* Hidden: revealed on "show more" */}
+        <g class="bm-hidden-blobs bm-hidden" id="extra-blobs-bm">
+          <ellipse class="bm-blob" cx="330" cy="440" rx="80" ry="72"
+            fill="#c27a4a" opacity="0.75"
+            data-prof="social-worker" />
+
+          <ellipse class="bm-blob" cx="560" cy="290" rx="60" ry="55"
+            fill="#b5894a" opacity="0.72"
+            data-prof="ot" />
+
+          <ellipse class="bm-blob" cx="80" cy="245" rx="58" ry="54"
+            fill="#c25a6a" opacity="0.72"
+            data-prof="mh-nurse" />
+
+          <ellipse class="bm-blob" cx="555" cy="440" rx="48" ry="45"
+            fill="#8a8a8a" opacity="0.65"
+            data-prof="peer" />
+        </g>
+      </g>
+
+      {/* Core labels */}
+      <text x="163" y="168" class="bm-blob-label" font-size="15" data-prof="psychologist">Psychologist</text>
+      <text x="156" y="186" class="bm-blob-sub" font-size="10" data-prof="psychologist">structured therapy</text>
+      <rect x="172" y="192" width="52" height="13" rx="6.5" class="bm-badge-bg"/>
+      <text x="179" y="201" class="bm-badge-text">AHPRA</text>
+
+      <text x="422" y="178" class="bm-blob-label" font-size="14" data-prof="psychiatrist">Psychiatrist</text>
+      <text x="423" y="196" class="bm-blob-sub" font-size="10" data-prof="psychiatrist">medication</text>
+      <rect x="430" y="201" width="52" height="13" rx="6.5" class="bm-badge-bg"/>
+      <text x="437" y="210" class="bm-badge-text">AHPRA</text>
+
+      <text x="275" y="393" class="bm-blob-label" font-size="14" data-prof="counsellor">Counsellor</text>
+      <text x="263" y="411" class="bm-blob-sub" font-size="10" data-prof="counsellor">someone to talk to</text>
+
+      <text x="298" y="254" class="bm-blob-label" font-size="16" data-prof="gp">GP</text>
+      <text x="288" y="272" class="bm-blob-sub" font-size="11" data-prof="gp">start here</text>
+
+      {/* Hidden labels */}
+      <g class="bm-hidden-blobs bm-hidden" id="extra-labels-bm">
+        <text x="290" y="434" class="bm-blob-label" font-size="12" data-prof="social-worker">Social Worker</text>
+        <text x="289" y="450" class="bm-blob-sub" font-size="9" data-prof="social-worker">holistic support</text>
+
+        <text x="534" y="285" class="bm-blob-label" font-size="10" data-prof="ot">MH OT</text>
+        <text x="524" y="298" class="bm-blob-sub" font-size="9" data-prof="ot">daily function</text>
+        <rect x="534" y="302" width="52" height="13" rx="6.5" class="bm-badge-bg"/>
+        <text x="541" y="311" class="bm-badge-text">AHPRA</text>
+
+        <text x="48" y="240" class="bm-blob-label" font-size="10" data-prof="mh-nurse">MH Nurse</text>
+        <text x="44" y="254" class="bm-blob-sub" font-size="9" data-prof="mh-nurse">clinical care</text>
+        <rect x="52" y="258" width="52" height="13" rx="6.5" class="bm-badge-bg"/>
+        <text x="59" y="267" class="bm-badge-text">AHPRA</text>
+
+        <text x="530" y="435" class="bm-blob-label" font-size="10" data-prof="peer">Peer</text>
+        <text x="525" y="448" class="bm-blob-label" font-size="10" data-prof="peer">Worker</text>
+      </g>
+    </svg>
+  </div>
+
+  <button class="bm-show-more-btn" id="showMoreBtn-bm">
+    ＋ There are more professionals who can help
+  </button>
+
+  <div class="bm-info-panel">
+    <div class="bm-info-card">
+      <div class="bm-info-placeholder" id="placeholder-bm">Tap any bubble to see what they do</div>
+      <div class="bm-info-content" id="info-bm"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const bmData = {
+  gp: {
+    name: "GP (General Practitioner)",
+    color: "#5c6670",
+    badges: [
+      { text: "AHPRA registered", cls: "badge-ahpra" },
+      { text: "Medicare", cls: "badge-medicare" }
+    ],
+    desc: "Your regular doctor — where most mental health journeys start. They'll listen to what's happening, can prescribe basic medication, and can set you up with a Mental Health Treatment Plan. That plan unlocks Medicare-funded sessions with a psychologist, social worker, or OT.",
+    details: [
+      { label: "Cost", value: "Often bulk-billed (free)" },
+      { label: "Referral", value: "None needed" },
+      { label: "Can prescribe", value: "Yes" },
+      { label: "Wait", value: "Days" }
+    ]
+  },
+  psychologist: {
+    name: "Psychologist",
+    color: "#4a7fb5",
+    badges: [
+      { text: "AHPRA registered", cls: "badge-ahpra" },
+      { text: "Medicare (with GP referral)", cls: "badge-medicare" }
+    ],
+    desc: "University-trained (6+ years) in evidence-based therapies like CBT, ACT, and DBT. The most common professional people see through Medicare. Clinical psychologists have additional specialist training and a higher rebate. Many psychologists also practise psychotherapy (longer-term, exploratory work). \"Psychologist\" is a protected title — only AHPRA-registered practitioners can use it.",
+    details: [
+      { label: "Cost", value: "$150–$300" },
+      { label: "Medicare rebate", value: "~$93 (general) / ~$149 (clinical)" },
+      { label: "Referral", value: "Yes, GP referral" },
+      { label: "Can prescribe", value: "No" }
+    ]
+  },
+  psychiatrist: {
+    name: "Psychiatrist",
+    color: "#7e6aad",
+    badges: [
+      { text: "AHPRA registered", cls: "badge-ahpra" },
+      { text: "Medicare (with GP referral)", cls: "badge-medicare" }
+    ],
+    desc: "A medical doctor who has specialised in mental health. The only professional here who can prescribe and manage psychiatric medication. They can also provide therapy, though many focus primarily on medication management and complex diagnosis. Your GP refers you.",
+    details: [
+      { label: "Cost", value: "$300–$600+" },
+      { label: "Medicare rebate", value: "$150–$300+" },
+      { label: "Referral", value: "Yes, GP referral" },
+      { label: "Can prescribe", value: "Yes" }
+    ]
+  },
+  counsellor: {
+    name: "Counsellor",
+    color: "#5aab7b",
+    badges: [
+      { text: "Title not regulated", cls: "badge-unregulated" },
+      { text: "No Medicare rebate", cls: "badge-no-medicare" },
+      { text: "Voluntary accreditation (ACA/PACFA)", cls: "badge-voluntary" }
+    ],
+    desc: "A trained listener who helps you work through everyday challenges — stress, grief, relationships, life transitions. You can book directly without a referral. Some counsellors also practise psychotherapy (longer-term, exploratory work). Note: neither \"counsellor\" nor \"psychotherapist\" are protected titles in Australia — anyone can use them. Look for practitioners registered with ACA or PACFA to ensure quality training.",
+    details: [
+      { label: "Cost", value: "$80–$200" },
+      { label: "Medicare", value: "No" },
+      { label: "Referral", value: "Not needed" },
+      { label: "Can prescribe", value: "No" }
+    ]
+  },
+  "social-worker": {
+    name: "Mental Health Social Worker",
+    color: "#c27a4a",
+    badges: [
+      { text: "AASW accredited (not AHPRA)", cls: "badge-voluntary" },
+      { text: "Medicare (with GP referral)", cls: "badge-medicare" }
+    ],
+    desc: "Accredited Mental Health Social Workers (AMHSWs) help you work through mental health challenges alongside practical life factors — relationships, housing, employment. They can provide therapy and are covered by Medicare under Better Access with a GP referral. Accredited through the AASW, not AHPRA.",
+    details: [
+      { label: "Cost", value: "$120–$220" },
+      { label: "Medicare rebate", value: "~$93" },
+      { label: "Referral", value: "Yes, GP referral" },
+      { label: "Can prescribe", value: "No" }
+    ]
+  },
+  ot: {
+    name: "Mental Health OT",
+    color: "#b5894a",
+    badges: [
+      { text: "AHPRA registered", cls: "badge-ahpra" },
+      { text: "Medicare (with GP referral)", cls: "badge-medicare" }
+    ],
+    desc: "Occupational therapists with mental health endorsement help when mental health conditions affect your ability to function day-to-day — work, routines, self-care, social participation. They focus on practical strategies and are covered by Medicare under Better Access.",
+    details: [
+      { label: "Cost", value: "$120–$200" },
+      { label: "Medicare rebate", value: "~$93" },
+      { label: "Referral", value: "Yes, GP referral" },
+      { label: "Can prescribe", value: "No" }
+    ]
+  },
+  "mh-nurse": {
+    name: "Mental Health Nurse",
+    color: "#c25a6a",
+    badges: [
+      { text: "AHPRA registered", cls: "badge-ahpra" },
+      { text: "Medicare (with GP/psychiatrist referral)", cls: "badge-medicare" }
+    ],
+    desc: "Credentialed mental health nurses support people experiencing mental illness. They work in hospitals, community settings, and private practice. They can conduct assessments, help with treatment programs, and provide clinical care alongside psychiatrists and GPs.",
+    details: [
+      { label: "Cost", value: "Varies" },
+      { label: "Medicare", value: "Yes (credentialed)" },
+      { label: "Referral", value: "Yes" },
+      { label: "Can prescribe", value: "No (some nurse practitioners can)" }
+    ]
+  },
+  peer: {
+    name: "Peer Support Worker",
+    color: "#8a8a8a",
+    badges: [
+      { text: "Not regulated", cls: "badge-unregulated" },
+      { text: "No Medicare rebate", cls: "badge-no-medicare" }
+    ],
+    desc: "People with their own lived experience of mental health challenges, trained to support others. They don't diagnose or prescribe — they share their journey and help you feel less alone. Often work within community mental health services, hospitals, and support organisations.",
+    details: [
+      { label: "Cost", value: "Usually free (through services)" },
+      { label: "Medicare", value: "No" },
+      { label: "Referral", value: "Not needed" },
+      { label: "Training", value: "Cert IV Mental Health or equivalent" }
+    ]
+  }
+};
+
+(function() {
+  const wrapper = document.querySelector('.bubble-map');
+  if (!wrapper) return;
+
+  wrapper.querySelectorAll('[data-prof]').forEach(function(el) {
+    (el as HTMLElement).style.cursor = 'pointer';
+    el.addEventListener('click', function() {
+      const key = el.getAttribute('data-prof');
+      if (key) showBmInfo(key);
+    });
+  });
+
+  let moreVisible = false;
+  const showMoreBtn = document.getElementById('showMoreBtn-bm');
+  if (showMoreBtn) {
+    showMoreBtn.addEventListener('click', function() {
+      moreVisible = !moreVisible;
+      const blobs = document.getElementById('extra-blobs-bm');
+      const labels = document.getElementById('extra-labels-bm');
+
+      if (moreVisible) {
+        blobs?.classList.remove('bm-hidden');
+        blobs?.classList.add('bm-visible');
+        labels?.classList.remove('bm-hidden');
+        labels?.classList.add('bm-visible');
+        showMoreBtn.textContent = '\u2190 Show fewer professionals';
+      } else {
+        blobs?.classList.add('bm-hidden');
+        blobs?.classList.remove('bm-visible');
+        labels?.classList.add('bm-hidden');
+        labels?.classList.remove('bm-visible');
+        showMoreBtn.textContent = '\uff0b There are more professionals who can help';
+      }
+    });
+  }
+
+  function showBmInfo(key: string) {
+    const p = bmData[key as keyof typeof bmData];
+    if (!p) return;
+    const placeholder = document.getElementById('placeholder-bm');
+    const content = document.getElementById('info-bm');
+    if (!placeholder || !content) return;
+
+    placeholder.style.display = 'none';
+    content.style.display = 'block';
+
+    content.innerHTML =
+      '<div class="bm-info-topline">' +
+        '<div class="bm-info-dot" style="background:' + p.color + '"></div>' +
+        '<div class="bm-info-name">' + p.name + '</div>' +
+      '</div>' +
+      '<div class="bm-info-badges">' +
+        p.badges.map(function(b) { return '<span class="bm-info-badge ' + b.cls + '">' + b.text + '</span>'; }).join('') +
+      '</div>' +
+      '<div class="bm-info-desc">' + p.desc + '</div>' +
+      '<div class="bm-info-details">' +
+        p.details.map(function(d) {
+          return '<div class="bm-info-detail">' +
+            '<div class="bm-info-detail-label">' + d.label + '</div>' +
+            '<div class="bm-info-detail-value">' + d.value + '</div>' +
+          '</div>';
+        }).join('') +
+      '</div>';
+  }
+})();
+</script>
+
+<style>
+  .bubble-map {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .bubble-map .bm-header {
+    text-align: center;
+    padding: 0 24px 12px;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  .bubble-map .bm-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
+  }
+
+  .bubble-map .bm-subtitle {
+    color: #64748b;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .bubble-map .bm-map-container {
+    max-width: 680px;
+    margin: 12px auto 0;
+    padding: 0 12px;
+  }
+
+  .bubble-map .bm-map-svg {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .bubble-map .bm-blob {
+    cursor: pointer;
+    transition: opacity 0.4s ease, filter 0.4s ease;
+  }
+
+  .bubble-map .bm-blob:hover {
+    filter: brightness(1.1);
+  }
+
+  .bubble-map .bm-blob-label {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    fill: white;
+    pointer-events: none;
+  }
+
+  .bubble-map .bm-blob-sub {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    fill: rgba(255,255,255,0.7);
+    pointer-events: none;
+  }
+
+  .bubble-map .bm-badge-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 7.5px;
+    font-weight: 700;
+    fill: rgba(255,255,255,0.95);
+    pointer-events: none;
+    letter-spacing: 0.5px;
+  }
+
+  .bubble-map .bm-badge-bg {
+    fill: rgba(0,0,0,0.2);
+    pointer-events: none;
+  }
+
+  .bubble-map .bm-show-more-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 4px auto 8px;
+    padding: 14px 32px;
+    border-radius: 12px;
+    border: none;
+    background: #44EE70;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1e293b;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+  }
+
+  .bubble-map .bm-show-more-btn:hover {
+    background: #3bd462;
+  }
+
+  .bubble-map .bm-info-panel {
+    max-width: 560px;
+    margin: 16px auto 0;
+    padding: 0 16px;
+  }
+
+  .bubble-map .bm-info-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
+    min-height: 80px;
+  }
+
+  .bubble-map .bm-info-placeholder {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 14px;
+    padding: 12px 0;
+  }
+
+  .bubble-map .bm-info-content {
+    display: none;
+  }
+
+  .bubble-map .bm-info-topline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  .bubble-map .bm-info-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .bubble-map .bm-info-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  .bubble-map .bm-info-badges {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .bubble-map .bm-info-badge {
+    padding: 2px 9px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .bubble-map .badge-ahpra {
+    background: #e0edff;
+    color: #1e40af;
+  }
+  .bubble-map .badge-medicare {
+    background: #f0fdf4;
+    color: #166534;
+  }
+  .bubble-map .badge-no-medicare {
+    background: #fef2f2;
+    color: #991b1b;
+  }
+  .bubble-map .badge-unregulated {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  .bubble-map .badge-voluntary {
+    background: #f3e8ff;
+    color: #6b21a8;
+  }
+
+  .bubble-map .bm-info-desc {
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.7;
+    margin-bottom: 14px;
+  }
+
+  .bubble-map .bm-info-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 10px;
+  }
+
+  .bubble-map .bm-info-detail {
+    padding: 10px 12px;
+    background: #f8fafc;
+    border-radius: 10px;
+  }
+
+  .bubble-map .bm-info-detail-label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #94a3b8;
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+
+  .bubble-map .bm-info-detail-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  .bubble-map .bm-hidden-blobs {
+    transition: opacity 0.5s ease;
+  }
+  .bubble-map .bm-hidden-blobs.bm-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .bubble-map .bm-hidden-blobs.bm-visible {
+    opacity: 1;
+    pointer-events: all;
+  }
+</style>
