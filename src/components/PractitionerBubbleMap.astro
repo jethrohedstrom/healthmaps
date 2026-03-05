@@ -315,7 +315,7 @@ const bmData = {
 })();
 </script>
 
-<style>
+<style is:global>
   .bubble-map {
     max-width: 680px;
     margin: 0 auto;
@@ -361,6 +361,10 @@ const bmData = {
 
   .bubble-map .bm-blob:hover {
     filter: brightness(1.1);
+  }
+
+  .bubble-map .bm-blob:focus {
+    outline: none;
   }
 
   .bubble-map .bm-blob:focus-visible {
