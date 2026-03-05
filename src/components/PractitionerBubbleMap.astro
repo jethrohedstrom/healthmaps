@@ -8,88 +8,90 @@
   </div>
 
   <div class="bm-map-container">
-    <svg class="bm-map-svg" viewBox="0 0 640 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interactive map of mental health professionals in Australia. Tap a bubble to learn more.">
+    <svg class="bm-map-svg" viewBox="0 0 700 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interactive map of mental health professionals in Australia. Tap a bubble to learn more.">
       <defs>
-        <filter id="goo-bm">
+        <filter id="goo">
           <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
           <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo"/>
           <feComposite in="SourceGraphic" in2="goo" operator="atop"/>
         </filter>
       </defs>
 
-      <g filter="url(#goo-bm)">
-        {/* Always visible: core professionals */}
-        <ellipse class="bm-blob" cx="200" cy="175" rx="115" ry="108"
+      {/* Core blobs with goo filter — overlapping organic cluster */}
+      <g filter="url(#goo)">
+        <ellipse class="bm-blob" cx="230" cy="175" rx="115" ry="108"
           fill="#4a7fb5" opacity="0.80"
           data-prof="psychologist" />
 
-        <ellipse class="bm-blob" cx="460" cy="185" rx="100" ry="95"
+        <ellipse class="bm-blob" cx="490" cy="185" rx="100" ry="95"
           fill="#7e6aad" opacity="0.78"
           data-prof="psychiatrist" />
 
-        <ellipse class="bm-blob" cx="320" cy="400" rx="115" ry="105"
+        <ellipse class="bm-blob" cx="270" cy="420" rx="110" ry="100"
           fill="#5aab7b" opacity="0.78"
           data-prof="counsellor" />
 
-        {/* GP centre */}
-        <ellipse class="bm-blob" cx="320" cy="260" rx="78" ry="72"
-          fill="#5c6670" opacity="0.92"
+        {/* GP centre — rendered last so it draws on top */}
+        <ellipse class="bm-blob" cx="350" cy="270" rx="78" ry="72"
+          fill="#5c6670" opacity="1.0"
           data-prof="gp" />
-
-        {/* Hidden: revealed on "show more" */}
-        <g class="bm-hidden-blobs bm-hidden" id="extra-blobs-bm" aria-hidden="true">
-          <ellipse class="bm-blob" cx="330" cy="440" rx="80" ry="72"
-            fill="#c27a4a" opacity="0.75"
-            data-prof="social-worker" />
-
-          <ellipse class="bm-blob" cx="560" cy="290" rx="60" ry="55"
-            fill="#b5894a" opacity="0.72"
-            data-prof="ot" />
-
-          <ellipse class="bm-blob" cx="80" cy="245" rx="58" ry="54"
-            fill="#c25a6a" opacity="0.72"
-            data-prof="mh-nurse" />
-
-          <ellipse class="bm-blob" cx="555" cy="440" rx="48" ry="45"
-            fill="#8a8a8a" opacity="0.65"
-            data-prof="peer" />
-        </g>
       </g>
 
-      {/* Core labels */}
-      <text x="163" y="168" class="bm-blob-label" font-size="15">Psychologist</text>
-      <text x="156" y="186" class="bm-blob-sub" font-size="10">structured therapy</text>
-      <rect x="172" y="192" width="52" height="13" rx="6.5" class="bm-badge-bg"/>
-      <text x="179" y="201" class="bm-badge-text">AHPRA</text>
+      {/* Hidden blobs — NO goo filter to avoid ugly long-distance connections */}
+      <g class="bm-hidden-blobs bm-hidden" id="extra-blobs-bm" aria-hidden="true">
+        <ellipse class="bm-blob" cx="490" cy="410" rx="80" ry="72"
+          fill="#c27a4a" opacity="0.75"
+          data-prof="social-worker" />
 
-      <text x="422" y="178" class="bm-blob-label" font-size="14">Psychiatrist</text>
-      <text x="423" y="196" class="bm-blob-sub" font-size="10">medication</text>
-      <rect x="430" y="201" width="52" height="13" rx="6.5" class="bm-badge-bg"/>
-      <text x="437" y="210" class="bm-badge-text">AHPRA</text>
+        <ellipse class="bm-blob" cx="600" cy="300" rx="60" ry="55"
+          fill="#b5894a" opacity="0.72"
+          data-prof="ot" />
 
-      <text x="275" y="393" class="bm-blob-label" font-size="14">Counsellor</text>
-      <text x="263" y="411" class="bm-blob-sub" font-size="10">someone to talk to</text>
+        <ellipse class="bm-blob" cx="100" cy="290" rx="58" ry="54"
+          fill="#c25a6a" opacity="0.72"
+          data-prof="mh-nurse" />
 
-      <text x="298" y="254" class="bm-blob-label" font-size="16">GP</text>
-      <text x="288" y="272" class="bm-blob-sub" font-size="11">start here</text>
+        <ellipse class="bm-blob" cx="620" cy="430" rx="48" ry="45"
+          fill="#8a8a8a" opacity="0.65"
+          data-prof="peer" />
+      </g>
+
+      {/* Core labels — positioned to match blob centres */}
+      <text x="230" y="168" class="bm-blob-label" font-size="15" text-anchor="middle" data-prof="psychologist">Psychologist</text>
+      <text x="230" y="186" class="bm-blob-sub" font-size="10" text-anchor="middle" data-prof="psychologist">structured therapy</text>
+      <rect x="204" y="192" width="52" height="13" rx="6.5" class="bm-badge-bg"/>
+      <text x="230" y="201" class="bm-badge-text" text-anchor="middle">AHPRA</text>
+
+      <text x="490" y="178" class="bm-blob-label" font-size="14" text-anchor="middle" data-prof="psychiatrist">Psychiatrist</text>
+      <text x="490" y="196" class="bm-blob-sub" font-size="10" text-anchor="middle" data-prof="psychiatrist">medication</text>
+      <rect x="464" y="201" width="52" height="13" rx="6.5" class="bm-badge-bg"/>
+      <text x="490" y="210" class="bm-badge-text" text-anchor="middle">AHPRA</text>
+
+      <text x="270" y="413" class="bm-blob-label" font-size="14" text-anchor="middle" data-prof="counsellor">Counsellor</text>
+      <text x="270" y="431" class="bm-blob-sub" font-size="10" text-anchor="middle" data-prof="counsellor">someone to talk to</text>
+
+      <text x="350" y="264" class="bm-blob-label" font-size="16" text-anchor="middle" data-prof="gp">GP</text>
+      <text x="350" y="282" class="bm-blob-sub" font-size="11" text-anchor="middle" data-prof="gp">start here</text>
 
       {/* Hidden labels */}
       <g class="bm-hidden-blobs bm-hidden" id="extra-labels-bm" aria-hidden="true">
-        <text x="290" y="434" class="bm-blob-label" font-size="12">Social Worker</text>
-        <text x="289" y="450" class="bm-blob-sub" font-size="9">holistic support</text>
+        <text x="490" y="404" class="bm-blob-label" font-size="12" text-anchor="middle" data-prof="social-worker">Social Worker</text>
+        <text x="490" y="420" class="bm-blob-sub" font-size="9" text-anchor="middle" data-prof="social-worker">holistic support</text>
 
-        <text x="534" y="285" class="bm-blob-label" font-size="10">MH OT</text>
-        <text x="524" y="298" class="bm-blob-sub" font-size="9">daily function</text>
-        <rect x="534" y="302" width="52" height="13" rx="6.5" class="bm-badge-bg"/>
-        <text x="541" y="311" class="bm-badge-text">AHPRA</text>
+        <text x="600" y="289" class="bm-blob-label" font-size="9" text-anchor="middle" data-prof="ot">Mental Health</text>
+        <text x="600" y="301" class="bm-blob-label" font-size="9" text-anchor="middle" data-prof="ot">OT</text>
+        <text x="600" y="314" class="bm-blob-sub" font-size="8" text-anchor="middle" data-prof="ot">daily function</text>
+        <rect x="574" y="320" width="52" height="13" rx="6.5" class="bm-badge-bg"/>
+        <text x="600" y="329" class="bm-badge-text" text-anchor="middle">AHPRA</text>
 
-        <text x="48" y="240" class="bm-blob-label" font-size="10">MH Nurse</text>
-        <text x="44" y="254" class="bm-blob-sub" font-size="9">clinical care</text>
-        <rect x="52" y="258" width="52" height="13" rx="6.5" class="bm-badge-bg"/>
-        <text x="59" y="267" class="bm-badge-text">AHPRA</text>
+        <text x="100" y="279" class="bm-blob-label" font-size="9" text-anchor="middle" data-prof="mh-nurse">Mental Health</text>
+        <text x="100" y="291" class="bm-blob-label" font-size="9" text-anchor="middle" data-prof="mh-nurse">Nurse</text>
+        <text x="100" y="304" class="bm-blob-sub" font-size="8" text-anchor="middle" data-prof="mh-nurse">clinical care</text>
+        <rect x="74" y="310" width="52" height="13" rx="6.5" class="bm-badge-bg"/>
+        <text x="100" y="319" class="bm-badge-text" text-anchor="middle">AHPRA</text>
 
-        <text x="530" y="435" class="bm-blob-label" font-size="10">Peer</text>
-        <text x="525" y="448" class="bm-blob-label" font-size="10">Worker</text>
+        <text x="620" y="427" class="bm-blob-label" font-size="10" text-anchor="middle" data-prof="peer">Peer</text>
+        <text x="620" y="440" class="bm-blob-label" font-size="10" text-anchor="middle" data-prof="peer">Worker</text>
       </g>
     </svg>
   </div>
@@ -399,7 +401,7 @@ const bmData = {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin: 4px auto 8px;
+    margin: 16px auto 8px;
     padding: 14px 32px;
     border-radius: 12px;
     border: none;
