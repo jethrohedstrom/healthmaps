@@ -92,10 +92,11 @@ body {
 
 /* Card hover — subtle shadow only (no lift) */
 .card-hover {
-  transition: box-shadow 0.2s ease;
+  transition: all 0.2s ease;
 }
 .card-hover:hover {
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-color: rgba(68, 238, 112, 0.4);
 }
 
 /* Details/summary — clean chevron rotation, CSS-only */

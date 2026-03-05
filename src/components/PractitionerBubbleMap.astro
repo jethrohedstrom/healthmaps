@@ -4,7 +4,7 @@
 <div class="bubble-map">
   <div class="bm-header">
     <h3 class="bm-title">Who can help?</h3>
-    <p class="bm-subtitle">Start with the most common professionals. Tap "show more" to see the full picture.</p>
+    <p class="bm-subtitle">These are the most common professionals in Australia. Tap to learn what they do.</p>
   </div>
 
   <div class="bm-map-container">
@@ -97,7 +97,7 @@
   </div>
 
   <button class="bm-show-more-btn" id="showMoreBtn-bm" aria-expanded="false" aria-controls="extra-blobs-bm extra-labels-bm">
-    ＋ There are more professionals who can help
+    ＋ Show all professionals
   </button>
 
   <div class="bm-info-panel">
@@ -279,7 +279,7 @@ const bmData = {
         labels?.classList.add('bm-hidden');
         labels?.classList.remove('bm-visible');
         labels?.setAttribute('aria-hidden', 'true');
-        showMoreBtn.textContent = '\uff0b There are more professionals who can help';
+        showMoreBtn.textContent = '\uff0b Show all professionals';
       }
     });
   }
