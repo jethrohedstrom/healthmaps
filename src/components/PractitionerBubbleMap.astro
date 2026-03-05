@@ -8,7 +8,7 @@
   </div>
 
   <div class="bm-map-container">
-    <svg class="bm-map-svg" viewBox="0 0 640 500" xmlns="http://www.w3.org/2000/svg">
+    <svg class="bm-map-svg" viewBox="0 0 640 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interactive map of mental health professionals in Australia. Tap a bubble to learn more.">
       <defs>
         <filter id="goo-bm">
           <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
@@ -37,7 +37,7 @@
           data-prof="gp" />
 
         {/* Hidden: revealed on "show more" */}
-        <g class="bm-hidden-blobs bm-hidden" id="extra-blobs-bm">
+        <g class="bm-hidden-blobs bm-hidden" id="extra-blobs-bm" aria-hidden="true">
           <ellipse class="bm-blob" cx="330" cy="440" rx="80" ry="72"
             fill="#c27a4a" opacity="0.75"
             data-prof="social-worker" />
@@ -57,51 +57,51 @@
       </g>
 
       {/* Core labels */}
-      <text x="163" y="168" class="bm-blob-label" font-size="15" data-prof="psychologist">Psychologist</text>
-      <text x="156" y="186" class="bm-blob-sub" font-size="10" data-prof="psychologist">structured therapy</text>
+      <text x="163" y="168" class="bm-blob-label" font-size="15">Psychologist</text>
+      <text x="156" y="186" class="bm-blob-sub" font-size="10">structured therapy</text>
       <rect x="172" y="192" width="52" height="13" rx="6.5" class="bm-badge-bg"/>
       <text x="179" y="201" class="bm-badge-text">AHPRA</text>
 
-      <text x="422" y="178" class="bm-blob-label" font-size="14" data-prof="psychiatrist">Psychiatrist</text>
-      <text x="423" y="196" class="bm-blob-sub" font-size="10" data-prof="psychiatrist">medication</text>
+      <text x="422" y="178" class="bm-blob-label" font-size="14">Psychiatrist</text>
+      <text x="423" y="196" class="bm-blob-sub" font-size="10">medication</text>
       <rect x="430" y="201" width="52" height="13" rx="6.5" class="bm-badge-bg"/>
       <text x="437" y="210" class="bm-badge-text">AHPRA</text>
 
-      <text x="275" y="393" class="bm-blob-label" font-size="14" data-prof="counsellor">Counsellor</text>
-      <text x="263" y="411" class="bm-blob-sub" font-size="10" data-prof="counsellor">someone to talk to</text>
+      <text x="275" y="393" class="bm-blob-label" font-size="14">Counsellor</text>
+      <text x="263" y="411" class="bm-blob-sub" font-size="10">someone to talk to</text>
 
-      <text x="298" y="254" class="bm-blob-label" font-size="16" data-prof="gp">GP</text>
-      <text x="288" y="272" class="bm-blob-sub" font-size="11" data-prof="gp">start here</text>
+      <text x="298" y="254" class="bm-blob-label" font-size="16">GP</text>
+      <text x="288" y="272" class="bm-blob-sub" font-size="11">start here</text>
 
       {/* Hidden labels */}
-      <g class="bm-hidden-blobs bm-hidden" id="extra-labels-bm">
-        <text x="290" y="434" class="bm-blob-label" font-size="12" data-prof="social-worker">Social Worker</text>
-        <text x="289" y="450" class="bm-blob-sub" font-size="9" data-prof="social-worker">holistic support</text>
+      <g class="bm-hidden-blobs bm-hidden" id="extra-labels-bm" aria-hidden="true">
+        <text x="290" y="434" class="bm-blob-label" font-size="12">Social Worker</text>
+        <text x="289" y="450" class="bm-blob-sub" font-size="9">holistic support</text>
 
-        <text x="534" y="285" class="bm-blob-label" font-size="10" data-prof="ot">MH OT</text>
-        <text x="524" y="298" class="bm-blob-sub" font-size="9" data-prof="ot">daily function</text>
+        <text x="534" y="285" class="bm-blob-label" font-size="10">MH OT</text>
+        <text x="524" y="298" class="bm-blob-sub" font-size="9">daily function</text>
         <rect x="534" y="302" width="52" height="13" rx="6.5" class="bm-badge-bg"/>
         <text x="541" y="311" class="bm-badge-text">AHPRA</text>
 
-        <text x="48" y="240" class="bm-blob-label" font-size="10" data-prof="mh-nurse">MH Nurse</text>
-        <text x="44" y="254" class="bm-blob-sub" font-size="9" data-prof="mh-nurse">clinical care</text>
+        <text x="48" y="240" class="bm-blob-label" font-size="10">MH Nurse</text>
+        <text x="44" y="254" class="bm-blob-sub" font-size="9">clinical care</text>
         <rect x="52" y="258" width="52" height="13" rx="6.5" class="bm-badge-bg"/>
         <text x="59" y="267" class="bm-badge-text">AHPRA</text>
 
-        <text x="530" y="435" class="bm-blob-label" font-size="10" data-prof="peer">Peer</text>
-        <text x="525" y="448" class="bm-blob-label" font-size="10" data-prof="peer">Worker</text>
+        <text x="530" y="435" class="bm-blob-label" font-size="10">Peer</text>
+        <text x="525" y="448" class="bm-blob-label" font-size="10">Worker</text>
       </g>
     </svg>
   </div>
 
-  <button class="bm-show-more-btn" id="showMoreBtn-bm">
+  <button class="bm-show-more-btn" id="showMoreBtn-bm" aria-expanded="false" aria-controls="extra-blobs-bm extra-labels-bm">
     ＋ There are more professionals who can help
   </button>
 
   <div class="bm-info-panel">
     <div class="bm-info-card">
       <div class="bm-info-placeholder" id="placeholder-bm">Tap any bubble to see what they do</div>
-      <div class="bm-info-content" id="info-bm"></div>
+      <div class="bm-info-content" id="info-bm" aria-live="polite"></div>
     </div>
   </div>
 </div>
@@ -235,11 +235,21 @@ const bmData = {
   const wrapper = document.querySelector('.bubble-map');
   if (!wrapper) return;
 
-  wrapper.querySelectorAll('[data-prof]').forEach(function(el) {
-    (el as HTMLElement).style.cursor = 'pointer';
+  wrapper.querySelectorAll('.bm-blob[data-prof]').forEach(function(el) {
+    (el as SVGElement).style.cursor = 'pointer';
+    el.setAttribute('tabindex', '0');
+    el.setAttribute('role', 'button');
+    const key = el.getAttribute('data-prof');
+    const label = bmData[key as keyof typeof bmData]?.name || key;
+    el.setAttribute('aria-label', 'Learn about ' + label);
     el.addEventListener('click', function() {
-      const key = el.getAttribute('data-prof');
       if (key) showBmInfo(key);
+    });
+    el.addEventListener('keydown', function(e) {
+      if ((e as KeyboardEvent).key === 'Enter' || (e as KeyboardEvent).key === ' ') {
+        (e as KeyboardEvent).preventDefault();
+        if (key) showBmInfo(key);
+      }
     });
   });
 
@@ -251,17 +261,22 @@ const bmData = {
       const blobs = document.getElementById('extra-blobs-bm');
       const labels = document.getElementById('extra-labels-bm');
 
+      showMoreBtn.setAttribute('aria-expanded', String(moreVisible));
       if (moreVisible) {
         blobs?.classList.remove('bm-hidden');
         blobs?.classList.add('bm-visible');
+        blobs?.setAttribute('aria-hidden', 'false');
         labels?.classList.remove('bm-hidden');
         labels?.classList.add('bm-visible');
+        labels?.setAttribute('aria-hidden', 'false');
         showMoreBtn.textContent = '\u2190 Show fewer professionals';
       } else {
         blobs?.classList.add('bm-hidden');
         blobs?.classList.remove('bm-visible');
+        blobs?.setAttribute('aria-hidden', 'true');
         labels?.classList.add('bm-hidden');
         labels?.classList.remove('bm-visible');
+        labels?.setAttribute('aria-hidden', 'true');
         showMoreBtn.textContent = '\uff0b There are more professionals who can help';
       }
     });
@@ -344,6 +359,11 @@ const bmData = {
 
   .bubble-map .bm-blob:hover {
     filter: brightness(1.1);
+  }
+
+  .bubble-map .bm-blob:focus-visible {
+    outline: 2px solid #44EE70;
+    outline-offset: 2px;
   }
 
   .bubble-map .bm-blob-label {
