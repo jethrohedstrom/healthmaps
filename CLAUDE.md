@@ -109,9 +109,11 @@ src/
 - Accordions: native `<details>`/`<summary>`, CSS chevron rotation, .accordion-item class
 
 ## Commands
-- `npm run dev` — start dev server at localhost:4321
+- `npm run dev` — start dev server at localhost:4321. **Run this in a separate terminal tab**, not as a Claude Code background task — background tasks die when you `/clear` or start a new session.
 - `npm run build` — production build to `dist/`
 - `npx astro check` — type/build error checking
+
+**Known issue:** Vite HMR sometimes fails to pick up changes to inline `<script>` tags in `.astro` components. If edits don't take effect after a browser hard-refresh, restart the dev server (`Ctrl+C` then `npm run dev`). Verify by curling the compiled JS URL to confirm the server is serving updated code.
 
 ## Content Editing
 To add a new story: create `src/content/stories/my-story.md` with YAML frontmatter:
