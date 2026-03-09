@@ -54,6 +54,8 @@ practitioners.forEach(p => {
     <div class="max-w-[1100px] mx-auto px-4 pt-16 md:pt-20 pb-8 md:pb-10">
       <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-2 tracking-[-0.01em] text-center">Who should I see?</h1>
       <PractitionerBubbleMap />
+      <script is:inline type="application/json" id="practitioner-comparison-data" set:html={JSON.stringify(comparisonData)}></script>
+      <PractitionerComparison />
       <div class="max-w-[720px] mt-8">
         <div class="space-y-5 text-lg leading-relaxed text-body">
           <p>Psychologist?<br />Counsellor?<br />Psychiatrist?<br /><br />If you're not sure what the difference is, you're not alone.<br />Here's a simple breakdown.</p>
@@ -113,10 +115,6 @@ practitioners.forEach(p => {
       </div>
     </div>
   </section>
-
-  <!-- Practitioner comparison (multi-select from bubble map) -->
-  <script is:inline type="application/json" id="practitioner-comparison-data" set:html={JSON.stringify(comparisonData)}></script>
-  <PractitionerComparison />
 
   <!-- CTA -->
   <section class="bg-gray-50">
