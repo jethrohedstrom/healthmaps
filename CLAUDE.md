@@ -1,7 +1,16 @@
 # HealthMaps — Claude Code Instructions
 
 ## Project Overview
-HealthMaps helps Australians navigate the mental health system. It explains how to access Medicare-funded psychology sessions via a GP and Mental Health Care Plan (MHCP).
+HealthMaps helps Australians figure out where to start with mental health support, and understand how the system actually works. The core problem: people either don't know what to do first (decision paralysis), or they're already in the system but missing practical knowledge — like the fact that you can research and choose a specific psychologist before asking your GP for the referral. The site explains options, costs, and next steps in plain language.
+
+## Workflow Process (added March 9th 2026)
+- **Brainstorm before building.** For any new feature, ask me questions one at a time to clarify what we're doing before writing any code. Multiple choice where possible.
+- **Small chunks only.** When describing designs or plans, keep each response to 200-300 words max, then check in with me before continuing.
+- **Plan into a file.** Write implementation plans into docs/plans/ so a fresh session can pick them up cold.
+- **Don't leap into code.** Planning and design must be agreed before any implementation starts. If I haven't said "go", don't start building.
+- **/clear between task chunks.** After completing a group of tasks, /clear and start fresh rather than /compact. Stale context causes errors.
+- **Checker agent pattern.** After implementation, I may paste your work into a second Claude Code session for review. Write clean commits so diffs are reviewable.
+- **Code review framing.** If I paste external review feedback, treat the reviewer as a job candidate — evaluate whether their suggestions are correct before acting on them.
 
 ## Current Status
 - **All 6 build phases complete** — foundation, pathway, practitioners, calculator, stories/tips, homepage/404
@@ -96,7 +105,7 @@ src/
 - Inner page cards: bg-white rounded-xl p-8 md:p-12 shadow-sm, no border, card-hover on `<a>` wrapper
 - Feature card icons: w-16 h-16 rounded-xl bg-icon-bg with text-primary SVG
 - Card hover: subtle shadow only (no lift) via .card-hover class
-- Header: opaque white, no bottom border, wider padding (px-4 sm:px-8 lg:px-20 py-8)
+- Header: opaque white, no bottom border, wider padding (px-4 sm:px-8 lg:px-20 py-4)
 - Accordions: native `<details>`/`<summary>`, CSS chevron rotation, .accordion-item class
 
 ## Commands
