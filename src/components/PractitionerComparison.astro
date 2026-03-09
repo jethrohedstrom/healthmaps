@@ -1,0 +1,253 @@
+---
+---
+
+<section class="bg-gray-50" id="comparison-section">
+  <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
+    <div id="comparison-prompt" class="text-center">
+      <p class="text-body text-lg">Select 2–3 professionals above to compare</p>
+    </div>
+    <div id="comparison-table" class="comparison-table" style="display:none;" aria-live="polite">
+      <div class="comparison-scroll">
+        <div class="comparison-scroll-inner" id="comparison-grid"></div>
+        <div class="comparison-fade-hint" aria-hidden="true"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  const dataEl = document.getElementById('practitioner-comparison-data');
+  if (!dataEl) return;
+  const allData: Record<string, {
+    name: string;
+    color: string;
+    cost: string;
+    rebate: string;
+    referralRequired: boolean;
+    bestFor: string;
+    registrationStatus: string;
+    waitTime: string;
+  }> = JSON.parse(dataEl.textContent || '{}');
+
+  const prompt = document.getElementById('comparison-prompt');
+  const table = document.getElementById('comparison-table');
+  const grid = document.getElementById('comparison-grid');
+  if (!prompt || !table || !grid) return;
+
+  let wasVisible = false;
+
+  document.addEventListener('practitioner-selection-changed', function(e: Event) {
+    const detail = (e as CustomEvent).detail;
+    const selected: string[] = detail.selected;
+
+    if (selected.length < 2) {
+      table.style.display = 'none';
+      prompt.style.display = '';
+      wasVisible = false;
+      return;
+    }
+
+    prompt.style.display = 'none';
+    table.style.display = '';
+
+    // Build comparison grid
+    const cols = selected.length;
+    const rows = [
+      { label: 'Typical cost', key: 'cost' },
+      { label: 'Medicare rebate', key: 'rebate' },
+      { label: 'Referral needed', key: 'referral' },
+      { label: 'Best for', key: 'bestFor' },
+      { label: 'Registration', key: 'registrationStatus' },
+      { label: 'Wait time', key: 'waitTime' },
+    ];
+
+    let html = '';
+
+    // Header row: empty label cell + prof names
+    html += '<div class="cmp-row cmp-header-row">';
+    html += '<div class="cmp-label-cell"></div>';
+    selected.forEach(function(key) {
+      const p = allData[key];
+      if (!p) return;
+      html += '<div class="cmp-header-cell">' +
+        '<div class="cmp-header-dot" style="background:' + p.color + '"></div>' +
+        '<div class="cmp-header-name">' + p.name + '</div>' +
+        '<button class="cmp-deselect" data-prof="' + key + '" aria-label="Remove ' + p.name + ' from comparison">&times;</button>' +
+      '</div>';
+    });
+    html += '</div>';
+
+    // Data rows
+    rows.forEach(function(row) {
+      html += '<div class="cmp-row">';
+      html += '<div class="cmp-label-cell">' + row.label + '</div>';
+      selected.forEach(function(key) {
+        const p = allData[key];
+        if (!p) { html += '<div class="cmp-value-cell">—</div>'; return; }
+        let value = '';
+        if (row.key === 'referral') {
+          if (p.referralRequired) {
+            value = '<span class="cmp-ref-yes">Yes (GP referral)</span>';
+          } else {
+            value = '<span class="cmp-ref-no">No</span>';
+          }
+        } else {
+          value = (p as any)[row.key] || '—';
+        }
+        html += '<div class="cmp-value-cell">' + value + '</div>';
+      });
+      html += '</div>';
+    });
+
+    grid.innerHTML = html;
+    grid.style.setProperty('--cmp-cols', String(cols));
+
+    // Wire up deselect buttons
+    grid.querySelectorAll('.cmp-deselect').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const key = btn.getAttribute('data-prof');
+        if (!key) return;
+        // Simulate a bubble click to deselect
+        const bubble = document.querySelector('.bm-blob[data-prof="' + key + '"]') as HTMLElement | null;
+        if (bubble) bubble.click();
+      });
+    });
+
+    // Smooth scroll into view on first appearance
+    if (!wasVisible) {
+      wasVisible = true;
+      const section = document.getElementById('comparison-section');
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  });
+})();
+</script>
+
+<style is:global>
+  .comparison-table {
+    transition: opacity 0.3s ease;
+  }
+
+  .comparison-scroll {
+    position: relative;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .comparison-scroll-inner {
+    min-width: fit-content;
+  }
+
+  .comparison-fade-hint {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 40px;
+    background: linear-gradient(to right, transparent, rgb(249 250 251));
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .cmp-row {
+    display: grid;
+    grid-template-columns: 140px repeat(var(--cmp-cols, 2), minmax(180px, 1fr));
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .cmp-header-row {
+    border-bottom: 2px solid #e5e7eb;
+  }
+
+  .cmp-label-cell {
+    padding: 14px 16px;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #94a3b8;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    align-items: center;
+  }
+
+  .cmp-header-cell {
+    padding: 16px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cmp-header-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .cmp-header-name {
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e293b;
+    white-space: nowrap;
+  }
+
+  .cmp-deselect {
+    margin-left: auto;
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+    font-family: 'Inter', sans-serif;
+    transition: color 0.15s ease;
+    flex-shrink: 0;
+  }
+
+  .cmp-deselect:hover {
+    color: #1e293b;
+  }
+
+  .cmp-value-cell {
+    padding: 14px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    color: #334155;
+    line-height: 1.5;
+    display: flex;
+    align-items: center;
+  }
+
+  .cmp-ref-yes {
+    color: #D97706;
+    font-weight: 600;
+  }
+
+  .cmp-ref-no {
+    color: #16a34a;
+    font-weight: 600;
+  }
+
+  @media (max-width: 767px) {
+    .cmp-row {
+      grid-template-columns: 100px repeat(var(--cmp-cols, 2), minmax(160px, 1fr));
+    }
+    .cmp-label-cell {
+      font-size: 11px;
+      padding: 12px 10px;
+    }
+    .cmp-value-cell {
+      font-size: 13px;
+      padding: 12px 10px;
+    }
+    .cmp-header-name {
+      font-size: 13px;
+    }
+  }
+</style>

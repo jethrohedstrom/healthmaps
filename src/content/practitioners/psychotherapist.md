@@ -4,6 +4,8 @@ cost: "$100–$250 per session"
 rebate: "None (unless also a registered psychologist)"
 referralRequired: false
 waitTime: "1–6 weeks"
+bestFor: "Deep patterns, trauma, self-understanding"
+registrationStatus: "Unregulated title — look for PACFA/ACA"
 order: 4
 ---
 

@@ -4,6 +4,8 @@ cost: "$150–$300 per session"
 rebate: "$93.35 (standard) / $149.25 (clinical)"
 referralRequired: true
 waitTime: "2–12 weeks"
+bestFor: "Structured therapy — anxiety, depression, trauma"
+registrationStatus: "AHPRA registered"
 order: 1
 ---
 

@@ -4,6 +4,8 @@ cost: "$80–$200 per session"
 rebate: "None (no Medicare rebate)"
 referralRequired: false
 waitTime: "1–4 weeks"
+bestFor: "Relationships, grief, life transitions"
+registrationStatus: "Unregulated title — look for ACA/PACFA"
 order: 3
 ---
 

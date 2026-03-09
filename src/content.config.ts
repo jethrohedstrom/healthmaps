@@ -27,6 +27,8 @@ const practitioners = defineCollection({
     rebate: z.string(),
     referralRequired: z.boolean(),
     waitTime: z.string().optional(),
+    bestFor: z.string().optional(),
+    registrationStatus: z.string().optional(),
     order: z.number().optional(),
   }),
 });

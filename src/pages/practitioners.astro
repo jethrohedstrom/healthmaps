@@ -1,9 +1,49 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
-import { getCollection, render } from 'astro:content';
+import PractitionerComparison from '../components/PractitionerComparison.astro';
+import { getCollection } from 'astro:content';
 
 const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+
+// Map content collection IDs to bubble map data-prof keys
+const profKeyMap: Record<string, string> = {
+  'psychologist': 'psychologist',
+  'psychiatrist': 'psychiatrist',
+  'counsellor': 'counsellor',
+  'mental-health-social-worker': 'social-worker',
+  'mental-health-occupational-therapist': 'ot',
+  'mental-health-nurse': 'mh-nurse',
+  'gp': 'gp',
+};
+
+// Bubble colour map (matches SVG fill values)
+const profColorMap: Record<string, string> = {
+  'psychologist': '#4a7fb5',
+  'psychiatrist': '#7e6aad',
+  'counsellor': '#5aab7b',
+  'social-worker': '#c27a4a',
+  'ot': '#b5894a',
+  'mh-nurse': '#c25a6a',
+  'gp': '#5c6670',
+};
+
+// Build JSON blob for the comparison component
+const comparisonData: Record<string, any> = {};
+practitioners.forEach(p => {
+  const profKey = profKeyMap[p.id];
+  if (!profKey) return; // skip psychotherapist
+  comparisonData[profKey] = {
+    name: p.data.title,
+    color: profColorMap[profKey] || '#888',
+    cost: p.data.cost.replace(' per session', ''),
+    rebate: p.data.rebate,
+    referralRequired: p.data.referralRequired,
+    bestFor: p.data.bestFor || '',
+    registrationStatus: p.data.registrationStatus || '',
+    waitTime: p.data.waitTime || '—',
+  };
+});
 ---
 <BaseLayout
   title="Who should I see?"
@@ -74,87 +114,9 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
     </div>
   </section>
 
-  <!-- Practitioner summary cards -->
-  <section class="bg-gray-50">
-    <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
-      <details class="accordion-item">
-        <summary class="w-fit">
-          <h2 class="text-[1.5rem] md:text-[2rem] font-bold text-slate-800 tracking-[-0.01em] inline">Compare professionals</h2>
-        </summary>
-        <div class="accordion-content">
-          <p class="text-gray-500 mb-6">What each type costs and when to see them.</p>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {practitioners.map(async (p) => {
-              const { Content } = await render(p);
-              return (
-                <details id={p.id} class="practitioner-card bg-white rounded-xl p-6 md:p-8 shadow-sm scroll-mt-24">
-                  <summary>
-                    <h3 class="text-lg font-semibold text-heading mb-3">{p.data.title}</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-x-4 gap-y-2">
-                      <div>
-                        <div class="text-xs uppercase tracking-wide text-gray-400 mb-0.5">Typical cost</div>
-                        <div class="text-sm font-semibold text-heading">{p.data.cost.replace(' per session', '')}</div>
-                      </div>
-                      <div>
-                        <div class="text-xs uppercase tracking-wide text-gray-400 mb-0.5">Medicare rebate</div>
-                        <div class="text-sm font-semibold text-heading">{p.data.rebate}</div>
-                      </div>
-                      <div>
-                        <div class="text-xs uppercase tracking-wide text-gray-400 mb-0.5">Referral needed</div>
-                        {p.data.referralRequired ? (
-                          <div class="text-sm font-semibold text-brand-orange">Yes (GP referral)</div>
-                        ) : (
-                          <div class="text-sm font-semibold text-brand-green">No, book directly</div>
-                        )}
-                      </div>
-                    </div>
-                  </summary>
-                  <div class="border-t border-gray-100 mt-4 pt-4 prose prose-sm max-w-none text-gray-700">
-                    <Content />
-                  </div>
-                </details>
-              );
-            })}
-          </div>
-
-          <details class="accordion-item mt-8 scroll-mt-24">
-            <summary class="text-lg font-semibold text-slate-800">Compare at a glance</summary>
-            <div class="accordion-content">
-              <div class="overflow-x-auto">
-                <table class="w-full text-sm text-left border-collapse">
-                  <thead>
-                    <tr class="border-b-2 border-gray-300">
-                      <th class="py-3 px-4 font-semibold text-slate-800"></th>
-                      <th class="py-3 px-4 font-semibold text-slate-800">Typical Cost</th>
-                      <th class="py-3 px-4 font-semibold text-slate-800">Medicare Rebate</th>
-                      <th class="py-3 px-4 font-semibold text-slate-800">Referral Needed?</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {practitioners.map((p, i) => (
-                      <tr class:list={[i % 2 === 0 ? 'bg-white' : 'bg-gray-50', 'border-b border-gray-200']}>
-                        <td class="py-3 px-4 font-semibold text-gray-700">{p.data.title}</td>
-                        <td class="py-3 px-4 text-gray-500">{p.data.cost}</td>
-                        <td class="py-3 px-4 text-gray-500">{p.data.rebate}</td>
-                        <td class="py-3 px-4">
-                          {p.data.referralRequired ? (
-                            <span class="text-brand-orange font-medium">Yes</span>
-                          ) : (
-                            <span class="text-brand-green font-medium">No</span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </details>
-        </div>
-      </details>
-    </div>
-  </section>
+  <!-- Practitioner comparison (multi-select from bubble map) -->
+  <script is:inline type="application/json" id="practitioner-comparison-data" set:html={JSON.stringify(comparisonData)}></script>
+  <PractitionerComparison />
 
   <!-- CTA -->
   <section class="bg-gray-50">
@@ -173,7 +135,6 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
       if (!hash) return;
       const target = document.querySelector(hash);
       if (target instanceof HTMLDetailsElement) {
-        // Open ancestor <details> elements first (e.g. the parent "The details" accordion)
         let ancestor = target.parentElement;
         while (ancestor) {
           if (ancestor instanceof HTMLDetailsElement) {
@@ -186,18 +147,5 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
     }
     openTargetAccordion();
     window.addEventListener('hashchange', openTargetAccordion);
-
-    // Expand practitioner card to full width when opened
-    document.querySelectorAll<HTMLDetailsElement>('.practitioner-card').forEach(card => {
-      card.addEventListener('toggle', () => {
-        card.classList.toggle('md:col-span-2', card.open);
-      });
-    });
-
-    // Also apply col-span if hash-opened on load
-    const hashTarget = window.location.hash ? document.querySelector<HTMLDetailsElement>(window.location.hash) : null;
-    if (hashTarget?.classList.contains('practitioner-card') && hashTarget.open) {
-      hashTarget.classList.add('md:col-span-2');
-    }
   </script>
 </BaseLayout>

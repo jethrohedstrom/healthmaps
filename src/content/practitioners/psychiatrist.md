@@ -4,6 +4,8 @@ cost: "$300–$600+ per session"
 rebate: "$150–$300+ (varies by session type)"
 referralRequired: true
 waitTime: "4–26 weeks"
+bestFor: "Complex conditions, medication management"
+registrationStatus: "AHPRA registered (medical specialist)"
 order: 2
 ---
 

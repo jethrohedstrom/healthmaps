@@ -3,6 +3,8 @@ title: "Mental Health Nurse"
 cost: "$80–$150 per session"
 rebate: "Limited (varies)"
 referralRequired: true
+bestFor: "Ongoing care coordination, clinical support"
+registrationStatus: "AHPRA registered"
 order: 7
 ---
 

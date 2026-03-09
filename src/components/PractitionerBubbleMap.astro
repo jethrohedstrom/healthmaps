@@ -3,7 +3,7 @@
 
 <div class="bubble-map">
   <div class="bm-header">
-    <p class="bm-subtitle">These are the most common professionals in Australia. Tap to learn what they do.</p>
+    <p class="bm-subtitle">Tap a bubble to see what they do</p>
   </div>
 
   <div class="bm-layout">
@@ -246,16 +246,7 @@ const bmData = {
     el.setAttribute('role', 'button');
     const key = el.getAttribute('data-prof');
     const label = bmData[key as keyof typeof bmData]?.name || key;
-    el.setAttribute('aria-label', 'Learn about ' + label);
-    el.addEventListener('click', function() {
-      if (key) showBmInfo(key);
-    });
-    el.addEventListener('keydown', function(e) {
-      if ((e as KeyboardEvent).key === 'Enter' || (e as KeyboardEvent).key === ' ') {
-        (e as KeyboardEvent).preventDefault();
-        if (key) showBmInfo(key);
-      }
-    });
+    el.setAttribute('aria-label', 'Select ' + label + ' for comparison');
   });
 
   let moreVisible = false;
@@ -287,15 +278,55 @@ const bmData = {
     });
   }
 
-  let activeBlob: SVGElement | null = null;
+  const selectedKeys = new Set<string>();
   let activeKey: string | null = null;
+
+  function updateBlobVisuals() {
+    const allBlobs = wrapper!.querySelectorAll('.bm-blob[data-prof]');
+    const hasSelection = selectedKeys.size > 0;
+    allBlobs.forEach(function(el) {
+      const key = el.getAttribute('data-prof') || '';
+      if (selectedKeys.has(key)) {
+        el.classList.add('bm-blob-selected');
+        el.classList.remove('bm-blob-dimmed');
+      } else {
+        el.classList.remove('bm-blob-selected');
+        if (hasSelection) {
+          el.classList.add('bm-blob-dimmed');
+        } else {
+          el.classList.remove('bm-blob-dimmed');
+        }
+      }
+    });
+  }
+
+  function dispatchSelectionEvent() {
+    document.dispatchEvent(new CustomEvent('practitioner-selection-changed', {
+      detail: { selected: [...selectedKeys] }
+    }));
+  }
+
+  function showToast(msg: string) {
+    const existing = wrapper!.querySelector('.bm-toast');
+    if (existing) existing.remove();
+    const toast = document.createElement('div');
+    toast.className = 'bm-toast';
+    toast.textContent = msg;
+    const container = wrapper!.querySelector('.bm-map-container');
+    if (container) {
+      container.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.add('bm-toast-visible'));
+      setTimeout(() => {
+        toast.classList.remove('bm-toast-visible');
+        setTimeout(() => toast.remove(), 300);
+      }, 2000);
+    }
+  }
 
   function hideBmInfo() {
     const placeholder = document.getElementById('placeholder-bm');
     const content = document.getElementById('info-bm');
     if (!placeholder || !content) return;
-    if (activeBlob) activeBlob.classList.remove('bm-blob-active');
-    activeBlob = null;
     activeKey = null;
     content.style.display = 'none';
     content.innerHTML = '';
@@ -303,27 +334,16 @@ const bmData = {
   }
 
   function showBmInfo(key: string) {
-    // Toggle off if tapping the same bubble
-    if (key === activeKey) {
-      hideBmInfo();
-      return;
-    }
-
     const p = bmData[key as keyof typeof bmData];
     if (!p) return;
     const placeholder = document.getElementById('placeholder-bm');
     const content = document.getElementById('info-bm');
     if (!placeholder || !content) return;
 
-    // Highlight active bubble
-    if (activeBlob) activeBlob.classList.remove('bm-blob-active');
-    const newBlob = wrapper!.querySelector('.bm-blob[data-prof="' + key + '"]') as SVGElement | null;
-    if (newBlob) {
-      newBlob.classList.add('bm-blob-active');
-      activeBlob = newBlob;
-    }
-    activeKey = key;
+    // Stop pulse animation after first interaction
+    wrapper!.classList.add('bm-interacted');
 
+    activeKey = key;
     placeholder.style.display = 'none';
     content.style.display = 'block';
 
@@ -345,6 +365,44 @@ const bmData = {
         }).join('') +
       '</div>';
   }
+
+  function toggleSelection(key: string) {
+    if (selectedKeys.has(key)) {
+      selectedKeys.delete(key);
+      if (activeKey === key) {
+        // Show info for last remaining selected, or hide
+        const remaining = [...selectedKeys];
+        if (remaining.length > 0) {
+          showBmInfo(remaining[remaining.length - 1]);
+        } else {
+          hideBmInfo();
+        }
+      }
+    } else {
+      if (selectedKeys.size >= 3) {
+        showToast('Max 3 selected');
+        return;
+      }
+      selectedKeys.add(key);
+      showBmInfo(key);
+    }
+    updateBlobVisuals();
+    dispatchSelectionEvent();
+  }
+
+  wrapper.querySelectorAll('.bm-blob[data-prof]').forEach(function(el) {
+    el.addEventListener('click', function() {
+      const key = el.getAttribute('data-prof');
+      if (key) toggleSelection(key);
+    });
+    el.addEventListener('keydown', function(e) {
+      if ((e as KeyboardEvent).key === 'Enter' || (e as KeyboardEvent).key === ' ') {
+        (e as KeyboardEvent).preventDefault();
+        const key = el.getAttribute('data-prof');
+        if (key) toggleSelection(key);
+      }
+    });
+  });
 })();
 </script>
 
@@ -410,9 +468,25 @@ const bmData = {
     display: block;
   }
 
+  @keyframes bm-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+
   .bubble-map .bm-blob {
     cursor: pointer;
     transition: opacity 0.4s ease, filter 0.4s ease;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: bm-pulse 2s ease-in-out infinite;
+  }
+
+  .bubble-map .bm-blob[data-prof="psychiatrist"] { animation-delay: 0.5s; }
+  .bubble-map .bm-blob[data-prof="counsellor"] { animation-delay: 1s; }
+  .bubble-map .bm-blob[data-prof="gp"] { animation-delay: 1.5s; }
+
+  .bubble-map.bm-interacted .bm-blob {
+    animation: none;
   }
 
   .bubble-map .bm-blob:hover {
@@ -423,6 +497,16 @@ const bmData = {
     filter: brightness(1.15);
     stroke: white;
     stroke-width: 2;
+  }
+
+  .bubble-map .bm-blob.bm-blob-selected {
+    filter: brightness(1.12);
+    stroke: white;
+    stroke-width: 3;
+  }
+
+  .bubble-map .bm-blob.bm-blob-dimmed {
+    opacity: 0.4;
   }
 
   .bubble-map .bm-blob:focus {
@@ -640,5 +724,32 @@ const bmData = {
   .bubble-map .bm-hidden-blobs.bm-visible {
     opacity: 1;
     pointer-events: all;
+  }
+
+  .bubble-map .bm-map-container {
+    position: relative;
+  }
+
+  .bubble-map .bm-toast {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e293b;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 20px;
+    border-radius: 100px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  .bubble-map .bm-toast.bm-toast-visible {
+    opacity: 1;
   }
 </style>
