@@ -9,32 +9,31 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
   title="Who should I see?"
   description="Compare mental health professionals in Australia, including psychologists, psychiatrists, counsellors, social workers, and more. Understand costs, Medicare rebates, and referral requirements."
 >
-  <!-- Hero -->
+  <!-- Hero + bubble map -->
   <section class="bg-white">
-    <div class="max-w-[960px] mx-auto px-4 pt-16 md:pt-20 pb-12 md:pb-16">
-      <div id="hero-flex" class="flex flex-col md:flex-row md:items-start md:gap-16">
-        <!-- Text column -->
-        <div class="max-w-[720px] md:flex-1">
-          <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-8 tracking-[-0.01em]">Who should I see?</h1>
-          <div class="space-y-5 text-lg leading-relaxed text-body">
-            <p>Psychologist?<br />Counsellor?<br />Psychiatrist?<br /><br />If you're not sure what the difference is, you're not alone.<br />Here's a simple breakdown.</p>
-          </div>
-        </div>
-        <!-- Decorative illustration — aligned with copy on desktop -->
-        <div id="hero-illustration" class="hidden md:flex md:items-center md:justify-center md:flex-shrink-0 md:mt-[76px] md:mr-[-4rem]">
-          <img src="/images/ellipse.svg" alt="" class="w-48 lg:w-56 h-auto opacity-90" />
+    <div class="max-w-[960px] mx-auto px-4 pt-16 md:pt-20 pb-8 md:pb-10">
+      <div class="max-w-[720px]">
+        <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-4 tracking-[-0.01em]">Who should I see?</h1>
+      </div>
+      <PractitionerBubbleMap />
+      <div class="max-w-[720px] mt-8">
+        <div class="space-y-5 text-lg leading-relaxed text-body">
+          <p>Psychologist?<br />Counsellor?<br />Psychiatrist?<br /><br />If you're not sure what the difference is, you're not alone.<br />Here's a simple breakdown.</p>
         </div>
       </div>
-      <!-- "Does it actually matter?" — centered below hero -->
-      <div class="mt-14 flex justify-center">
-        <details id="hero-accordion" class="accordion-item scroll-mt-24 bg-gray-100 rounded-lg px-10 py-4">
-          <summary class="text-lg font-semibold text-slate-800 w-fit mx-auto">Does it actually matter?</summary>
-          <div class="accordion-content space-y-5 text-lg leading-relaxed text-body mt-4">
-            <p>For many people, the title and training of the professional (i.e. counsellor, psychologist, psychotherapist) matters less than the sense that they trust and get along with their professional.</p>
-            <p>But there are times when it really does matter.<br />For example, the term 'psychotherapist' is unregulated in Australia, meaning anyone can use it.<br />And only medical doctors, like General Practitioners (GPs) and psychiatrists, can prescribe medication.</p>
-          </div>
-        </details>
-      </div>
+    </div>
+  </section>
+
+  <!-- "Does it actually matter?" accordion -->
+  <section class="bg-white">
+    <div class="max-w-[960px] mx-auto px-4 pb-16 md:pb-20 flex justify-center">
+      <details id="hero-accordion" class="accordion-item scroll-mt-24 bg-gray-100 rounded-lg px-10 py-4">
+        <summary class="text-lg font-semibold text-slate-800 w-fit mx-auto">Does it actually matter?</summary>
+        <div class="accordion-content space-y-5 text-lg leading-relaxed text-body mt-4">
+          <p>For many people, the title and training of the professional (i.e. counsellor, psychologist, psychotherapist) matters less than the sense that they trust and get along with their professional.</p>
+          <p>But there are times when it really does matter.<br />For example, the term 'psychotherapist' is unregulated in Australia, meaning anyone can use it.<br />And only medical doctors, like General Practitioners (GPs) and psychiatrists, can prescribe medication.</p>
+        </div>
+      </details>
     </div>
   </section>
 
@@ -74,13 +73,6 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
           </div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- Interactive bubble map -->
-  <section class="bg-white">
-    <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
-      <PractitionerBubbleMap />
     </div>
   </section>
 
@@ -208,33 +200,6 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
     const hashTarget = window.location.hash ? document.querySelector<HTMLDetailsElement>(window.location.hash) : null;
     if (hashTarget?.classList.contains('practitioner-card') && hashTarget.open) {
       hashTarget.classList.add('md:col-span-2');
-    }
-
-    // Lock hero illustration position when accordion opens
-    const heroAccordion = document.getElementById('hero-accordion') as HTMLDetailsElement | null;
-    const heroFlex = document.getElementById('hero-flex');
-    const heroIllustration = document.getElementById('hero-illustration');
-    const heroSummary = heroAccordion?.querySelector('summary');
-    if (heroAccordion && heroFlex && heroIllustration && heroSummary) {
-      const lockedOffset = heroIllustration.getBoundingClientRect().top - heroFlex.getBoundingClientRect().top;
-      heroSummary.addEventListener('click', () => {
-        const willOpen = !heroAccordion.open;
-        if (willOpen) {
-          heroIllustration.style.alignSelf = 'flex-start';
-          heroIllustration.style.marginTop = lockedOffset + 'px';
-          requestAnimationFrame(() => {
-            const introP = heroAccordion.previousElementSibling;
-            if (introP) {
-              const headerHeight = 96;
-              const bottomOfIntro = introP.getBoundingClientRect().bottom + window.scrollY;
-              window.scrollTo({ top: bottomOfIntro - headerHeight, behavior: 'smooth' });
-            }
-          });
-        } else {
-          heroIllustration.style.alignSelf = '';
-          heroIllustration.style.marginTop = '';
-        }
-      });
     }
   </script>
 </BaseLayout>
