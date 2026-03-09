@@ -1,10 +1,10 @@
 ---
 ---
 
-<section class="bg-gray-50" id="comparison-section">
-  <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
-    <div id="comparison-prompt" class="text-center">
-      <p class="text-body text-lg">Select 2–3 professionals above to compare</p>
+<div class="bg-white" id="comparison-section">
+  <div class="max-w-[960px] mx-auto px-4 pt-6 pb-2">
+    <div id="comparison-empty" class="text-center py-6">
+      <p class="text-sm text-body">Tap two or more bubbles to compare</p>
     </div>
     <div id="comparison-table" class="comparison-table" style="display:none;" aria-live="polite">
       <div class="comparison-scroll">
@@ -13,7 +13,7 @@
       </div>
     </div>
   </div>
-</section>
+</div>
 
 <script>
 (function() {
@@ -30,10 +30,10 @@
     waitTime: string;
   }> = JSON.parse(dataEl.textContent || '{}');
 
-  const prompt = document.getElementById('comparison-prompt');
   const table = document.getElementById('comparison-table');
   const grid = document.getElementById('comparison-grid');
-  if (!prompt || !table || !grid) return;
+  const empty = document.getElementById('comparison-empty');
+  if (!table || !grid) return;
 
   let wasVisible = false;
 
@@ -43,13 +43,13 @@
 
     if (selected.length < 2) {
       table.style.display = 'none';
-      prompt.style.display = '';
+      if (empty) empty.style.display = '';
       wasVisible = false;
       return;
     }
 
-    prompt.style.display = 'none';
     table.style.display = '';
+    if (empty) empty.style.display = 'none';
 
     // Build comparison grid
     const cols = selected.length;
@@ -147,7 +147,7 @@
     right: 0;
     bottom: 0;
     width: 40px;
-    background: linear-gradient(to right, transparent, rgb(249 250 251));
+    background: linear-gradient(to right, transparent, white);
     pointer-events: none;
     z-index: 2;
   }
