@@ -12,9 +12,7 @@ const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.d
   <!-- Hero + bubble map -->
   <section class="bg-white">
     <div class="max-w-[960px] mx-auto px-4 pt-16 md:pt-20 pb-8 md:pb-10">
-      <div class="max-w-[720px]">
-        <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-4 tracking-[-0.01em]">Who should I see?</h1>
-      </div>
+      <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-2 tracking-[-0.01em] text-center">Who should I see?</h1>
       <PractitionerBubbleMap />
       <div class="max-w-[720px] mt-8">
         <div class="space-y-5 text-lg leading-relaxed text-body">
