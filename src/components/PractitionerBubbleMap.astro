@@ -643,6 +643,7 @@ const bmData = {
         const baseVh = 60;
         const maxVh = 90;
         const extraVh = Math.min((upDelta / window.innerHeight) * 100, maxVh - baseVh);
+        popover.style.height = (baseVh + extraVh) + 'vh';
         popover.style.maxHeight = (baseVh + extraVh) + 'vh';
       }
     }, { passive: false });
@@ -670,9 +671,11 @@ const bmData = {
         if (upDelta > 40) {
           // Snap to expanded
           popover.classList.add('bm-popover-expanded');
+          popover.style.height = '';
           popover.style.maxHeight = '';
         } else {
           // Snap back to default
+          popover.style.height = '';
           popover.style.maxHeight = '';
         }
       }
@@ -918,6 +921,7 @@ const bmData = {
       right: 0;
       top: auto;
       width: auto;
+      height: 60vh;
       max-height: 60vh;
       overflow-y: hidden;
       touch-action: none;
@@ -1088,6 +1092,7 @@ const bmData = {
   /* Expanded mobile bottom sheet */
   @media (max-width: 767px) {
     .bubble-map .bm-popover.bm-popover-expanded {
+      height: 90vh;
       max-height: 90vh;
       overflow-y: auto;
       touch-action: pan-y;
