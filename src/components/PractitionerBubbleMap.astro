@@ -20,6 +20,7 @@
 
           {/* Core blobs with goo filter — overlapping organic cluster */}
           <g filter="url(#goo)">
+            <g class="bm-dimmed-layer"></g>
             <ellipse class="bm-blob" cx="230" cy="175" rx="115" ry="108"
               fill="#4a7fb5" opacity="0.80"
               data-prof="psychologist" />
@@ -56,6 +57,8 @@
               fill="#8a8a8a" opacity="0.65"
               data-prof="peer" />
           </g>
+
+          <g class="bm-dimmed-text-layer"></g>
 
           {/* Core labels — positioned to match blob centres */}
           <text x="230" y="168" class="bm-blob-label" font-size="15" text-anchor="middle" data-prof="psychologist">Psychologist</text>
@@ -277,6 +280,8 @@ const bmData = {
   let activeKey: string | null = null;
   let hideTimeout: number | null = null;
   const gooGroup = wrapper!.querySelector('g[filter]') || wrapper!.querySelector('.bm-map-svg > g:first-of-type');
+  const dimmedLayer = wrapper!.querySelector('.bm-dimmed-layer') as SVGGElement | null;
+  const dimmedTextLayer = wrapper!.querySelector('.bm-dimmed-text-layer') as SVGGElement | null;
   const popover = document.getElementById('bm-popover') as HTMLElement;
   const backdrop = document.getElementById('bm-popover-backdrop') as HTMLElement;
   const mapContainer = wrapper!.querySelector('.bm-map-container') as HTMLElement;
@@ -293,31 +298,62 @@ const bmData = {
       }
     }
 
+    // Move blobs into/out of dimmed layer for uniform group opacity
     allBlobs.forEach(function(el) {
       const key = el.getAttribute('data-prof') || '';
       if (selectedKeys.has(key)) {
         el.classList.add('bm-blob-selected');
         el.classList.remove('bm-blob-dimmed');
         el.removeAttribute('display');
+        // Selected blobs stay as direct children of gooGroup (above dimmed layer)
+        if ((el.parentNode as Element) === dimmedLayer && gooGroup) {
+          gooGroup.appendChild(el);
+        }
       } else {
         el.classList.remove('bm-blob-selected');
         if (hasSelection) {
           el.classList.add('bm-blob-dimmed');
+          // Move non-selected blobs into the dimmed layer
+          if (dimmedLayer && (el.parentNode as Element) !== dimmedLayer) {
+            dimmedLayer.appendChild(el);
+          }
         } else {
           el.classList.remove('bm-blob-dimmed');
           el.removeAttribute('display');
+          // Move all blobs back as direct children of gooGroup
+          if ((el.parentNode as Element) === dimmedLayer && gooGroup) {
+            gooGroup.appendChild(el);
+          }
         }
       }
     });
 
-    // Hide/show labels, sub-labels, and badges that have data-prof
+    // Set group opacity on dimmed layers
+    if (dimmedLayer) {
+      dimmedLayer.style.opacity = hasSelection ? '0.25' : '1';
+    }
+    if (dimmedTextLayer) {
+      dimmedTextLayer.style.opacity = hasSelection ? '0.2' : '1';
+    }
+
+    // Move text elements into/out of dimmed text layer
     wrapper!.querySelectorAll('[data-prof]:not(.bm-blob)').forEach(function(el) {
       const key = el.getAttribute('data-prof') || '';
+      const svg = wrapper!.querySelector('.bm-map-svg');
       if (!hasSelection || selectedKeys.has(key)) {
         el.classList.remove('bm-text-dimmed');
         el.removeAttribute('display');
+        // Move back to SVG root (or its original parent)
+        if ((el.parentNode as Element) === dimmedTextLayer && svg) {
+          // Insert before the dimmed text layer to maintain order
+          svg.insertBefore(el, dimmedTextLayer);
+        }
       } else {
         el.classList.add('bm-text-dimmed');
+        // Move into dimmed text layer
+        if (dimmedTextLayer && (el.parentNode as Element) !== dimmedTextLayer) {
+          dimmedTextLayer.appendChild(el);
+        }
       }
     });
   }
@@ -567,6 +603,12 @@ const bmData = {
     padding: 0 12px;
   }
 
+  @media (max-width: 640px) {
+    .bubble-map .bm-map-container {
+      padding: 0 4px;
+    }
+  }
+
   .bubble-map .bm-map-svg {
     width: 100%;
     height: auto;
@@ -605,11 +647,15 @@ const bmData = {
   }
 
   .bubble-map .bm-blob.bm-blob-dimmed {
-    opacity: 0;
+    /* opacity handled by group layer */
   }
 
   .bubble-map .bm-text-dimmed {
-    opacity: 0;
+    /* opacity handled by group layer */
+  }
+
+  .bubble-map .bm-dimmed-layer,
+  .bubble-map .bm-dimmed-text-layer {
     transition: opacity 0.4s ease;
   }
 
