@@ -595,10 +595,9 @@ const bmData = {
           if (touchDeltaY > 5 && popover.scrollTop <= 0) {
             dragDirection = 'down';
           } else if (touchDeltaY < -5) {
-            // Allow expansion if sheet isn't expanded AND content doesn't overflow
+            // Allow expansion when sheet isn't fully expanded yet
             const isExpanded = popover.classList.contains('bm-popover-expanded');
-            const isScrollable = popover.scrollHeight > popover.clientHeight + 2;
-            if (!isExpanded && !isScrollable) {
+            if (!isExpanded) {
               dragDirection = 'up';
             } else {
               touchStartY = 0;
@@ -914,7 +913,7 @@ const bmData = {
       top: auto;
       width: auto;
       max-height: 60vh;
-      overflow-y: auto;
+      overflow-y: hidden;
       border-radius: 16px 16px 0 0;
       transform: translateY(100%);
       padding: 24px;
@@ -1083,6 +1082,7 @@ const bmData = {
   @media (max-width: 767px) {
     .bubble-map .bm-popover.bm-popover-expanded {
       max-height: 90vh;
+      overflow-y: auto;
     }
   }
 
