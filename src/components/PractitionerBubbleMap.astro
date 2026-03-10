@@ -422,10 +422,15 @@ const bmData = {
     if (!popover) return;
     activeKey = null;
     popover.classList.remove('bm-popover-visible');
+    popover.classList.remove('bm-popover-expanded');
     backdrop.classList.remove('bm-popover-backdrop-visible');
+    // Unlock body scroll
+    document.body.classList.remove('bm-body-locked');
+    document.documentElement.classList.remove('bm-body-locked');
     hideTimeout = window.setTimeout(function() {
       popover.style.display = 'none';
       popover.style.transform = '';
+      popover.style.maxHeight = '';
       popover.innerHTML = '';
     }, 200);
   }
@@ -479,9 +484,11 @@ const bmData = {
       positionPopover(blobEl);
     }
 
-    // Show backdrop on mobile
+    // Show backdrop and lock body scroll on mobile
     if (isMobile()) {
       backdrop.classList.add('bm-popover-backdrop-visible');
+      document.body.classList.add('bm-body-locked');
+      document.documentElement.classList.add('bm-body-locked');
     }
 
     // Animate in
@@ -543,19 +550,20 @@ const bmData = {
     });
   }
 
-  // Swipe-to-dismiss on mobile
+  // Swipe-to-dismiss and swipe-to-expand on mobile
   let touchStartY = 0;
   let touchDeltaY = 0;
   let isDragging = false;
+  let dragDirection: 'down' | 'up' | null = null;
 
   if (popover) {
     popover.addEventListener('touchstart', function(e) {
       if (!isMobile() || !activeKey) return;
-      // Don't intercept if content is scrolled
-      if (popover.scrollTop > 0) return;
+      // Don't intercept downward drag if content is scrolled
       touchStartY = e.touches[0].clientY;
       touchDeltaY = 0;
       isDragging = false;
+      dragDirection = null;
     }, { passive: true });
 
     popover.addEventListener('touchmove', function(e) {
@@ -563,43 +571,92 @@ const bmData = {
       const currentY = e.touches[0].clientY;
       touchDeltaY = currentY - touchStartY;
 
-      // Only drag downward; if scrolled, let native scroll work
-      if (touchDeltaY <= 0 || popover.scrollTop > 0) {
-        touchDeltaY = 0;
-        return;
+      // Determine drag direction on first significant movement
+      if (!dragDirection) {
+        if (touchDeltaY > 5 && popover.scrollTop <= 0) {
+          dragDirection = 'down';
+        } else if (touchDeltaY < -5) {
+          // Allow upward drag only when not already expanded and at scroll bottom
+          const isExpanded = popover.classList.contains('bm-popover-expanded');
+          const atScrollBottom = popover.scrollHeight - popover.scrollTop - popover.clientHeight < 2;
+          if (!isExpanded && atScrollBottom) {
+            dragDirection = 'up';
+          } else {
+            // Let native scroll handle it
+            touchStartY = 0;
+            return;
+          }
+        } else {
+          return;
+        }
       }
 
-      if (!isDragging) {
-        isDragging = true;
-        popover.classList.add('bm-popover-dragging');
-      }
+      if (dragDirection === 'down') {
+        // Prevent Chrome pull-to-refresh
+        e.preventDefault();
 
-      popover.style.transform = 'translateY(' + touchDeltaY + 'px)';
-      // Fade backdrop proportionally (dismiss at 80px threshold)
-      const progress = Math.min(touchDeltaY / 200, 1);
-      backdrop.style.opacity = String(1 - progress);
-    }, { passive: true });
+        if (!isDragging) {
+          isDragging = true;
+          popover.classList.add('bm-popover-dragging');
+        }
+
+        const downDelta = Math.max(0, touchDeltaY);
+        popover.style.transform = 'translateY(' + downDelta + 'px)';
+        // Fade backdrop proportionally (dismiss at 80px threshold)
+        const progress = Math.min(downDelta / 200, 1);
+        backdrop.style.opacity = String(1 - progress);
+      } else if (dragDirection === 'up') {
+        // Prevent Chrome pull-to-refresh / default scroll
+        e.preventDefault();
+
+        if (!isDragging) {
+          isDragging = true;
+          popover.classList.add('bm-popover-dragging');
+        }
+
+        // Increase max-height dynamically (upDelta is positive pixels dragged upward)
+        const upDelta = Math.max(0, -touchDeltaY);
+        const baseVh = 60;
+        const maxVh = 90;
+        const extraVh = Math.min((upDelta / window.innerHeight) * 100, maxVh - baseVh);
+        popover.style.maxHeight = (baseVh + extraVh) + 'vh';
+      }
+    }, { passive: false });
 
     popover.addEventListener('touchend', function() {
       if (!isDragging) {
         touchStartY = 0;
+        dragDirection = null;
         return;
       }
 
       popover.classList.remove('bm-popover-dragging');
-      backdrop.style.opacity = '';
 
-      if (touchDeltaY > 80) {
-        // Dismiss
-        hideBmInfo();
-      } else {
-        // Snap back
-        popover.style.transform = '';
+      if (dragDirection === 'down') {
+        backdrop.style.opacity = '';
+        if (touchDeltaY > 80) {
+          // Dismiss
+          hideBmInfo();
+        } else {
+          // Snap back
+          popover.style.transform = '';
+        }
+      } else if (dragDirection === 'up') {
+        const upDelta = Math.max(0, -touchDeltaY);
+        if (upDelta > 40) {
+          // Snap to expanded
+          popover.classList.add('bm-popover-expanded');
+          popover.style.maxHeight = '';
+        } else {
+          // Snap back to default
+          popover.style.maxHeight = '';
+        }
       }
 
       touchStartY = 0;
       touchDeltaY = 0;
       isDragging = false;
+      dragDirection = null;
     }, { passive: true });
   }
 
@@ -994,6 +1051,18 @@ const bmData = {
 
     .bubble-map .bm-popover.bm-popover-dragging {
       transition: none !important;
+    }
+  }
+
+  /* Body scroll lock when mobile sheet is open */
+  .bm-body-locked {
+    overflow: hidden !important;
+  }
+
+  /* Expanded mobile bottom sheet */
+  @media (max-width: 767px) {
+    .bubble-map .bm-popover.bm-popover-expanded {
+      max-height: 90vh;
     }
   }
 
