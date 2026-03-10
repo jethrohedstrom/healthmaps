@@ -573,6 +573,12 @@ const bmData = {
       const currentY = e.touches[0].clientY;
       touchDeltaY = currentY - touchStartY;
 
+      // Prevent browser from claiming touch gestures on non-expanded sheet.
+      // Must fire before 5px threshold so iOS Safari doesn't pre-empt our handler.
+      if (!popover.classList.contains('bm-popover-expanded')) {
+        e.preventDefault();
+      }
+
       // Determine drag direction on first significant movement
       if (!dragDirection) {
         if (touchStartOnHandle) {
@@ -914,6 +920,7 @@ const bmData = {
       width: auto;
       max-height: 60vh;
       overflow-y: hidden;
+      touch-action: none;
       border-radius: 16px 16px 0 0;
       transform: translateY(100%);
       padding: 24px;
@@ -1083,6 +1090,7 @@ const bmData = {
     .bubble-map .bm-popover.bm-popover-expanded {
       max-height: 90vh;
       overflow-y: auto;
+      touch-action: pan-y;
     }
   }
 
