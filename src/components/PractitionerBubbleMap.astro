@@ -594,9 +594,17 @@ const bmData = {
           // Content area: only allow downward dismiss when scrolled to top
           if (touchDeltaY > 5 && popover.scrollTop <= 0) {
             dragDirection = 'down';
+          } else if (touchDeltaY < -5) {
+            // Allow expansion if sheet isn't expanded AND content doesn't overflow
+            const isExpanded = popover.classList.contains('bm-popover-expanded');
+            const isScrollable = popover.scrollHeight > popover.clientHeight + 2;
+            if (!isExpanded && !isScrollable) {
+              dragDirection = 'up';
+            } else {
+              touchStartY = 0;
+              return;
+            }
           } else {
-            // Let native scroll handle it
-            touchStartY = 0;
             return;
           }
         }
@@ -1049,7 +1057,7 @@ const bmData = {
     .bubble-map .bm-drag-handle {
       display: flex;
       justify-content: center;
-      padding: 0 0 12px;
+      padding: 8px 0 16px;
       cursor: grab;
       touch-action: none;
     }
