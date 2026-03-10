@@ -555,15 +555,17 @@ const bmData = {
   let touchDeltaY = 0;
   let isDragging = false;
   let dragDirection: 'down' | 'up' | null = null;
+  let touchStartOnHandle = false;
 
   if (popover) {
     popover.addEventListener('touchstart', function(e) {
       if (!isMobile() || !activeKey) return;
-      // Don't intercept downward drag if content is scrolled
       touchStartY = e.touches[0].clientY;
       touchDeltaY = 0;
       isDragging = false;
       dragDirection = null;
+      const target = e.target as HTMLElement;
+      touchStartOnHandle = target.closest('.bm-drag-handle') !== null;
     }, { passive: true });
 
     popover.addEventListener('touchmove', function(e) {
@@ -573,21 +575,30 @@ const bmData = {
 
       // Determine drag direction on first significant movement
       if (!dragDirection) {
-        if (touchDeltaY > 5 && popover.scrollTop <= 0) {
-          dragDirection = 'down';
-        } else if (touchDeltaY < -5) {
-          // Allow upward drag only when not already expanded and at scroll bottom
-          const isExpanded = popover.classList.contains('bm-popover-expanded');
-          const atScrollBottom = popover.scrollHeight - popover.scrollTop - popover.clientHeight < 2;
-          if (!isExpanded && atScrollBottom) {
-            dragDirection = 'up';
+        if (touchStartOnHandle) {
+          // Drag handle: allow both directions immediately, no scroll checks
+          if (touchDeltaY > 5) {
+            dragDirection = 'down';
+          } else if (touchDeltaY < -5) {
+            const isExpanded = popover.classList.contains('bm-popover-expanded');
+            if (!isExpanded) {
+              dragDirection = 'up';
+            } else {
+              touchStartY = 0;
+              return;
+            }
+          } else {
+            return;
+          }
+        } else {
+          // Content area: only allow downward dismiss when scrolled to top
+          if (touchDeltaY > 5 && popover.scrollTop <= 0) {
+            dragDirection = 'down';
           } else {
             // Let native scroll handle it
             touchStartY = 0;
             return;
           }
-        } else {
-          return;
         }
       }
 
@@ -1040,6 +1051,7 @@ const bmData = {
       justify-content: center;
       padding: 0 0 12px;
       cursor: grab;
+      touch-action: none;
     }
 
     .bubble-map .bm-drag-pill {
