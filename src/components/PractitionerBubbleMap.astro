@@ -425,6 +425,7 @@ const bmData = {
     backdrop.classList.remove('bm-popover-backdrop-visible');
     hideTimeout = window.setTimeout(function() {
       popover.style.display = 'none';
+      popover.style.transform = '';
       popover.innerHTML = '';
     }, 200);
   }
@@ -442,6 +443,7 @@ const bmData = {
     activeKey = key;
 
     popover.innerHTML =
+      '<div class="bm-drag-handle"><div class="bm-drag-pill"></div></div>' +
       '<button class="bm-popover-close" aria-label="Close">&times;</button>' +
       '<div class="bm-info-topline">' +
         '<div class="bm-info-dot" style="background:' + p.color + '"></div>' +
@@ -539,6 +541,66 @@ const bmData = {
     backdrop.addEventListener('click', function() {
       hideBmInfo();
     });
+  }
+
+  // Swipe-to-dismiss on mobile
+  let touchStartY = 0;
+  let touchDeltaY = 0;
+  let isDragging = false;
+
+  if (popover) {
+    popover.addEventListener('touchstart', function(e) {
+      if (!isMobile() || !activeKey) return;
+      // Don't intercept if content is scrolled
+      if (popover.scrollTop > 0) return;
+      touchStartY = e.touches[0].clientY;
+      touchDeltaY = 0;
+      isDragging = false;
+    }, { passive: true });
+
+    popover.addEventListener('touchmove', function(e) {
+      if (!isMobile() || !activeKey || touchStartY === 0) return;
+      const currentY = e.touches[0].clientY;
+      touchDeltaY = currentY - touchStartY;
+
+      // Only drag downward; if scrolled, let native scroll work
+      if (touchDeltaY <= 0 || popover.scrollTop > 0) {
+        touchDeltaY = 0;
+        return;
+      }
+
+      if (!isDragging) {
+        isDragging = true;
+        popover.classList.add('bm-popover-dragging');
+      }
+
+      popover.style.transform = 'translateY(' + touchDeltaY + 'px)';
+      // Fade backdrop proportionally (dismiss at 80px threshold)
+      const progress = Math.min(touchDeltaY / 200, 1);
+      backdrop.style.opacity = String(1 - progress);
+    }, { passive: true });
+
+    popover.addEventListener('touchend', function() {
+      if (!isDragging) {
+        touchStartY = 0;
+        return;
+      }
+
+      popover.classList.remove('bm-popover-dragging');
+      backdrop.style.opacity = '';
+
+      if (touchDeltaY > 80) {
+        // Dismiss
+        hideBmInfo();
+      } else {
+        // Snap back
+        popover.style.transform = '';
+      }
+
+      touchStartY = 0;
+      touchDeltaY = 0;
+      isDragging = false;
+    }, { passive: true });
   }
 
   // Dismiss on Escape
@@ -908,6 +970,31 @@ const bmData = {
 
   .bubble-map .bm-map-container {
     position: relative;
+  }
+
+  /* Drag handle — mobile only */
+  .bubble-map .bm-drag-handle {
+    display: none;
+  }
+
+  @media (max-width: 767px) {
+    .bubble-map .bm-drag-handle {
+      display: flex;
+      justify-content: center;
+      padding: 0 0 12px;
+      cursor: grab;
+    }
+
+    .bubble-map .bm-drag-pill {
+      width: 36px;
+      height: 4px;
+      background: #cbd5e1;
+      border-radius: 2px;
+    }
+
+    .bubble-map .bm-popover.bm-popover-dragging {
+      transition: none !important;
+    }
   }
 
   .bubble-map .bm-toast {
