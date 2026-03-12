@@ -22,15 +22,15 @@
           <g filter="url(#goo)">
             <g class="bm-dimmed-layer"></g>
             <ellipse class="bm-blob" cx="230" cy="175" rx="115" ry="108"
-              fill="#4a7fb5" opacity="0.80"
+              fill="#4a7fb5" opacity="1.0"
               data-prof="psychologist" />
 
             <ellipse class="bm-blob" cx="490" cy="185" rx="100" ry="95"
-              fill="#7e6aad" opacity="0.78"
+              fill="#7e6aad" opacity="1.0"
               data-prof="psychiatrist" />
 
             <ellipse class="bm-blob" cx="270" cy="420" rx="110" ry="100"
-              fill="#5aab7b" opacity="0.78"
+              fill="#5aab7b" opacity="1.0"
               data-prof="counsellor" />
 
             {/* GP centre — rendered last so it draws on top */}
@@ -42,19 +42,19 @@
           {/* Hidden blobs — NO goo filter to avoid ugly long-distance connections */}
           <g class="bm-hidden-blobs bm-hidden" id="extra-blobs-bm" aria-hidden="true">
             <ellipse class="bm-blob" cx="490" cy="410" rx="80" ry="72"
-              fill="#c27a4a" opacity="0.75"
+              fill="#c27a4a" opacity="1.0"
               data-prof="social-worker" />
 
             <ellipse class="bm-blob" cx="600" cy="300" rx="60" ry="55"
-              fill="#b5894a" opacity="0.72"
+              fill="#b5894a" opacity="1.0"
               data-prof="ot" />
 
             <ellipse class="bm-blob" cx="100" cy="290" rx="58" ry="54"
-              fill="#c25a6a" opacity="0.72"
+              fill="#c25a6a" opacity="1.0"
               data-prof="mh-nurse" />
 
             <ellipse class="bm-blob" cx="620" cy="430" rx="48" ry="45"
-              fill="#8a8a8a" opacity="0.65"
+              fill="#8a8a8a" opacity="1.0"
               data-prof="peer" />
           </g>
 
@@ -248,12 +248,96 @@ const bmData = {
   });
 
   let moreVisible = false;
+  const bmSvg = wrapper.querySelector('.bm-map-svg') as SVGSVGElement;
+  const FULL_VB = '0 0 700 540';
+  const MOBILE_VB = '80 40 560 480';
+  // Keep identical scale between states to avoid perceived blob size jumps.
+  const MOBILE_VB_EXPANDED = '80 40 560 480';
+
+  // --- Mobile blob repositioning ---
+  // Shift only edge hidden blobs inward when expanded to avoid clipping.
+  const mobileShifts: Record<string, number> = { 'mh-nurse': 50, 'ot': -50, 'peer': -60 };
+  const origX = new Map<Element, number>();
+
+  Object.keys(mobileShifts).forEach(function(prof) {
+    wrapper!.querySelectorAll('[data-prof="' + prof + '"]').forEach(function(el) {
+      const tag = el.tagName.toLowerCase();
+      const attr = tag === 'ellipse' ? 'cx' : 'x';
+      origX.set(el, parseFloat(el.getAttribute(attr) || '0'));
+    });
+  });
+
+  function repositionMobileBlobs() {
+    const mobile = window.innerWidth < 640;
+    origX.forEach(function(origVal, el) {
+      const prof = el.getAttribute('data-prof') || '';
+      const shift = mobileShifts[prof] || 0;
+      const tag = el.tagName.toLowerCase();
+      const attr = tag === 'ellipse' ? 'cx' : 'x';
+      // Keep hidden blob coordinates stable across show/hide toggles on mobile.
+      // This avoids perceived lateral "movement" when only visibility changes.
+      el.setAttribute(attr, String(mobile ? origVal + shift : origVal));
+    });
+  }
+
+  // --- Mobile badge rect sizing ---
+  const badgeOriginals = new Map<Element, { y: number; height: number }>();
+  const badgeTextOriginals = new Map<Element, number>();
+
+  wrapper!.querySelectorAll('.bm-badge-bg').forEach(function(rect) {
+    badgeOriginals.set(rect, {
+      y: parseFloat(rect.getAttribute('y') || '0'),
+      height: parseFloat(rect.getAttribute('height') || '13')
+    });
+  });
+  wrapper!.querySelectorAll('.bm-badge-text').forEach(function(text) {
+    badgeTextOriginals.set(text, parseFloat(text.getAttribute('y') || '0'));
+  });
+
+  function updateBadgeRects() {
+    const mobile = window.innerWidth < 640;
+    badgeOriginals.forEach(function(orig, rect) {
+      if (mobile) {
+        rect.setAttribute('y', String(orig.y - 2));
+        rect.setAttribute('height', '17');
+      } else {
+        rect.setAttribute('y', String(orig.y));
+        rect.setAttribute('height', String(orig.height));
+      }
+    });
+    badgeTextOriginals.forEach(function(origY, text) {
+      text.setAttribute('y', String(mobile ? origY + 1 : origY));
+    });
+  }
+
+  function updateViewBox() {
+    if (!bmSvg) return;
+    if (window.innerWidth < 640) {
+      bmSvg.setAttribute('viewBox', moreVisible ? MOBILE_VB_EXPANDED : MOBILE_VB);
+    } else {
+      bmSvg.setAttribute('viewBox', FULL_VB);
+    }
+    repositionMobileBlobs();
+    updateBadgeRects();
+    // #region agent log
+    fetch('http://127.0.0.1:7517/ingest/4796b335-cf3c-4958-9a7c-6583e2dcb00e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'324cd4'},body:JSON.stringify({sessionId:'324cd4',runId:'run1',hypothesisId:'H1',location:'PractitionerBubbleMap.astro:updateViewBox',message:'viewbox-and-positions-after-update',data:getSnapshot(),timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
+  }
+
   const showMoreBtn = document.getElementById('showMoreBtn-bm');
   if (showMoreBtn) {
     showMoreBtn.addEventListener('click', function() {
+      const prevScrollY = window.scrollY;
       moreVisible = !moreVisible;
       const blobs = document.getElementById('extra-blobs-bm');
       const labels = document.getElementById('extra-labels-bm');
+      const hiddenKeys = ['social-worker', 'ot', 'mh-nurse', 'peer'];
+
+      // If the bottom-sheet popover is open, close it before relayout to avoid
+      // mobile viewport scroll jumps when toggling map state.
+      if (activeKey) {
+        hideBmInfo();
+      }
 
       showMoreBtn.setAttribute('aria-expanded', String(moreVisible));
       if (moreVisible) {
@@ -272,19 +356,155 @@ const bmData = {
         labels?.classList.remove('bm-visible');
         labels?.setAttribute('aria-hidden', 'true');
         showMoreBtn.textContent = '\uff0b Show all professionals';
+        // If a hidden profession was selected, clear it on collapse so hidden items
+        // do not remain selected/dimmed while invisible.
+        let removedAny = false;
+        hiddenKeys.forEach(function(k) {
+          if (selectedKeys.has(k)) {
+            selectedKeys.delete(k);
+            removedAny = true;
+          }
+        });
+        if (removedAny) {
+          if (activeKey && hiddenKeys.includes(activeKey)) {
+            hideBmInfo();
+          }
+          updateBlobVisuals();
+          dispatchSelectionEvent();
+        }
       }
+      updateViewBox();
+      requestAnimationFrame(function() {
+        if (window.scrollY !== prevScrollY) {
+          window.scrollTo(0, prevScrollY);
+        }
+      });
+      // #region agent log
+      fetch('http://127.0.0.1:7517/ingest/4796b335-cf3c-4958-9a7c-6583e2dcb00e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'324cd4'},body:JSON.stringify({sessionId:'324cd4',runId:'run1',hypothesisId:'H2',location:'PractitionerBubbleMap.astro:showMoreClick',message:'show-more-toggle-post-update',data:{...getSnapshot(),preToggleScrollY:prevScrollY},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
     });
   }
 
-  const selectedKeys = new Set<string>();
-  let activeKey: string | null = null;
-  let hideTimeout: number | null = null;
   const gooGroup = wrapper!.querySelector('g[filter]') || wrapper!.querySelector('.bm-map-svg > g:first-of-type');
   const dimmedLayer = wrapper!.querySelector('.bm-dimmed-layer') as SVGGElement | null;
   const dimmedTextLayer = wrapper!.querySelector('.bm-dimmed-text-layer') as SVGGElement | null;
   const popover = document.getElementById('bm-popover') as HTMLElement;
   const backdrop = document.getElementById('bm-popover-backdrop') as HTMLElement;
   const mapContainer = wrapper!.querySelector('.bm-map-container') as HTMLElement;
+  const selectedKeys = new Set<string>();
+  let activeKey: string | null = null;
+  let hideTimeout: number | null = null;
+
+  updateViewBox();
+
+  function parseViewBox(vb: string | null) {
+    if (!vb) return null;
+    const nums = vb.split(/\s+/).map(function(n) { return parseFloat(n); });
+    if (nums.length !== 4 || nums.some(function(n) { return Number.isNaN(n); })) return null;
+    return { minX: nums[0], minY: nums[1], width: nums[2], height: nums[3], maxX: nums[0] + nums[2], maxY: nums[1] + nums[3] };
+  }
+
+  function getBlob(prof: string) {
+    return wrapper!.querySelector('.bm-blob[data-prof="' + prof + '"]') as SVGElement | null;
+  }
+
+  function getNumericAttr(el: Element | null, attr: string) {
+    if (!el) return null;
+    const n = parseFloat(el.getAttribute(attr) || '');
+    return Number.isNaN(n) ? null : n;
+  }
+
+  function textFitFor(prof: string) {
+    const ellipse = getBlob(prof);
+    if (!ellipse || typeof (ellipse as SVGGraphicsElement).getBBox !== 'function') return null;
+    const cx = getNumericAttr(ellipse, 'cx');
+    const cy = getNumericAttr(ellipse, 'cy');
+    const rx = getNumericAttr(ellipse, 'rx');
+    const ry = getNumericAttr(ellipse, 'ry');
+    if (cx === null || cy === null || rx === null || ry === null) return null;
+    const nodes = wrapper!.querySelectorAll('[data-prof="' + prof + '"]:not(.bm-blob)');
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+    nodes.forEach(function(node) {
+      if (typeof (node as SVGGraphicsElement).getBBox !== 'function') return;
+      let b;
+      try {
+        b = (node as SVGGraphicsElement).getBBox();
+      } catch {
+        return;
+      }
+      minX = Math.min(minX, b.x);
+      minY = Math.min(minY, b.y);
+      maxX = Math.max(maxX, b.x + b.width);
+      maxY = Math.max(maxY, b.y + b.height);
+    });
+    if (!Number.isFinite(minX)) return null;
+    return {
+      prof: prof,
+      ellipseBox: { minX: cx - rx, maxX: cx + rx, minY: cy - ry, maxY: cy + ry },
+      contentBox: { minX: minX, maxX: maxX, minY: minY, maxY: maxY },
+      overflowX: minX < (cx - rx) || maxX > (cx + rx),
+      overflowY: minY < (cy - ry) || maxY > (cy + ry)
+    };
+  }
+
+  function getSnapshot() {
+    const vb = parseViewBox(bmSvg?.getAttribute('viewBox') || null);
+    const social = getBlob('social-worker');
+    const peer = getBlob('peer');
+    const socialCx = getNumericAttr(social, 'cx');
+    const socialRx = getNumericAttr(social, 'rx');
+    const peerCx = getNumericAttr(peer, 'cx');
+    const peerRx = getNumericAttr(peer, 'rx');
+    const overlapDelta = (socialCx !== null && socialRx !== null && peerCx !== null && peerRx !== null)
+      ? Math.abs(peerCx - socialCx) - (socialRx + peerRx)
+      : null;
+    const clippedBlobs = vb ? Array.from(wrapper!.querySelectorAll('.bm-blob[data-prof]')).map(function(el) {
+      const prof = el.getAttribute('data-prof') || '';
+      const cx = getNumericAttr(el, 'cx');
+      const cy = getNumericAttr(el, 'cy');
+      const rx = getNumericAttr(el, 'rx');
+      const ry = getNumericAttr(el, 'ry');
+      if (cx === null || cy === null || rx === null || ry === null) return null;
+      const out = (cx - rx) < vb.minX || (cx + rx) > vb.maxX || (cy - ry) < vb.minY || (cy + ry) > vb.maxY;
+      return out ? { prof: prof, box: { minX: cx - rx, maxX: cx + rx, minY: cy - ry, maxY: cy + ry } } : null;
+    }).filter(Boolean) : [];
+    const svgRect = bmSvg ? bmSvg.getBoundingClientRect() : null;
+    const containerRect = mapContainer ? mapContainer.getBoundingClientRect() : null;
+    const selectedInDimmedLayer = dimmedLayer ? dimmedLayer.querySelectorAll('.bm-blob-selected').length : 0;
+    return {
+      mobile: window.innerWidth < 640,
+      width: window.innerWidth,
+      scrollY: window.scrollY,
+      moreVisible: moreVisible,
+      selectedCount: selectedKeys.size,
+      selectedKeys: Array.from(selectedKeys),
+      gooFilter: gooGroup ? gooGroup.getAttribute('filter') : null,
+      selectedInDimmedLayer: selectedInDimmedLayer,
+      svgRect: svgRect ? { top: svgRect.top, left: svgRect.left, width: svgRect.width, height: svgRect.height } : null,
+      containerRect: containerRect ? { top: containerRect.top, left: containerRect.left, width: containerRect.width, height: containerRect.height } : null,
+      viewBox: vb,
+      coreCx: {
+        psychologist: getNumericAttr(getBlob('psychologist'), 'cx'),
+        psychiatrist: getNumericAttr(getBlob('psychiatrist'), 'cx'),
+        counsellor: getNumericAttr(getBlob('counsellor'), 'cx'),
+        gp: getNumericAttr(getBlob('gp'), 'cx')
+      },
+      hiddenCx: {
+        socialWorker: socialCx,
+        ot: getNumericAttr(getBlob('ot'), 'cx'),
+        mhNurse: getNumericAttr(getBlob('mh-nurse'), 'cx'),
+        peer: peerCx
+      },
+      clippedBlobs: clippedBlobs,
+      socialPeerOverlapDelta: overlapDelta,
+      fitMhNurse: textFitFor('mh-nurse'),
+      fitSocialWorker: textFitFor('social-worker'),
+      fitPeer: textFitFor('peer')
+    };
+  }
 
   function updateBlobVisuals() {
     const allBlobs = wrapper!.querySelectorAll('.bm-blob[data-prof]');
@@ -356,6 +576,9 @@ const bmData = {
         }
       }
     });
+    // #region agent log
+    fetch('http://127.0.0.1:7517/ingest/4796b335-cf3c-4958-9a7c-6583e2dcb00e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'324cd4'},body:JSON.stringify({sessionId:'324cd4',runId:'run1',hypothesisId:'H4',location:'PractitionerBubbleMap.astro:updateBlobVisuals',message:'blob-visuals-updated',data:getSnapshot(),timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
   }
 
   function dispatchSelectionEvent() {
@@ -519,6 +742,9 @@ const bmData = {
     }
     updateBlobVisuals();
     dispatchSelectionEvent();
+    // #region agent log
+    fetch('http://127.0.0.1:7517/ingest/4796b335-cf3c-4958-9a7c-6583e2dcb00e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'324cd4'},body:JSON.stringify({sessionId:'324cd4',runId:'run1',hypothesisId:'H3',location:'PractitionerBubbleMap.astro:toggleSelection',message:'selection-updated',data:getSnapshot(),timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
   }
 
   wrapper.querySelectorAll('.bm-blob[data-prof]').forEach(function(el) {
@@ -697,11 +923,13 @@ const bmData = {
   // Reposition on resize (debounced)
   let resizeTimer: number | null = null;
   window.addEventListener('resize', function() {
-    if (!activeKey || !popover) return;
     if (resizeTimer) clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(function() {
-      const blobEl = wrapper!.querySelector('.bm-blob[data-prof="' + activeKey + '"]') as SVGElement | null;
-      if (blobEl) positionPopover(blobEl);
+      updateViewBox();
+      if (activeKey && popover) {
+        const blobEl = wrapper!.querySelector('.bm-blob[data-prof="' + activeKey + '"]') as SVGElement | null;
+        if (blobEl) positionPopover(blobEl);
+      }
     }, 100);
   });
 })();
@@ -750,8 +978,11 @@ const bmData = {
   }
 
   @media (max-width: 640px) {
+    .bubble-map .bm-header {
+      padding: 0 12px 8px;
+    }
     .bubble-map .bm-map-container {
-      padding: 0 4px;
+      padding: 0;
     }
   }
 
@@ -1120,5 +1351,22 @@ const bmData = {
 
   .bubble-map .bm-toast.bm-toast-visible {
     opacity: 1;
+  }
+
+  /* Mobile: bump SVG text sizes for legibility */
+  @media (max-width: 640px) {
+    .bubble-map .bm-blob-label { font-size: 18px; }
+    .bubble-map .bm-blob-sub { font-size: 13px; }
+    .bubble-map .bm-badge-text { font-size: 10px; }
+    #extra-labels-bm .bm-blob-label { font-size: 13px; }
+    #extra-labels-bm .bm-blob-sub { font-size: 10px; }
+    #extra-labels-bm .bm-badge-text { font-size: 9px; }
+    /* MH Nurse needs a tighter fit at this radius */
+    #extra-labels-bm [data-prof="mh-nurse"].bm-blob-label { font-size: 11px; }
+    #extra-labels-bm [data-prof="mh-nurse"].bm-blob-sub { font-size: 9px; }
+    #extra-labels-bm [data-prof="mh-nurse"].bm-badge-text { font-size: 8px; }
+    .bubble-map [data-prof="mh-nurse"].bm-blob-label { font-size: 11px; }
+    .bubble-map [data-prof="mh-nurse"].bm-blob-sub { font-size: 9px; }
+    .bubble-map [data-prof="mh-nurse"].bm-badge-text { font-size: 8px; }
   }
 </style>
