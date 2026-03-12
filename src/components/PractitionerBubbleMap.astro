@@ -268,7 +268,7 @@ const bmData = {
   });
 
   function repositionMobileBlobs() {
-    const mobile = window.innerWidth < 640;
+    const mobile = window.innerWidth < 768;
     origX.forEach(function(origVal, el) {
       const prof = el.getAttribute('data-prof') || '';
       const shift = mobileShifts[prof] || 0;
@@ -295,7 +295,7 @@ const bmData = {
   });
 
   function updateBadgeRects() {
-    const mobile = window.innerWidth < 640;
+    const mobile = window.innerWidth < 768;
     badgeOriginals.forEach(function(orig, rect) {
       if (mobile) {
         rect.setAttribute('y', String(orig.y - 2));
@@ -312,16 +312,13 @@ const bmData = {
 
   function updateViewBox() {
     if (!bmSvg) return;
-    if (window.innerWidth < 640) {
+    if (window.innerWidth < 768) {
       bmSvg.setAttribute('viewBox', moreVisible ? MOBILE_VB_EXPANDED : MOBILE_VB);
     } else {
       bmSvg.setAttribute('viewBox', FULL_VB);
     }
     repositionMobileBlobs();
     updateBadgeRects();
-    // #region agent log
-    fetch('http://127.0.0.1:7517/ingest/4796b335-cf3c-4958-9a7c-6583e2dcb00e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'324cd4'},body:JSON.stringify({sessionId:'324cd4',runId:'run1',hypothesisId:'H1',location:'PractitionerBubbleMap.astro:updateViewBox',message:'viewbox-and-positions-after-update',data:getSnapshot(),timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
   }
 
   const showMoreBtn = document.getElementById('showMoreBtn-bm');
@@ -333,14 +330,13 @@ const bmData = {
       const labels = document.getElementById('extra-labels-bm');
       const hiddenKeys = ['social-worker', 'ot', 'mh-nurse', 'peer'];
 
-      // If the bottom-sheet popover is open, close it before relayout to avoid
-      // mobile viewport scroll jumps when toggling map state.
-      if (activeKey) {
-        hideBmInfo();
-      }
-
       showMoreBtn.setAttribute('aria-expanded', String(moreVisible));
       if (moreVisible) {
+        // Close popover synchronously before relayout to avoid
+        // mobile viewport scroll jumps when toggling map state.
+        if (activeKey) {
+          hideBmInfo(true);
+        }
         blobs?.classList.remove('bm-hidden');
         blobs?.classList.add('bm-visible');
         blobs?.setAttribute('aria-hidden', 'false');
@@ -349,15 +345,9 @@ const bmData = {
         labels?.setAttribute('aria-hidden', 'false');
         showMoreBtn.textContent = '\u2190 Show fewer professionals';
       } else {
-        blobs?.classList.add('bm-hidden');
-        blobs?.classList.remove('bm-visible');
-        blobs?.setAttribute('aria-hidden', 'true');
-        labels?.classList.add('bm-hidden');
-        labels?.classList.remove('bm-visible');
-        labels?.setAttribute('aria-hidden', 'true');
-        showMoreBtn.textContent = '\uff0b Show all professionals';
-        // If a hidden profession was selected, clear it on collapse so hidden items
-        // do not remain selected/dimmed while invisible.
+        // Deselect hidden items BEFORE changing visibility classes so
+        // blob visuals update while elements are still visible, avoiding
+        // a window where fading-out blobs still show selected strokes.
         let removedAny = false;
         hiddenKeys.forEach(function(k) {
           if (selectedKeys.has(k)) {
@@ -366,12 +356,21 @@ const bmData = {
           }
         });
         if (removedAny) {
-          if (activeKey && hiddenKeys.includes(activeKey)) {
-            hideBmInfo();
-          }
           updateBlobVisuals();
           dispatchSelectionEvent();
         }
+        // Close popover synchronously (no 200ms race with relayout)
+        if (activeKey) {
+          hideBmInfo(true);
+        }
+        // Now change visibility
+        blobs?.classList.add('bm-hidden');
+        blobs?.classList.remove('bm-visible');
+        blobs?.setAttribute('aria-hidden', 'true');
+        labels?.classList.add('bm-hidden');
+        labels?.classList.remove('bm-visible');
+        labels?.setAttribute('aria-hidden', 'true');
+        showMoreBtn.textContent = '\uff0b Show all professionals';
       }
       updateViewBox();
       requestAnimationFrame(function() {
@@ -379,9 +378,6 @@ const bmData = {
           window.scrollTo(0, prevScrollY);
         }
       });
-      // #region agent log
-      fetch('http://127.0.0.1:7517/ingest/4796b335-cf3c-4958-9a7c-6583e2dcb00e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'324cd4'},body:JSON.stringify({sessionId:'324cd4',runId:'run1',hypothesisId:'H2',location:'PractitionerBubbleMap.astro:showMoreClick',message:'show-more-toggle-post-update',data:{...getSnapshot(),preToggleScrollY:prevScrollY},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
     });
   }
 
@@ -396,115 +392,6 @@ const bmData = {
   let hideTimeout: number | null = null;
 
   updateViewBox();
-
-  function parseViewBox(vb: string | null) {
-    if (!vb) return null;
-    const nums = vb.split(/\s+/).map(function(n) { return parseFloat(n); });
-    if (nums.length !== 4 || nums.some(function(n) { return Number.isNaN(n); })) return null;
-    return { minX: nums[0], minY: nums[1], width: nums[2], height: nums[3], maxX: nums[0] + nums[2], maxY: nums[1] + nums[3] };
-  }
-
-  function getBlob(prof: string) {
-    return wrapper!.querySelector('.bm-blob[data-prof="' + prof + '"]') as SVGElement | null;
-  }
-
-  function getNumericAttr(el: Element | null, attr: string) {
-    if (!el) return null;
-    const n = parseFloat(el.getAttribute(attr) || '');
-    return Number.isNaN(n) ? null : n;
-  }
-
-  function textFitFor(prof: string) {
-    const ellipse = getBlob(prof);
-    if (!ellipse || typeof (ellipse as SVGGraphicsElement).getBBox !== 'function') return null;
-    const cx = getNumericAttr(ellipse, 'cx');
-    const cy = getNumericAttr(ellipse, 'cy');
-    const rx = getNumericAttr(ellipse, 'rx');
-    const ry = getNumericAttr(ellipse, 'ry');
-    if (cx === null || cy === null || rx === null || ry === null) return null;
-    const nodes = wrapper!.querySelectorAll('[data-prof="' + prof + '"]:not(.bm-blob)');
-    let minX = Infinity;
-    let minY = Infinity;
-    let maxX = -Infinity;
-    let maxY = -Infinity;
-    nodes.forEach(function(node) {
-      if (typeof (node as SVGGraphicsElement).getBBox !== 'function') return;
-      let b;
-      try {
-        b = (node as SVGGraphicsElement).getBBox();
-      } catch {
-        return;
-      }
-      minX = Math.min(minX, b.x);
-      minY = Math.min(minY, b.y);
-      maxX = Math.max(maxX, b.x + b.width);
-      maxY = Math.max(maxY, b.y + b.height);
-    });
-    if (!Number.isFinite(minX)) return null;
-    return {
-      prof: prof,
-      ellipseBox: { minX: cx - rx, maxX: cx + rx, minY: cy - ry, maxY: cy + ry },
-      contentBox: { minX: minX, maxX: maxX, minY: minY, maxY: maxY },
-      overflowX: minX < (cx - rx) || maxX > (cx + rx),
-      overflowY: minY < (cy - ry) || maxY > (cy + ry)
-    };
-  }
-
-  function getSnapshot() {
-    const vb = parseViewBox(bmSvg?.getAttribute('viewBox') || null);
-    const social = getBlob('social-worker');
-    const peer = getBlob('peer');
-    const socialCx = getNumericAttr(social, 'cx');
-    const socialRx = getNumericAttr(social, 'rx');
-    const peerCx = getNumericAttr(peer, 'cx');
-    const peerRx = getNumericAttr(peer, 'rx');
-    const overlapDelta = (socialCx !== null && socialRx !== null && peerCx !== null && peerRx !== null)
-      ? Math.abs(peerCx - socialCx) - (socialRx + peerRx)
-      : null;
-    const clippedBlobs = vb ? Array.from(wrapper!.querySelectorAll('.bm-blob[data-prof]')).map(function(el) {
-      const prof = el.getAttribute('data-prof') || '';
-      const cx = getNumericAttr(el, 'cx');
-      const cy = getNumericAttr(el, 'cy');
-      const rx = getNumericAttr(el, 'rx');
-      const ry = getNumericAttr(el, 'ry');
-      if (cx === null || cy === null || rx === null || ry === null) return null;
-      const out = (cx - rx) < vb.minX || (cx + rx) > vb.maxX || (cy - ry) < vb.minY || (cy + ry) > vb.maxY;
-      return out ? { prof: prof, box: { minX: cx - rx, maxX: cx + rx, minY: cy - ry, maxY: cy + ry } } : null;
-    }).filter(Boolean) : [];
-    const svgRect = bmSvg ? bmSvg.getBoundingClientRect() : null;
-    const containerRect = mapContainer ? mapContainer.getBoundingClientRect() : null;
-    const selectedInDimmedLayer = dimmedLayer ? dimmedLayer.querySelectorAll('.bm-blob-selected').length : 0;
-    return {
-      mobile: window.innerWidth < 640,
-      width: window.innerWidth,
-      scrollY: window.scrollY,
-      moreVisible: moreVisible,
-      selectedCount: selectedKeys.size,
-      selectedKeys: Array.from(selectedKeys),
-      gooFilter: gooGroup ? gooGroup.getAttribute('filter') : null,
-      selectedInDimmedLayer: selectedInDimmedLayer,
-      svgRect: svgRect ? { top: svgRect.top, left: svgRect.left, width: svgRect.width, height: svgRect.height } : null,
-      containerRect: containerRect ? { top: containerRect.top, left: containerRect.left, width: containerRect.width, height: containerRect.height } : null,
-      viewBox: vb,
-      coreCx: {
-        psychologist: getNumericAttr(getBlob('psychologist'), 'cx'),
-        psychiatrist: getNumericAttr(getBlob('psychiatrist'), 'cx'),
-        counsellor: getNumericAttr(getBlob('counsellor'), 'cx'),
-        gp: getNumericAttr(getBlob('gp'), 'cx')
-      },
-      hiddenCx: {
-        socialWorker: socialCx,
-        ot: getNumericAttr(getBlob('ot'), 'cx'),
-        mhNurse: getNumericAttr(getBlob('mh-nurse'), 'cx'),
-        peer: peerCx
-      },
-      clippedBlobs: clippedBlobs,
-      socialPeerOverlapDelta: overlapDelta,
-      fitMhNurse: textFitFor('mh-nurse'),
-      fitSocialWorker: textFitFor('social-worker'),
-      fitPeer: textFitFor('peer')
-    };
-  }
 
   function updateBlobVisuals() {
     const allBlobs = wrapper!.querySelectorAll('.bm-blob[data-prof]');
@@ -576,9 +463,6 @@ const bmData = {
         }
       }
     });
-    // #region agent log
-    fetch('http://127.0.0.1:7517/ingest/4796b335-cf3c-4958-9a7c-6583e2dcb00e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'324cd4'},body:JSON.stringify({sessionId:'324cd4',runId:'run1',hypothesisId:'H4',location:'PractitionerBubbleMap.astro:updateBlobVisuals',message:'blob-visuals-updated',data:getSnapshot(),timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
   }
 
   function dispatchSelectionEvent() {
@@ -641,7 +525,7 @@ const bmData = {
     popover.style.top = top + 'px';
   }
 
-  function hideBmInfo() {
+  function hideBmInfo(immediate?: boolean) {
     if (!popover) return;
     activeKey = null;
     popover.classList.remove('bm-popover-visible');
@@ -650,12 +534,20 @@ const bmData = {
     // Unlock body scroll
     document.body.classList.remove('bm-body-locked');
     document.documentElement.classList.remove('bm-body-locked');
-    hideTimeout = window.setTimeout(function() {
+    if (immediate) {
+      if (hideTimeout) { clearTimeout(hideTimeout); hideTimeout = null; }
       popover.style.display = 'none';
       popover.style.transform = '';
       popover.style.maxHeight = '';
       popover.innerHTML = '';
-    }, 200);
+    } else {
+      hideTimeout = window.setTimeout(function() {
+        popover.style.display = 'none';
+        popover.style.transform = '';
+        popover.style.maxHeight = '';
+        popover.innerHTML = '';
+      }, 200);
+    }
   }
 
   function showBmInfo(key: string) {
@@ -742,9 +634,6 @@ const bmData = {
     }
     updateBlobVisuals();
     dispatchSelectionEvent();
-    // #region agent log
-    fetch('http://127.0.0.1:7517/ingest/4796b335-cf3c-4958-9a7c-6583e2dcb00e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'324cd4'},body:JSON.stringify({sessionId:'324cd4',runId:'run1',hypothesisId:'H3',location:'PractitionerBubbleMap.astro:toggleSelection',message:'selection-updated',data:getSnapshot(),timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
   }
 
   wrapper.querySelectorAll('.bm-blob[data-prof]').forEach(function(el) {
@@ -977,7 +866,7 @@ const bmData = {
     padding: 0 12px;
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 767px) {
     .bubble-map .bm-header {
       padding: 0 12px 8px;
     }
@@ -1354,7 +1243,7 @@ const bmData = {
   }
 
   /* Mobile: bump SVG text sizes for legibility */
-  @media (max-width: 640px) {
+  @media (max-width: 767px) {
     .bubble-map .bm-blob-label { font-size: 18px; }
     .bubble-map .bm-blob-sub { font-size: 13px; }
     .bubble-map .bm-badge-text { font-size: 10px; }
