@@ -428,7 +428,7 @@ const bmData = {
         popover.innerHTML = '';
         document.body.classList.remove('bm-body-locked');
         document.documentElement.classList.remove('bm-body-locked');
-      }, 450);
+      }, 550);
     }
   }
 
@@ -484,15 +484,17 @@ const bmData = {
       backdrop.classList.add('bm-popover-backdrop-visible');
     }
 
-    // Double rAF: first frame lets the browser lay out the new innerHTML,
-    // second frame triggers the transition on a clean frame.
+    // Double rAF: first frame absorbs scroll-lock reflow,
+    // second frame triggers the animation on a clean frame.
     requestAnimationFrame(function() {
+      // First frame: absorb scroll-lock reflow
+      if (isMobile()) {
+        document.body.classList.add('bm-body-locked');
+        document.documentElement.classList.add('bm-body-locked');
+      }
       requestAnimationFrame(function() {
+        // Second frame: clean animation start
         popover.classList.add('bm-popover-visible');
-        if (isMobile()) {
-          document.body.classList.add('bm-body-locked');
-          document.documentElement.classList.add('bm-body-locked');
-        }
       });
     });
   }
@@ -657,7 +659,7 @@ const bmData = {
             popover.innerHTML = '';
             document.body.classList.remove('bm-body-locked');
             document.documentElement.classList.remove('bm-body-locked');
-          }, 450);
+          }, 550);
         } else {
           // Snap back — animate from drag position to translateY(0)
           popover.style.transform = '';
@@ -921,7 +923,7 @@ const bmData = {
       padding: 24px;
       z-index: 1000;
       will-change: transform;
-      transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1);
+      transition: transform 0.5s cubic-bezier(0.2, 0, 0, 1);
     }
 
     .bubble-map .bm-popover.bm-popover-visible {
@@ -936,7 +938,7 @@ const bmData = {
       z-index: 999;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.4s ease;
+      transition: opacity 0.5s ease;
     }
 
     .bubble-map .bm-popover-backdrop.bm-popover-backdrop-visible {
