@@ -247,7 +247,7 @@ const bmData = {
   let moreVisible = false;
   const bmSvg = wrapper.querySelector('.bm-map-svg') as SVGSVGElement;
   const FULL_VB = '0 0 700 540';
-  const MOBILE_VB = '80 40 560 480';
+  const MOBILE_VB = '80 40 560 500';
   // Keep identical scale between states to avoid perceived blob size jumps.
   const MOBILE_VB_EXPANDED = '80 40 560 500';
 
@@ -746,6 +746,12 @@ const bmData = {
     width: 100%;
     height: auto;
     display: block;
+  }
+
+  @media (max-width: 767px) {
+    .bubble-map .bm-map-svg {
+      aspect-ratio: 560 / 500;
+    }
   }
 
   @keyframes bm-pulse {
