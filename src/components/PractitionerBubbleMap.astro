@@ -428,7 +428,7 @@ const bmData = {
         popover.innerHTML = '';
         document.body.classList.remove('bm-body-locked');
         document.documentElement.classList.remove('bm-body-locked');
-      }, 350);
+      }, 450);
     }
   }
 
@@ -484,17 +484,16 @@ const bmData = {
       backdrop.classList.add('bm-popover-backdrop-visible');
     }
 
-    // Single rAF: element is already in the render tree (no display:none),
-    // so one frame is enough for the browser to lay out the new innerHTML
-    // before we trigger the transition.
+    // Double rAF: first frame lets the browser lay out the new innerHTML,
+    // second frame triggers the transition on a clean frame.
     requestAnimationFrame(function() {
-      popover.classList.add('bm-popover-visible');
-      // Defer body scroll lock into the rAF to avoid viewport reflow
-      // (iOS Safari URL bar) during animation setup.
-      if (isMobile()) {
-        document.body.classList.add('bm-body-locked');
-        document.documentElement.classList.add('bm-body-locked');
-      }
+      requestAnimationFrame(function() {
+        popover.classList.add('bm-popover-visible');
+        if (isMobile()) {
+          document.body.classList.add('bm-body-locked');
+          document.documentElement.classList.add('bm-body-locked');
+        }
+      });
     });
   }
 
@@ -641,15 +640,28 @@ const bmData = {
       }
 
       popover.classList.remove('bm-popover-dragging');
+      void popover.offsetHeight; // force style recalc so transitions apply
 
       if (dragDirection === 'down') {
-        backdrop.style.opacity = '';
         if (touchDeltaY > 80) {
-          // Dismiss
-          hideBmInfo();
+          // Dismiss — animate from drag position to off-screen
+          popover.style.transform = 'translateY(100%)';
+          backdrop.style.opacity = '';
+          backdrop.classList.remove('bm-popover-backdrop-visible');
+          activeKey = null;
+          hideTimeout = window.setTimeout(function() {
+            popover.classList.remove('bm-popover-visible');
+            popover.classList.remove('bm-popover-expanded');
+            popover.style.transform = '';
+            popover.style.maxHeight = '';
+            popover.innerHTML = '';
+            document.body.classList.remove('bm-body-locked');
+            document.documentElement.classList.remove('bm-body-locked');
+          }, 450);
         } else {
-          // Snap back
+          // Snap back — animate from drag position to translateY(0)
           popover.style.transform = '';
+          backdrop.style.opacity = '';
         }
       } else if (dragDirection === 'up') {
         const upDelta = Math.max(0, -touchDeltaY);
@@ -909,7 +921,7 @@ const bmData = {
       padding: 24px;
       z-index: 1000;
       will-change: transform;
-      transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
+      transition: transform 0.4s cubic-bezier(0.2, 0, 0, 1);
     }
 
     .bubble-map .bm-popover.bm-popover-visible {
@@ -924,7 +936,7 @@ const bmData = {
       z-index: 999;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: opacity 0.4s ease;
     }
 
     .bubble-map .bm-popover-backdrop.bm-popover-backdrop-visible {
