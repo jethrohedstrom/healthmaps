@@ -429,7 +429,7 @@ const bmData = {
         popover.style.transform = '';
         popover.style.maxHeight = '';
         popover.innerHTML = '';
-      }, 200);
+      }, 350);
     }
   }
 
@@ -489,9 +489,12 @@ const bmData = {
       document.documentElement.classList.add('bm-body-locked');
     }
 
-    // Animate in
+    // Animate in — double-rAF ensures the browser paints the initial
+    // (off-screen) state before we trigger the transition.
     requestAnimationFrame(function() {
-      popover.classList.add('bm-popover-visible');
+      requestAnimationFrame(function() {
+        popover.classList.add('bm-popover-visible');
+      });
     });
   }
 
@@ -904,6 +907,8 @@ const bmData = {
       transform: translateY(100%);
       padding: 24px;
       z-index: 1000;
+      will-change: transform, opacity;
+      transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s ease;
     }
 
     .bubble-map .bm-popover.bm-popover-visible {
