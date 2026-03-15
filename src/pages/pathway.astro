@@ -76,4 +76,19 @@ const alternatives = (await getCollection('alternatives')).sort((a, b) => (a.dat
       </a>
     </div>
   </section>
+  <script>
+    function openStepFromHash() {
+      const hash = window.location.hash;
+      if (!hash) return;
+      const target = document.querySelector(hash);
+      if (!target) return;
+      const details = target.querySelector('details');
+      if (details) {
+        details.open = true;
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+    openStepFromHash();
+    window.addEventListener('hashchange', openStepFromHash);
+  </script>
 </BaseLayout>
