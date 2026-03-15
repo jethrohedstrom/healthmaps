@@ -52,7 +52,7 @@
               fill="#c25a6a" opacity="1.0"
               data-prof="mh-nurse" />
 
-            <ellipse class="bm-blob" cx="620" cy="430" rx="48" ry="45"
+            <ellipse class="bm-blob" cx="640" cy="480" rx="48" ry="45"
               fill="#8a8a8a" opacity="1.0"
               data-prof="peer" />
           </g>
@@ -91,8 +91,8 @@
             <rect x="74" y="310" width="52" height="13" rx="6.5" class="bm-badge-bg" data-prof="mh-nurse"/>
             <text x="100" y="319" class="bm-badge-text" text-anchor="middle" data-prof="mh-nurse">AHPRA</text>
 
-            <text x="620" y="427" class="bm-blob-label" font-size="10" text-anchor="middle" data-prof="peer">Peer</text>
-            <text x="620" y="440" class="bm-blob-label" font-size="10" text-anchor="middle" data-prof="peer">Worker</text>
+            <text x="640" y="477" class="bm-blob-label" font-size="10" text-anchor="middle" data-prof="peer">Peer</text>
+            <text x="640" y="490" class="bm-blob-label" font-size="10" text-anchor="middle" data-prof="peer">Worker</text>
           </g>
         </svg>
         <div class="bm-popover" id="bm-popover" role="dialog" aria-label="Practitioner details" style="display:none;"></div>
@@ -249,11 +249,11 @@ const bmData = {
   const FULL_VB = '0 0 700 540';
   const MOBILE_VB = '80 40 560 480';
   // Keep identical scale between states to avoid perceived blob size jumps.
-  const MOBILE_VB_EXPANDED = '80 40 560 480';
+  const MOBILE_VB_EXPANDED = '80 40 560 500';
 
   // --- Mobile blob repositioning ---
   // Shift only edge hidden blobs inward when expanded to avoid clipping.
-  const mobileShifts: Record<string, number> = { 'mh-nurse': 50, 'ot': -50, 'peer': -60 };
+  const mobileShifts: Record<string, number> = { 'mh-nurse': 50, 'ot': -50, 'peer': -80 };
   const origX = new Map<Element, number>();
 
   Object.keys(mobileShifts).forEach(function(prof) {
