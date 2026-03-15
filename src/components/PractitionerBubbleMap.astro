@@ -20,7 +20,6 @@
 
           {/* Core blobs with goo filter — overlapping organic cluster */}
           <g filter="url(#goo)">
-            <g class="bm-dimmed-layer"></g>
             <ellipse class="bm-blob" cx="230" cy="175" rx="115" ry="108"
               fill="#4a7fb5" opacity="1.0"
               data-prof="psychologist" />
@@ -57,8 +56,6 @@
               fill="#8a8a8a" opacity="1.0"
               data-prof="peer" />
           </g>
-
-          <g class="bm-dimmed-text-layer"></g>
 
           {/* Core labels — positioned to match blob centres */}
           <text x="230" y="168" class="bm-blob-label" font-size="15" text-anchor="middle" data-prof="psychologist">Psychologist</text>
@@ -244,7 +241,7 @@ const bmData = {
     el.setAttribute('role', 'button');
     const key = el.getAttribute('data-prof');
     const label = bmData[key as keyof typeof bmData]?.name || key;
-    el.setAttribute('aria-label', 'Select ' + label + ' for comparison');
+    el.setAttribute('aria-label', 'Learn about ' + label);
   });
 
   let moreVisible = false;
@@ -328,7 +325,6 @@ const bmData = {
       moreVisible = !moreVisible;
       const blobs = document.getElementById('extra-blobs-bm');
       const labels = document.getElementById('extra-labels-bm');
-      const hiddenKeys = ['social-worker', 'ot', 'mh-nurse', 'peer'];
 
       showMoreBtn.setAttribute('aria-expanded', String(moreVisible));
       if (moreVisible) {
@@ -345,20 +341,6 @@ const bmData = {
         labels?.setAttribute('aria-hidden', 'false');
         showMoreBtn.textContent = '\u2190 Show fewer professionals';
       } else {
-        // Deselect hidden items BEFORE changing visibility classes so
-        // blob visuals update while elements are still visible, avoiding
-        // a window where fading-out blobs still show selected strokes.
-        let removedAny = false;
-        hiddenKeys.forEach(function(k) {
-          if (selectedKeys.has(k)) {
-            selectedKeys.delete(k);
-            removedAny = true;
-          }
-        });
-        if (removedAny) {
-          updateBlobVisuals();
-          dispatchSelectionEvent();
-        }
         // Close popover synchronously (no 200ms race with relayout)
         if (activeKey) {
           hideBmInfo(true);
@@ -381,112 +363,13 @@ const bmData = {
     });
   }
 
-  const gooGroup = wrapper!.querySelector('g[filter]') || wrapper!.querySelector('.bm-map-svg > g:first-of-type');
-  const dimmedLayer = wrapper!.querySelector('.bm-dimmed-layer') as SVGGElement | null;
-  const dimmedTextLayer = wrapper!.querySelector('.bm-dimmed-text-layer') as SVGGElement | null;
   const popover = document.getElementById('bm-popover') as HTMLElement;
   const backdrop = document.getElementById('bm-popover-backdrop') as HTMLElement;
   const mapContainer = wrapper!.querySelector('.bm-map-container') as HTMLElement;
-  const selectedKeys = new Set<string>();
   let activeKey: string | null = null;
   let hideTimeout: number | null = null;
 
   updateViewBox();
-
-  function updateBlobVisuals() {
-    const allBlobs = wrapper!.querySelectorAll('.bm-blob[data-prof]');
-    const hasSelection = selectedKeys.size > 0;
-
-    if (gooGroup) {
-      if (hasSelection) {
-        gooGroup.removeAttribute('filter');
-      } else {
-        gooGroup.setAttribute('filter', 'url(#goo)');
-      }
-    }
-
-    // Move blobs into/out of dimmed layer for uniform group opacity
-    allBlobs.forEach(function(el) {
-      const key = el.getAttribute('data-prof') || '';
-      if (selectedKeys.has(key)) {
-        el.classList.add('bm-blob-selected');
-        el.classList.remove('bm-blob-dimmed');
-        el.removeAttribute('display');
-        // Selected blobs stay as direct children of gooGroup (above dimmed layer)
-        if ((el.parentNode as Element) === dimmedLayer && gooGroup) {
-          gooGroup.appendChild(el);
-        }
-      } else {
-        el.classList.remove('bm-blob-selected');
-        if (hasSelection) {
-          el.classList.add('bm-blob-dimmed');
-          // Move non-selected blobs into the dimmed layer
-          if (dimmedLayer && (el.parentNode as Element) !== dimmedLayer) {
-            dimmedLayer.appendChild(el);
-          }
-        } else {
-          el.classList.remove('bm-blob-dimmed');
-          el.removeAttribute('display');
-          // Move all blobs back as direct children of gooGroup
-          if ((el.parentNode as Element) === dimmedLayer && gooGroup) {
-            gooGroup.appendChild(el);
-          }
-        }
-      }
-    });
-
-    // Set group opacity on dimmed layers
-    if (dimmedLayer) {
-      dimmedLayer.style.opacity = hasSelection ? '0.25' : '1';
-    }
-    if (dimmedTextLayer) {
-      dimmedTextLayer.style.opacity = hasSelection ? '0.2' : '1';
-    }
-
-    // Move text elements into/out of dimmed text layer
-    wrapper!.querySelectorAll('[data-prof]:not(.bm-blob)').forEach(function(el) {
-      const key = el.getAttribute('data-prof') || '';
-      const svg = wrapper!.querySelector('.bm-map-svg');
-      if (!hasSelection || selectedKeys.has(key)) {
-        el.classList.remove('bm-text-dimmed');
-        el.removeAttribute('display');
-        // Move back to SVG root (or its original parent)
-        if ((el.parentNode as Element) === dimmedTextLayer && svg) {
-          // Insert before the dimmed text layer to maintain order
-          svg.insertBefore(el, dimmedTextLayer);
-        }
-      } else {
-        el.classList.add('bm-text-dimmed');
-        // Move into dimmed text layer
-        if (dimmedTextLayer && (el.parentNode as Element) !== dimmedTextLayer) {
-          dimmedTextLayer.appendChild(el);
-        }
-      }
-    });
-  }
-
-  function dispatchSelectionEvent() {
-    document.dispatchEvent(new CustomEvent('practitioner-selection-changed', {
-      detail: { selected: [...selectedKeys] }
-    }));
-  }
-
-  function showToast(msg: string) {
-    const existing = wrapper!.querySelector('.bm-toast');
-    if (existing) existing.remove();
-    const toast = document.createElement('div');
-    toast.className = 'bm-toast';
-    toast.textContent = msg;
-    const container = wrapper!.querySelector('.bm-map-container');
-    if (container) {
-      container.appendChild(toast);
-      requestAnimationFrame(() => toast.classList.add('bm-toast-visible'));
-      setTimeout(() => {
-        toast.classList.remove('bm-toast-visible');
-        setTimeout(() => toast.remove(), 300);
-      }, 2000);
-    }
-  }
 
   function isMobile() {
     return window.innerWidth < 768;
@@ -613,27 +496,11 @@ const bmData = {
   }
 
   function toggleSelection(key: string) {
-    if (selectedKeys.has(key)) {
-      selectedKeys.delete(key);
-      if (activeKey === key) {
-        // Show info for last remaining selected, or hide
-        const remaining = [...selectedKeys];
-        if (remaining.length > 0) {
-          showBmInfo(remaining[remaining.length - 1]);
-        } else {
-          hideBmInfo();
-        }
-      }
+    if (activeKey === key) {
+      hideBmInfo();
     } else {
-      if (selectedKeys.size >= 3) {
-        showToast('Max 3 selected');
-        return;
-      }
-      selectedKeys.add(key);
       showBmInfo(key);
     }
-    updateBlobVisuals();
-    dispatchSelectionEvent();
   }
 
   wrapper.querySelectorAll('.bm-blob[data-prof]').forEach(function(el) {
@@ -902,27 +769,6 @@ const bmData = {
     filter: brightness(1.15);
     stroke: white;
     stroke-width: 2;
-  }
-
-  .bubble-map .bm-blob.bm-blob-selected {
-    opacity: 1 !important;
-    filter: brightness(1.12);
-    stroke: white;
-    stroke-width: 3;
-    animation: none;
-  }
-
-  .bubble-map .bm-blob.bm-blob-dimmed {
-    /* opacity handled by group layer */
-  }
-
-  .bubble-map .bm-text-dimmed {
-    /* opacity handled by group layer */
-  }
-
-  .bubble-map .bm-dimmed-layer,
-  .bubble-map .bm-dimmed-text-layer {
-    transition: opacity 0.4s ease;
   }
 
   .bubble-map .bm-blob:focus {
@@ -1220,29 +1066,6 @@ const bmData = {
       overflow-y: auto;
       touch-action: pan-y;
     }
-  }
-
-  .bubble-map .bm-toast {
-    position: absolute;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #1e293b;
-    color: white;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 8px 20px;
-    border-radius: 100px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-    white-space: nowrap;
-    z-index: 10;
-  }
-
-  .bubble-map .bm-toast.bm-toast-visible {
-    opacity: 1;
   }
 
   /* Mobile: bump SVG text sizes for legibility */

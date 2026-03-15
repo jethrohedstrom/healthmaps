@@ -1,49 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
-import PractitionerComparison from '../components/PractitionerComparison.astro';
-import { getCollection } from 'astro:content';
-
-const practitioners = (await getCollection('practitioners')).sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
-
-// Map content collection IDs to bubble map data-prof keys
-const profKeyMap: Record<string, string> = {
-  'psychologist': 'psychologist',
-  'psychiatrist': 'psychiatrist',
-  'counsellor': 'counsellor',
-  'mental-health-social-worker': 'social-worker',
-  'mental-health-occupational-therapist': 'ot',
-  'mental-health-nurse': 'mh-nurse',
-  'gp': 'gp',
-};
-
-// Bubble colour map (matches SVG fill values)
-const profColorMap: Record<string, string> = {
-  'psychologist': '#4a7fb5',
-  'psychiatrist': '#7e6aad',
-  'counsellor': '#5aab7b',
-  'social-worker': '#c27a4a',
-  'ot': '#b5894a',
-  'mh-nurse': '#c25a6a',
-  'gp': '#5c6670',
-};
-
-// Build JSON blob for the comparison component
-const comparisonData: Record<string, any> = {};
-practitioners.forEach(p => {
-  const profKey = profKeyMap[p.id];
-  if (!profKey) return; // skip psychotherapist
-  comparisonData[profKey] = {
-    name: p.data.title,
-    color: profColorMap[profKey] || '#888',
-    cost: p.data.cost.replace(' per session', ''),
-    rebate: p.data.rebate,
-    referralRequired: p.data.referralRequired,
-    bestFor: p.data.bestFor || '',
-    registrationStatus: p.data.registrationStatus || '',
-    waitTime: p.data.waitTime || '—',
-  };
-});
 ---
 <BaseLayout
   title="Who should I see?"
@@ -54,8 +11,6 @@ practitioners.forEach(p => {
     <div class="max-w-[1100px] mx-auto px-4 pt-10 md:pt-20 pb-8 md:pb-10">
       <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-slate-800 mb-2 tracking-[-0.01em] text-center">Who should I see?</h1>
       <PractitionerBubbleMap />
-      <script is:inline type="application/json" id="practitioner-comparison-data" set:html={JSON.stringify(comparisonData)}></script>
-      <PractitionerComparison />
       <div class="max-w-[720px] mt-8">
         <div class="space-y-5 text-lg leading-relaxed text-body">
           <p>Psychologist?<br />Counsellor?<br />Psychiatrist?<br /><br />If you're not sure what the difference is, you're not alone.<br />Here's a simple breakdown.</p>
