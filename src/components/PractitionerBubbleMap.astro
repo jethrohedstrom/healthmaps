@@ -95,7 +95,7 @@
             <text x="640" y="490" class="bm-blob-label" font-size="10" text-anchor="middle" data-prof="peer">Worker</text>
           </g>
         </svg>
-        <div class="bm-popover" id="bm-popover" role="dialog" aria-label="Practitioner details" style="display:none;"></div>
+        <div class="bm-popover" id="bm-popover" role="dialog" aria-label="Practitioner details"></div>
         <div class="bm-popover-backdrop" id="bm-popover-backdrop"></div>
       </div>
 
@@ -414,21 +414,20 @@ const bmData = {
     popover.classList.remove('bm-popover-visible');
     popover.classList.remove('bm-popover-expanded');
     backdrop.classList.remove('bm-popover-backdrop-visible');
-    // Unlock body scroll
-    document.body.classList.remove('bm-body-locked');
-    document.documentElement.classList.remove('bm-body-locked');
     if (immediate) {
       if (hideTimeout) { clearTimeout(hideTimeout); hideTimeout = null; }
-      popover.style.display = 'none';
       popover.style.transform = '';
       popover.style.maxHeight = '';
       popover.innerHTML = '';
+      document.body.classList.remove('bm-body-locked');
+      document.documentElement.classList.remove('bm-body-locked');
     } else {
       hideTimeout = window.setTimeout(function() {
-        popover.style.display = 'none';
         popover.style.transform = '';
         popover.style.maxHeight = '';
         popover.innerHTML = '';
+        document.body.classList.remove('bm-body-locked');
+        document.documentElement.classList.remove('bm-body-locked');
       }, 350);
     }
   }
@@ -465,8 +464,6 @@ const bmData = {
         }).join('') +
       '</div>';
 
-    popover.style.display = 'block';
-
     // Wire close button
     const closeBtn = popover.querySelector('.bm-popover-close');
     if (closeBtn) {
@@ -482,19 +479,22 @@ const bmData = {
       positionPopover(blobEl);
     }
 
-    // Show backdrop and lock body scroll on mobile
+    // Show backdrop on mobile (backdrop is opacity-animated, no reflow cost)
     if (isMobile()) {
       backdrop.classList.add('bm-popover-backdrop-visible');
-      document.body.classList.add('bm-body-locked');
-      document.documentElement.classList.add('bm-body-locked');
     }
 
-    // Animate in — double-rAF ensures the browser paints the initial
-    // (off-screen) state before we trigger the transition.
+    // Single rAF: element is already in the render tree (no display:none),
+    // so one frame is enough for the browser to lay out the new innerHTML
+    // before we trigger the transition.
     requestAnimationFrame(function() {
-      requestAnimationFrame(function() {
-        popover.classList.add('bm-popover-visible');
-      });
+      popover.classList.add('bm-popover-visible');
+      // Defer body scroll lock into the rAF to avoid viewport reflow
+      // (iOS Safari URL bar) during animation setup.
+      if (isMobile()) {
+        document.body.classList.add('bm-body-locked');
+        document.documentElement.classList.add('bm-body-locked');
+      }
     });
   }
 
@@ -905,10 +905,11 @@ const bmData = {
       touch-action: none;
       border-radius: 16px 16px 0 0;
       transform: translateY(100%);
+      opacity: 1;
       padding: 24px;
       z-index: 1000;
-      will-change: transform, opacity;
-      transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), opacity 0.2s ease;
+      will-change: transform;
+      transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1);
     }
 
     .bubble-map .bm-popover.bm-popover-visible {
@@ -923,7 +924,7 @@ const bmData = {
       z-index: 999;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s ease;
+      transition: opacity 0.3s ease;
     }
 
     .bubble-map .bm-popover-backdrop.bm-popover-backdrop-visible {
