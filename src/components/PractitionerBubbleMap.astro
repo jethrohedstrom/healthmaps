@@ -442,6 +442,17 @@ const bmData = {
       hideTimeout = null;
     }
 
+    // Reset stale state from any interrupted dismiss animation
+    popover.style.transform = '';
+    popover.style.maxHeight = '';
+    popover.style.height = '';
+    backdrop.style.opacity = '';
+    popover.classList.remove('bm-popover-visible');
+    popover.classList.remove('bm-popover-expanded');
+    popover.classList.remove('bm-popover-dragging');
+    document.body.classList.remove('bm-body-locked');
+    document.documentElement.classList.remove('bm-body-locked');
+
     activeKey = key;
 
     popover.innerHTML =
