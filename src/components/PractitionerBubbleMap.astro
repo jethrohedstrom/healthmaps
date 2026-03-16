@@ -507,6 +507,19 @@ const bmData = {
         document.documentElement.classList.add('bm-body-locked');
       }
       popover.classList.add('bm-popover-visible');
+
+      // On desktop, scroll the page if the popover is clipped by the viewport
+      if (!isMobile()) {
+        requestAnimationFrame(function() {
+          const rect = popover.getBoundingClientRect();
+          const margin = 24;
+          if (rect.bottom > window.innerHeight - margin) {
+            window.scrollBy({ top: rect.bottom - window.innerHeight + margin, behavior: 'smooth' });
+          } else if (rect.top < margin) {
+            window.scrollBy({ top: rect.top - margin, behavior: 'smooth' });
+          }
+        });
+      }
     });
   }
 
