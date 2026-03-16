@@ -498,7 +498,7 @@ const bmData = {
     }
 
     // Force layout NOW so innerHTML geometry is computed before animation
-    popover.offsetHeight;
+    void popover.offsetHeight;
 
     requestAnimationFrame(function() {
       if (isMobile()) {
@@ -934,7 +934,7 @@ const bmData = {
       padding: 24px;
       z-index: 1000;
       will-change: transform;
-      contain: content;
+      contain: layout style;
       transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
     }
 
