@@ -513,10 +513,12 @@ const bmData = {
         requestAnimationFrame(function() {
           const rect = popover.getBoundingClientRect();
           const margin = 24;
+          const header = document.querySelector('header');
+          const topMargin = (header ? header.getBoundingClientRect().height : 0) + margin;
           if (rect.bottom > window.innerHeight - margin) {
             window.scrollBy({ top: rect.bottom - window.innerHeight + margin, behavior: 'smooth' });
-          } else if (rect.top < margin) {
-            window.scrollBy({ top: rect.top - margin, behavior: 'smooth' });
+          } else if (rect.top < topMargin) {
+            window.scrollBy({ top: rect.top - topMargin, behavior: 'smooth' });
           }
         });
       }
