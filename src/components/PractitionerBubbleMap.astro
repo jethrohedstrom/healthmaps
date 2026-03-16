@@ -497,23 +497,16 @@ const bmData = {
       positionPopover(blobEl);
     }
 
-    // Show backdrop on mobile (backdrop is opacity-animated, no reflow cost)
-    if (isMobile()) {
-      backdrop.classList.add('bm-popover-backdrop-visible');
-    }
+    // Force layout NOW so innerHTML geometry is computed before animation
+    popover.offsetHeight;
 
-    // Double rAF: first frame absorbs scroll-lock reflow,
-    // second frame triggers the animation on a clean frame.
     requestAnimationFrame(function() {
-      // First frame: absorb scroll-lock reflow
       if (isMobile()) {
+        backdrop.classList.add('bm-popover-backdrop-visible');
         document.body.classList.add('bm-body-locked');
         document.documentElement.classList.add('bm-body-locked');
       }
-      requestAnimationFrame(function() {
-        // Second frame: clean animation start
-        popover.classList.add('bm-popover-visible');
-      });
+      popover.classList.add('bm-popover-visible');
     });
   }
 
@@ -941,7 +934,8 @@ const bmData = {
       padding: 24px;
       z-index: 1000;
       will-change: transform;
-      transition: transform 0.5s cubic-bezier(0.2, 0, 0, 1);
+      contain: content;
+      transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
     }
 
     .bubble-map .bm-popover.bm-popover-visible {
