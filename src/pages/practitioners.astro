@@ -108,6 +108,14 @@ import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
 
     const heroAccordionEl = document.getElementById('hero-accordion');
     if (heroAccordionEl instanceof HTMLDetailsElement) {
+      heroAccordionEl.addEventListener('toggle', () => {
+        if (heroAccordionEl.open) {
+          requestAnimationFrame(() => {
+            heroAccordionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        }
+      });
+
       const content = heroAccordionEl.querySelector('.accordion-content');
       if (content instanceof HTMLElement) {
         content.addEventListener('click', () => {
