@@ -88,6 +88,8 @@ import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
 
   <!-- Auto-open accordion when navigating from decision helper -->
   <script>
+    let suppressNextScroll = false;
+
     function openTargetAccordion() {
       const hash = window.location.hash;
       if (!hash) return;
@@ -100,6 +102,7 @@ import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
           }
           ancestor = ancestor.parentElement;
         }
+        suppressNextScroll = true;
         target.open = true;
       }
     }
@@ -110,6 +113,10 @@ import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
     if (heroAccordionEl instanceof HTMLDetailsElement) {
       heroAccordionEl.addEventListener('toggle', () => {
         if (heroAccordionEl.open) {
+          if (suppressNextScroll) {
+            suppressNextScroll = false;
+            return;
+          }
           requestAnimationFrame(() => {
             heroAccordionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
           });
