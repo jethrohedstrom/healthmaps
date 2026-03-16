@@ -102,8 +102,10 @@ import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
           }
           ancestor = ancestor.parentElement;
         }
-        suppressNextScroll = true;
-        target.open = true;
+        if (!target.open) {
+          suppressNextScroll = true;
+          target.open = true;
+        }
       }
     }
     openTargetAccordion();
