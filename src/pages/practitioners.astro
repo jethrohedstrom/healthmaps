@@ -106,6 +106,17 @@ import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
     openTargetAccordion();
     window.addEventListener('hashchange', openTargetAccordion);
 
+    const heroAccordion = document.getElementById('hero-accordion');
+    if (heroAccordion) {
+      heroAccordion.addEventListener('toggle', () => {
+        if (heroAccordion.open) {
+          requestAnimationFrame(() => {
+            heroAccordion.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          });
+        }
+      });
+    }
+
     const mhcpToggle = document.getElementById('mhcp-toggle');
     const mhcpExplanation = document.getElementById('mhcp-explanation');
     if (mhcpToggle && mhcpExplanation) {
