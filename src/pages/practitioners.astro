@@ -106,26 +106,27 @@ import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
     openTargetAccordion();
     window.addEventListener('hashchange', openTargetAccordion);
 
-    const heroAccordion = document.getElementById('hero-accordion') as HTMLDetailsElement | null;
-    if (heroAccordion) {
+    const heroAccordionEl = document.getElementById('hero-accordion');
+    if (heroAccordionEl instanceof HTMLDetailsElement) {
       let savedScrollY = 0;
 
-      heroAccordion.addEventListener('toggle', () => {
-        if (heroAccordion.open) {
+      heroAccordionEl.addEventListener('toggle', () => {
+        if (heroAccordionEl.open) {
           savedScrollY = window.scrollY;
           requestAnimationFrame(() => {
-            heroAccordion.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            heroAccordionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
           });
         } else {
           window.scrollTo({ top: savedScrollY, behavior: 'smooth' });
         }
       });
 
-      const content = heroAccordion.querySelector('.accordion-content') as HTMLElement | null;
-      if (content) {
-        content.style.cursor = 'pointer';
+      const content = heroAccordionEl.querySelector('.accordion-content');
+      if (content instanceof HTMLElement) {
         content.addEventListener('click', () => {
-          heroAccordion.open = false;
+          const selection = window.getSelection();
+          if (selection && selection.toString().length > 0) return;
+          heroAccordionEl.open = false;
         });
       }
     }
