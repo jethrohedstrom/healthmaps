@@ -111,7 +111,7 @@ import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
       heroAccordion.addEventListener('toggle', () => {
         if (heroAccordion.open) {
           requestAnimationFrame(() => {
-            heroAccordion.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            heroAccordion.scrollIntoView({ behavior: 'smooth', block: 'start' });
           });
         }
       });
