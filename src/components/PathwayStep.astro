@@ -9,7 +9,7 @@ interface Props {
 
 const { step, title, summary, isLast = false, open = false } = Astro.props;
 ---
-<div class="pathway-step relative pl-16 pb-10 scroll-mt-24" id={`step-${step}`}>
+<div class="pathway-step relative pl-14 md:pl-16 pb-10 scroll-mt-24" id={`step-${step}`}>
   <!-- Step connector line -->
   {!isLast && (
     <div class="step-connector absolute left-[1.4375rem] top-12 bottom-0 w-px bg-border" aria-hidden="true"></div>
