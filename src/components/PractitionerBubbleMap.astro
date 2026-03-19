@@ -770,7 +770,7 @@ const bmData = {
   }
 
   .bubble-map .bm-title {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-sans);
     font-size: 1.75rem;
     font-weight: 700;
     color: #1e293b;
@@ -837,12 +837,12 @@ const bmData = {
   }
 
   .bubble-map .bm-blob:focus-visible {
-    outline: 2px solid #44EE70;
+    outline: 2px solid white;
     outline-offset: 2px;
   }
 
   .bubble-map .bm-blob-label {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-sans);
     font-weight: 700;
     fill: white;
     pointer-events: none;
@@ -850,7 +850,7 @@ const bmData = {
   }
 
   .bubble-map .bm-blob-sub {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-sans);
     font-weight: 500;
     fill: rgba(255,255,255,0.7);
     pointer-events: none;
@@ -858,7 +858,7 @@ const bmData = {
   }
 
   .bubble-map .bm-badge-text {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-sans);
     font-size: 7.5px;
     font-weight: 700;
     fill: rgba(255,255,255,0.95);
@@ -884,7 +884,7 @@ const bmData = {
     border-radius: 12px;
     border: none;
     background: #44EE70;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-sans);
     font-size: 15px;
     font-weight: 600;
     color: #1e293b;
@@ -895,7 +895,7 @@ const bmData = {
 
   @media (hover: hover) {
     .bubble-map .bm-show-more-btn:hover {
-      background: #3bd462;
+      background: var(--color-primary-mid);
     }
   }
 
@@ -1001,7 +1001,7 @@ const bmData = {
   }
 
   .bubble-map .bm-info-name {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-sans);
     font-size: 17px;
     font-weight: 700;
     color: #1e293b;

@@ -14,7 +14,7 @@ const practitionerTypes = costsData.practitionerTypes;
       <select
         id="practitioner-type"
         name="practitionerType"
-        class="w-full border border-border rounded-lg px-4 py-2.5 text-body bg-white focus:ring-2 focus:ring-primary focus:border-primary"
+        class="w-full border border-border rounded-lg px-4 py-2.5 text-body bg-white hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary"
       >
         {practitionerTypes.map((p) => (
           <option value={p.id} data-rebate={p.rebatePerSession} data-requires-mhcp={p.requiresMHCP}>
@@ -37,7 +37,7 @@ const practitionerTypes = costsData.practitionerTypes;
         max="1000"
         step="5"
         placeholder="e.g. 220"
-        class="w-full border border-border rounded-lg px-4 py-2.5 text-body bg-white focus:ring-2 focus:ring-primary focus:border-primary"
+        class="w-full border border-border rounded-lg px-4 py-2.5 text-body bg-white hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary"
       />
       <p id="fee-hint" class="text-xs text-body mt-1">Typical range: loading...</p>
     </div>
@@ -50,7 +50,7 @@ const practitionerTypes = costsData.practitionerTypes;
       <select
         id="num-sessions"
         name="numSessions"
-        class="w-full border border-border rounded-lg px-4 py-2.5 text-body bg-white focus:ring-2 focus:ring-primary focus:border-primary"
+        class="w-full border border-border rounded-lg px-4 py-2.5 text-body bg-white hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary"
       >
         {[1,2,3,4,5,6,7,8,9,10].map(n => (
           <option value={n} selected={n === 10}>{n} session{n > 1 ? 's' : ''}{n === 10 ? ' (max Medicare)' : ''}</option>
@@ -66,7 +66,7 @@ const practitionerTypes = costsData.practitionerTypes;
       <select
         id="gp-billing"
         name="gpBilling"
-        class="w-full border border-border rounded-lg px-4 py-2.5 text-body bg-white focus:ring-2 focus:ring-primary focus:border-primary"
+        class="w-full border border-border rounded-lg px-4 py-2.5 text-body bg-white hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary"
       >
         <option value="yes">Yes — no out-of-pocket cost for GP visits</option>
         <option value="no">No — I pay a gap fee (~$40)</option>
@@ -110,7 +110,7 @@ const practitionerTypes = costsData.practitionerTypes;
     <!-- REVIEW -->
     <p class="mt-4 text-xs text-body">
       These are estimates only. Medicare rebate amounts may have changed — check
-      <a href="https://www.servicesaustralia.gov.au/medicare" class="underline hover:text-primary" target="_blank" rel="noopener">Services Australia</a>
+      <a href="https://www.servicesaustralia.gov.au/medicare" class="underline hover:text-primary transition-colors" target="_blank" rel="noopener">Services Australia</a>
       for current rates. Last updated: {costsData.lastUpdated}.
     </p>
   </div>

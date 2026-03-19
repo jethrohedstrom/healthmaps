@@ -11,7 +11,7 @@ const stories = await getCollection('stories');
   <!-- Hero -->
   <section class="bg-white">
     <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
-      <h1 class="text-[2.25rem] md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em]">Stories</h1>
+      <h1 class="text-3xl md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em]">Stories</h1>
       <p class="text-lg text-body">
         Experiences from people who've navigated the mental health system. Every journey is different — these might help you see what to expect.
       </p>
@@ -28,8 +28,8 @@ const stories = await getCollection('stories');
         <div class="space-y-6">
           {stories.map(story => (
             <a href={`/stories/${story.id}/`} class="card-hover block group">
-              <article class="bg-white rounded-xl shadow-sm p-8 transition-colors">
-                <h2 class="text-[1.375rem] font-semibold text-heading group-hover:text-primary transition-colors">
+              <article class="bg-white rounded-xl shadow-sm p-6 md:p-8 transition-colors">
+                <h2 class="text-xl md:text-[1.375rem] font-semibold text-heading group-hover:text-primary transition-colors">
                   "{story.data.title}"
                 </h2>
                 <p class="text-sm text-body mt-1">

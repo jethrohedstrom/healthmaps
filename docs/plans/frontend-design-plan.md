@@ -236,11 +236,11 @@ Removed `border border-border` from outer wrapper, replaced with `shadow-sm`.
 
 ### What's left
 
-**Design polish (not yet started):**
-- BaseLayout floating crisis button contrast fix (`text-heading` → `text-white`) — needs decision on whether crisis UI follows the same button spec
-- Responsive breakpoint polish across all pages
+**Design polish:**
+- ~~BaseLayout floating crisis button contrast fix~~ → Done (19 March 2026). Restyled CrisisBanner: `bg-brand-blue` → `bg-dark` (correct semantic token), added `hover:bg-dark/90` on pill, `md:rounded-xl` on desktop, bumped padding (`md:px-6 md:py-3.5` on pill, `p-6` on card), added `font-display` to card heading. Removed dead `--color-brand-blue` token from global.css.
+- ~~Responsive breakpoint polish across all pages~~ → Done (19 March 2026). Audited all 12 pages + 6 components at 320/375/768/1280px. No critical breakages found — site was already well-structured with mobile-first patterns. Applied visual-level polish: stepped down all page h1s from fixed `text-[2.25rem]` to `text-3xl md:text-[2.5rem]` for narrow screens; homepage hero from `text-4xl` to `text-3xl md:text-[56px]`; reduced mobile card padding from `p-8` to `p-6` on homepage feature cards, story cards, and tip cards; added responsive scaling to story/tip card headings (`text-xl md:text-[1.375rem]`); fixed 404 secondary button to match primary button sizing/radius.
 - Hover states and micro-interactions audit
-- Lighthouse audit (target 95+ all categories, per CLAUDE.md next steps)
+- ~~Lighthouse audit (target 95+ all categories)~~ → Done (19 March 2026). Fixed chat bubble contrast (`text-heading` → `text-white` on `bg-primary`). Replaced all 6 `font-family: 'Inter'` declarations in BubbleMap with `var(--font-sans)`. Removed unused `@fontsource/inter` dependency. Added aggressive cache headers for `/_astro/*` and `/fonts/*` in netlify.toml. Skipped font preload — Astro hashes font filenames so a static preload path would break on every build. Build clean: 0 errors, 0 warnings.
 
 **Content (not design):**
 - Review all `<!-- REVIEW -->` comments in `src/content/` for health accuracy
