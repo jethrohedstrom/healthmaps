@@ -185,16 +185,3 @@ details[open] > summary::after {
   opacity: 0.3;
 }
 
-/* GP callout buttons — force vertical stack on small screens */
-@media (max-width: 767px) {
-  .gp-callout-buttons {
-    display: grid;
-    grid-template-columns: 1fr;
-    row-gap: 0.75rem;
-  }
-
-  .gp-callout-buttons > a {
-    width: 100%;
-    justify-content: center;
-  }
-}
