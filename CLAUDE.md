@@ -56,8 +56,10 @@ src/
 │   ├── stories/               Story index + dynamic pages
 │   ├── tips/                  Tips index + dynamic pages
 │   └── 404.astro
+├── fonts/
+│   └── Satoshi-Variable.woff2 Satoshi body font (Fontshare)
 └── styles/
-    └── global.css             Tailwind + Inter font + design tokens
+    └── global.css             Tailwind v4 @theme tokens + font-faces
 ```
 
 ## Critical Rules
@@ -67,46 +69,54 @@ src/
 4. **No JS frameworks** — vanilla JS only for interactivity.
 5. **Australian context** — costs in AUD, Medicare/GP/MHCP terminology, Australian crisis numbers.
 
-## Design Tokens
+## Design Direction
+Health Maps should feel like a calm, credible friend who happens to know how the system works — unhurried, generous with space, never overwhelming. The design prioritises clarity above all else: deep forest green, serif headings, and wide open whitespace that makes every option and next step immediately obvious. It's closer to a Scandinavian public health site than an Australian wellness startup.
 
-### Colours (defined in global.css @theme)
-- Heading: `#0f172a` (--color-heading / text-heading) — all headings
-- Body text: `#64748b` (--color-body / text-body) — paragraph text
-- Primary green: `#44EE70` (--color-primary / text-primary) — buttons, links, interactive elements (dark text on green buttons for contrast)
-- Icon background: `#f0fdf4` (--color-icon-bg / bg-icon-bg) — green-tint square behind icons
-- Light background: `#f8fafc` (--color-bg-light / bg-bg-light)
-- Border: `#e5e7eb` (--color-border / border-border)
+Reference sites: nhn.no (NHN), app.oevra.com, getmosh.com.au. Screenshots in `design input/`.
+
+## Design Tokens (defined in src/styles/global.css @theme)
+
+### Colours — forest green palette, no warm accent
+- Primary: `#1B6B4A` (--color-primary) — buttons, links, interactive elements (white text on green)
+- Primary light: `#E8F5EE` (--color-primary-light) — light wash backgrounds, icon backgrounds
+- Primary mid: `#3A8F68` (--color-primary-mid) — secondary green for subtle variation
+- Heading: `#1e293b` (--color-heading) — all headings
+- Body text: `#64748b` (--color-body) — paragraph text
+- Border: `#e5e7eb` (--color-border)
+- Light background: `#f8fafc` (--color-bg-light)
 - Orange: `#D97706` (brand-orange) — functional labels only (e.g. "Required")
-- Backward-compatible aliases defined but no longer used in templates: brand-blue, brand-green, brand-green-light
+- **Never use raw hex values or default Tailwind colours (bg-blue-500 etc). Always use @theme tokens.**
 
 ### Typography
-- Font: Inter (locally bundled via @fontsource)
+- **Headings:** Fraunces (serif, via @fontsource) — use `font-family: var(--font-display)`
+- **Body:** Satoshi (variable, locally bundled from Fontshare) — use `font-family: var(--font-sans)`
+- **Never use** Inter, Roboto, Arial, Open Sans, or Lato
 - Body: 16px, line-height 1.625, antialiased
 - Hero heading: 56px, font-bold, tracking -0.025em, text-heading
 - Section headings (h2): 36–40px, font-bold
 - Card headings (h3): 24px (text-2xl), font-bold, text-heading
+- Section labels: spaced uppercase (tracking-widest, uppercase, text-sm)
 - Small/meta text: 14px, text-gray-500
+- **Tailwind v4** — CSS-first config via `@theme` directive in global.css. NOT tailwind.config.js.
 
 ### Spacing
+- Generous whitespace is the #1 priority — this is what separates premium from generic
 - Hero: pt-20 pb-8 md:pt-32 md:pb-12 (homepage), py-16 md:py-20 (inner pages)
-- Explore Tools (below hero): pt-0 pb-24 md:pt-4 md:pb-32
-- Section-to-section: py-24 md:py-32 (homepage), py-16 md:py-20 (inner pages)
-- No `<hr>` dividers on homepage (removed)
+- Section-to-section: py-24 md:py-32 (homepage), py-16 md:py-24 (inner pages)
 - Body text max-width: 720px
 - Card grid max-width: 960px
 - Page container: 1280px (max-w-6xl)
 - Feature card padding: p-12 (48px)
 - Feature card grid gap: gap-12 (48px)
-- Icon-to-heading gap: mb-8 (32px)
 
 ### Components
-- Buttons: rounded-xl, bg-primary text-heading, px-10 py-4, font-semibold, shadow-sm (all pages)
-- Feature cards (homepage): bg-white rounded-xl p-12 shadow-sm text-left, no border, FAQ-style question headings
+- Buttons: rounded-xl, bg-primary text-white, px-10 py-4, font-semibold, shadow-sm
+- Feature cards: bg-white rounded-xl p-12 shadow-sm text-left, no border
 - Inner page cards: bg-white rounded-xl p-8 md:p-12 shadow-sm, no border, card-hover on `<a>` wrapper
-- Feature card icons: w-16 h-16 rounded-xl bg-icon-bg with text-primary SVG
 - Card hover: subtle shadow only (no lift) via .card-hover class
 - Header: opaque white, no bottom border, wider padding (px-4 sm:px-8 lg:px-20 py-4)
 - Accordions: native `<details>`/`<summary>`, CSS chevron rotation, .accordion-item class
+- Icon containers: rounded-xl bg-primary-light with text-primary SVG
 
 ## Commands
 - `npm run dev` — start dev server at localhost:4321. **Run this in a separate terminal tab**, not as a Claude Code background task — background tasks die when you `/clear` or start a new session.
