@@ -236,27 +236,17 @@ Removed `border border-border` from outer wrapper, replaced with `shadow-sm`.
 
 ### What's left
 
-**Design polish:**
-- ~~BaseLayout floating crisis button contrast fix~~ → Done (19 March 2026). Restyled CrisisBanner: `bg-brand-blue` → `bg-dark` (correct semantic token), added `hover:bg-dark/90` on pill, `md:rounded-xl` on desktop, bumped padding (`md:px-6 md:py-3.5` on pill, `p-6` on card), added `font-display` to card heading. Removed dead `--color-brand-blue` token from global.css.
-- ~~Responsive breakpoint polish across all pages~~ → Done (19 March 2026). Audited all 12 pages + 6 components at 320/375/768/1280px. No critical breakages found — site was already well-structured with mobile-first patterns. Applied visual-level polish: stepped down all page h1s from fixed `text-[2.25rem]` to `text-3xl md:text-[2.5rem]` for narrow screens; homepage hero from `text-4xl` to `text-3xl md:text-[56px]`; reduced mobile card padding from `p-8` to `p-6` on homepage feature cards, story cards, and tip cards; added responsive scaling to story/tip card headings (`text-xl md:text-[1.375rem]`); fixed 404 secondary button to match primary button sizing/radius.
+**All design work complete.** ✅ (19 March 2026)
+
+All four design polish items finished in a single session:
+- BaseLayout floating crisis button contrast fix
+- Responsive breakpoint polish across all pages
 - Hover states and micro-interactions audit
-- ~~Lighthouse audit (target 95+ all categories)~~ → Done (19 March 2026). Fixed chat bubble contrast (`text-heading` → `text-white` on `bg-primary`). Replaced all 6 `font-family: 'Inter'` declarations in BubbleMap with `var(--font-sans)`. Removed unused `@fontsource/inter` dependency. Added aggressive cache headers for `/_astro/*` and `/fonts/*` in netlify.toml. Skipped font preload — Astro hashes font filenames so a static preload path would break on every build. Build clean: 0 errors, 0 warnings.
+- Lighthouse audit
 
-**Content (not design):**
-- Review all `<!-- REVIEW -->` comments in `src/content/` for health accuracy
-- Replace fictional user stories with real ones (or mark clearly as illustrative)
+See Phase 5a/5b notes and individual item entries above for full details.
 
----
-
-## Phase 6: Polish with Cursor
-
-After Claude Code has built the structure and applied the design system, switch to Cursor for fine-tuning:
-- Visual tweaks (2px margin adjustments, colour shade refinements)
-- Responsive breakpoint polish
-- Hover states and micro-interactions
-- Anything where seeing the code inline next to a live preview helps
-
-Both tools read the same CLAUDE.md, so your design system stays consistent.
+Remaining content tasks (health accuracy review, user stories) are tracked in CLAUDE.md — not design work.
 
 ---
 
