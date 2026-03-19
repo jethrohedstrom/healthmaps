@@ -199,6 +199,55 @@ If Claude keeps producing generic output for a section, ask for "5 completely di
 
 ---
 
+### Phase 5a: Design token migration ✅ (19 March 2026)
+
+Replaced all raw Tailwind colours (bg-blue-500, text-green-600, etc.) and raw hex values across every page and component with semantic `@theme` tokens (`bg-primary`, `text-heading`, `text-body`, `border-border`, etc.). Fonts migrated to Fraunces (display) + Satoshi (body) via `--font-display` / `--font-sans` custom properties.
+
+**Commit:** `9ff355f` — "Replace design tokens: Fraunces + Satoshi fonts, forest green palette"
+
+### Phase 5b: Visual spec alignment pass ✅ (19 March 2026)
+
+Audit against CLAUDE.md design specs found two categories of mechanical issues across all pages. No layout changes — just bringing existing elements into spec.
+
+**Fix 1 — Button styling (8 buttons across 7 files):**
+Every `bg-primary` button now uses `text-white rounded-xl px-10 py-4 font-semibold shadow-sm` per spec. Previously several had `text-heading` (dark gray on green — WCAG contrast fail), `rounded-lg`, and smaller padding.
+
+Files: `index.astro` (hero CTA + bottom CTA), `pathway.astro`, `practitioners.astro`, `stories/[...slug].astro`, `tips/[...slug].astro`, `CostCalculator.astro`, `404.astro`
+
+**Fix 2 — Card borders removed (6 cards across 4 files):**
+Spec says "no border, shadow-sm only". Removed `border-2 border-border` / `border border-border` from all card containers. Added `shadow-sm` where missing.
+
+Files: `index.astro` (3 feature cards + story cards), `stories/index.astro`, `tips/index.astro`
+
+**Fix 3 — CostCalculator container:**
+Removed `border border-border` from outer wrapper, replaced with `shadow-sm`.
+
+**Not touched (intentional):**
+- `BaseLayout.astro` floating crisis button still has `text-heading` on `bg-primary` — flagged but outside scope (crisis UI has separate review process)
+- Form input borders in CostCalculator — legitimate `border border-border` on `<select>`/`<input>` elements
+- Secondary/outline buttons (404 "Getting Started Guide", practitioners GP callout) — these are `bg-white` buttons with borders, not primary buttons
+- `PathwayStep.astro` step circle border — decorative element, not a card
+
+**Verification:** `astro check` — 0 errors, 0 warnings. Grep confirms no remaining `text-heading` adjacent to `bg-primary` in any button element.
+
+**Decision noted:** Homepage hero stays centered (CLAUDE.md says "left-aligned" but user confirmed centered is intentional).
+
+---
+
+### What's left
+
+**Design polish (not yet started):**
+- BaseLayout floating crisis button contrast fix (`text-heading` → `text-white`) — needs decision on whether crisis UI follows the same button spec
+- Responsive breakpoint polish across all pages
+- Hover states and micro-interactions audit
+- Lighthouse audit (target 95+ all categories, per CLAUDE.md next steps)
+
+**Content (not design):**
+- Review all `<!-- REVIEW -->` comments in `src/content/` for health accuracy
+- Replace fictional user stories with real ones (or mark clearly as illustrative)
+
+---
+
 ## Phase 6: Polish with Cursor
 
 After Claude Code has built the structure and applied the design system, switch to Cursor for fine-tuning:

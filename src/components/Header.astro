@@ -20,7 +20,7 @@ const navLinks = [
       <!-- Mobile menu button -->
       <button
         id="mobile-menu-btn"
-        class="md:hidden p-2 text-gray-600 hover:text-primary"
+        class="md:hidden p-2 text-body hover:text-primary"
         aria-expanded="false"
         aria-controls="mobile-menu"
         aria-label="Toggle navigation menu"
@@ -66,8 +66,8 @@ const navLinks = [
           <a
             href={link.href}
             class:list={[
-              'block py-3.5 px-4 rounded-lg text-center hover:bg-gray-50 transition-colors',
-              currentPath === link.href ? 'text-primary font-semibold bg-gray-50' : 'text-heading',
+              'block py-3.5 px-4 rounded-lg text-center hover:bg-bg-light transition-colors',
+              currentPath === link.href ? 'text-primary font-semibold bg-bg-light' : 'text-heading',
             ]}
             aria-current={currentPath === link.href ? 'page' : undefined}
           >
@@ -80,7 +80,7 @@ const navLinks = [
           href="https://chat.healthmaps.com.au"
           target="_blank"
           rel="noopener noreferrer"
-          class="block py-3.5 px-4 rounded-lg text-center hover:bg-gray-50 transition-colors text-heading"
+          class="block py-3.5 px-4 rounded-lg text-center hover:bg-bg-light transition-colors text-heading"
         >
           Chat
         </a>
