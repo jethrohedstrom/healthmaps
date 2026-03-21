@@ -6,8 +6,8 @@ globs: src/**/*
 # Typography Rules
 
 - Headings (h1, h2, h3) MUST use `font-family: var(--font-display)` (Switzer)
-- Body text uses `font-family: var(--font-sans)` (Switzer) — this is the default on `<body>`
-- Both `--font-display` and `--font-sans` resolve to Switzer — one font for the whole site
+- Body text uses `font-family: var(--font-sans)` (General Sans) — this is the default on `<body>`
+- `--font-display` resolves to Switzer (headings), `--font-sans` resolves to General Sans (body)
 - Section labels use spaced uppercase: `uppercase tracking-widest text-sm text-primary`
 - NEVER use Inter, Roboto, Arial, Open Sans, or Lato
 - NEVER hardcode font-family values — always reference the CSS custom properties

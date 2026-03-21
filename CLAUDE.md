@@ -57,7 +57,8 @@ src/
 │   ├── tips/                  Tips index + dynamic pages
 │   └── 404.astro
 ├── fonts/
-│   └── Switzer-Variable.woff2       Switzer — headings and body (Fontshare)
+│   ├── GeneralSans-Variable.woff2   General Sans — body (Fontshare)
+│   └── Switzer-Variable.woff2       Switzer — headings (Fontshare)
 └── styles/
     └── global.css             Tailwind v4 @theme tokens + font-faces
 ```
@@ -88,8 +89,9 @@ Reference sites: nhn.no (NHN), app.oevra.com, getmosh.com.au. Screenshots in `de
 - **Never use raw hex values or default Tailwind colours (bg-blue-500 etc). Always use @theme tokens.**
 
 ### Typography
-- **Headings and body:** Switzer (variable, locally bundled from Fontshare)
-- Headings use `font-family: var(--font-display)`, body uses `font-family: var(--font-sans)` — both resolve to Switzer
+- **Headings:** Switzer (variable, locally bundled from Fontshare)
+- **Body:** General Sans (variable, locally bundled from Fontshare)
+- Headings use `font-family: var(--font-display)` (Switzer), body uses `font-family: var(--font-sans)` (General Sans)
 - **Never use** Inter, Roboto, Arial, Open Sans, or Lato
 - Body: 16px, line-height 1.625, antialiased
 - Hero heading: 56px, font-bold, tracking -0.025em, text-heading
