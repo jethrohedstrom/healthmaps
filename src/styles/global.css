@@ -1,36 +1,22 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* Satoshi — body font (variable, locally bundled from Fontshare) */
+/* General Sans — body font (variable, locally bundled from Fontshare) */
 @font-face {
-  font-family: 'Satoshi';
+  font-family: 'General Sans';
   font-style: normal;
   font-display: swap;
-  font-weight: 300 900;
-  src: url('../fonts/Satoshi-Variable.woff2') format('woff2');
+  font-weight: 200 700;
+  src: url('../fonts/GeneralSans-Variable.woff2') format('woff2');
 }
 
-/* Fraunces — display/heading font (locally bundled via fontsource) */
+/* Switzer — heading font (variable, locally bundled from Fontshare) */
 @font-face {
-  font-family: 'Fraunces';
+  font-family: 'Switzer';
   font-style: normal;
   font-display: swap;
-  font-weight: 400;
-  src: url('@fontsource/fraunces/files/fraunces-latin-400-normal.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Fraunces';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 600;
-  src: url('@fontsource/fraunces/files/fraunces-latin-600-normal.woff2') format('woff2');
-}
-@font-face {
-  font-family: 'Fraunces';
-  font-style: normal;
-  font-display: swap;
-  font-weight: 700;
-  src: url('@fontsource/fraunces/files/fraunces-latin-700-normal.woff2') format('woff2');
+  font-weight: 100 900;
+  src: url('../fonts/Switzer-Variable.woff2') format('woff2');
 }
 
 /* Design tokens */
@@ -48,8 +34,8 @@
   --shadow-sm: 0px 1px 2px rgba(0,0,0,0.05);
 
   /* Typography */
-  --font-sans: 'Satoshi', ui-sans-serif, system-ui, sans-serif;
-  --font-display: 'Fraunces', Georgia, serif;
+  --font-sans: 'General Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Switzer', ui-sans-serif, system-ui, sans-serif;
 }
 
 /* Base styles */
