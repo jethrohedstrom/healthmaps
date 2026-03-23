@@ -485,9 +485,7 @@ const bmData = {
 
       const containerPageTop = (mapContainer ? mapContainer.getBoundingClientRect().top + window.scrollY : 0);
       const popoverAbsTop = containerPageTop + popover.offsetTop;
-      const popoverAbsBottom = popoverAbsTop + popover.offsetHeight;
       const viewportTop = window.scrollY + topMargin;
-      const viewportBottom = window.scrollY + window.innerHeight - margin;
 
       const htmlEl = document.documentElement;
       const savedSB = htmlEl.style.scrollBehavior;
@@ -496,12 +494,6 @@ const bmData = {
       if (popoverAbsTop < viewportTop) {
         // Title is above the viewport — scroll up to show it
         window.scrollBy({ top: popoverAbsTop - viewportTop, behavior: 'instant' });
-      } else if (popoverAbsBottom > viewportBottom) {
-        // Bottom is clipped — scroll down, but cap so the title stays visible
-        const delta = Math.min(popoverAbsBottom - viewportBottom, popoverAbsTop - viewportTop);
-        if (delta > 0) {
-          window.scrollBy({ top: delta, behavior: 'instant' });
-        }
       }
 
       htmlEl.style.scrollBehavior = savedSB;
