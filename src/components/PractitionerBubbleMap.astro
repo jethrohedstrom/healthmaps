@@ -474,6 +474,27 @@ const bmData = {
     // Force layout NOW so innerHTML geometry is computed before animation
     void popover.offsetHeight;
 
+    // Scroll BEFORE animation starts — layout is stable, no transforms in play,
+    // no race with scroll-behavior:smooth on <html>.
+    if (!isMobile()) {
+      const margin = 24;
+      const header = document.querySelector('header');
+      const headerHeight = header ? header.getBoundingClientRect().height : 0;
+      const topMargin = headerHeight + margin;
+
+      const containerPageTop = (mapContainer ? mapContainer.getBoundingClientRect().top + window.scrollY : 0);
+      const popoverAbsTop = containerPageTop + popover.offsetTop;
+      const popoverAbsBottom = popoverAbsTop + popover.offsetHeight;
+      const viewportTop = window.scrollY + topMargin;
+      const viewportBottom = window.scrollY + window.innerHeight - margin;
+
+      if (popoverAbsBottom > viewportBottom) {
+        window.scrollBy({ top: popoverAbsBottom - viewportBottom, behavior: 'instant' });
+      } else if (popoverAbsTop < viewportTop) {
+        window.scrollBy({ top: popoverAbsTop - viewportTop, behavior: 'instant' });
+      }
+    }
+
     requestAnimationFrame(function() {
       if (isMobile()) {
         backdrop.classList.add('bm-popover-backdrop-visible');
@@ -481,38 +502,6 @@ const bmData = {
         document.documentElement.classList.add('bm-body-locked');
       }
       popover.classList.add('bm-popover-visible');
-
-      // On desktop, scroll the page if the popover is clipped by the viewport.
-      // Use offsetTop/offsetHeight (unaffected by CSS transforms) instead of
-      // getBoundingClientRect() which returns mid-animation dimensions at scale(0.95).
-      // Use behavior:'instant' to avoid race conditions with scroll-behavior:smooth
-      // on <html> — a previous smooth scroll may still be animating from the last click.
-      if (!isMobile()) {
-        requestAnimationFrame(function() {
-          const margin = 24;
-          const header = document.querySelector('header');
-          const headerHeight = header ? header.getBoundingClientRect().height : 0;
-          const topMargin = headerHeight + margin;
-
-          // Cancel any in-flight smooth scroll so measurements are from a stable position
-          window.scrollTo({ top: window.scrollY, behavior: 'instant' });
-
-          // Calculate popover page position from layout properties.
-          // mapContainer has no transform so its getBoundingClientRect is accurate;
-          // popover.offsetTop/offsetHeight are layout values unaffected by its own scale transform.
-          const containerPageTop = (mapContainer ? mapContainer.getBoundingClientRect().top + window.scrollY : 0);
-          const popoverAbsTop = containerPageTop + popover.offsetTop;
-          const popoverAbsBottom = popoverAbsTop + popover.offsetHeight;
-          const viewportTop = window.scrollY + topMargin;
-          const viewportBottom = window.scrollY + window.innerHeight - margin;
-
-          if (popoverAbsBottom > viewportBottom) {
-            window.scrollBy({ top: popoverAbsBottom - viewportBottom, behavior: 'instant' });
-          } else if (popoverAbsTop < viewportTop) {
-            window.scrollBy({ top: popoverAbsTop - viewportTop, behavior: 'instant' });
-          }
-        });
-      }
     });
   }
 
