@@ -474,8 +474,9 @@ const bmData = {
     // Force layout NOW so innerHTML geometry is computed before animation
     void popover.offsetHeight;
 
-    // Scroll BEFORE animation starts — layout is stable, no transforms in play,
-    // no race with scroll-behavior:smooth on <html>.
+    // On desktop, scroll the popover into view. The popover can be taller than
+    // the viewport, so always prioritise showing the TOP (title) — never scroll
+    // so far that the title disappears behind the sticky header.
     if (!isMobile()) {
       const margin = 24;
       const header = document.querySelector('header');
@@ -488,22 +489,22 @@ const bmData = {
       const viewportTop = window.scrollY + topMargin;
       const viewportBottom = window.scrollY + window.innerHeight - margin;
 
-      if (popoverAbsBottom > viewportBottom || popoverAbsTop < viewportTop) {
-        // Override CSS scroll-behavior:smooth on <html> so behavior:'instant' is
-        // truly synchronous — without this, some browsers still animate the scroll,
-        // causing alternating overshoot on every other click.
-        const htmlEl = document.documentElement;
-        const savedSB = htmlEl.style.scrollBehavior;
-        htmlEl.style.scrollBehavior = 'auto';
+      const htmlEl = document.documentElement;
+      const savedSB = htmlEl.style.scrollBehavior;
+      htmlEl.style.scrollBehavior = 'auto';
 
-        if (popoverAbsBottom > viewportBottom) {
-          window.scrollBy({ top: popoverAbsBottom - viewportBottom, behavior: 'instant' });
-        } else {
-          window.scrollBy({ top: popoverAbsTop - viewportTop, behavior: 'instant' });
+      if (popoverAbsTop < viewportTop) {
+        // Title is above the viewport — scroll up to show it
+        window.scrollBy({ top: popoverAbsTop - viewportTop, behavior: 'instant' });
+      } else if (popoverAbsBottom > viewportBottom) {
+        // Bottom is clipped — scroll down, but cap so the title stays visible
+        const delta = Math.min(popoverAbsBottom - viewportBottom, popoverAbsTop - viewportTop);
+        if (delta > 0) {
+          window.scrollBy({ top: delta, behavior: 'instant' });
         }
-
-        htmlEl.style.scrollBehavior = savedSB;
       }
+
+      htmlEl.style.scrollBehavior = savedSB;
     }
 
     requestAnimationFrame(function() {
