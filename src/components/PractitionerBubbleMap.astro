@@ -482,17 +482,29 @@ const bmData = {
       }
       popover.classList.add('bm-popover-visible');
 
-      // On desktop, scroll the page if the popover is clipped by the viewport
+      // On desktop, scroll the page if the popover is clipped by the viewport.
+      // Use offsetTop/offsetHeight (unaffected by CSS transforms) instead of
+      // getBoundingClientRect() which returns mid-animation dimensions at scale(0.95).
       if (!isMobile()) {
         requestAnimationFrame(function() {
-          const rect = popover.getBoundingClientRect();
           const margin = 24;
           const header = document.querySelector('header');
-          const topMargin = (header ? header.getBoundingClientRect().height : 0) + margin;
-          if (rect.bottom > window.innerHeight - margin) {
-            window.scrollBy({ top: rect.bottom - window.innerHeight + margin, behavior: 'smooth' });
-          } else if (rect.top < topMargin) {
-            window.scrollBy({ top: rect.top - topMargin, behavior: 'smooth' });
+          const headerHeight = header ? header.getBoundingClientRect().height : 0;
+          const topMargin = headerHeight + margin;
+
+          // Calculate popover page position from layout properties.
+          // mapContainer has no transform so its getBoundingClientRect is accurate;
+          // popover.offsetTop/offsetHeight are layout values unaffected by its own scale transform.
+          const containerPageTop = (mapContainer ? mapContainer.getBoundingClientRect().top + window.scrollY : 0);
+          const popoverAbsTop = containerPageTop + popover.offsetTop;
+          const popoverAbsBottom = popoverAbsTop + popover.offsetHeight;
+          const viewportTop = window.scrollY + topMargin;
+          const viewportBottom = window.scrollY + window.innerHeight - margin;
+
+          if (popoverAbsBottom > viewportBottom) {
+            window.scrollBy({ top: popoverAbsBottom - viewportBottom, behavior: 'smooth' });
+          } else if (popoverAbsTop < viewportTop) {
+            window.scrollBy({ top: popoverAbsTop - viewportTop, behavior: 'smooth' });
           }
         });
       }
