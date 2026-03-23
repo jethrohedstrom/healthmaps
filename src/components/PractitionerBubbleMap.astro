@@ -362,9 +362,43 @@ const bmData = {
 
     // Measure popover height after content is set
     const popoverHeight = popover.offsetHeight;
+    const vpMargin = 16;
+    const hdr = document.querySelector('header');
+    const hdrH = hdr ? hdr.getBoundingClientRect().height : 0;
+
+    // Allow popover to extend above the container (negative top) to use
+    // the hero whitespace, but stay below the sticky header
+    const minTop = Math.min(8, -(containerRect.top - hdrH - vpMargin));
+
+    // Ideal vertical position: centered on bubble, clamped within container
     let top = bubbleCenterY - popoverHeight / 2;
-    // Clamp vertically
-    top = Math.max(8, Math.min(top, containerRect.height - popoverHeight - 8));
+    top = Math.max(minTop, Math.min(top, containerRect.height - popoverHeight - 8));
+
+    // Check if bottom extends below viewport
+    const popoverBottom = containerRect.top + top + popoverHeight;
+    const viewportBottom = window.innerHeight - vpMargin;
+
+    if (popoverBottom > viewportBottom) {
+      // Try moving the popover up (can go above container into hero area)
+      const overflow = popoverBottom - viewportBottom;
+      top = Math.max(minTop, top - overflow);
+
+      // If still overflows after moving up as far as possible, cap height
+      const newBottom = containerRect.top + top + popoverHeight;
+      if (newBottom > viewportBottom) {
+        const maxH = viewportBottom - (containerRect.top + top);
+        if (maxH > 200) {
+          popover.style.maxHeight = maxH + 'px';
+          popover.style.overflowY = 'auto';
+        }
+      } else {
+        popover.style.maxHeight = '';
+        popover.style.overflowY = '';
+      }
+    } else {
+      popover.style.maxHeight = '';
+      popover.style.overflowY = '';
+    }
 
     popover.style.left = left + 'px';
     popover.style.top = top + 'px';
@@ -380,6 +414,7 @@ const bmData = {
       if (hideTimeout) { clearTimeout(hideTimeout); hideTimeout = null; }
       popover.style.transform = '';
       popover.style.maxHeight = '';
+      popover.style.overflowY = '';
       popover.innerHTML = '';
       document.body.classList.remove('bm-body-locked');
       document.documentElement.classList.remove('bm-body-locked');
@@ -387,6 +422,7 @@ const bmData = {
       hideTimeout = window.setTimeout(function() {
         popover.style.transform = '';
         popover.style.maxHeight = '';
+        popover.style.overflowY = '';
         popover.innerHTML = '';
         document.body.classList.remove('bm-body-locked');
         document.documentElement.classList.remove('bm-body-locked');
@@ -407,6 +443,7 @@ const bmData = {
     // Reset stale state from any interrupted dismiss animation
     popover.style.transform = '';
     popover.style.maxHeight = '';
+    popover.style.overflowY = '';
     popover.style.height = '';
     backdrop.style.opacity = '';
     popover.classList.remove('bm-popover-visible');
