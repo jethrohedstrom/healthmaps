@@ -488,10 +488,21 @@ const bmData = {
       const viewportTop = window.scrollY + topMargin;
       const viewportBottom = window.scrollY + window.innerHeight - margin;
 
-      if (popoverAbsBottom > viewportBottom) {
-        window.scrollBy({ top: popoverAbsBottom - viewportBottom, behavior: 'instant' });
-      } else if (popoverAbsTop < viewportTop) {
-        window.scrollBy({ top: popoverAbsTop - viewportTop, behavior: 'instant' });
+      if (popoverAbsBottom > viewportBottom || popoverAbsTop < viewportTop) {
+        // Override CSS scroll-behavior:smooth on <html> so behavior:'instant' is
+        // truly synchronous — without this, some browsers still animate the scroll,
+        // causing alternating overshoot on every other click.
+        const htmlEl = document.documentElement;
+        const savedSB = htmlEl.style.scrollBehavior;
+        htmlEl.style.scrollBehavior = 'auto';
+
+        if (popoverAbsBottom > viewportBottom) {
+          window.scrollBy({ top: popoverAbsBottom - viewportBottom, behavior: 'instant' });
+        } else {
+          window.scrollBy({ top: popoverAbsTop - viewportTop, behavior: 'instant' });
+        }
+
+        htmlEl.style.scrollBehavior = savedSB;
       }
     }
 
