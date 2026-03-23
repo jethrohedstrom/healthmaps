@@ -107,7 +107,7 @@ const bmData = {
       { text: "AHPRA registered", cls: "badge-ahpra" },
       { text: "Medicare", cls: "badge-medicare" }
     ],
-    desc: "Your regular doctor — where most mental health journeys start. They'll listen to what's happening, can prescribe basic medication, and can set you up with a <button type=\"button\" class=\"bm-mhcp-toggle\" style=\"color:#44EE70;font-weight:600;text-decoration:underline;text-underline-offset:2px;cursor:pointer;background:none;border:none;padding:0;font-size:inherit;font-family:inherit;line-height:inherit;\">Mental Health Care Plan</button>. That plan unlocks Medicare-funded sessions with a psychologist, social worker, or OT.",
+    desc: "Your regular doctor — where most mental health journeys start. They'll listen to what's happening, can prescribe basic medication, and can set you up with a <button type=\"button\" class=\"bm-mhcp-toggle\" style=\"color:var(--color-primary);font-weight:600;text-decoration:underline;text-underline-offset:2px;cursor:pointer;background:none;border:none;padding:0;font-size:inherit;font-family:inherit;line-height:inherit;\">Mental Health Care Plan</button>. That plan unlocks Medicare-funded sessions with a psychologist, social worker, or OT.",
     details: [
       { label: "Cost", value: "Often bulk-billed (free)" },
       { label: "Referral", value: "None needed" },
@@ -429,7 +429,7 @@ const bmData = {
         p.badges.map(function(b) { return '<span class="bm-info-badge ' + b.cls + '">' + b.text + '</span>'; }).join('') +
       '</div>' +
       '<div class="bm-info-desc">' + p.desc + '</div>' +
-      (key === 'gp' ? '<div class="bm-mhcp-detail" style="overflow:hidden;max-height:0;opacity:0;transition:max-height 0.3s ease-out,opacity 0.3s ease-out;"><div style="background:#f8fafc;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#64748b;line-height:1.6;border-left:3px solid rgba(68,238,112,0.4);"><p style="font-weight:600;color:#1e293b;margin:0 0 4px;">What is a Mental Health Care Plan?</p><p style="margin:0;">A document your GP creates during your appointment that unlocks Medicare rebates for up to 10 psychology sessions per calendar year. Your GP handles it all — no extra paperwork on your end.</p><a href="/pathway/#step-2" style="display:inline-flex;align-items:center;gap:4px;color:#44EE70;font-weight:600;margin-top:6px;font-size:11px;text-decoration:none;">Learn more about the process <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></a></div></div>' : '') +
+      (key === 'gp' ? '<div class="bm-mhcp-detail" style="overflow:hidden;max-height:0;opacity:0;transition:max-height 0.3s ease-out,opacity 0.3s ease-out;"><div style="background:#f8fafc;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#64748b;line-height:1.6;border-left:3px solid rgba(68,238,112,0.4);"><p style="font-weight:600;color:#1e293b;margin:0 0 4px;">What is a Mental Health Care Plan?</p><p style="margin:0;">A document your GP creates during your appointment that unlocks Medicare rebates for up to 10 psychology sessions per calendar year. Your GP handles it all — no extra paperwork on your end.</p><a href="/pathway/#step-2" style="display:inline-flex;align-items:center;gap:4px;color:var(--color-primary);font-weight:600;margin-top:6px;font-size:11px;text-decoration:none;">Learn more about the process <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></a></div></div>' : '') +
       '<div class="bm-info-details">' +
         p.details.map(function(d) {
           return '<div class="bm-info-detail">' +
@@ -828,20 +828,20 @@ const bmData = {
     padding: 14px 32px;
     min-width: min(290px, 100%);
     border-radius: 12px;
-    border: none;
-    background: #44EE70;
+    border: 2px solid var(--color-border);
+    background: #ffffff;
     font-family: var(--font-sans);
     font-size: 15px;
     font-weight: 600;
-    color: #1e293b;
+    color: var(--color-primary);
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: border-color 0.2s ease, color 0.2s ease;
     box-shadow: 0px 1px 2px rgba(0,0,0,0.05);
   }
 
   @media (hover: hover) {
     .bubble-map .bm-show-more-btn:hover {
-      background: var(--color-primary-mid);
+      border-color: var(--color-primary);
     }
   }
 
