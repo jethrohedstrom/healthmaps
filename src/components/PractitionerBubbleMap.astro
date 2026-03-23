@@ -60,13 +60,9 @@
           {/* Core labels — positioned to match blob centres */}
           <text x="230" y="168" class="bm-blob-label" font-size="15" text-anchor="middle" data-prof="psychologist">Psychologist</text>
           <text x="230" y="186" class="bm-blob-sub" font-size="10" text-anchor="middle" data-prof="psychologist">structured therapy</text>
-          <rect x="204" y="192" width="52" height="13" rx="6.5" class="bm-badge-bg" data-prof="psychologist"/>
-          <text x="230" y="201" class="bm-badge-text" text-anchor="middle" data-prof="psychologist">AHPRA</text>
 
           <text x="490" y="178" class="bm-blob-label" font-size="14" text-anchor="middle" data-prof="psychiatrist">Psychiatrist</text>
           <text x="490" y="196" class="bm-blob-sub" font-size="10" text-anchor="middle" data-prof="psychiatrist">medication</text>
-          <rect x="464" y="201" width="52" height="13" rx="6.5" class="bm-badge-bg" data-prof="psychiatrist"/>
-          <text x="490" y="210" class="bm-badge-text" text-anchor="middle" data-prof="psychiatrist">AHPRA</text>
 
           <text x="270" y="413" class="bm-blob-label" font-size="14" text-anchor="middle" data-prof="counsellor">Counsellor</text>
           <text x="270" y="431" class="bm-blob-sub" font-size="10" text-anchor="middle" data-prof="counsellor">someone to talk to</text>
@@ -82,14 +78,10 @@
             <text x="600" y="285" class="bm-blob-label" font-size="9" text-anchor="middle" data-prof="ot">Mental Health</text>
             <text x="600" y="299" class="bm-blob-label" font-size="9" text-anchor="middle" data-prof="ot">OT</text>
             <text x="600" y="314" class="bm-blob-sub" font-size="8" text-anchor="middle" data-prof="ot">daily function</text>
-            <rect x="574" y="322" width="52" height="13" rx="6.5" class="bm-badge-bg" data-prof="ot"/>
-            <text x="600" y="331" class="bm-badge-text" text-anchor="middle" data-prof="ot">AHPRA</text>
 
             <text x="100" y="279" class="bm-blob-label" font-size="9" text-anchor="middle" data-prof="mh-nurse">Mental Health</text>
             <text x="100" y="291" class="bm-blob-label" font-size="9" text-anchor="middle" data-prof="mh-nurse">Nurse</text>
             <text x="100" y="304" class="bm-blob-sub" font-size="8" text-anchor="middle" data-prof="mh-nurse">clinical care</text>
-            <rect x="74" y="310" width="52" height="13" rx="6.5" class="bm-badge-bg" data-prof="mh-nurse"/>
-            <text x="100" y="319" class="bm-badge-text" text-anchor="middle" data-prof="mh-nurse">AHPRA</text>
 
             <text x="640" y="477" class="bm-blob-label" font-size="10" text-anchor="middle" data-prof="peer">Peer</text>
             <text x="640" y="490" class="bm-blob-label" font-size="10" text-anchor="middle" data-prof="peer">Worker</text>
@@ -130,11 +122,12 @@ const bmData = {
       { text: "AHPRA registered", cls: "badge-ahpra" },
       { text: "Medicare (with GP referral)", cls: "badge-medicare" }
     ],
-    desc: "University-trained (6+ years) in evidence-based therapies like CBT, ACT, and DBT. The most common professional people see through Medicare. Clinical psychologists have additional specialist training and a higher rebate. Many psychologists also practise psychotherapy (longer-term, exploratory work). \"Psychologist\" is a protected title — only AHPRA-registered practitioners can use it.",
+    desc: "The most common professional people see through Medicare for mental health. They work with you on specific problems using techniques that are backed by research. You'll need a GP referral to access Medicare rebates. There are two types: general psychologists and clinical psychologists. Clinical psychologists have additional specialist training and attract a higher Medicare rebate.",
     details: [
       { label: "Cost", value: "$150–$300" },
-      { label: "Medicare rebate", value: "~$93 (general) / ~$149 (clinical)" },
-      { label: "Referral", value: "Yes, GP referral" },
+      { label: "Medicare rebate", value: "$98.95 (general) / $145.25 (clinical)" },
+      { label: "Sessions", value: "10 per year (Better Access)" },
+      { label: "Referral", value: "Yes, GP Mental Health Treatment Plan" },
       { label: "Can prescribe", value: "No" }
     ]
   },
@@ -277,36 +270,6 @@ const bmData = {
     });
   }
 
-  // --- Mobile badge rect sizing ---
-  const badgeOriginals = new Map<Element, { y: number; height: number }>();
-  const badgeTextOriginals = new Map<Element, number>();
-
-  wrapper!.querySelectorAll('.bm-badge-bg').forEach(function(rect) {
-    badgeOriginals.set(rect, {
-      y: parseFloat(rect.getAttribute('y') || '0'),
-      height: parseFloat(rect.getAttribute('height') || '13')
-    });
-  });
-  wrapper!.querySelectorAll('.bm-badge-text').forEach(function(text) {
-    badgeTextOriginals.set(text, parseFloat(text.getAttribute('y') || '0'));
-  });
-
-  function updateBadgeRects() {
-    const mobile = window.innerWidth < 768;
-    badgeOriginals.forEach(function(orig, rect) {
-      if (mobile) {
-        rect.setAttribute('y', String(orig.y - 2));
-        rect.setAttribute('height', '17');
-      } else {
-        rect.setAttribute('y', String(orig.y));
-        rect.setAttribute('height', String(orig.height));
-      }
-    });
-    badgeTextOriginals.forEach(function(origY, text) {
-      text.setAttribute('y', String(mobile ? origY + 1 : origY));
-    });
-  }
-
   function updateViewBox() {
     if (!bmSvg) return;
     if (window.innerWidth < 768) {
@@ -315,7 +278,6 @@ const bmData = {
       bmSvg.setAttribute('viewBox', FULL_VB);
     }
     repositionMobileBlobs();
-    updateBadgeRects();
   }
 
   const showMoreBtn = document.getElementById('showMoreBtn-bm');
@@ -857,22 +819,6 @@ const bmData = {
     transition: opacity 0.4s ease;
   }
 
-  .bubble-map .bm-badge-text {
-    font-family: var(--font-sans);
-    font-size: 7.5px;
-    font-weight: 700;
-    fill: rgba(255,255,255,0.95);
-    pointer-events: none;
-    letter-spacing: 0.5px;
-    transition: opacity 0.4s ease;
-  }
-
-  .bubble-map .bm-badge-bg {
-    fill: rgba(0,0,0,0.2);
-    pointer-events: none;
-    transition: opacity 0.4s ease;
-  }
-
   .bubble-map .bm-show-more-btn {
     display: flex;
     align-items: center;
@@ -1137,16 +1083,12 @@ const bmData = {
   @media (max-width: 767px) {
     .bubble-map .bm-blob-label { font-size: 18px; }
     .bubble-map .bm-blob-sub { font-size: 13px; }
-    .bubble-map .bm-badge-text { font-size: 10px; }
     #extra-labels-bm .bm-blob-label { font-size: 13px; }
     #extra-labels-bm .bm-blob-sub { font-size: 10px; }
-    #extra-labels-bm .bm-badge-text { font-size: 9px; }
     /* MH Nurse needs a tighter fit at this radius */
     #extra-labels-bm [data-prof="mh-nurse"].bm-blob-label { font-size: 11px; }
     #extra-labels-bm [data-prof="mh-nurse"].bm-blob-sub { font-size: 9px; }
-    #extra-labels-bm [data-prof="mh-nurse"].bm-badge-text { font-size: 8px; }
     .bubble-map [data-prof="mh-nurse"].bm-blob-label { font-size: 11px; }
     .bubble-map [data-prof="mh-nurse"].bm-blob-sub { font-size: 9px; }
-    .bubble-map [data-prof="mh-nurse"].bm-badge-text { font-size: 8px; }
   }
 </style>
