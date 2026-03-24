@@ -366,35 +366,28 @@ const bmData = {
     const hdr = document.querySelector('header');
     const hdrH = hdr ? hdr.getBoundingClientRect().height : 0;
 
-    // Allow popover to extend above the container (negative top) to use
-    // the hero whitespace, but stay below the sticky header
-    const minTop = Math.min(8, -(containerRect.top - hdrH - vpMargin));
+    // Clamp popover within the VIEWPORT (converted to container-relative coords)
+    // so it stays on-screen without any scrolling.
+    const visibleTop = -containerRect.top + hdrH + vpMargin;
+    const visibleBottom = -containerRect.top + window.innerHeight - vpMargin;
 
-    // Ideal vertical position: centered on bubble, clamped within container
+    // Ideal vertical position: centered on bubble
     let top = bubbleCenterY - popoverHeight / 2;
-    top = Math.max(minTop, Math.min(top, containerRect.height - popoverHeight - 8));
 
-    // Check if bottom extends below viewport
-    const popoverBottom = containerRect.top + top + popoverHeight;
-    const viewportBottom = window.innerHeight - vpMargin;
+    // Clamp within viewport-visible area
+    if (top + popoverHeight > visibleBottom) {
+      top = visibleBottom - popoverHeight;
+    }
+    if (top < visibleTop) {
+      top = visibleTop;
+    }
 
-    if (popoverBottom > viewportBottom) {
-      // Try moving the popover up (can go above container into hero area)
-      const overflow = popoverBottom - viewportBottom;
-      top = Math.max(minTop, top - overflow);
-
-      // If still overflows after moving up as far as possible, cap height
-      const newBottom = containerRect.top + top + popoverHeight;
-      if (newBottom > viewportBottom) {
-        const maxH = viewportBottom - (containerRect.top + top);
-        if (maxH > 200) {
-          popover.style.maxHeight = maxH + 'px';
-          popover.style.overflowY = 'auto';
-        }
-      } else {
-        popover.style.maxHeight = '';
-        popover.style.overflowY = '';
-      }
+    // If popover is taller than visible area, pin to top and cap height
+    const availableHeight = visibleBottom - visibleTop;
+    if (popoverHeight > availableHeight && availableHeight > 200) {
+      top = visibleTop;
+      popover.style.maxHeight = availableHeight + 'px';
+      popover.style.overflowY = 'auto';
     } else {
       popover.style.maxHeight = '';
       popover.style.overflowY = '';
@@ -510,31 +503,6 @@ const bmData = {
 
     // Force layout NOW so innerHTML geometry is computed before animation
     void popover.offsetHeight;
-
-    // On desktop, scroll the popover into view. The popover can be taller than
-    // the viewport, so always prioritise showing the TOP (title) — never scroll
-    // so far that the title disappears behind the sticky header.
-    if (!isMobile()) {
-      const margin = 24;
-      const header = document.querySelector('header');
-      const headerHeight = header ? header.getBoundingClientRect().height : 0;
-      const topMargin = headerHeight + margin;
-
-      const containerPageTop = (mapContainer ? mapContainer.getBoundingClientRect().top + window.scrollY : 0);
-      const popoverAbsTop = containerPageTop + popover.offsetTop;
-      const viewportTop = window.scrollY + topMargin;
-
-      const htmlEl = document.documentElement;
-      const savedSB = htmlEl.style.scrollBehavior;
-      htmlEl.style.scrollBehavior = 'auto';
-
-      if (popoverAbsTop < viewportTop) {
-        // Title is above the viewport — scroll up to show it
-        window.scrollBy({ top: popoverAbsTop - viewportTop, behavior: 'instant' });
-      }
-
-      htmlEl.style.scrollBehavior = savedSB;
-    }
 
     requestAnimationFrame(function() {
       if (isMobile()) {
