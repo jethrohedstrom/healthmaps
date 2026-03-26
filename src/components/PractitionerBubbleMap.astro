@@ -348,7 +348,7 @@ const bmData = {
     const bubbleCenterY = blobRect.top + blobRect.height / 2 - containerRect.top;
     const bubbleRadiusX = blobRect.width / 2;
 
-    const popoverWidth = 300;
+    const popoverWidth = 360;
     const gap = 12;
 
     // Try right side first
@@ -867,7 +867,7 @@ const bmData = {
   /* Popover — desktop: absolute near bubble; mobile: bottom sheet */
   .bubble-map .bm-popover {
     position: absolute;
-    width: 300px;
+    width: 360px;
     background: #ffffff;
     border-radius: 14px;
     padding: 20px;
@@ -955,7 +955,7 @@ const bmData = {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
   .bubble-map .bm-info-dot {
@@ -975,14 +975,14 @@ const bmData = {
   .bubble-map .bm-info-badges {
     display: flex;
     gap: 6px;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
     flex-wrap: wrap;
   }
 
   .bubble-map .bm-info-badge {
     padding: 2px 9px;
     border-radius: 100px;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
   }
 
@@ -1009,25 +1009,25 @@ const bmData = {
 
   .bubble-map .bm-info-desc {
     color: #64748b;
-    font-size: 13px;
-    line-height: 1.7;
-    margin-bottom: 14px;
+    font-size: 14px;
+    line-height: 1.55;
+    margin-bottom: 10px;
   }
 
   .bubble-map .bm-info-details {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 10px;
+    gap: 8px;
   }
 
   .bubble-map .bm-info-detail {
-    padding: 10px 12px;
+    padding: 8px 10px;
     background: #f8fafc;
     border-radius: 10px;
   }
 
   .bubble-map .bm-info-detail-label {
-    font-size: 9px;
+    font-size: 10px;
     text-transform: uppercase;
     letter-spacing: 1.2px;
     color: #94a3b8;
@@ -1036,7 +1036,7 @@ const bmData = {
   }
 
   .bubble-map .bm-info-detail-value {
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
     color: #1e293b;
   }
