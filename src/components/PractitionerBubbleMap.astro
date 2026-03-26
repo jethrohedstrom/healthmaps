@@ -104,7 +104,7 @@ const bmData = {
     name: "GP (General Practitioner)",
     color: "#5c6670",
     badges: [
-      { text: "AHPRA registered", cls: "badge-ahpra" },
+      { text: "Nationally registered", cls: "badge-registered" },
       { text: "Medicare", cls: "badge-medicare" }
     ],
     desc: "Your regular doctor — where most mental health journeys start. They'll listen to what's happening, can prescribe basic medication, and can set you up with a <button type=\"button\" class=\"bm-mhcp-toggle\" style=\"color:var(--color-primary);font-weight:600;text-decoration:underline;text-underline-offset:2px;cursor:pointer;background:none;border:none;padding:0;font-size:inherit;font-family:inherit;line-height:inherit;\">Mental Health Care Plan</button>. That plan unlocks Medicare-funded sessions with a psychologist, social worker, or OT.",
@@ -119,7 +119,7 @@ const bmData = {
     name: "Psychologist",
     color: "#4a7fb5",
     badges: [
-      { text: "AHPRA registered", cls: "badge-ahpra" },
+      { text: "Nationally registered", cls: "badge-registered" },
       { text: "Medicare (with GP referral)", cls: "badge-medicare" }
     ],
     desc: "The most common professional people see through Medicare for mental health. They work with you on specific problems using techniques that are backed by research. You'll need a GP referral to access Medicare rebates. There are two types: general psychologists and clinical psychologists. Clinical psychologists have additional specialist training and attract a higher Medicare rebate.",
@@ -135,7 +135,7 @@ const bmData = {
     name: "Psychiatrist",
     color: "#7e6aad",
     badges: [
-      { text: "AHPRA registered", cls: "badge-ahpra" },
+      { text: "Nationally registered", cls: "badge-registered" },
       { text: "Medicare (with GP referral)", cls: "badge-medicare" }
     ],
     desc: "A medical doctor who has specialised in mental health. The only professional here who can prescribe and manage psychiatric medication. They can also provide therapy, though many focus primarily on medication management and complex diagnosis. Your GP refers you.",
@@ -166,10 +166,10 @@ const bmData = {
     name: "Mental Health Social Worker",
     color: "#c27a4a",
     badges: [
-      { text: "AASW accredited (not AHPRA)", cls: "badge-voluntary" },
+      { text: "Professionally accredited (AASW)", cls: "badge-voluntary" },
       { text: "Medicare (with GP referral)", cls: "badge-medicare" }
     ],
-    desc: "Accredited Mental Health Social Workers (AMHSWs) help you work through mental health challenges alongside practical life factors — relationships, housing, employment. They can provide therapy and are covered by Medicare under Better Access with a GP referral. Accredited through the AASW, not AHPRA.",
+    desc: "Accredited Mental Health Social Workers (AMHSWs) help you work through mental health challenges alongside practical life factors — relationships, housing, employment. They can provide therapy and are covered by Medicare under Better Access with a GP referral. Accredited through AASW (Australian Association of Social Workers).",
     details: [
       { label: "Cost", value: "$120–$220" },
       { label: "Medicare rebate", value: "~$93" },
@@ -181,7 +181,7 @@ const bmData = {
     name: "Mental Health OT",
     color: "#b5894a",
     badges: [
-      { text: "AHPRA registered", cls: "badge-ahpra" },
+      { text: "Nationally registered", cls: "badge-registered" },
       { text: "Medicare (with GP referral)", cls: "badge-medicare" }
     ],
     desc: "Occupational therapists with mental health endorsement help when mental health conditions affect your ability to function day-to-day — work, routines, self-care, social participation. They focus on practical strategies and are covered by Medicare under Better Access.",
@@ -196,7 +196,7 @@ const bmData = {
     name: "Mental Health Nurse",
     color: "#c25a6a",
     badges: [
-      { text: "AHPRA registered", cls: "badge-ahpra" },
+      { text: "Nationally registered", cls: "badge-registered" },
       { text: "Medicare (with GP/psychiatrist referral)", cls: "badge-medicare" }
     ],
     desc: "Credentialed mental health nurses support people experiencing mental illness. They work in hospitals, community settings, and private practice. They can conduct assessments, help with treatment programs, and provide clinical care alongside psychiatrists and GPs.",
@@ -986,7 +986,7 @@ const bmData = {
     font-weight: 600;
   }
 
-  .bubble-map .badge-ahpra {
+  .bubble-map .badge-registered {
     background: #e0edff;
     color: #1e40af;
   }
