@@ -462,7 +462,29 @@ const bmData = {
         p.badges.map(function(b) { return '<span class="bm-info-badge ' + b.cls + '">' + b.text + '</span>'; }).join('') +
       '</div>' +
       '<div class="bm-info-desc">' + p.desc + '</div>' +
-      ('costRows' in p && (p as any).costRows ? '<div class="bm-cost-breakdown">' + (p as any).costRows.map(function(r: any) { return '<div class="bm-cost-row"><div class="bm-cost-row-label">' + r.label + '</div><div class="bm-cost-row-items"><div class="bm-cost-item"><div class="bm-cost-item-label">Fee</div><div class="bm-cost-item-value">' + r.fee + '</div></div><div class="bm-cost-item"><div class="bm-cost-item-label">Medicare rebate</div><div class="bm-cost-item-value">' + r.rebate + '</div></div><div class="bm-cost-item"><div class="bm-cost-item-label">Out of pocket</div><div class="bm-cost-item-value">' + r.outOfPocket + '</div></div></div></div>'; }).join('') + '</div>' : '') +
+      ('costRows' in p && (p as any).costRows
+        ? '<div class="bm-cost-breakdown">' +
+          (p as any).costRows.map(function(r: any) {
+            return '<div class="bm-cost-row">' +
+              '<div class="bm-cost-row-label">' + r.label + '</div>' +
+              '<div class="bm-cost-row-items">' +
+                '<div class="bm-cost-item">' +
+                  '<div class="bm-cost-item-label">Fee</div>' +
+                  '<div class="bm-cost-item-value">' + r.fee + '</div>' +
+                '</div>' +
+                '<div class="bm-cost-item">' +
+                  '<div class="bm-cost-item-label">Medicare rebate</div>' +
+                  '<div class="bm-cost-item-value">' + r.rebate + '</div>' +
+                '</div>' +
+                '<div class="bm-cost-item">' +
+                  '<div class="bm-cost-item-label">Out of pocket</div>' +
+                  '<div class="bm-cost-item-value">' + r.outOfPocket + '</div>' +
+                '</div>' +
+              '</div>' +
+            '</div>';
+          }).join('') +
+          '</div>'
+        : '') +
       (key === 'gp' ? '<div class="bm-mhcp-detail" style="overflow:hidden;max-height:0;opacity:0;transition:max-height 0.3s ease-out,opacity 0.3s ease-out;"><div style="background:#f8fafc;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#64748b;line-height:1.6;border-left:3px solid rgba(68,238,112,0.4);"><p style="font-weight:600;color:#1e293b;margin:0 0 4px;">What is a Mental Health Care Plan?</p><p style="margin:0;">A document your GP creates during your appointment that unlocks Medicare rebates for up to 10 psychology sessions per calendar year. Your GP handles it all — no extra paperwork on your end.</p><a href="/pathway/#step-2" style="display:inline-flex;align-items:center;gap:4px;color:var(--color-primary);font-weight:600;margin-top:6px;font-size:11px;text-decoration:none;">Learn more about the process <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></a></div></div>' : '') +
       '<div class="bm-info-details">' +
         p.details.map(function(d) {
@@ -1055,17 +1077,17 @@ const bmData = {
 
   .bubble-map .bm-cost-row {
     padding: 12px 14px;
-    background: #f8fafc;
+    background: var(--color-bg-light);
     border-radius: 10px;
   }
 
   .bubble-map .bm-cost-row-label {
     font-size: 12px;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--color-heading);
     margin-bottom: 8px;
     padding-bottom: 6px;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .bubble-map .bm-cost-row-items {
@@ -1082,7 +1104,7 @@ const bmData = {
 
   .bubble-map .bm-cost-item-label {
     font-size: 11px;
-    color: #64748b;
+    color: var(--color-body);
     font-weight: 500;
     text-transform: none;
     letter-spacing: 0;
@@ -1091,7 +1113,7 @@ const bmData = {
   .bubble-map .bm-cost-item-value {
     font-size: 13px;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--color-heading);
     text-align: right;
   }
 
