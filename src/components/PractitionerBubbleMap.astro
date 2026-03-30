@@ -476,6 +476,7 @@ const bmData = {
                   '<div class="bm-cost-item-label">Medicare rebate</div>' +
                   '<div class="bm-cost-item-value">' + r.rebate + '</div>' +
                 '</div>' +
+                '<div class="bm-cost-separator"></div>' +
                 '<div class="bm-cost-item bm-cost-item-highlight">' +
                   '<div class="bm-cost-item-label">Out of pocket</div>' +
                   '<div class="bm-cost-item-value">' + r.outOfPocket + '</div>' +
@@ -1116,11 +1117,15 @@ const bmData = {
     white-space: nowrap;
   }
 
+  .bubble-map .bm-cost-separator {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--color-border);
+    margin-top: 3px;
+  }
+
   .bubble-map .bm-cost-item-highlight .bm-cost-item-label,
   .bubble-map .bm-cost-item-highlight .bm-cost-item-value {
-    margin-top: 3px;
-    padding-top: 6px;
-    border-top: 1px solid var(--color-border);
+    padding-top: 3px;
   }
 
   .bubble-map .bm-cost-item-highlight .bm-cost-item-label {
