@@ -138,11 +138,14 @@ const bmData = {
       { text: "Nationally registered", cls: "badge-registered" },
       { text: "Medicare (with GP referral)", cls: "badge-medicare" }
     ],
-    desc: "A medical doctor who has specialised in mental health. The only professional here who can prescribe and manage psychiatric medication. They can also provide therapy, though many focus primarily on medication management and complex diagnosis. Your GP refers you.",
+    desc: "A psychiatrist is a medical doctor who specialises in mental health. They can diagnose conditions, prescribe and manage medication, and provide therapy. Most people see a psychiatrist for conditions like ADHD, bipolar disorder, or treatment-resistant depression — or when a clear diagnosis is needed, or when specialist medications are required that a GP can't prescribe. You'll need a GP referral to access a Medicare rebate.",
+    costRows: [
+      { label: "First session", fee: "$400 – $800", rebate: "$262.10", outOfPocket: "$138 – $538" },
+      { label: "Follow-up sessions", fee: "$200 – $400", rebate: "$87.05 – $134.00", outOfPocket: "$66 – $266" }
+    ],
     details: [
-      { label: "Cost", value: "$300–$600+" },
-      { label: "Medicare rebate", value: "$150–$300+" },
-      { label: "Referral", value: "Yes, GP referral" },
+      { label: "Wait", value: "1 – 6 months" },
+      { label: "Referral", value: "GP referral needed" },
       { label: "Can prescribe", value: "Yes" }
     ]
   },
@@ -459,6 +462,7 @@ const bmData = {
         p.badges.map(function(b) { return '<span class="bm-info-badge ' + b.cls + '">' + b.text + '</span>'; }).join('') +
       '</div>' +
       '<div class="bm-info-desc">' + p.desc + '</div>' +
+      ('costRows' in p && (p as any).costRows ? '<div class="bm-cost-breakdown">' + (p as any).costRows.map(function(r: any) { return '<div class="bm-cost-row"><div class="bm-cost-row-label">' + r.label + '</div><div class="bm-cost-row-items"><div class="bm-cost-item"><div class="bm-cost-item-label">Fee</div><div class="bm-cost-item-value">' + r.fee + '</div></div><div class="bm-cost-item"><div class="bm-cost-item-label">Medicare rebate</div><div class="bm-cost-item-value">' + r.rebate + '</div></div><div class="bm-cost-item"><div class="bm-cost-item-label">Out of pocket</div><div class="bm-cost-item-value">' + r.outOfPocket + '</div></div></div></div>'; }).join('') + '</div>' : '') +
       (key === 'gp' ? '<div class="bm-mhcp-detail" style="overflow:hidden;max-height:0;opacity:0;transition:max-height 0.3s ease-out,opacity 0.3s ease-out;"><div style="background:#f8fafc;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#64748b;line-height:1.6;border-left:3px solid rgba(68,238,112,0.4);"><p style="font-weight:600;color:#1e293b;margin:0 0 4px;">What is a Mental Health Care Plan?</p><p style="margin:0;">A document your GP creates during your appointment that unlocks Medicare rebates for up to 10 psychology sessions per calendar year. Your GP handles it all — no extra paperwork on your end.</p><a href="/pathway/#step-2" style="display:inline-flex;align-items:center;gap:4px;color:var(--color-primary);font-weight:600;margin-top:6px;font-size:11px;text-decoration:none;">Learn more about the process <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></a></div></div>' : '') +
       '<div class="bm-info-details">' +
         p.details.map(function(d) {
@@ -1039,6 +1043,56 @@ const bmData = {
     font-size: 14px;
     font-weight: 700;
     color: #1e293b;
+  }
+
+  .bubble-map .bm-cost-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 14px;
+    margin-bottom: 14px;
+  }
+
+  .bubble-map .bm-cost-row {
+    padding: 12px 14px;
+    background: #f8fafc;
+    border-radius: 10px;
+  }
+
+  .bubble-map .bm-cost-row-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .bubble-map .bm-cost-row-items {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .bubble-map .bm-cost-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .bubble-map .bm-cost-item-label {
+    font-size: 11px;
+    color: #64748b;
+    font-weight: 500;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .bubble-map .bm-cost-item-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+    text-align: right;
   }
 
   .bubble-map .bm-hidden-blobs {
