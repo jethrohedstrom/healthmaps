@@ -476,7 +476,7 @@ const bmData = {
                   '<div class="bm-cost-item-label">Medicare rebate</div>' +
                   '<div class="bm-cost-item-value">' + r.rebate + '</div>' +
                 '</div>' +
-                '<div class="bm-cost-item">' +
+                '<div class="bm-cost-item bm-cost-item-highlight">' +
                   '<div class="bm-cost-item-label">Out of pocket</div>' +
                   '<div class="bm-cost-item-value">' + r.outOfPocket + '</div>' +
                 '</div>' +
@@ -1071,12 +1071,12 @@ const bmData = {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-top: 14px;
+    margin-top: 16px;
     margin-bottom: 14px;
   }
 
   .bubble-map .bm-cost-row {
-    padding: 12px 14px;
+    padding: 14px 16px;
     background: var(--color-bg-light);
     border-radius: 10px;
   }
@@ -1085,36 +1085,54 @@ const bmData = {
     font-size: 12px;
     font-weight: 700;
     color: var(--color-heading);
-    margin-bottom: 8px;
-    padding-bottom: 6px;
+    margin-bottom: 10px;
+    padding-bottom: 7px;
     border-bottom: 1px solid var(--color-border);
   }
 
   .bubble-map .bm-cost-row-items {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 3px 10px;
   }
 
   .bubble-map .bm-cost-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
+    display: contents;
   }
 
   .bubble-map .bm-cost-item-label {
     font-size: 11px;
     color: var(--color-body);
-    font-weight: 500;
+    font-weight: 400;
     text-transform: none;
     letter-spacing: 0;
+    white-space: nowrap;
   }
 
   .bubble-map .bm-cost-item-value {
-    font-size: 13px;
-    font-weight: 700;
+    font-size: 12px;
+    font-weight: 600;
     color: var(--color-heading);
-    text-align: right;
+    white-space: nowrap;
+  }
+
+  .bubble-map .bm-cost-item-highlight .bm-cost-item-label,
+  .bubble-map .bm-cost-item-highlight .bm-cost-item-value {
+    margin-top: 3px;
+    padding-top: 6px;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .bubble-map .bm-cost-item-highlight .bm-cost-item-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-heading);
+  }
+
+  .bubble-map .bm-cost-item-highlight .bm-cost-item-value {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--color-primary);
   }
 
   .bubble-map .bm-hidden-blobs {
