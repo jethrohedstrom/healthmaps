@@ -1,7 +1,7 @@
 ---
 title: "Mental Health Social Worker"
 cost: "$100–$200 per session"
-rebate: "~$93.35 (with MHCP)"
+rebate: "~$87.25 (with MHCP)"
 referralRequired: true
 bestFor: "Life circumstances affecting mental health"
 registrationStatus: "AASW accredited"
@@ -32,4 +32,4 @@ Requires a **Mental Health Care Plan (MHCP)** and **GP referral**. Up to 10 Medi
 - Focuses on social determinants of mental health, not just clinical symptoms
 - Strong understanding of community services and support systems
 - Can help connect you with other services (housing, legal, financial counselling)
-- Same Medicare rebate structure as general psychologists
+- Lower Medicare rebate than general psychologists ($87.25 vs $98.95)
