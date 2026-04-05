@@ -243,9 +243,9 @@ const bmData = {
   let moreVisible = false;
   const bmSvg = wrapper.querySelector('.bm-map-svg') as SVGSVGElement;
   const FULL_VB = '0 0 700 540';
-  const MOBILE_VB = '80 40 560 500';
+  const MOBILE_VB = '100 50 500 460';
   // Keep identical scale between states to avoid perceived blob size jumps.
-  const MOBILE_VB_EXPANDED = '80 40 560 500';
+  const MOBILE_VB_EXPANDED = '100 50 500 460';
 
   // --- Mobile blob repositioning ---
   // Shift only edge hidden blobs inward when expanded to avoid clipping.
@@ -830,7 +830,7 @@ const bmData = {
 
   @media (max-width: 767px) {
     .bubble-map .bm-map-svg {
-      aspect-ratio: 560 / 500;
+      aspect-ratio: 500 / 460;
     }
   }
 
@@ -1220,14 +1220,14 @@ const bmData = {
 
   /* Mobile: bump SVG text sizes for legibility */
   @media (max-width: 767px) {
-    .bubble-map .bm-blob-label { font-size: 18px; }
-    .bubble-map .bm-blob-sub { font-size: 13px; }
-    #extra-labels-bm .bm-blob-label { font-size: 13px; }
-    #extra-labels-bm .bm-blob-sub { font-size: 10px; }
+    .bubble-map .bm-blob-label { font-size: 28px; }
+    .bubble-map .bm-blob-sub { font-size: 20px; }
+    #extra-labels-bm .bm-blob-label { font-size: 20px; }
+    #extra-labels-bm .bm-blob-sub { font-size: 16px; }
     /* MH Nurse needs a tighter fit at this radius */
-    #extra-labels-bm [data-prof="mh-nurse"].bm-blob-label { font-size: 11px; }
-    #extra-labels-bm [data-prof="mh-nurse"].bm-blob-sub { font-size: 9px; }
-    .bubble-map [data-prof="mh-nurse"].bm-blob-label { font-size: 11px; }
-    .bubble-map [data-prof="mh-nurse"].bm-blob-sub { font-size: 9px; }
+    #extra-labels-bm [data-prof="mh-nurse"].bm-blob-label { font-size: 16px; }
+    #extra-labels-bm [data-prof="mh-nurse"].bm-blob-sub { font-size: 13px; }
+    .bubble-map [data-prof="mh-nurse"].bm-blob-label { font-size: 16px; }
+    .bubble-map [data-prof="mh-nurse"].bm-blob-sub { font-size: 13px; }
   }
 </style>
