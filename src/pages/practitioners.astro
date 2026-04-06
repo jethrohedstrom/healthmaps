@@ -89,9 +89,35 @@ import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
   <!-- Auto-open accordion when navigating from decision helper -->
   <script>
     let suppressNextScroll = false;
+    const debugRunId = `run-${Date.now()}`;
+    function debugLog(hypothesisId: string, location: string, message: string, data: Record<string, unknown>) {
+      fetch('http://127.0.0.1:7840/ingest/4796b335-cf3c-4958-9a7c-6583e2dcb00e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a57960'},body:JSON.stringify({sessionId:'a57960',runId:debugRunId,hypothesisId,location,message,data,timestamp:Date.now()})}).catch(()=>{});
+    }
+    // #region agent log
+    debugLog('P1', 'src/pages/practitioners.astro:scriptInit', 'practitioners inline script init', {
+      hash: window.location.hash,
+      scrollY: window.scrollY,
+      scrollRestoration: history.scrollRestoration
+    });
+    // #endregion
+    window.addEventListener('pageshow', (e) => {
+      // #region agent log
+      debugLog('P1', 'src/pages/practitioners.astro:pageshow', 'pageshow fired', {
+        persisted: e.persisted,
+        scrollY: window.scrollY,
+        hash: window.location.hash
+      });
+      // #endregion
+    });
 
     function openTargetAccordion() {
       const hash = window.location.hash;
+      // #region agent log
+      debugLog('P3', 'src/pages/practitioners.astro:openTargetAccordion:start', 'openTargetAccordion invoked', {
+        hash,
+        scrollY: window.scrollY
+      });
+      // #endregion
       if (!hash) return;
       const target = document.querySelector(hash);
       if (target instanceof HTMLDetailsElement) {
@@ -106,6 +132,14 @@ import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
           suppressNextScroll = true;
           target.open = true;
         }
+        // #region agent log
+        debugLog('P3', 'src/pages/practitioners.astro:openTargetAccordion:end', 'openTargetAccordion finished target handling', {
+          hash,
+          suppressNextScroll,
+          targetOpen: target.open,
+          scrollY: window.scrollY
+        });
+        // #endregion
       }
     }
     openTargetAccordion();
@@ -113,14 +147,49 @@ import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
 
     const heroAccordionEl = document.getElementById('hero-accordion');
     if (heroAccordionEl instanceof HTMLDetailsElement) {
+      const prevBindCount = Number(heroAccordionEl.dataset.debugToggleBindCount || '0');
+      heroAccordionEl.dataset.debugToggleBindCount = String(prevBindCount + 1);
+      // #region agent log
+      debugLog('P5', 'src/pages/practitioners.astro:heroAccordion:bind', 'hero accordion toggle listener bound', {
+        prevBindCount,
+        currentBindCount: prevBindCount + 1,
+        initiallyOpen: heroAccordionEl.open,
+        scrollY: window.scrollY
+      });
+      // #endregion
       heroAccordionEl.addEventListener('toggle', () => {
+        // #region agent log
+        debugLog('P2', 'src/pages/practitioners.astro:heroAccordion:toggle', 'hero accordion toggled', {
+          open: heroAccordionEl.open,
+          suppressNextScroll,
+          scrollY: window.scrollY
+        });
+        // #endregion
         if (heroAccordionEl.open) {
           if (suppressNextScroll) {
             suppressNextScroll = false;
+            // #region agent log
+            debugLog('P2', 'src/pages/practitioners.astro:heroAccordion:toggleSuppressed', 'scroll suppressed after toggle', {
+              open: heroAccordionEl.open,
+              scrollY: window.scrollY
+            });
+            // #endregion
             return;
           }
           requestAnimationFrame(() => {
+            // #region agent log
+            debugLog('P2', 'src/pages/practitioners.astro:heroAccordion:beforeScrollIntoView', 'about to call scrollIntoView', {
+              open: heroAccordionEl.open,
+              scrollY: window.scrollY
+            });
+            // #endregion
             heroAccordionEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // #region agent log
+            debugLog('P2', 'src/pages/practitioners.astro:heroAccordion:afterScrollIntoView', 'scrollIntoView called', {
+              open: heroAccordionEl.open,
+              scrollY: window.scrollY
+            });
+            // #endregion
           });
         }
       });

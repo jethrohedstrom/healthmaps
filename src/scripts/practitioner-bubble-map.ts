@@ -129,6 +129,21 @@ const bmData = {
 (function() {
   const wrapper = document.querySelector('.bubble-map');
   if (!wrapper) return;
+  const debugRunId = `run-${Date.now()}`;
+  let debugUpdateViewBoxCount = 0;
+  function debugLog(hypothesisId: string, location: string, message: string, data: Record<string, unknown>) {
+    fetch('http://127.0.0.1:7840/ingest/4796b335-cf3c-4958-9a7c-6583e2dcb00e',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a57960'},body:JSON.stringify({sessionId:'a57960',runId:debugRunId,hypothesisId,location,message,data,timestamp:Date.now()})}).catch(()=>{});
+  }
+  const prevInitCount = Number((wrapper as HTMLElement).dataset.bmInitCount || '0');
+  (wrapper as HTMLElement).dataset.bmInitCount = String(prevInitCount + 1);
+  // #region agent log
+  debugLog('H1', 'src/scripts/practitioner-bubble-map.ts:init', 'bubble map script initialized', {
+    prevInitCount,
+    currentInitCount: prevInitCount + 1,
+    path: window.location.pathname,
+    width: window.innerWidth
+  });
+  // #endregion
 
   wrapper.querySelectorAll('.bm-blob[data-prof]').forEach(function(el) {
     (el as SVGElement).style.cursor = 'pointer';
@@ -174,18 +189,35 @@ const bmData = {
 
   function updateViewBox() {
     if (!bmSvg) return;
+    debugUpdateViewBoxCount += 1;
     if (window.innerWidth < 768) {
       bmSvg.setAttribute('viewBox', moreVisible ? MOBILE_VB_EXPANDED : MOBILE_VB);
     } else {
       bmSvg.setAttribute('viewBox', FULL_VB);
     }
     repositionMobileBlobs();
+    // #region agent log
+    debugLog('H2', 'src/scripts/practitioner-bubble-map.ts:updateViewBox', 'updateViewBox applied', {
+      count: debugUpdateViewBoxCount,
+      width: window.innerWidth,
+      moreVisible,
+      appliedViewBox: bmSvg.getAttribute('viewBox')
+    });
+    // #endregion
   }
 
   const showMoreBtn = document.getElementById('showMoreBtn-bm');
   if (showMoreBtn) {
     showMoreBtn.addEventListener('click', function() {
       const prevScrollY = window.scrollY;
+      // #region agent log
+      debugLog('H3', 'src/scripts/practitioner-bubble-map.ts:showMoreBtn:before', 'show more clicked before toggle', {
+        moreVisible,
+        prevScrollY,
+        labelsClass: document.getElementById('extra-labels-bm')?.className,
+        blobsClass: document.getElementById('extra-blobs-bm')?.className
+      });
+      // #endregion
       moreVisible = !moreVisible;
       const blobs = document.getElementById('extra-blobs-bm');
       const labels = document.getElementById('extra-labels-bm');
@@ -223,6 +255,16 @@ const bmData = {
         if (window.scrollY !== prevScrollY) {
           window.scrollTo(0, prevScrollY);
         }
+        // #region agent log
+        debugLog('H3', 'src/scripts/practitioner-bubble-map.ts:showMoreBtn:afterRAF', 'show more completed frame', {
+          moreVisible,
+          scrollYAfter: window.scrollY,
+          targetScrollY: prevScrollY,
+          labelsClass: labels?.className,
+          blobsClass: blobs?.className,
+          viewBox: bmSvg?.getAttribute('viewBox')
+        });
+        // #endregion
       });
     });
   }
@@ -301,6 +343,13 @@ const bmData = {
 
   function hideBmInfo(immediate?: boolean) {
     if (!popover) return;
+    // #region agent log
+    debugLog('H4', 'src/scripts/practitioner-bubble-map.ts:hideBmInfo', 'hide popover called', {
+      immediate: Boolean(immediate),
+      activeKey,
+      hasHideTimeout: Boolean(hideTimeout)
+    });
+    // #endregion
     activeKey = null;
     popover.classList.remove('bm-popover-visible');
     popover.classList.remove('bm-popover-expanded');
@@ -661,6 +710,12 @@ const bmData = {
     if (resizeTimer) clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(function() {
       updateViewBox();
+      // #region agent log
+      debugLog('H2', 'src/scripts/practitioner-bubble-map.ts:resizeDebounced', 'resize debounce fired', {
+        width: window.innerWidth,
+        moreVisible
+      });
+      // #endregion
       if (activeKey && popover) {
         const blobEl = wrapper!.querySelector('.bm-blob[data-prof="' + activeKey + '"]') as SVGElement | null;
         if (blobEl) positionPopover(blobEl);
