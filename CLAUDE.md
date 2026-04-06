@@ -89,7 +89,7 @@ Design system tokens and rules: see `.claude/rules/design.md`
 - `npm run build` — production build to `dist/`
 - `npx astro check` — type/build error checking
 
-**Known issue:** Vite HMR sometimes fails to pick up changes to inline `<script>` tags in `.astro` components. If edits don't take effect after a browser hard-refresh, restart the dev server (`Ctrl+C` then `npm run dev`). Verify by curling the compiled JS URL to confirm the server is serving updated code.
+**Known issue:** Vite HMR sometimes fails to pick up changes to inline `<script>` tags in `.astro` components. If edits don't take effect after a browser hard-refresh, restart the dev server (`Ctrl+C` then `npm run dev`). Verify by curling the compiled JS URL to confirm the server is serving updated code. The practitioner bubble map script is in `src/scripts/practitioner-bubble-map.ts` (imported from the component) so its logic hot-reloads with the normal JS pipeline.
 
 ## Content Editing
 
