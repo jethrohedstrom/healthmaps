@@ -39,14 +39,8 @@ import { pathwayCards } from '../data/pathway-cards';
       <h2 class="text-xl font-bold text-heading mb-2">6 ways to access support</h2>
       <p class="text-body mb-8">Select any option to see how it works.</p>
 
-      {/* Crisis card — full width */}
-      <div class="mb-4">
-        <PathwayCard {...pathwayCards[0]} />
-      </div>
-
-      {/* Remaining cards — grid */}
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {pathwayCards.slice(1).map((card) => (
+      <div class="space-y-4">
+        {pathwayCards.map((card) => (
           <PathwayCard {...card} />
         ))}
       </div>
