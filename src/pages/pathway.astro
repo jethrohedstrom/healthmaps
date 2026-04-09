@@ -1,94 +1,48 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PathwayStep from '../components/PathwayStep.astro';
-import { getCollection } from 'astro:content';
-import { render } from 'astro:content';
-
-const pathwaySteps = (await getCollection('pathway')).sort((a, b) => a.data.step - b.data.step);
-const alternatives = (await getCollection('alternatives')).sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99));
+import PathwayCard from '../components/PathwayCard.astro';
+import CrisisFooterBar from '../components/CrisisFooterBar.astro';
+import { pathwayCards } from '../data/pathway-cards';
 ---
 <BaseLayout
-  title="Getting Started"
-  description="A step-by-step guide to accessing Medicare-funded mental health support in Australia — from booking a GP to finding a psychologist."
+  title="How to Access Mental Health Support"
+  description="Six pathways to mental health support in Australia — crisis help, Medicare, private, low-cost, psychiatrist referral, and NDIS."
 >
   <!-- Hero -->
   <section class="bg-white">
     <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
-      <h1 class="text-3xl md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em]">Getting Started with Mental Health Support</h1>
-      <p class="text-lg text-body">
-        A clear, step-by-step guide to accessing Medicare-funded psychology sessions in Australia. Click each step to learn more.
+      <h1 class="text-3xl md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em]">How to access mental health support in Australia</h1>
+      <p class="text-lg leading-relaxed text-body">
+        There are several ways to get mental health support. Here's how each one works — and what it costs.
       </p>
     </div>
   </section>
 
-  <!-- Pathway Steps -->
+  <!-- Quiz placeholder -->
   <section class="bg-bg-light">
-    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
-      <h2 class="sr-only">The Medicare pathway</h2>
-      {pathwaySteps.map(async (step, index) => {
-        const { Content } = await render(step);
-        return (
-          <PathwayStep
-            step={step.data.step}
-            title={step.data.title}
-            summary={step.data.summary}
-            isLast={index === pathwaySteps.length - 1}
-            open={index === 0}
-          >
-            <Content />
-          </PathwayStep>
-        );
-      })}
+    <div class="max-w-[720px] mx-auto px-4 py-12 md:py-16 text-center">
+      <p class="text-lg font-semibold text-heading mb-4">Not sure where to start?</p>
+      <button
+        type="button"
+        disabled
+        class="inline-block bg-primary text-white px-10 py-4 rounded-xl font-semibold shadow-sm opacity-75 cursor-not-allowed"
+      >
+        Take the quiz (coming soon)
+      </button>
     </div>
   </section>
 
-  <!-- Alternative Pathways -->
+  <!-- Pathway cards -->
   <section class="bg-white">
-    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
-      <h2 class="text-[1.5rem] font-bold text-heading mb-2 tracking-[-0.01em]">Other Ways to Get Support</h2>
-      <p class="text-body mb-8">The Medicare pathway isn't your only option. Here are other ways to access mental health support.</p>
-
-      <div>
-        {alternatives.map(async (alt) => {
-          const { Content } = await render(alt);
-          return (
-            <details class="accordion-item">
-              <summary class="text-lg font-medium text-heading">
-                {alt.data.title}
-              </summary>
-              <div class="accordion-content prose prose-sm max-w-none text-body">
-                <p class="text-body text-sm italic mt-0">{alt.data.summary}</p>
-                <Content />
-              </div>
-            </details>
-          );
-        })}
+    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20 pb-28">
+      <h2 class="sr-only">Pathways to mental health support</h2>
+      <div class="space-y-6">
+        {pathwayCards.map((card) => (
+          <PathwayCard {...card} />
+        ))}
       </div>
     </div>
   </section>
 
-  <!-- CTA -->
-  <section class="bg-bg-light">
-    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20 text-center">
-      <h2 class="text-xl font-semibold text-heading mb-3">Not sure what type of practitioner you need?</h2>
-      <a href="/practitioners/" class="inline-block bg-primary text-white px-10 py-4 rounded-xl font-semibold shadow-sm hover:bg-primary/90 transition-colors">
-        Types of Professionals
-      </a>
-    </div>
-  </section>
-  <script>
-    function openStepFromHash() {
-      const hash = window.location.hash;
-      if (!hash) return;
-      const target = document.querySelector(hash);
-      if (!target) return;
-      const details = target.querySelector('details');
-      if (details) {
-        details.open = true;
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }
-    openStepFromHash();
-    window.addEventListener('hashchange', openStepFromHash);
-  </script>
+  <CrisisFooterBar />
 </BaseLayout>

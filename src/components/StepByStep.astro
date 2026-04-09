@@ -1,0 +1,40 @@
+---
+interface Step {
+  number: number;
+  title: string;
+  detail: string;
+}
+
+interface Props {
+  steps: Step[];
+}
+
+const { steps } = Astro.props;
+---
+
+<div class="relative">
+  {steps.map((step, index) => {
+    const isLast = index === steps.length - 1;
+    return (
+      <div class="pathway-step relative pl-14 md:pl-16">
+        {/* Vertical connector line */}
+        {!isLast && (
+          <div class="step-connector absolute left-[19px] md:left-[19px] top-10 bottom-0 w-px bg-border" aria-hidden="true" />
+        )}
+
+        {/* Numbered circle */}
+        <div class="step-circle absolute left-0 top-0 w-10 h-10 rounded-full border-2 border-border bg-white flex items-center justify-center font-bold text-sm text-body z-10" aria-hidden="true">
+          {step.number}
+        </div>
+
+        {/* Step content */}
+        <details class="pb-6">
+          <summary class="min-h-[48px] flex items-center text-base font-semibold text-heading cursor-pointer select-none pr-2">
+            {step.title}
+          </summary>
+          <div class="mt-2 text-lg leading-relaxed text-body pr-2" set:html={step.detail} />
+        </details>
+      </div>
+    );
+  })}
+</div>
