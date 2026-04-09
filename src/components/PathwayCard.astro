@@ -4,48 +4,42 @@ import type { PathwayCard } from '../data/pathway-cards';
 
 interface Props extends PathwayCard {}
 
-const { id, title, oneLiner, isCrisis, facts, steps } = Astro.props;
+const { id, title, tagline, accentColor, oneLiner, isCrisis, facts, steps } = Astro.props;
 
-const cardClasses = isCrisis
-  ? 'bg-primary-light border-2 border-primary/30 rounded-xl p-6 md:p-8'
-  : 'bg-white rounded-xl shadow-sm p-6 md:p-8';
+const bgClass = isCrisis ? 'bg-primary-light' : 'bg-white';
 ---
 
-<article id={id} class={cardClasses}>
-  {/* Header */}
-  <h3 class="text-2xl font-bold text-heading mb-2">{title}</h3>
-  <p class="text-lg leading-relaxed text-body mb-6">{oneLiner}</p>
+<details id={id} class={`pathway-card rounded-xl shadow-sm border-l-4 ${accentColor} ${bgClass}`}>
+  <summary class="min-h-[48px] p-5 md:p-6 cursor-pointer select-none">
+    <h3 class="text-lg font-bold text-heading leading-snug">{title}</h3>
+    <p class="text-sm text-body mt-1">{tagline}</p>
+  </summary>
 
-  {/* Key facts */}
-  <div class="flex flex-wrap gap-x-6 gap-y-3 mb-6 text-sm">
-    <div>
-      <span class="text-body">Cost:</span>{' '}
-      <span class="font-semibold text-heading">{facts.cost}</span>
+  <div class="px-5 md:px-6 pb-6">
+    {/* One-liner */}
+    <p class="text-lg leading-relaxed text-body mb-5">{oneLiner}</p>
+
+    {/* Key facts */}
+    <div class="flex flex-wrap gap-x-6 gap-y-3 mb-6 text-sm">
+      <div>
+        <span class="text-body">Cost:</span>{' '}
+        <span class="font-semibold text-heading">{facts.cost}</span>
+      </div>
+      {facts.sessions && (
+        <div>
+          <span class="text-body">Sessions:</span>{' '}
+          <span class="font-semibold text-heading">{facts.sessions}</span>
+        </div>
+      )}
+      {facts.wait && (
+        <div>
+          <span class="text-body">Wait:</span>{' '}
+          <span class="font-semibold text-heading">{facts.wait}</span>
+        </div>
+      )}
     </div>
-    {facts.sessions && (
-      <div>
-        <span class="text-body">Sessions:</span>{' '}
-        <span class="font-semibold text-heading">{facts.sessions}</span>
-      </div>
-    )}
-    {facts.wait && (
-      <div>
-        <span class="text-body">Wait:</span>{' '}
-        <span class="font-semibold text-heading">{facts.wait}</span>
-      </div>
-    )}
+
+    {/* Steps */}
+    <StepByStep steps={steps} />
   </div>
-
-  {/* Expandable steps */}
-  <details class="group">
-    <summary class="min-h-[48px] inline-flex items-center gap-2 text-primary font-semibold cursor-pointer select-none">
-      <span>Show me how</span>
-      <svg class="w-4 h-4 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-      </svg>
-    </summary>
-    <div class="mt-6">
-      <StepByStep steps={steps} />
-    </div>
-  </details>
-</article>
+</details>

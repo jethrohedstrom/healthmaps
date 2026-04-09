@@ -36,8 +36,9 @@ import { pathwayCards } from '../data/pathway-cards';
   <!-- Pathway cards -->
   <section class="bg-white">
     <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20 pb-28">
-      <h2 class="sr-only">Pathways to mental health support</h2>
-      <div class="space-y-6">
+      <h2 class="text-xl font-bold text-heading mb-2">6 ways to access support</h2>
+      <p class="text-body mb-8">Tap any option to see how it works.</p>
+      <div class="space-y-4">
         {pathwayCards.map((card) => (
           <PathwayCard {...card} />
         ))}

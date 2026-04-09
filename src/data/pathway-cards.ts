@@ -7,6 +7,8 @@ export interface PathwayStep {
 export interface PathwayCard {
   id: string;
   title: string;
+  tagline: string;
+  accentColor: string;
   oneLiner: string;
   isCrisis: boolean;
   facts: {
@@ -25,6 +27,8 @@ export const pathwayCards: PathwayCard[] = [
   {
     id: 'crisis',
     title: 'I need help now',
+    tagline: 'Free, 24/7, no appointment needed',
+    accentColor: 'border-l-accent-amber',
     oneLiner: 'You or someone you know is in immediate danger or severe distress.',
     isCrisis: true,
     facts: {
@@ -62,6 +66,8 @@ export const pathwayCards: PathwayCard[] = [
   {
     id: 'medicare-gp',
     title: 'See a psychologist through your GP',
+    tagline: '$50\u2013$220/session after Medicare rebate', // REVIEW cost range
+    accentColor: 'border-l-primary',
     oneLiner: 'You want professional support and are happy to start with your GP.',
     isCrisis: false,
     facts: {
@@ -105,6 +111,8 @@ export const pathwayCards: PathwayCard[] = [
   {
     id: 'private',
     title: 'Go direct \u2014 no GP, no waiting for a plan',
+    tagline: '$120\u2013$330+/session, no rebate', // REVIEW cost range
+    accentColor: 'border-l-accent-blue',
     oneLiner: 'You want to start quickly, you know what you\u2019re looking for, or you\u2019d rather not go through a GP.',
     isCrisis: false,
     facts: {
@@ -138,6 +146,8 @@ export const pathwayCards: PathwayCard[] = [
   {
     id: 'low-cost',
     title: 'Free or low-cost support',
+    tagline: 'Free or very low cost',
+    accentColor: 'border-l-accent-teal',
     oneLiner: 'Cost is a barrier, you\u2019re on a low income, or you want to access services without a Medicare gap fee.',
     isCrisis: false,
     facts: {
@@ -175,6 +185,8 @@ export const pathwayCards: PathwayCard[] = [
   {
     id: 'psychiatrist',
     title: 'See a psychiatrist for specialist assessment or medication',
+    tagline: '$150\u2013$550+ out-of-pocket, 2\u20136 month wait', // REVIEW cost range
+    accentColor: 'border-l-accent-purple',
     oneLiner: 'You think you may need medication, your condition is complex, or previous treatment hasn\u2019t worked.',
     isCrisis: false,
     facts: {
@@ -213,6 +225,8 @@ export const pathwayCards: PathwayCard[] = [
   {
     id: 'ndis',
     title: 'Mental health support through the NDIS',
+    tagline: '$0 out-of-pocket, NDIS-funded',
+    accentColor: 'border-l-accent-olive',
     oneLiner: 'You have a severe, ongoing mental health condition (psychosocial disability) that significantly affects your daily life.',
     isCrisis: false,
     facts: {

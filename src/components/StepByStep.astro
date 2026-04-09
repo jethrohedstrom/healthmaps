@@ -12,14 +12,14 @@ interface Props {
 const { steps } = Astro.props;
 ---
 
-<div class="relative">
+<ol class="relative">
   {steps.map((step, index) => {
     const isLast = index === steps.length - 1;
     return (
-      <div class="pathway-step relative pl-14 md:pl-16">
+      <li class="pathway-step relative pl-14 md:pl-16 pb-6 last:pb-0">
         {/* Vertical connector line */}
         {!isLast && (
-          <div class="step-connector absolute left-[19px] md:left-[19px] top-10 bottom-0 w-px bg-border" aria-hidden="true" />
+          <div class="step-connector absolute left-[19px] top-10 bottom-0 w-px bg-border" aria-hidden="true" />
         )}
 
         {/* Numbered circle */}
@@ -28,13 +28,9 @@ const { steps } = Astro.props;
         </div>
 
         {/* Step content */}
-        <details class="pb-6">
-          <summary class="min-h-[48px] flex items-center text-base font-semibold text-heading cursor-pointer select-none pr-2">
-            {step.title}
-          </summary>
-          <div class="prose mt-2 text-lg leading-relaxed text-body pr-2" set:html={step.detail} />
-        </details>
-      </div>
+        <p class="font-semibold text-heading min-h-[40px] flex items-center">{step.title}</p>
+        <div class="prose mt-1 text-base leading-relaxed text-body" set:html={step.detail} />
+      </li>
     );
   })}
-</div>
+</ol>
