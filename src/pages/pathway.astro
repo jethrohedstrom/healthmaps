@@ -40,8 +40,12 @@ import { pathwayCards } from '../data/pathway-cards';
       <h2 class="text-xl font-bold text-heading mb-2">6 ways to access support</h2>
       <p class="text-body mb-8">Select any option to see how it works.</p>
 
-      <div class="space-y-4">
-        {pathwayCards.map((card) => (
+      {/* Crisis card — full width, visually distinct */}
+      <PathwayCard {...pathwayCards[0]} />
+
+      {/* Remaining cards — 2-col grid on desktop, 1-col on mobile */}
+      <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        {pathwayCards.slice(1).map((card) => (
           <PathwayCard {...card} />
         ))}
       </div>
