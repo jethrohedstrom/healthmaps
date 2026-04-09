@@ -167,6 +167,54 @@ details[open] > summary::after {
   padding-right: 2.5rem;
 }
 
+/* Journey Strip — timeline connector line */
+.journey-timeline::before {
+  content: '';
+  position: absolute;
+  top: 7px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--color-border);
+  z-index: 0;
+}
+
+/* Journey Strip — active dot fills with accent colour */
+.journey-dot--active {
+  background-color: var(--dot-accent);
+  border-color: var(--dot-accent);
+  transform: scale(1.25);
+}
+
+/* Journey Strip — mobile horizontal scroll */
+@media (max-width: 767px) {
+  .journey-timeline {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
+  }
+  .journey-timeline-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 3rem;
+    background: linear-gradient(to right, transparent, var(--strip-bg, white));
+    pointer-events: none;
+    z-index: 5;
+  }
+}
+
+/* Pathway steps toggle — green chevron, no right-padding override */
+.pathway-steps-toggle > summary {
+  padding-right: 1.5rem;
+}
+.pathway-steps-toggle > summary::after {
+  border-color: var(--color-primary);
+}
+
 
 /* Prose/markdown content links — hover transition */
 .prose a {

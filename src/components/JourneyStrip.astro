@@ -1,0 +1,142 @@
+---
+import PathwayIcon from './PathwayIcon.astro';
+import type { PathwayCard } from '../data/pathway-cards';
+
+interface Props extends PathwayCard {}
+
+const { id, icon, title, accentColor, badge, isCrisis, facts, steps } = Astro.props;
+
+const bgClass = isCrisis ? 'bg-primary-light' : 'bg-white';
+const fadeBg = isCrisis ? 'var(--color-primary-light)' : 'white';
+const accentTopBorder = accentColor.replace('border-l-', 'border-t-');
+
+const accentVarMap: Record<string, string> = {
+  'border-l-accent-amber':  'var(--color-accent-amber)',
+  'border-l-primary':       'var(--color-primary)',
+  'border-l-accent-blue':   'var(--color-accent-blue)',
+  'border-l-accent-teal':   'var(--color-accent-teal)',
+  'border-l-accent-purple': 'var(--color-accent-purple)',
+  'border-l-accent-olive':  'var(--color-accent-olive)',
+};
+const dotAccent = accentVarMap[accentColor] ?? 'var(--color-primary)';
+
+const iconStyleMap: Record<string, { bg: string; stroke: string }> = {
+  phone:       { bg: 'bg-amber-50',      stroke: 'text-accent-amber' },
+  stethoscope: { bg: 'bg-primary-light',  stroke: 'text-primary' },
+  bolt:        { bg: 'bg-blue-50',       stroke: 'text-accent-blue' },
+  heart:       { bg: 'bg-teal-50',       stroke: 'text-accent-teal' },
+  clipboard:   { bg: 'bg-purple-50',     stroke: 'text-accent-purple' },
+  shield:      { bg: 'bg-lime-50',       stroke: 'text-accent-olive' },
+};
+const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-primary' };
+---
+
+<article
+  class={`journey-strip rounded-xl shadow-sm border-t-4 ${accentTopBorder} ${bgClass} p-6 md:p-8`}
+  style={`--dot-accent: ${dotAccent}; --strip-bg: ${fadeBg};`}
+  data-strip-id={id}
+>
+  {/* Header */}
+  <div class="flex items-start gap-4 mb-6">
+    <div class={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${iconStyle.bg}`}>
+      <PathwayIcon icon={icon} class={`w-5 h-5 ${iconStyle.stroke}`} />
+    </div>
+    <div class="flex-1 min-w-0">
+      <div class="flex items-center gap-2 flex-wrap">
+        <h3 class="text-lg font-bold text-heading leading-snug">{title}</h3>
+        {badge && (
+          <span class="text-xs font-semibold text-white bg-primary px-2.5 py-0.5 rounded-full">{badge}</span>
+        )}
+      </div>
+      <div class="flex items-center gap-3 mt-1.5 text-sm text-body">
+        <span>{facts.cost}</span>
+        {facts.wait && (
+          <>
+            <span class="w-1 h-1 rounded-full bg-border inline-block" aria-hidden="true"></span>
+            <span>{facts.wait}</span>
+          </>
+        )}
+      </div>
+    </div>
+    <span class="text-sm font-semibold text-body/60 shrink-0">{steps.length} steps</span>
+  </div>
+
+  {/* Timeline */}
+  <div class="journey-timeline-wrap relative">
+    <ol class="journey-timeline flex relative" role="list" aria-label={`${title} steps`}>
+      {steps.map((step) => (
+        <li class="flex-1 min-w-[80px] shrink-0 text-center relative" style="scroll-snap-align: center;">
+          <button
+            class="journey-dot w-4 h-4 rounded-full border-2 bg-white mx-auto block relative z-10 cursor-pointer transition-all duration-200 hover:scale-125 focus-visible:outline-2 focus-visible:outline-primary focus-visible:outline-offset-2"
+            style={`border-color: var(--dot-accent);`}
+            aria-expanded="false"
+            aria-controls={`detail-${id}-${step.number}`}
+            aria-label={`Step ${step.number}: ${step.title}`}
+          />
+          <span class="text-xs text-body mt-2 block leading-tight line-clamp-2 px-1">{step.title}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+
+  {/* Detail panels — one per step, below the timeline */}
+  <div class="journey-details-container">
+    {steps.map((step) => (
+      <div
+        id={`detail-${id}-${step.number}`}
+        class="journey-detail overflow-hidden transition-all duration-200 ease-out"
+        style="max-height: 0; opacity: 0;"
+        role="region"
+        aria-label={`Step ${step.number} detail`}
+      >
+        <div class="mt-4 p-4 bg-bg-light rounded-lg">
+          <p class="font-semibold text-heading text-sm mb-1">Step {step.number}: {step.title}</p>
+          <div class="text-sm text-body leading-relaxed prose" set:html={step.detail} />
+        </div>
+      </div>
+    ))}
+  </div>
+</article>
+
+<script>
+  document.querySelectorAll('.journey-strip').forEach(strip => {
+    strip.querySelectorAll('.journey-dot').forEach(dot => {
+      dot.addEventListener('click', () => {
+        const wasExpanded = dot.getAttribute('aria-expanded') === 'true';
+        const controlsId = dot.getAttribute('aria-controls');
+        if (!controlsId) return;
+        const detail = document.getElementById(controlsId);
+        if (!detail) return;
+
+        // Close all other details in this strip
+        strip.querySelectorAll('.journey-dot[aria-expanded="true"]').forEach(other => {
+          if (other !== dot) {
+            other.setAttribute('aria-expanded', 'false');
+            other.classList.remove('journey-dot--active');
+            const otherId = other.getAttribute('aria-controls');
+            if (otherId) {
+              const otherDetail = document.getElementById(otherId);
+              if (otherDetail) {
+                otherDetail.style.maxHeight = '0';
+                otherDetail.style.opacity = '0';
+              }
+            }
+          }
+        });
+
+        // Toggle this one
+        if (wasExpanded) {
+          dot.setAttribute('aria-expanded', 'false');
+          dot.classList.remove('journey-dot--active');
+          detail.style.maxHeight = '0';
+          detail.style.opacity = '0';
+        } else {
+          dot.setAttribute('aria-expanded', 'true');
+          dot.classList.add('journey-dot--active');
+          detail.style.maxHeight = detail.scrollHeight + 'px';
+          detail.style.opacity = '1';
+        }
+      });
+    });
+  });
+</script>

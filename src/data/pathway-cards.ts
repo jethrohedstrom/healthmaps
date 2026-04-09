@@ -6,6 +6,7 @@ export interface PathwayStep {
 
 export interface PathwayCard {
   id: string;
+  icon: string;
   title: string;
   tagline: string;
   bestFor: string;
@@ -28,6 +29,7 @@ export interface PathwayCard {
 export const pathwayCards: PathwayCard[] = [
   {
     id: 'crisis',
+    icon: 'phone',
     title: 'I need help now',
     tagline: 'Free, 24/7, no appointment needed',
     bestFor: 'Best for: immediate safety or someone in danger',
@@ -68,6 +70,7 @@ export const pathwayCards: PathwayCard[] = [
   },
   {
     id: 'medicare-gp',
+    icon: 'stethoscope',
     title: 'See a psychologist through your GP',
     tagline: '$50\u2013$220/session after Medicare rebate', // REVIEW cost range
     bestFor: 'Best for: ongoing support at the lowest cost',
@@ -115,6 +118,7 @@ export const pathwayCards: PathwayCard[] = [
   },
   {
     id: 'private',
+    icon: 'bolt',
     title: 'Go direct \u2014 no GP, no waiting for a plan',
     tagline: '$120\u2013$330+/session, no rebate', // REVIEW cost range
     bestFor: 'Best for: getting started quickly without a GP visit',
@@ -151,6 +155,7 @@ export const pathwayCards: PathwayCard[] = [
   },
   {
     id: 'low-cost',
+    icon: 'heart',
     title: 'Free or low-cost support',
     tagline: 'Free or very low cost',
     bestFor: 'Best for: people on a tight budget or without Medicare',
@@ -191,6 +196,7 @@ export const pathwayCards: PathwayCard[] = [
   },
   {
     id: 'psychiatrist',
+    icon: 'clipboard',
     title: 'See a psychiatrist for specialist assessment or medication',
     tagline: '$150\u2013$550+ out-of-pocket, 2\u20136 month wait', // REVIEW cost range
     bestFor: 'Best for: complex conditions, diagnosis, or medication',
@@ -232,6 +238,7 @@ export const pathwayCards: PathwayCard[] = [
   },
   {
     id: 'ndis',
+    icon: 'shield',
     title: 'Mental health support through the NDIS',
     tagline: '$0 out-of-pocket, NDIS-funded',
     bestFor: 'Best for: people with an NDIS plan that includes mental health',

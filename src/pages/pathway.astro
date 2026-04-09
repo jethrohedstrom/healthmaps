@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PathwayCard from '../components/PathwayCard.astro';
+import PathwayCardVisual from '../components/PathwayCardVisual.astro';
+import JourneyStrip from '../components/JourneyStrip.astro';
 import CrisisFooterBar from '../components/CrisisFooterBar.astro';
 import { pathwayCards } from '../data/pathway-cards';
 
@@ -41,15 +42,33 @@ const otherCards = pathwayCards.filter(c => !c.isCrisis);
   <section class="bg-white">
     <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20 pb-28">
       <h2 class="text-xl font-bold text-heading mb-2">6 ways to access support</h2>
-      <p class="text-body mb-8">Select any option to see how it works.</p>
+      <p class="text-body mb-10">Each pathway has different costs, wait times, and steps. Compare them below.</p>
 
       {/* Crisis card — full width, visually distinct */}
-      <PathwayCard {...crisisCard} />
+      <PathwayCardVisual {...crisisCard} />
 
       {/* Remaining cards — 2-col grid on desktop, 1-col on mobile */}
-      <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {otherCards.map((card) => (
-          <PathwayCard {...card} />
+          <PathwayCardVisual {...card} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Section divider -->
+  <hr class="section-divider" />
+
+  <!-- Variant B: Journey Strips -->
+  <section class="bg-bg-light">
+    <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
+      <p class="uppercase tracking-widest text-sm text-primary mb-3 font-semibold">Alternate view</p>
+      <h2 class="text-xl font-bold text-heading mb-2">Compare the journey</h2>
+      <p class="text-body mb-10">See how many steps each pathway takes. Tap a step to see what's involved.</p>
+
+      <div class="space-y-6">
+        {pathwayCards.map((card) => (
+          <JourneyStrip {...card} />
         ))}
       </div>
     </div>
