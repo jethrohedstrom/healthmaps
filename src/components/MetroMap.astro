@@ -1,0 +1,255 @@
+---
+// MetroMap.astro — metro-style pathway diagram showing GP route vs direct route
+---
+
+<!-- Screen reader description -->
+<div class="sr-only">
+  <h3>Two routes to mental health support</h3>
+  <p>Route 1 (most common): See your GP, get a Mental Health Care Plan (which unlocks Medicare rebates),
+  then choose between a Psychologist ($50–$220/session), Social worker or OT ($50–$160/session),
+  or Psychiatrist (requires referral, 2–6 month wait).</p>
+  <p>Route 2 (direct): Find a practitioner and start sessions directly.
+  Options include Psychologist, Counsellor, Psychotherapist, or Social worker.
+  Cost is $120–$330+ per session with no referral needed and no Medicare rebate.</p>
+</div>
+
+<!-- ============ DESKTOP SVG (md+) ============ -->
+<div class="hidden md:block">
+  <svg
+    class="metro-map-svg w-full h-auto"
+    viewBox="0 0 960 460"
+    xmlns="http://www.w3.org/2000/svg"
+    role="img"
+    aria-label="Metro-style diagram showing two pathways to mental health support. The GP route through Medicare is most common. The direct route lets you start without a referral."
+  >
+    <!-- ── GP Route lines (green, thick, dominant) ── -->
+
+    <!-- Fork from "You" up to GP line -->
+    <path d="M 75,235 C 120,235 155,135 200,135 L 242,135"
+          stroke="var(--color-primary)" stroke-width="4" fill="none" stroke-linecap="round" />
+
+    <!-- GP main line: See GP → Care Plan -->
+    <path d="M 258,135 L 462,135"
+          stroke="var(--color-primary)" stroke-width="4" fill="none" stroke-linecap="round" />
+
+    <!-- Fan-out: Care Plan → Psychologist -->
+    <path d="M 478,135 C 530,135 570,80 630,80 L 738,80"
+          stroke="var(--color-primary)" stroke-width="3" fill="none" stroke-linecap="round" />
+
+    <!-- Fan-out: Care Plan → Social worker/OT (straight) -->
+    <path d="M 478,135 L 738,135"
+          stroke="var(--color-primary)" stroke-width="3" fill="none" stroke-linecap="round" />
+
+    <!-- Fan-out: Care Plan → Psychiatrist (purple) -->
+    <path d="M 478,135 C 530,135 570,195 630,195 L 738,195"
+          stroke="var(--color-accent-purple)" stroke-width="3" fill="none" stroke-linecap="round" />
+
+    <!-- ── Direct Route lines (blue, thin, muted) ── -->
+
+    <!-- Fork from "You" down to Direct line -->
+    <path d="M 75,235 C 120,235 155,350 200,350 L 253,350"
+          stroke="var(--color-accent-blue)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5" />
+
+    <!-- Direct main line: Find practitioner → Start sessions -->
+    <path d="M 267,350 L 423,350"
+          stroke="var(--color-accent-blue)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.5" />
+
+    <!-- ── Station circles ── -->
+
+    <!-- "You" start node -->
+    <circle cx="55" cy="235" r="22" fill="var(--color-primary-light)" stroke="var(--color-primary)" stroke-width="3" />
+
+    <!-- GP: See your GP -->
+    <circle cx="250" cy="135" r="9" fill="var(--color-primary-light)" stroke="var(--color-primary)" stroke-width="2.5" />
+
+    <!-- GP: Mental health care plan -->
+    <circle cx="470" cy="135" r="9" fill="var(--color-primary-light)" stroke="var(--color-primary)" stroke-width="2.5" />
+
+    <!-- GP endpoints -->
+    <circle cx="745" cy="80" r="7" fill="var(--color-primary-light)" stroke="var(--color-primary)" stroke-width="2" />
+    <circle cx="745" cy="135" r="7" fill="var(--color-primary-light)" stroke="var(--color-primary)" stroke-width="2" />
+    <circle cx="745" cy="195" r="7" fill="var(--color-accent-purple-light)" stroke="var(--color-accent-purple)" stroke-width="2" />
+
+    <!-- Direct: Find a practitioner -->
+    <circle cx="260" cy="350" r="7" fill="var(--color-accent-blue-light)" stroke="var(--color-accent-blue)" stroke-width="2" opacity="0.6" />
+
+    <!-- Direct: Start sessions -->
+    <circle cx="430" cy="350" r="7" fill="var(--color-accent-blue-light)" stroke="var(--color-accent-blue)" stroke-width="2" opacity="0.6" />
+
+    <!-- ── Badges ── -->
+
+    <!-- "Most common route" badge (green pill) -->
+    <rect x="128" y="82" width="160" height="28" rx="14" fill="var(--color-primary)" />
+    <text x="208" y="101" text-anchor="middle" fill="white" font-size="12" font-weight="600"
+          font-family="var(--font-sans)">Most common route</text>
+
+    <!-- "Unlocks Medicare rebates" badge (light green pill below care plan) -->
+    <rect x="420" y="157" width="175" height="22" rx="11" fill="var(--color-primary-light)" />
+    <!-- Lock icon (SVG path) -->
+    <g transform="translate(430, 161)" fill="none" stroke="var(--color-primary)" stroke-width="1.5" stroke-linecap="round">
+      <rect x="1" y="6" width="10" height="8" rx="1.5" fill="var(--color-primary-light)" />
+      <path d="M3,6 V4 a3,3 0 0,1 6,0 V6" />
+    </g>
+    <text x="520" y="172" text-anchor="middle" font-size="10" fill="var(--color-primary)" font-weight="600"
+          font-family="var(--font-sans)">Unlocks Medicare rebates</text>
+
+    <!-- "Less common route" badge (outlined blue pill) -->
+    <rect x="128" y="305" width="155" height="26" rx="13" fill="none"
+          stroke="var(--color-accent-blue)" stroke-width="1.5" opacity="0.5" />
+    <text x="205" y="323" text-anchor="middle" font-size="12" font-weight="600"
+          fill="var(--color-accent-blue)" opacity="0.6" font-family="var(--font-sans)">Less common route</text>
+
+    <!-- ── Text labels ── -->
+
+    <!-- "You" label -->
+    <text x="55" y="240" text-anchor="middle" class="metro-heading" font-size="15">You</text>
+
+    <!-- GP: See your GP -->
+    <text x="250" y="163" text-anchor="middle" class="metro-heading" font-size="13">See your GP</text>
+
+    <!-- GP: Mental health care plan (linked) -->
+    <a href="#care-plan">
+      <text x="470" y="118" text-anchor="middle" font-size="13" font-weight="700"
+            font-family="var(--font-display)" fill="var(--color-primary)" text-decoration="underline">Mental health care plan</text>
+    </a>
+
+    <!-- GP endpoint: Psychologist -->
+    <text x="762" y="77" text-anchor="start" class="metro-heading" font-size="13">Psychologist</text>
+    <text x="762" y="93" text-anchor="start" font-size="11" fill="var(--color-body)"
+          font-family="var(--font-sans)">$50–$220/session</text>
+
+    <!-- GP endpoint: Social worker, OT -->
+    <text x="762" y="132" text-anchor="start" class="metro-heading" font-size="13">Social worker, OT</text>
+    <text x="762" y="148" text-anchor="start" font-size="11" fill="var(--color-body)"
+          font-family="var(--font-sans)">$50–$160/session</text>
+
+    <!-- GP endpoint: Psychiatrist (purple) -->
+    <text x="762" y="192" text-anchor="start" font-size="13" font-weight="700"
+          font-family="var(--font-display)" fill="var(--color-accent-purple)">Psychiatrist</text>
+    <text x="762" y="208" text-anchor="start" font-size="11" fill="var(--color-body)"
+          font-family="var(--font-sans)">Referral + 2–6 month wait</text>
+
+    <!-- Direct: Find a practitioner -->
+    <text x="260" y="376" text-anchor="middle" font-size="12" font-weight="700"
+          font-family="var(--font-display)" fill="var(--color-heading)" opacity="0.65">Find a practitioner</text>
+
+    <!-- Direct: Start sessions -->
+    <text x="430" y="376" text-anchor="middle" font-size="12" font-weight="700"
+          font-family="var(--font-display)" fill="var(--color-heading)" opacity="0.65">Start sessions</text>
+
+    <!-- Direct: Info text block -->
+    <text x="500" y="340" text-anchor="start" font-size="11" fill="var(--color-body)"
+          font-family="var(--font-sans)" opacity="0.7">
+      <tspan x="500" dy="0">Psychologist, counsellor,</tspan>
+      <tspan x="500" dy="15">psychotherapist, social worker</tspan>
+    </text>
+    <text x="500" y="385" text-anchor="start" font-size="11" fill="var(--color-body)"
+          font-family="var(--font-sans)" opacity="0.7">
+      <tspan x="500" dy="0">$120–$330+/session</tspan>
+      <tspan x="500" dy="15">No referral needed</tspan>
+      <tspan x="500" dy="15">No Medicare rebate — full price</tspan>
+    </text>
+  </svg>
+</div>
+
+<!-- ============ MOBILE VERTICAL LAYOUT (<md) ============ -->
+<div class="md:hidden">
+  <!-- You starting point -->
+  <div class="flex items-center gap-3 mb-6">
+    <div class="w-11 h-11 rounded-full bg-primary-light border-[3px] border-primary flex items-center justify-center shrink-0">
+      <span class="text-sm font-bold text-primary" style="font-family: var(--font-display)">You</span>
+    </div>
+    <p class="text-body text-sm">Two routes to professional support</p>
+  </div>
+
+  <!-- ── GP Route ── -->
+  <div class="mb-10">
+    <div class="mb-4">
+      <span class="inline-block text-xs font-semibold bg-primary text-white px-3 py-1 rounded-full">Most common route</span>
+    </div>
+
+    <!-- Station: See your GP -->
+    <div class="flex gap-4">
+      <div class="flex flex-col items-center">
+        <div class="w-4 h-4 rounded-full bg-primary-light border-[2.5px] border-primary shrink-0 mt-0.5"></div>
+        <div class="w-[3px] flex-1 bg-primary rounded-full my-1"></div>
+      </div>
+      <div class="pb-5">
+        <span class="font-semibold text-heading text-[15px]" style="font-family: var(--font-display)">See your GP</span>
+      </div>
+    </div>
+
+    <!-- Station: Mental health care plan -->
+    <div class="flex gap-4">
+      <div class="flex flex-col items-center">
+        <div class="w-4 h-4 rounded-full bg-primary-light border-[2.5px] border-primary shrink-0 mt-0.5"></div>
+        <div class="w-[3px] flex-1 bg-primary rounded-full my-1"></div>
+      </div>
+      <div class="pb-5">
+        <a href="#care-plan" class="font-semibold text-primary underline underline-offset-2 text-[15px]" style="font-family: var(--font-display)">Mental health care plan</a>
+        <span class="block text-sm text-body mt-1">🔓 Unlocks Medicare rebates</span>
+      </div>
+    </div>
+
+    <!-- Fan-out: Practitioner endpoints -->
+    <div class="ml-2 space-y-3">
+      <div class="flex items-start gap-3">
+        <div class="w-3 h-3 mt-1.5 rounded-full bg-primary-light border-2 border-primary shrink-0"></div>
+        <div>
+          <span class="text-sm font-semibold text-heading">Psychologist</span>
+          <span class="text-sm text-body block">$50–$220/session</span>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <div class="w-3 h-3 mt-1.5 rounded-full bg-primary-light border-2 border-primary shrink-0"></div>
+        <div>
+          <span class="text-sm font-semibold text-heading">Social worker, OT</span>
+          <span class="text-sm text-body block">$50–$160/session</span>
+        </div>
+      </div>
+      <div class="flex items-start gap-3">
+        <div class="w-3 h-3 mt-1.5 rounded-full bg-accent-purple-light border-2 border-accent-purple shrink-0"></div>
+        <div>
+          <span class="text-sm font-semibold" style="color: var(--color-accent-purple)">Psychiatrist</span>
+          <span class="text-sm text-body block">Referral + 2–6 month wait</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Direct Route ── -->
+  <div class="opacity-70">
+    <div class="mb-4">
+      <span class="inline-block text-xs font-semibold border border-accent-blue text-accent-blue px-3 py-1 rounded-full">Less common route</span>
+    </div>
+
+    <!-- Station: Find a practitioner -->
+    <div class="flex gap-4">
+      <div class="flex flex-col items-center">
+        <div class="w-3.5 h-3.5 rounded-full bg-accent-blue-light border-2 border-accent-blue shrink-0 mt-0.5"></div>
+        <div class="w-[2px] flex-1 bg-accent-blue/50 rounded-full my-1"></div>
+      </div>
+      <div class="pb-5">
+        <span class="font-semibold text-heading text-[15px]" style="font-family: var(--font-display)">Find a practitioner</span>
+      </div>
+    </div>
+
+    <!-- Station: Start sessions -->
+    <div class="flex gap-4">
+      <div class="flex flex-col items-center">
+        <div class="w-3.5 h-3.5 rounded-full bg-accent-blue-light border-2 border-accent-blue shrink-0 mt-0.5"></div>
+      </div>
+      <div>
+        <span class="font-semibold text-heading text-[15px]" style="font-family: var(--font-display)">Start sessions</span>
+      </div>
+    </div>
+
+    <!-- Info -->
+    <div class="ml-7 mt-3 text-sm text-body space-y-1">
+      <p>Psychologist, counsellor, psychotherapist, social worker</p>
+      <p class="mt-3 font-medium text-heading">$120–$330+/session</p>
+      <p>No referral needed</p>
+      <p>No Medicare rebate — full price</p>
+    </div>
+  </div>
+</div>

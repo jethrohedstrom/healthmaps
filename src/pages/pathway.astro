@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PathwayCardVisual from '../components/PathwayCardVisual.astro';
 import JourneyStrip from '../components/JourneyStrip.astro';
 import CrisisFooterBar from '../components/CrisisFooterBar.astro';
+import MetroMap from '../components/MetroMap.astro';
 import { pathwayCards } from '../data/pathway-cards';
 
 const crisisCard = pathwayCards.find(c => c.isCrisis)!;
@@ -71,6 +72,19 @@ const otherCards = pathwayCards.filter(c => !c.isCrisis);
           <JourneyStrip {...card} />
         ))}
       </div>
+    </div>
+  </section>
+
+  <!-- Section divider -->
+  <hr class="section-divider" />
+
+  <!-- Variant C: Metro Map -->
+  <section class="bg-white">
+    <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
+      <p class="uppercase tracking-widest text-sm text-primary mb-3 font-semibold">Visual overview</p>
+      <h2 class="text-xl font-bold text-heading mb-2" style="font-family: var(--font-display)">See the routes at a glance</h2>
+      <p class="text-body mb-10">Two main pathways to professional mental health support in Australia.</p>
+      <MetroMap />
     </div>
   </section>
 

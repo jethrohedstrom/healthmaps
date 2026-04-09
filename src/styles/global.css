@@ -31,12 +31,19 @@
   --color-bg-light: #f8fafc;
   --color-dark: #0f172a;
 
-  /* Pathway card accent colours — left borders only */
+  /* Pathway card accent colours */
   --color-accent-amber: #D97706;
   --color-accent-blue: #3B82F6;
   --color-accent-teal: #0D9488;
   --color-accent-purple: #7C3AED;
   --color-accent-olive: #65A30D;
+
+  /* Light accent backgrounds — icon containers */
+  --color-accent-amber-light: #FFFBEB;
+  --color-accent-blue-light: #EFF6FF;
+  --color-accent-teal-light: #F0FDFA;
+  --color-accent-purple-light: #FAF5FF;
+  --color-accent-olive-light: #F7FEE7;
 
   --shadow-sm: 0px 1px 2px rgba(0,0,0,0.05);
 
@@ -167,11 +174,11 @@ details[open] > summary::after {
   padding-right: 2.5rem;
 }
 
-/* Journey Strip — timeline connector line */
+/* Journey Strip — timeline connector line (vertically centred on 44px button) */
 .journey-timeline::before {
   content: '';
   position: absolute;
-  top: 7px;
+  top: 21px;
   left: 0;
   right: 0;
   height: 2px;
@@ -180,10 +187,15 @@ details[open] > summary::after {
 }
 
 /* Journey Strip — active dot fills with accent colour */
-.journey-dot--active {
+.journey-dot--active > span {
   background-color: var(--dot-accent);
   border-color: var(--dot-accent);
+}
+.journey-dot--active {
   transform: scale(1.25);
+}
+.journey-dot--active:hover {
+  transform: scale(1.35);
 }
 
 /* Journey Strip — mobile horizontal scroll */
@@ -193,6 +205,7 @@ details[open] > summary::after {
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     padding-bottom: 0.5rem;
+    padding-right: 3rem;
   }
   .journey-timeline-wrap::after {
     content: '';
@@ -215,6 +228,24 @@ details[open] > summary::after {
   border-color: var(--color-primary);
 }
 
+
+/* Metro map — SVG text typography */
+.metro-map-svg text {
+  font-family: var(--font-sans);
+  fill: var(--color-body);
+}
+.metro-map-svg text.metro-heading {
+  font-family: var(--font-display);
+  font-weight: 700;
+  fill: var(--color-heading);
+}
+.metro-map-svg a text {
+  fill: var(--color-primary);
+  cursor: pointer;
+}
+.metro-map-svg a:hover text {
+  fill: var(--color-primary-mid);
+}
 
 /* Prose/markdown content links — hover transition */
 .prose a {
