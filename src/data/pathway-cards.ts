@@ -9,6 +9,7 @@ export interface PathwayCard {
   title: string;
   tagline: string;
   accentColor: string;
+  badge?: string;
   oneLiner: string;
   isCrisis: boolean;
   facts: {
@@ -68,6 +69,7 @@ export const pathwayCards: PathwayCard[] = [
     title: 'See a psychologist through your GP',
     tagline: '$50\u2013$220/session after Medicare rebate', // REVIEW cost range
     accentColor: 'border-l-primary',
+    badge: 'Most common starting point',
     oneLiner: 'You want professional support and are happy to start with your GP.',
     isCrisis: false,
     facts: {
