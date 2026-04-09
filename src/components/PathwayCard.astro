@@ -7,12 +7,16 @@ interface Props extends PathwayCard {}
 const { id, title, tagline, accentColor, oneLiner, isCrisis, facts, steps } = Astro.props;
 
 const bgClass = isCrisis ? 'bg-primary-light' : 'bg-white';
+
+/* Tailwind safelist — accent border classes used via dynamic interpolation:
+   border-l-accent-amber border-l-primary border-l-accent-blue
+   border-l-accent-teal border-l-accent-purple border-l-accent-olive */
 ---
 
 <details id={id} class={`pathway-card rounded-xl shadow-sm border-l-4 ${accentColor} ${bgClass}`}>
   <summary class="min-h-[48px] p-5 md:p-6 cursor-pointer select-none">
-    <h3 class="text-lg font-bold text-heading leading-snug">{title}</h3>
-    <p class="text-sm text-body mt-1">{tagline}</p>
+    <span class="text-lg font-bold text-heading leading-snug block">{title}</span>
+    <span class="text-sm text-body mt-1 block">{tagline}</span>
   </summary>
 
   <div class="px-5 md:px-6 pb-6">
