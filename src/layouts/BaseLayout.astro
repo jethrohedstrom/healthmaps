@@ -8,12 +8,14 @@ interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  hideCrisisPill?: boolean;
 }
 
 const {
   title,
   description = 'Navigate Australia\'s mental health system with clear, step-by-step guidance. Find the right practitioner, understand costs, and access Medicare rebates.',
   ogImage = '/og-default.png',
+  hideCrisisPill = false,
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://healthmaps.au');
@@ -48,6 +50,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://healthma
     </main>
     <Footer />
 
-    <CrisisBanner />
+    {!hideCrisisPill && <CrisisBanner />}
   </body>
 </html>

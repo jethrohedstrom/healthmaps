@@ -17,6 +17,10 @@ export interface PathwayCard {
   steps: PathwayStep[];
 }
 
+// REVIEW — All costs, session limits, phone numbers, eligibility criteria,
+// and process descriptions below are AI-drafted and need verification against
+// current Medicare, NDIS, and service provider information.
+
 export const pathwayCards: PathwayCard[] = [
   {
     id: 'crisis',
@@ -61,8 +65,8 @@ export const pathwayCards: PathwayCard[] = [
     oneLiner: 'You want professional support and are happy to start with your GP.',
     isCrisis: false,
     facts: {
-      cost: '$50\u2013$220 per session after rebate',
-      sessions: '10 per calendar year',
+      cost: '$50\u2013$220 per session after rebate', // REVIEW cost range
+      sessions: '10 per calendar year', // REVIEW session cap
       wait: 'Days for GP; weeks\u2013months for psych',
     },
     steps: [
@@ -104,7 +108,7 @@ export const pathwayCards: PathwayCard[] = [
     oneLiner: 'You want to start quickly, you know what you\u2019re looking for, or you\u2019d rather not go through a GP.',
     isCrisis: false,
     facts: {
-      cost: '$120\u2013$330+ per session (no rebate)',
+      cost: '$120\u2013$330+ per session (no rebate)', // REVIEW cost range
       sessions: 'No limit',
       wait: 'Days to 2 weeks',
     },
@@ -159,12 +163,12 @@ export const pathwayCards: PathwayCard[] = [
       {
         number: 4,
         title: 'Ask about university training clinics',
-        detail: 'University psychology clinics offer sessions at $10\u2013$80 on a sliding scale. You\u2019ll see a trainee supervised by a registered psychologist.',
+        detail: 'University psychology clinics offer sessions at $10\u2013$80 on a sliding scale. You\u2019ll see a trainee supervised by a registered psychologist.', // REVIEW cost range
       },
       {
         number: 5,
         title: 'Ask your employer about an EAP',
-        detail: 'Employee Assistance Programs typically offer 3\u20136 free, confidential sessions. Check with your HR team or workplace intranet.',
+        detail: 'Employee Assistance Programs typically offer 3\u20136 free, confidential sessions. Check with your HR team or workplace intranet.', // REVIEW session count
       },
     ],
   },
@@ -174,8 +178,8 @@ export const pathwayCards: PathwayCard[] = [
     oneLiner: 'You think you may need medication, your condition is complex, or previous treatment hasn\u2019t worked.',
     isCrisis: false,
     facts: {
-      cost: '$150\u2013$550+ out-of-pocket (after rebate)',
-      sessions: 'No annual cap',
+      cost: '$150\u2013$550+ out-of-pocket (after rebate)', // REVIEW cost range
+      sessions: 'No annual cap', // REVIEW session rules
       wait: '2\u20136 months typically',
     },
     steps: [
@@ -219,7 +223,7 @@ export const pathwayCards: PathwayCard[] = [
       {
         number: 1,
         title: 'Check if you may be eligible',
-        detail: 'The NDIS is for permanent and significant disability, not short-term conditions. Your psychosocial disability must substantially affect your ability to do everyday activities.',
+        detail: 'The NDIS is for permanent and significant disability, not short-term conditions. Your psychosocial disability must substantially affect your ability to do everyday activities.', // REVIEW eligibility criteria
       },
       {
         number: 2,
