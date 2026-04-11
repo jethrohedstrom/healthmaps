@@ -4,6 +4,7 @@ import PathwayCardVisual from '../components/PathwayCardVisual.astro';
 import JourneyStrip from '../components/JourneyStrip.astro';
 import CrisisFooterBar from '../components/CrisisFooterBar.astro';
 import MetroMap from '../components/MetroMap.astro';
+import PathwayTree from '../components/PathwayTree.astro';
 import { pathwayCards } from '../data/pathway-cards';
 
 const crisisCard = pathwayCards.find(c => c.isCrisis)!;
@@ -85,6 +86,19 @@ const otherCards = pathwayCards.filter(c => !c.isCrisis);
       <h2 class="text-xl font-bold text-heading mb-2">See the routes at a glance</h2>
       <p class="text-body mb-10">Two main pathways to professional mental health support in Australia.</p>
       <MetroMap />
+    </div>
+  </section>
+
+  <!-- Section divider -->
+  <hr class="section-divider" />
+
+  <!-- Variant D: Branching tree -->
+  <section class="bg-bg-light">
+    <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
+      <p class="uppercase tracking-widest text-sm text-primary mb-3 font-semibold">Minimal tree</p>
+      <h2 class="text-xl font-bold text-heading mb-2">Where to start</h2>
+      <p class="text-body mb-10">Four ways in. Tap "Through your GP" to see the specialist routes that branch from there.</p>
+      <PathwayTree />
     </div>
   </section>
 

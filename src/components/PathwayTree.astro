@@ -1,0 +1,326 @@
+---
+// PathwayTree — branching minimal-tree variant (Variant D) for /pathway.
+// Mockup reference: pathways page mockup B.png
+// All CSS scoped via .pt- class prefix. Vanilla JS in src/scripts/pathway-tree.ts.
+
+interface Branch {
+  id: string;
+  title: string;
+  subtitle: string;
+  color: string;     // line / dot / title colour
+  bg: string;        // pastel card background
+  href: string;
+}
+
+const topBranches: Branch[] = [
+  { id: 'gp',       title: 'Through your GP', subtitle: 'most common route',     color: '#1D9E75', bg: '#E6F4EC', href: '#' },
+  { id: 'private',  title: 'Private',         subtitle: 'skip the wait, full cost', color: '#378ADD', bg: '#E5EFFB', href: '#' },
+  { id: 'lowcost',  title: 'Low-cost',        subtitle: 'free or sliding scale', color: '#BA7517', bg: '#F8EFD9', href: '#' },
+  { id: 'crisis',   title: 'Crisis',          subtitle: 'immediate help',        color: '#E24B4A', bg: '#FBE6E6', href: '#' },
+];
+
+const subBranches: Branch[] = [
+  { id: 'psychologist', title: 'Psychologist',  subtitle: 'talk therapy, 10 sessions', color: '#1D9E75', bg: '#E6F4EC', href: '#' },
+  { id: 'psychiatrist', title: 'Psychiatrist',  subtitle: 'medication, specialist',    color: '#7F77DD', bg: '#EAE8FB', href: '#' },
+  { id: 'allied',       title: 'Allied health', subtitle: 'OT, social worker, nurse',  color: '#5DCAA5', bg: '#E8F7F0', href: '#' },
+];
+
+// Geometry — desktop SVG fan
+// viewBox 800 x 120; junction at (400, 8); endpoint dots aligned with the 4 card centres.
+const TOP_VB_W = 800;
+const TOP_VB_H = 120;
+const TOP_JUNCTION_X = 400;
+const TOP_JUNCTION_Y = 8;
+const TOP_DOT_Y = 108;
+const topDotXs = [100, 300, 500, 700]; // 12.5%, 37.5%, 62.5%, 87.5% of 800
+
+const SUB_VB_W = 600;
+const SUB_VB_H = 110;
+const SUB_JUNCTION_X = 300;
+const SUB_JUNCTION_Y = 8;
+const SUB_DOT_Y = 100;
+const subDotXs = [100, 300, 500]; // 16.6%, 50%, 83.3% of 600
+---
+
+<div class="pt-tree">
+  <!-- Origin pill -->
+  <div class="pt-origin-wrap">
+    <div class="pt-origin">I need support</div>
+    <div class="pt-origin-stem" aria-hidden="true"></div>
+  </div>
+
+  <!-- Desktop branching SVG -->
+  <svg
+    class="pt-branches"
+    viewBox={`0 0 ${TOP_VB_W} ${TOP_VB_H}`}
+    preserveAspectRatio="xMidYMin meet"
+    role="img"
+    aria-hidden="true"
+  >
+    <!-- Junction node -->
+    <circle cx={TOP_JUNCTION_X} cy={TOP_JUNCTION_Y} r="4" fill="#9CA3AF" />
+
+    {topBranches.map((b, i) => (
+      <>
+        <line
+          x1={TOP_JUNCTION_X}
+          y1={TOP_JUNCTION_Y}
+          x2={topDotXs[i]}
+          y2={TOP_DOT_Y - 2}
+          stroke={b.color}
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+        <circle cx={topDotXs[i]} cy={TOP_DOT_Y} r="6" fill={b.color} />
+      </>
+    ))}
+  </svg>
+
+  <!-- Top-tier cards -->
+  <div class="pt-cards">
+    {topBranches.map((b) => (
+      <a
+        href={b.href}
+        class="pt-card"
+        data-branch={b.id}
+        style={`--pt-color:${b.color}; --pt-bg:${b.bg};`}
+      >
+        <div class="pt-card-title">{b.title}</div>
+        <div class="pt-card-sub">{b.subtitle}</div>
+      </a>
+    ))}
+  </div>
+
+  <!-- GP sub-tier (collapsed by default) -->
+  <div class="pt-sub" aria-hidden="true">
+    <div class="pt-sub-inner">
+      <div class="pt-sub-label">From your GP, you might be referred to:</div>
+
+      <svg
+        class="pt-branches pt-branches-sub"
+        viewBox={`0 0 ${SUB_VB_W} ${SUB_VB_H}`}
+        preserveAspectRatio="xMidYMin meet"
+        role="img"
+        aria-hidden="true"
+      >
+        <circle cx={SUB_JUNCTION_X} cy={SUB_JUNCTION_Y} r="4" fill="#9CA3AF" />
+        {subBranches.map((b, i) => (
+          <>
+            <line
+              x1={SUB_JUNCTION_X}
+              y1={SUB_JUNCTION_Y}
+              x2={subDotXs[i]}
+              y2={SUB_DOT_Y - 2}
+              stroke={b.color}
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <circle cx={subDotXs[i]} cy={SUB_DOT_Y} r="6" fill={b.color} />
+          </>
+        ))}
+      </svg>
+
+      <div class="pt-cards pt-cards-sub">
+        {subBranches.map((b) => (
+          <a
+            href={b.href}
+            class="pt-card"
+            style={`--pt-color:${b.color}; --pt-bg:${b.bg};`}
+          >
+            <div class="pt-card-title">{b.title}</div>
+            <div class="pt-card-sub">{b.subtitle}</div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import '../scripts/pathway-tree.ts';
+</script>
+
+<style>
+  .pt-tree {
+    max-width: 880px;
+    margin: 0 auto;
+    font-family: var(--font-sans);
+  }
+
+  /* Origin pill */
+  .pt-origin-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .pt-origin {
+    display: inline-block;
+    background: #F5F1EA;
+    border: 1px solid #E8E1D3;
+    border-radius: 12px;
+    padding: 14px 28px;
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-heading);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  .pt-origin-stem {
+    width: 1.5px;
+    height: 14px;
+    background: #9CA3AF;
+  }
+
+  /* Desktop branching SVG */
+  .pt-branches {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  /* Top-tier cards grid */
+  .pt-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-top: -4px; /* tuck cards close to dots */
+  }
+
+  .pt-cards-sub {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Card */
+  .pt-card {
+    position: relative;
+    display: block;
+    background: var(--pt-bg);
+    border-radius: 14px;
+    padding: 18px 16px 20px;
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .pt-card:hover,
+  .pt-card:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    outline: none;
+  }
+
+  .pt-card-title {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--pt-color);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .pt-card-sub {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--pt-color);
+    opacity: 0.75;
+    line-height: 1.35;
+  }
+
+  /* Sub-tier collapsible region */
+  .pt-sub {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease;
+    margin-top: 0;
+  }
+
+  .pt-tree.pt-sub-open .pt-sub {
+    max-height: 600px;
+    opacity: 1;
+    margin-top: 24px;
+  }
+
+  .pt-sub-inner {
+    background: #FAFAF8;
+    border: 1px dashed #E5E7EB;
+    border-radius: 16px;
+    padding: 20px 20px 24px;
+  }
+
+  .pt-sub-label {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-body);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  /* Indicate the GP card is interactive (toggle).
+     Absolutely positioned so it doesn't affect grid row heights. */
+  .pt-card[data-branch="gp"]::after {
+    content: '+';
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--pt-color);
+    opacity: 0.55;
+    transition: transform 0.25s ease;
+    line-height: 1;
+    transform-origin: center;
+  }
+
+  .pt-tree.pt-sub-open .pt-card[data-branch="gp"]::after {
+    transform: rotate(45deg);
+  }
+
+  /* Mobile: 2x2 grid, hide fan SVG, use top borders instead */
+  @media (max-width: 600px) {
+    .pt-branches {
+      display: none;
+    }
+
+    .pt-origin-stem {
+      height: 20px;
+    }
+
+    .pt-cards {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .pt-cards-sub {
+      grid-template-columns: 1fr;
+    }
+
+    .pt-card {
+      border-top: 4px solid var(--pt-color);
+      padding: 16px 14px 18px;
+    }
+
+    .pt-card-title {
+      font-size: 16px;
+    }
+
+    .pt-card-sub {
+      font-size: 12px;
+    }
+
+    .pt-sub-inner {
+      padding: 18px 14px 20px;
+    }
+  }
+</style>
