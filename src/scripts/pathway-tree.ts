@@ -5,40 +5,26 @@
   const tree = document.querySelector<HTMLElement>('.pt-tree');
   if (!tree) return;
 
-  const gpCard = tree.querySelector<HTMLElement>('.pt-card[data-branch="gp"]');
+  const gpBtn = tree.querySelector<HTMLButtonElement>('.pt-card-toggle');
   const subRegion = tree.querySelector<HTMLElement>('.pt-sub');
 
-  if (!gpCard || !subRegion) return;
+  if (!gpBtn || !subRegion) return;
 
   let open = false;
 
   function setOpen(next: boolean) {
     open = next;
-    gpCard!.setAttribute('aria-expanded', String(open));
-    subRegion!.setAttribute('aria-hidden', String(!open));
+    gpBtn!.setAttribute('aria-expanded', String(open));
     if (open) {
       tree!.classList.add('pt-sub-open');
+      subRegion!.removeAttribute('inert');
     } else {
       tree!.classList.remove('pt-sub-open');
+      subRegion!.setAttribute('inert', '');
     }
   }
 
-  // Make the GP card behave like a toggle button instead of a navigation link.
-  gpCard.setAttribute('role', 'button');
-  gpCard.setAttribute('aria-expanded', 'false');
-  gpCard.setAttribute('aria-controls', 'pt-sub-region');
-  subRegion.setAttribute('id', 'pt-sub-region');
-  subRegion.setAttribute('aria-hidden', 'true');
-
-  gpCard.addEventListener('click', function (e) {
-    e.preventDefault();
+  gpBtn.addEventListener('click', function () {
     setOpen(!open);
-  });
-
-  gpCard.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      setOpen(!open);
-    }
   });
 })();

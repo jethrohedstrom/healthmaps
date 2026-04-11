@@ -7,7 +7,7 @@ interface Branch {
   id: string;
   title: string;
   subtitle: string;
-  color: string;     // line / dot / title colour
+  color: string;     // line / dot / title colour family
   bg: string;        // pastel card background
   href: string;
 }
@@ -25,43 +25,55 @@ const subBranches: Branch[] = [
   { id: 'allied',       title: 'Allied health', subtitle: 'OT, social worker, nurse',  color: '#5DCAA5', bg: '#E8F7F0', href: '#' },
 ];
 
-// Geometry — desktop SVG fan
-// viewBox 800 x 120; junction at (400, 8); endpoint dots aligned with the 4 card centres.
-const TOP_VB_W = 800;
+// Geometry — SVG viewBox matches card-grid math so dot centres land exactly
+// on card centres at the component's max-width.
+const GAP = 14;
+
+const TOP_VB_W = 880;
 const TOP_VB_H = 120;
-const TOP_JUNCTION_X = 400;
+const TOP_N = topBranches.length;
+const topCardW = (TOP_VB_W - (TOP_N - 1) * GAP) / TOP_N;
+const topDotXs = Array.from({ length: TOP_N }, (_, i) => i * (topCardW + GAP) + topCardW / 2);
+const TOP_JUNCTION_X = TOP_VB_W / 2;
 const TOP_JUNCTION_Y = 8;
 const TOP_DOT_Y = 108;
-const topDotXs = [100, 300, 500, 700]; // 12.5%, 37.5%, 62.5%, 87.5% of 800
 
-const SUB_VB_W = 600;
+// Sub tree content sits inside .pt-sub-inner which has 20px horizontal padding.
+const SUB_VB_W = TOP_VB_W - 40;
 const SUB_VB_H = 110;
-const SUB_JUNCTION_X = 300;
+const SUB_N = subBranches.length;
+const subCardW = (SUB_VB_W - (SUB_N - 1) * GAP) / SUB_N;
+const subDotXs = Array.from({ length: SUB_N }, (_, i) => i * (subCardW + GAP) + subCardW / 2);
+const SUB_JUNCTION_X = SUB_VB_W / 2;
 const SUB_JUNCTION_Y = 8;
 const SUB_DOT_Y = 100;
-const subDotXs = [100, 300, 500]; // 16.6%, 50%, 83.3% of 600
 ---
 
 <div class="pt-tree">
+  <!-- Accessible description of the branching diagram for screen readers -->
+  <p class="sr-only">
+    Diagram of four ways to access mental health support in Australia, branching from a central "I need support" node:
+    through your GP (the most common route, which can further branch into psychologist, psychiatrist, or allied health referrals),
+    privately (paying full cost to skip the wait), via low-cost or sliding-scale services, or in crisis for immediate help.
+  </p>
+
   <!-- Origin pill -->
   <div class="pt-origin-wrap">
     <div class="pt-origin">I need support</div>
     <div class="pt-origin-stem" aria-hidden="true"></div>
   </div>
 
-  <!-- Desktop branching SVG -->
+  <!-- Desktop branching SVG (decorative — text description above covers meaning) -->
   <svg
     class="pt-branches"
     viewBox={`0 0 ${TOP_VB_W} ${TOP_VB_H}`}
     preserveAspectRatio="xMidYMin meet"
-    role="img"
     aria-hidden="true"
   >
-    <!-- Junction node -->
     <circle cx={TOP_JUNCTION_X} cy={TOP_JUNCTION_Y} r="4" fill="#9CA3AF" />
 
     {topBranches.map((b, i) => (
-      <>
+      <Fragment>
         <line
           x1={TOP_JUNCTION_X}
           y1={TOP_JUNCTION_Y}
@@ -72,27 +84,41 @@ const subDotXs = [100, 300, 500]; // 16.6%, 50%, 83.3% of 600
           stroke-linecap="round"
         />
         <circle cx={topDotXs[i]} cy={TOP_DOT_Y} r="6" fill={b.color} />
-      </>
+      </Fragment>
     ))}
   </svg>
 
-  <!-- Top-tier cards -->
+  <!-- Top-tier cards: GP is a real <button> (toggle); the rest are anchors -->
   <div class="pt-cards">
     {topBranches.map((b) => (
-      <a
-        href={b.href}
-        class="pt-card"
-        data-branch={b.id}
-        style={`--pt-color:${b.color}; --pt-bg:${b.bg};`}
-      >
-        <div class="pt-card-title">{b.title}</div>
-        <div class="pt-card-sub">{b.subtitle}</div>
-      </a>
+      b.id === 'gp' ? (
+        <button
+          type="button"
+          class="pt-card pt-card-toggle"
+          data-branch={b.id}
+          aria-expanded="false"
+          aria-controls="pt-sub-region"
+          style={`--pt-color:${b.color}; --pt-bg:${b.bg};`}
+        >
+          <span class="pt-card-title">{b.title}</span>
+          <span class="pt-card-sub">{b.subtitle}</span>
+        </button>
+      ) : (
+        <a
+          href={b.href}
+          class="pt-card"
+          data-branch={b.id}
+          style={`--pt-color:${b.color}; --pt-bg:${b.bg};`}
+        >
+          <span class="pt-card-title">{b.title}</span>
+          <span class="pt-card-sub">{b.subtitle}</span>
+        </a>
+      )
     ))}
   </div>
 
-  <!-- GP sub-tier (collapsed by default) -->
-  <div class="pt-sub" aria-hidden="true">
+  <!-- GP sub-tier (collapsed by default; `inert` removes it from tab order + a11y tree) -->
+  <div class="pt-sub" id="pt-sub-region" inert>
     <div class="pt-sub-inner">
       <div class="pt-sub-label">From your GP, you might be referred to:</div>
 
@@ -100,12 +126,11 @@ const subDotXs = [100, 300, 500]; // 16.6%, 50%, 83.3% of 600
         class="pt-branches pt-branches-sub"
         viewBox={`0 0 ${SUB_VB_W} ${SUB_VB_H}`}
         preserveAspectRatio="xMidYMin meet"
-        role="img"
         aria-hidden="true"
       >
         <circle cx={SUB_JUNCTION_X} cy={SUB_JUNCTION_Y} r="4" fill="#9CA3AF" />
         {subBranches.map((b, i) => (
-          <>
+          <Fragment>
             <line
               x1={SUB_JUNCTION_X}
               y1={SUB_JUNCTION_Y}
@@ -116,7 +141,7 @@ const subDotXs = [100, 300, 500]; // 16.6%, 50%, 83.3% of 600
               stroke-linecap="round"
             />
             <circle cx={subDotXs[i]} cy={SUB_DOT_Y} r="6" fill={b.color} />
-          </>
+          </Fragment>
         ))}
       </svg>
 
@@ -127,8 +152,8 @@ const subDotXs = [100, 300, 500]; // 16.6%, 50%, 83.3% of 600
             class="pt-card"
             style={`--pt-color:${b.color}; --pt-bg:${b.bg};`}
           >
-            <div class="pt-card-title">{b.title}</div>
-            <div class="pt-card-sub">{b.subtitle}</div>
+            <span class="pt-card-title">{b.title}</span>
+            <span class="pt-card-sub">{b.subtitle}</span>
           </a>
         ))}
       </div>
@@ -173,7 +198,7 @@ const subDotXs = [100, 300, 500]; // 16.6%, 50%, 83.3% of 600
     background: #9CA3AF;
   }
 
-  /* Desktop branching SVG */
+  /* Branching SVG — scales to container width */
   .pt-branches {
     display: block;
     width: 100%;
@@ -193,35 +218,42 @@ const subDotXs = [100, 300, 500]; // 16.6%, 50%, 83.3% of 600
     grid-template-columns: repeat(3, 1fr);
   }
 
-  /* Card */
+  /* Card — works for both <a> and <button> */
   .pt-card {
     position: relative;
     display: block;
+    width: 100%;
     background: var(--pt-bg);
+    border: none;
     border-radius: 14px;
     padding: 18px 16px 20px;
     text-decoration: none;
     color: inherit;
     text-align: center;
+    font: inherit;
     transition: transform 0.18s ease, box-shadow 0.18s ease;
     box-shadow: 0 1px 2px rgba(0,0,0,0.04);
     cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
   }
 
-  .pt-card:hover,
-  .pt-card:focus-visible {
+  .pt-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    outline: none;
+  }
+
+  /* Keep the global accessible focus ring (2px primary outline) — do NOT suppress it. */
+
+  .pt-card-title,
+  .pt-card-sub {
+    display: block;
   }
 
   .pt-card-title {
     font-family: var(--font-display);
     font-size: 18px;
     font-weight: 700;
-    color: var(--pt-color);
+    /* Darkened branch colour — passes WCAG AA for large text on the pastel bg */
+    color: color-mix(in srgb, var(--pt-color) 70%, #000);
     line-height: 1.2;
     margin-bottom: 4px;
   }
@@ -229,8 +261,8 @@ const subDotXs = [100, 300, 500]; // 16.6%, 50%, 83.3% of 600
   .pt-card-sub {
     font-size: 13px;
     font-weight: 500;
-    color: var(--pt-color);
-    opacity: 0.75;
+    /* Darker still — passes WCAG AA for normal text on the pastel bg */
+    color: color-mix(in srgb, var(--pt-color) 45%, #000);
     line-height: 1.35;
   }
 
@@ -266,28 +298,29 @@ const subDotXs = [100, 300, 500]; // 16.6%, 50%, 83.3% of 600
     letter-spacing: 0.06em;
   }
 
-  /* Indicate the GP card is interactive (toggle).
-     Absolutely positioned so it doesn't affect grid row heights. */
-  .pt-card[data-branch="gp"]::after {
+  /* "+" toggle indicator on the GP card — absolutely positioned so it
+     doesn't affect grid row heights. Rotates to "x" when expanded. */
+  .pt-card-toggle::after {
     content: '+';
     position: absolute;
     top: 8px;
     right: 12px;
     font-size: 18px;
     font-weight: 700;
-    color: var(--pt-color);
-    opacity: 0.55;
+    color: color-mix(in srgb, var(--pt-color) 55%, #000);
     transition: transform 0.25s ease;
     line-height: 1;
     transform-origin: center;
   }
 
-  .pt-tree.pt-sub-open .pt-card[data-branch="gp"]::after {
+  .pt-tree.pt-sub-open .pt-card-toggle::after {
     transform: rotate(45deg);
   }
 
-  /* Mobile: 2x2 grid, hide fan SVG, use top borders instead */
-  @media (max-width: 600px) {
+  /* Mobile / narrow desktop: 2x2 grid, hide fan SVG, use top borders instead.
+     Breakpoint is 900px (wider than the site's md 768px) because at 768–899px
+     four cards in a row become uncomfortably cramped. */
+  @media (max-width: 899px) {
     .pt-branches {
       display: none;
     }
