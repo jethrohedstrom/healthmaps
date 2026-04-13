@@ -254,13 +254,12 @@ details[open] > summary::after {
   position: relative;
 }
 
-/* Reset button — shown only when a route is selected (wrap collapses when hidden) */
+/* Reset button — floats over the top-right of the map so toggling its visibility doesn't shift layout */
 .metro-reset-wrap {
-  display: flex;
-  justify-content: flex-end;
-}
-.metro-reset-wrap:has(.metro-reset:not([hidden])) {
-  margin-bottom: 0.5rem;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
 }
 .metro-reset {
   font-size: 13px;
@@ -316,16 +315,18 @@ details[open] > summary::after {
   stroke-width: 22;
 }
 
-/* Recessive default opacity for less-common mobile routes (matches SVG inline path opacity) */
-.md\:hidden .route-group[data-route="direct"] { opacity: 0.8; }
-.md\:hidden .route-group[data-route="low-cost"] { opacity: 0.85; }
-
 /* Dim non-active routes when a selection exists */
 .metro-map-root.has-selection .route-group.is-dimmed {
   opacity: 0.3;
 }
-/* Active route always rendered at full opacity, even if it's a recessive mobile route */
+/* Active route lifts to full intensity — also overrides inline opacity on individual SVG paths/circles/text
+   (Direct/Low-cost have inline opacity="0.65"/0.75 etc. that would otherwise persist) */
 .metro-map-root.has-selection .route-group.is-active {
+  opacity: 1;
+}
+.metro-map-root.has-selection .route-group.is-active path,
+.metro-map-root.has-selection .route-group.is-active circle,
+.metro-map-root.has-selection .route-group.is-active text {
   opacity: 1;
 }
 
