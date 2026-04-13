@@ -4,7 +4,7 @@
 
 <!-- Screen reader description -->
 <div class="sr-only">
-  <h3>Two routes to mental health support</h3>
+  <h3>Three routes to mental health support</h3>
   <p>Route 1 (most common): See your GP. From the GP there are two options.
   Option A: get a Mental Health Care Plan, which unlocks Medicare rebates for a Psychologist ($50–$220/session)
   or Social worker or OT ($50–$160/session).
@@ -22,7 +22,7 @@
     viewBox="0 0 960 460"
     xmlns="http://www.w3.org/2000/svg"
     role="img"
-    aria-label="Metro-style diagram showing two pathways to mental health support. The GP route through Medicare is most common. The direct route lets you start without a referral."
+    aria-label="Metro-style diagram of three pathways to mental health support. From your GP, a Mental Health Care Plan unlocks Medicare-rebated Psychologist or Social worker / OT sessions; separately, the GP can write a specialist referral to a Psychiatrist. A third, direct route lets you find a practitioner without a referral."
   >
     <!-- ── GP Route lines (green, thick, dominant) ── -->
 
@@ -43,8 +43,14 @@
           stroke="var(--color-primary)" stroke-width="3" fill="none" stroke-linecap="round" />
 
     <!-- Fork from "See your GP" → Psychiatrist (purple, separate specialist referral, NOT from care plan) -->
-    <path d="M 258,135 C 330,135 380,195 460,195 L 738,195"
+    <!-- Starts below the GP station circle (y=144, bottom edge of r=9 circle at cy=135) and drops -->
+    <!-- down to y=220 well before x=420 so it clears the "Unlocks Medicare rebates" pill (y=157–179, x=420–595) -->
+    <path d="M 250,144 C 290,200 320,220 370,220 L 738,220"
           stroke="var(--color-accent-purple)" stroke-width="3" fill="none" stroke-linecap="round" />
+
+    <!-- Mid-line sub-label so the purple branch reads as "specialist referral" not a continuation of the green rail -->
+    <text x="260" y="238" text-anchor="start" font-size="10" font-weight="600"
+          font-family="var(--font-sans)" fill="var(--color-accent-purple)">Specialist referral</text>
 
     <!-- ── Direct Route lines (blue, thin, muted) ── -->
 
@@ -70,7 +76,7 @@
     <!-- GP endpoints -->
     <circle cx="745" cy="80" r="7" fill="var(--color-primary-light)" stroke="var(--color-primary)" stroke-width="2" />
     <circle cx="745" cy="135" r="7" fill="var(--color-primary-light)" stroke="var(--color-primary)" stroke-width="2" />
-    <circle cx="745" cy="195" r="7" fill="var(--color-accent-purple-light)" stroke="var(--color-accent-purple)" stroke-width="2" />
+    <circle cx="745" cy="220" r="7" fill="var(--color-accent-purple-light)" stroke="var(--color-accent-purple)" stroke-width="2" />
 
     <!-- Direct: Find a practitioner -->
     <circle cx="260" cy="350" r="7" fill="var(--color-accent-blue-light)" stroke="var(--color-accent-blue)" stroke-width="2" opacity="0.7" />
@@ -126,10 +132,10 @@
           font-family="var(--font-sans)">$50–$160/session</text>
 
     <!-- GP endpoint: Psychiatrist (purple) -->
-    <text x="762" y="192" text-anchor="start" font-size="13" font-weight="700"
+    <text x="762" y="217" text-anchor="start" font-size="13" font-weight="700"
           font-family="var(--font-display)" fill="var(--color-accent-purple)">Psychiatrist</text>
-    <text x="762" y="208" text-anchor="start" font-size="11" fill="var(--color-body)"
-          font-family="var(--font-sans)">Specialist referral + 2–6 month wait</text>
+    <text x="762" y="233" text-anchor="start" font-size="11" fill="var(--color-body)"
+          font-family="var(--font-sans)">2–6 month wait</text>
 
     <!-- Direct: Find a practitioner -->
     <text x="260" y="376" text-anchor="middle" font-size="12" font-weight="700"
@@ -161,7 +167,7 @@
     <div class="w-11 h-11 rounded-full bg-primary-light border-[3px] border-primary flex items-center justify-center shrink-0">
       <span class="text-sm font-bold text-primary" style="font-family: var(--font-display)">You</span>
     </div>
-    <p class="text-body text-sm">Two routes to professional support</p>
+    <p class="text-body text-sm">Three routes to professional support</p>
   </div>
 
   <!-- ── GP Route ── -->
@@ -178,18 +184,6 @@
       </div>
       <div class="pb-5">
         <span class="font-semibold text-heading text-[15px]" style="font-family: var(--font-display)">See your GP</span>
-        <span class="block text-sm text-body mt-1">From here, two separate paths:</span>
-      </div>
-    </div>
-
-    <!-- Purple sub-branch from GP → Psychiatrist (separate specialist referral, NOT from care plan) -->
-    <div class="ml-2 mb-5 pl-4 border-l-[3px] border-accent-purple/60">
-      <div class="flex items-start gap-3">
-        <div class="w-3 h-3 mt-1.5 rounded-full bg-accent-purple-light border-2 border-accent-purple shrink-0"></div>
-        <div>
-          <span class="text-sm font-semibold" style="color: var(--color-accent-purple); font-family: var(--font-display)">Specialist referral → Psychiatrist</span>
-          <span class="text-sm text-body block">Specialist referral + 2–6 month wait</span>
-        </div>
       </div>
     </div>
 
@@ -220,6 +214,26 @@
           <span class="text-sm font-semibold text-heading">Social worker, OT</span>
           <span class="text-sm text-body block">$50–$160/session</span>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Specialist referral route (purple, separate referral written by the same GP) ── -->
+  <div class="mb-10">
+    <div class="mb-4">
+      <span class="inline-block text-xs font-semibold px-3 py-1 rounded-full"
+            style="background: var(--color-accent-purple-light); color: var(--color-accent-purple)">Also from your GP</span>
+    </div>
+    <p class="text-sm text-body mb-4">A separate referral — written on a different piece of paper from the Mental Health Care Plan.</p>
+
+    <div class="flex gap-4">
+      <div class="flex flex-col items-center">
+        <div class="w-4 h-4 rounded-full shrink-0 mt-0.5"
+             style="background: var(--color-accent-purple-light); border: 2.5px solid var(--color-accent-purple)"></div>
+      </div>
+      <div>
+        <span class="font-semibold text-[15px]" style="color: var(--color-accent-purple)">Psychiatrist</span>
+        <span class="block text-sm text-body mt-1">Specialist referral — 2–6 month wait</span>
       </div>
     </div>
   </div>
