@@ -22,6 +22,26 @@ export interface PathwayCard {
   steps: PathwayStep[];
 }
 
+/* Shared style maps — used by PathwayCardVisual and JourneyStrip */
+export const iconStyleMap: Record<string, { bg: string; stroke: string }> = {
+  phone:       { bg: 'bg-accent-red-light',      stroke: 'text-accent-red' },
+  stethoscope: { bg: 'bg-primary-light',         stroke: 'text-primary' },
+  bolt:        { bg: 'bg-accent-blue-light',     stroke: 'text-accent-blue' },
+  heart:       { bg: 'bg-accent-amber-light',    stroke: 'text-accent-amber' },
+  clipboard:   { bg: 'bg-accent-purple-light',   stroke: 'text-accent-purple' },
+  shield:      { bg: 'bg-accent-olive-light',    stroke: 'text-accent-olive' },
+};
+
+export const accentVarMap: Record<string, string> = {
+  'border-l-accent-amber':  'var(--color-accent-amber)',
+  'border-l-accent-red':    'var(--color-accent-red)',
+  'border-l-primary':       'var(--color-primary)',
+  'border-l-accent-blue':   'var(--color-accent-blue)',
+  'border-l-accent-teal':   'var(--color-accent-teal)',
+  'border-l-accent-purple': 'var(--color-accent-purple)',
+  'border-l-accent-olive':  'var(--color-accent-olive)',
+};
+
 // REVIEW — All costs, session limits, phone numbers, eligibility criteria,
 // and process descriptions below are AI-drafted and need verification against
 // current Medicare, NDIS, and service provider information.
@@ -33,7 +53,7 @@ export const pathwayCards: PathwayCard[] = [
     title: 'I need help now',
     tagline: 'Free, 24/7, no appointment needed',
     bestFor: 'Best for: immediate safety or someone in danger',
-    accentColor: 'border-l-accent-amber',
+    accentColor: 'border-l-accent-red',
     oneLiner: 'You or someone you know is in immediate danger or severe distress.',
     isCrisis: true,
     facts: {
@@ -159,7 +179,7 @@ export const pathwayCards: PathwayCard[] = [
     title: 'Free or low-cost support',
     tagline: 'Free or very low cost',
     bestFor: 'Best for: people on a tight budget or without Medicare',
-    accentColor: 'border-l-accent-teal',
+    accentColor: 'border-l-accent-amber',
     oneLiner: 'Cost is a barrier, you\u2019re on a low income, or you want to access services without a Medicare gap fee.',
     isCrisis: false,
     facts: {
