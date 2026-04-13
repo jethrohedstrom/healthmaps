@@ -326,7 +326,9 @@ details[open] > summary::after {
 }
 .metro-map-root.has-selection .route-group.is-active path,
 .metro-map-root.has-selection .route-group.is-active circle,
-.metro-map-root.has-selection .route-group.is-active text {
+.metro-map-root.has-selection .route-group.is-active rect,
+.metro-map-root.has-selection .route-group.is-active text,
+.metro-map-root.has-selection .route-group.is-active g {
   opacity: 1;
 }
 
