@@ -249,6 +249,83 @@ details[open] > summary::after {
   fill: var(--color-primary-mid);
 }
 
+/* Metro map — interactivity (route selection + dim/active states) */
+.metro-map-root {
+  position: relative;
+}
+
+/* Reset button — shown only when a route is selected */
+.metro-reset-wrap {
+  display: flex;
+  justify-content: flex-end;
+  min-height: 2rem;
+  margin-bottom: 0.5rem;
+}
+.metro-reset {
+  font-size: 13px;
+  color: var(--color-body);
+  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 9999px;
+  padding: 4px 14px;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.metro-reset:hover,
+.metro-reset:focus-visible {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+/* Instructional helper text near the "You" node */
+.metro-instruction {
+  fill: var(--color-body);
+  opacity: 0.7;
+  font-style: italic;
+  font-family: var(--font-sans);
+  transition: opacity 300ms ease;
+}
+.metro-map-root.has-selection .metro-instruction {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Route groups — tap targets + dim/active states */
+.route-group {
+  cursor: pointer;
+  outline: none;
+  transition: opacity 300ms ease;
+}
+.route-group:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+  border-radius: 6px;
+}
+
+/* Invisible wide hit-targets for SVG routes */
+.route-hit {
+  stroke: transparent;
+  stroke-width: 40;
+  fill: none;
+  pointer-events: stroke;
+}
+
+/* Dim non-active routes when a selection exists */
+.metro-map-root.has-selection .route-group.is-dimmed {
+  opacity: 0.3;
+}
+
+/* Subtle hover lift on desktop (SVG routes only — mobile blocks already have padding) */
+@media (hover: hover) and (pointer: fine) {
+  .metro-map-svg .route-group:hover {
+    opacity: 1;
+  }
+  .metro-map-svg .route-group:hover .route-hit {
+    stroke: color-mix(in srgb, var(--color-primary) 6%, transparent);
+  }
+}
+
 /* Prose/markdown content links — hover transition */
 .prose a {
   color: var(--color-primary);
