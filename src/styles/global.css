@@ -320,7 +320,9 @@ details[open] > summary::after {
   opacity: 0.3;
 }
 /* Active route lifts to full intensity — also overrides inline opacity on individual SVG paths/circles/text
-   (Direct/Low-cost have inline opacity="0.65"/0.75 etc. that would otherwise persist) */
+   (Direct/Low-cost have inline opacity="0.65"/0.75 etc. that would otherwise persist).
+   Note: detail elements tagged .route-detail are further constrained below — they stay hidden
+   unless their own route is active, even when this rule forces opacity:1 on sibling elements. */
 .metro-map-root.has-selection .route-group.is-active {
   opacity: 1;
 }
@@ -332,15 +334,22 @@ details[open] > summary::after {
   opacity: 1;
 }
 
-/* Progressive disclosure — route detail (costs, wait times, info blocks) hidden until its route is selected */
+/* Progressive disclosure — route detail (costs, wait times, info blocks) is hidden until its route is selected.
+   visibility: hidden also strips hidden detail from the tab order and a11y tree (pointer-events alone wouldn't).
+   Below md we collapse with display:none so the mobile HTML layout doesn't leave blank gaps below station labels. */
 .route-detail {
   opacity: 0;
-  transition: opacity 300ms ease;
-  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 300ms ease, visibility 0s 300ms;
 }
 .metro-map-root.has-selection .route-group.is-active .route-detail {
   opacity: 1;
-  pointer-events: auto;
+  visibility: visible;
+  transition: opacity 300ms ease, visibility 0s;
+}
+@media (max-width: 767px) {
+  .route-detail { display: none; }
+  .metro-map-root.has-selection .route-group.is-active .route-detail { display: block; }
 }
 
 /* Subtle hover lift on desktop (SVG routes only — mobile blocks already have padding) */
