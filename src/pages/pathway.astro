@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PathwayCardVisual from '../components/PathwayCardVisual.astro';
-import JourneyStrip from '../components/JourneyStrip.astro';
 import CrisisFooterBar from '../components/CrisisFooterBar.astro';
 import MetroMap from '../components/MetroMap.astro';
 import PathwayTree from '../components/PathwayTree.astro';
@@ -53,24 +52,6 @@ const otherCards = pathwayCards.filter(c => !c.isCrisis);
       <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {otherCards.map((card) => (
           <PathwayCardVisual {...card} />
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- Section divider -->
-  <hr class="section-divider" />
-
-  <!-- Variant B: Journey Strips -->
-  <section class="bg-bg-light">
-    <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
-      <p class="uppercase tracking-widest text-sm text-primary mb-3 font-semibold">Alternate view</p>
-      <h2 class="text-xl font-bold text-heading mb-2">Compare the journey</h2>
-      <p class="text-body mb-10">See how many steps each pathway takes. Tap a step to see what's involved.</p>
-
-      <div class="space-y-6">
-        {pathwayCards.map((card) => (
-          <JourneyStrip {...card} />
         ))}
       </div>
     </div>
