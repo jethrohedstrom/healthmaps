@@ -248,6 +248,20 @@ details[open] > summary::after {
 .metro-map-svg a:hover text {
   fill: var(--color-primary-mid);
 }
+/* Inline tel: links inside SVG text — match the mobile HTML link style (primary colour + underline) */
+.metro-map-svg text a {
+  fill: var(--color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.metro-map-svg text a:hover {
+  fill: var(--color-primary-mid);
+}
+.metro-map-svg text a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
 
 /* Metro map — interactivity (route selection + dim/active states) */
 .metro-map-root {
@@ -319,9 +333,9 @@ details[open] > summary::after {
 .metro-map-root.has-selection .route-group.is-dimmed {
   opacity: 0.3;
 }
-/* Crisis route is exempt from dimming: emergency numbers must stay legible regardless of selection. */
+/* Crisis route dims less than others: emergency numbers must stay legible regardless of selection. */
 .metro-map-root.has-selection .route-group[data-route="crisis"].is-dimmed {
-  opacity: 1;
+  opacity: 0.7;
 }
 /* Active route lifts to full intensity — overrides inline opacity="0.65/0.75" on Direct/Low-cost children. */
 .metro-map-root.has-selection .route-group.is-active {
@@ -346,6 +360,9 @@ details[open] > summary::after {
   visibility: visible;
   transition: opacity 300ms ease, visibility 0s;
 }
+/* Mobile HTML participates in normal flow, so collapse hidden detail with display instead of opacity
+   to avoid unexplained blank gaps below station labels. Desktop SVG is absolutely positioned so
+   opacity alone is enough. */
 @media (max-width: 767px) {
   .route-detail { display: none; }
   .metro-map-root.has-selection .route-group.is-active .route-detail { display: block; }
