@@ -319,10 +319,11 @@ details[open] > summary::after {
 .metro-map-root.has-selection .route-group.is-dimmed {
   opacity: 0.3;
 }
-/* Active route lifts to full intensity — also overrides inline opacity on individual SVG paths/circles/text
-   (Direct/Low-cost have inline opacity="0.65"/0.75 etc. that would otherwise persist).
-   Note: detail elements tagged .route-detail are further constrained below — they stay hidden
-   unless their own route is active, even when this rule forces opacity:1 on sibling elements. */
+/* Crisis route is exempt from dimming: emergency numbers must stay legible regardless of selection. */
+.metro-map-root.has-selection .route-group[data-route="crisis"].is-dimmed {
+  opacity: 1;
+}
+/* Active route lifts to full intensity — overrides inline opacity="0.65/0.75" on Direct/Low-cost children. */
 .metro-map-root.has-selection .route-group.is-active {
   opacity: 1;
 }
@@ -334,9 +335,7 @@ details[open] > summary::after {
   opacity: 1;
 }
 
-/* Progressive disclosure — route detail (costs, wait times, info blocks) is hidden until its route is selected.
-   visibility: hidden also strips hidden detail from the tab order and a11y tree (pointer-events alone wouldn't).
-   Below md we collapse with display:none so the mobile HTML layout doesn't leave blank gaps below station labels. */
+/* Route detail stays out of the tab order and a11y tree while hidden (visibility, not just opacity). */
 .route-detail {
   opacity: 0;
   visibility: hidden;

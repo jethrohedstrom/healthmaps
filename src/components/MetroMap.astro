@@ -131,9 +131,7 @@
       <path d="M 250,144 C 290,200 320,220 370,220 L 738,220"
             stroke="var(--color-accent-purple)" stroke-width="3" fill="none" stroke-linecap="round" />
 
-      <!-- Mid-line sub-label — kept visible (not .route-detail) because it identifies what the purple line
-           IS in default scanning, not a rebate/cost detail. Without it the forked purple path reads as
-           unexplained. Siblings $... and "2–6 month wait" are still tagged as detail. -->
+      <!-- Mid-line sub-label — route identity, not detail. -->
       <text x="260" y="238" text-anchor="start" font-size="10" font-weight="600"
             font-family="var(--font-sans)" fill="var(--color-accent-purple)">Specialist referral</text>
 
@@ -260,15 +258,12 @@
       <text x="278" y="514" text-anchor="start" font-size="13" font-weight="700"
             font-family="var(--font-display)" fill="var(--color-accent-red)">I need help now</text>
 
-      <!-- Crisis: phone numbers block — intentionally NOT tagged .route-detail. Emergency numbers
-           must be visible at-a-glance in default state; this is a crisis pathway and a tap-to-reveal
-           gesture is a regression for that context. (CrisisBanner duplicates these site-wide; the
-           small redundancy here is deliberate.) -->
+      <!-- Crisis numbers — always visible, tappable. -->
       <text x="430" y="497" text-anchor="start" font-size="11" fill="var(--color-body)"
             font-family="var(--font-sans)">
-        <tspan x="430" dy="0"><tspan font-weight="700" fill="var(--color-heading)">Emergency</tspan> 000</tspan>
-        <tspan x="430" dy="15"><tspan font-weight="700" fill="var(--color-heading)">Lifeline</tspan> 13 11 14</tspan>
-        <tspan x="430" dy="15"><tspan font-weight="700" fill="var(--color-heading)">Beyond Blue</tspan> 1300 22 4636</tspan>
+        <a href="tel:000"><tspan x="430" dy="0"><tspan font-weight="700" fill="var(--color-heading)">Emergency</tspan> 000</tspan></a>
+        <a href="tel:131114"><tspan x="430" dy="15"><tspan font-weight="700" fill="var(--color-heading)">Lifeline</tspan> 13 11 14</tspan></a>
+        <a href="tel:1300224636"><tspan x="430" dy="15"><tspan font-weight="700" fill="var(--color-heading)">Beyond Blue</tspan> 1300 22 4636</tspan></a>
         <tspan x="430" dy="18" font-style="italic" opacity="0.8">Free, 24/7, immediate</tspan>
       </text>
     </g>
@@ -457,7 +452,7 @@
       </div>
     </div>
 
-    <!-- Info — intentionally NOT tagged .route-detail. Emergency numbers stay visible without a tap. -->
+    <!-- Emergency numbers — always visible. -->
     <div class="ml-7 mt-3 text-sm text-body space-y-1">
       <p><span class="font-semibold text-heading">Emergency</span> <a href="tel:000" class="text-primary underline underline-offset-2">000</a></p>
       <p><span class="font-semibold text-heading">Lifeline</span> <a href="tel:131114" class="text-primary underline underline-offset-2">13 11 14</a></p>
