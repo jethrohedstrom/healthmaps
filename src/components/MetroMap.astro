@@ -5,18 +5,20 @@
 <!-- Screen reader description -->
 <div class="sr-only">
   <h3>Five routes to mental health support</h3>
-  <p>Route 1 (most common): See your GP. From the GP there are two options.
-  Option A: get a Mental Health Care Plan, which unlocks Medicare rebates for a Psychologist ($50–$220/session)
-  or Social worker or OT ($50–$160/session).
-  Option B: ask the GP for a specialist referral to a Psychiatrist (2–6 month wait).
-  The specialist referral is separate from the Mental Health Care Plan.</p>
-  <p>Route 2 (direct): Find a practitioner and start sessions directly.
-  Options include Psychologist, Counsellor, Psychotherapist, or Social worker.
-  Cost is $120–$330+ per session with no referral needed and no Medicare rebate.</p>
-  <p>Route 3 (low-cost or community): Find a service, attend an assessment or intake, and start sessions.
-  Options include Medicare Mental Health Centre, community health services, headspace, and university clinics.
-  Free or low-cost (sliding scale), with no referral needed for most services.</p>
-  <p>Route 4 (crisis): If you need help now, use a free 24/7 crisis service.
+  <p>Route 1 (most common): See your GP for a Mental Health Care Plan, which unlocks
+  Medicare rebates for a Psychologist ($50–$220/session) or Social worker or OT
+  ($50–$160/session).</p>
+  <p>Route 2: Ask the same GP for a separate specialist referral to a Psychiatrist
+  (2–6 month wait). This referral is written on a different piece of paper from the
+  Mental Health Care Plan.</p>
+  <p>Route 3 (direct): Find a practitioner and start sessions directly. Options include
+  Psychologist, Counsellor, Psychotherapist, or Social worker. Cost is $120–$330+ per
+  session with no referral needed and no Medicare rebate.</p>
+  <p>Route 4 (low-cost or community): Find a service, attend an assessment or intake,
+  and start sessions. Options include Medicare Mental Health Centre, community health
+  services, headspace, and university clinics. Free or low-cost (sliding scale), with
+  no referral needed for most services.</p>
+  <p>Route 5 (crisis): If you need help now, use a free 24/7 crisis service.
   Emergency 000, Lifeline 13 11 14, or Beyond Blue 1300 22 4636.</p>
 </div>
 
@@ -201,8 +203,8 @@
     <text x="545" y="446" text-anchor="middle" font-size="12" font-weight="700"
           font-family="var(--font-display)" fill="var(--color-heading)" opacity="0.85">Start sessions</text>
 
-    <!-- Low-cost: services list (above line) -->
-    <text x="260" y="405" text-anchor="start" font-size="10" fill="var(--color-body)" opacity="0.85"
+    <!-- Low-cost: services list (below station labels, clear of info block) -->
+    <text x="260" y="467" text-anchor="start" font-size="10" fill="var(--color-body)" opacity="0.85"
           font-family="var(--font-sans)">Medicare Mental Health Centre · community health · headspace · university clinics</text>
 
     <!-- Low-cost: Info text block (past endpoint) -->
@@ -345,16 +347,14 @@
   <!-- ── Low-cost / Community Route ── -->
   <div class="mb-10 opacity-85">
     <div class="mb-4">
-      <span class="inline-block text-xs font-semibold px-3 py-1 rounded-full"
-            style="background: var(--color-accent-amber-light); color: var(--color-accent-amber)">No referral needed</span>
+      <span class="inline-block text-xs font-semibold bg-accent-amber-light text-accent-amber px-3 py-1 rounded-full">No referral needed</span>
     </div>
 
     <!-- Station: Find a service -->
     <div class="flex gap-4">
       <div class="flex flex-col items-center">
-        <div class="w-3.5 h-3.5 rounded-full shrink-0 mt-0.5"
-             style="background: var(--color-accent-amber-light); border: 2px solid var(--color-accent-amber)"></div>
-        <div class="w-[2px] flex-1 rounded-full my-1" style="background: var(--color-accent-amber); opacity: 0.5"></div>
+        <div class="w-3.5 h-3.5 rounded-full bg-accent-amber-light border-2 border-accent-amber shrink-0 mt-0.5"></div>
+        <div class="w-[2px] flex-1 bg-accent-amber/50 rounded-full my-1"></div>
       </div>
       <div class="pb-5">
         <span class="font-semibold text-heading text-[15px]" style="font-family: var(--font-display)">Find a service</span>
@@ -364,9 +364,8 @@
     <!-- Station: Assessment / intake -->
     <div class="flex gap-4">
       <div class="flex flex-col items-center">
-        <div class="w-3.5 h-3.5 rounded-full shrink-0 mt-0.5"
-             style="background: var(--color-accent-amber-light); border: 2px solid var(--color-accent-amber)"></div>
-        <div class="w-[2px] flex-1 rounded-full my-1" style="background: var(--color-accent-amber); opacity: 0.5"></div>
+        <div class="w-3.5 h-3.5 rounded-full bg-accent-amber-light border-2 border-accent-amber shrink-0 mt-0.5"></div>
+        <div class="w-[2px] flex-1 bg-accent-amber/50 rounded-full my-1"></div>
       </div>
       <div class="pb-5">
         <span class="font-semibold text-heading text-[15px]" style="font-family: var(--font-display)">Assessment / intake</span>
@@ -376,8 +375,7 @@
     <!-- Station: Start sessions -->
     <div class="flex gap-4">
       <div class="flex flex-col items-center">
-        <div class="w-3.5 h-3.5 rounded-full shrink-0 mt-0.5"
-             style="background: var(--color-accent-amber-light); border: 2px solid var(--color-accent-amber)"></div>
+        <div class="w-3.5 h-3.5 rounded-full bg-accent-amber-light border-2 border-accent-amber shrink-0 mt-0.5"></div>
       </div>
       <div>
         <span class="font-semibold text-heading text-[15px]" style="font-family: var(--font-display)">Start sessions</span>
@@ -395,26 +393,24 @@
   <!-- ── Crisis Route ── -->
   <div>
     <div class="mb-4">
-      <span class="inline-block text-xs font-semibold px-3 py-1 rounded-full"
-            style="background: var(--color-accent-red-light); color: var(--color-accent-red)">Immediate, free</span>
+      <span class="inline-block text-xs font-semibold bg-accent-red-light text-accent-red px-3 py-1 rounded-full">Immediate, free</span>
     </div>
 
     <!-- Station: I need help now -->
     <div class="flex gap-4">
       <div class="flex flex-col items-center">
-        <div class="w-4 h-4 rounded-full shrink-0 mt-0.5"
-             style="background: var(--color-accent-red-light); border: 2.5px solid var(--color-accent-red)"></div>
+        <div class="w-4 h-4 rounded-full bg-accent-red-light border-[2.5px] border-accent-red shrink-0 mt-0.5"></div>
       </div>
       <div>
-        <span class="font-semibold text-[15px]" style="font-family: var(--font-display); color: var(--color-accent-red)">I need help now</span>
+        <span class="font-semibold text-[15px] text-accent-red" style="font-family: var(--font-display)">I need help now</span>
       </div>
     </div>
 
     <!-- Info -->
     <div class="ml-7 mt-3 text-sm text-body space-y-1">
-      <p><span class="font-semibold text-heading">Emergency</span> 000</p>
-      <p><span class="font-semibold text-heading">Lifeline</span> 13 11 14</p>
-      <p><span class="font-semibold text-heading">Beyond Blue</span> 1300 22 4636</p>
+      <p><span class="font-semibold text-heading">Emergency</span> <a href="tel:000" class="text-primary underline underline-offset-2">000</a></p>
+      <p><span class="font-semibold text-heading">Lifeline</span> <a href="tel:131114" class="text-primary underline underline-offset-2">13 11 14</a></p>
+      <p><span class="font-semibold text-heading">Beyond Blue</span> <a href="tel:1300224636" class="text-primary underline underline-offset-2">1300 22 4636</a></p>
       <p class="mt-3 italic">Free, 24/7, immediate</p>
     </div>
   </div>
