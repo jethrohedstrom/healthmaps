@@ -3,7 +3,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import PathwayCardVisual from '../components/PathwayCardVisual.astro';
 import CrisisFooterBar from '../components/CrisisFooterBar.astro';
 import MetroMap from '../components/MetroMap.astro';
-import PathwayTree from '../components/PathwayTree.astro';
 import { pathwayCards } from '../data/pathway-cards';
 
 const crisisCard = pathwayCards.find(c => c.isCrisis)!;
@@ -39,16 +38,14 @@ const otherCards = pathwayCards.filter(c => !c.isCrisis);
   </section>
   */}
 
-  <!-- Pathway cards -->
+  {/* Pathway cards — commented out, preserved for later
   <section class="bg-white">
     <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20 pb-28">
       <h2 class="text-xl font-bold text-heading mb-2">6 ways to access support</h2>
       <p class="text-body mb-10">Each pathway has different costs, wait times, and steps. Compare them below.</p>
 
-      {/* Crisis card — full width, visually distinct */}
       <PathwayCardVisual {...crisisCard} />
 
-      {/* Remaining cards — 2-col grid on desktop, 1-col on mobile */}
       <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
         {otherCards.map((card) => (
           <PathwayCardVisual {...card} />
@@ -57,8 +54,8 @@ const otherCards = pathwayCards.filter(c => !c.isCrisis);
     </div>
   </section>
 
-  <!-- Section divider -->
   <hr class="section-divider" />
+  */}
 
   <!-- Variant C: Metro Map -->
   <section class="bg-white">
@@ -67,19 +64,6 @@ const otherCards = pathwayCards.filter(c => !c.isCrisis);
       <h2 class="text-xl font-bold text-heading mb-2">See the routes at a glance</h2>
       <p class="text-body mb-10">Five routes to mental health support in Australia.</p>
       <MetroMap />
-    </div>
-  </section>
-
-  <!-- Section divider -->
-  <hr class="section-divider" />
-
-  <!-- Variant D: Branching tree -->
-  <section class="bg-bg-light">
-    <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
-      <p class="uppercase tracking-widest text-sm text-primary mb-3 font-semibold">Minimal tree</p>
-      <h2 class="text-xl font-bold text-heading mb-2">Where to start</h2>
-      <p class="text-body mb-10">Four ways in. Tap "Through your GP" to see the specialist routes that branch from there.</p>
-      <PathwayTree />
     </div>
   </section>
 
