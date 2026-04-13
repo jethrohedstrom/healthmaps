@@ -254,11 +254,12 @@ details[open] > summary::after {
   position: relative;
 }
 
-/* Reset button — shown only when a route is selected */
+/* Reset button — shown only when a route is selected (wrap collapses when hidden) */
 .metro-reset-wrap {
   display: flex;
   justify-content: flex-end;
-  min-height: 2rem;
+}
+.metro-reset-wrap:has(.metro-reset:not([hidden])) {
   margin-bottom: 0.5rem;
 }
 .metro-reset {
@@ -303,17 +304,29 @@ details[open] > summary::after {
   border-radius: 6px;
 }
 
-/* Invisible wide hit-targets for SVG routes */
+/* Invisible hit-targets for SVG routes — trunk segments get generous width */
 .route-hit {
   stroke: transparent;
-  stroke-width: 40;
+  stroke-width: 36;
   fill: none;
   pointer-events: stroke;
 }
+/* Fork segments near the "You" node — narrower to reduce overlap between routes */
+.route-hit-fork {
+  stroke-width: 22;
+}
+
+/* Recessive default opacity for less-common mobile routes (matches SVG inline path opacity) */
+.md\:hidden .route-group[data-route="direct"] { opacity: 0.8; }
+.md\:hidden .route-group[data-route="low-cost"] { opacity: 0.85; }
 
 /* Dim non-active routes when a selection exists */
 .metro-map-root.has-selection .route-group.is-dimmed {
   opacity: 0.3;
+}
+/* Active route always rendered at full opacity, even if it's a recessive mobile route */
+.metro-map-root.has-selection .route-group.is-active {
+  opacity: 1;
 }
 
 /* Subtle hover lift on desktop (SVG routes only — mobile blocks already have padding) */

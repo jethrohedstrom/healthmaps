@@ -12,23 +12,29 @@
     if (resetBtn) resetBtn.hidden = next === null;
     groups.forEach((g) => {
       const id = g.getAttribute('data-route');
-      g.classList.toggle('is-active', id === next);
-      g.classList.toggle('is-dimmed', next !== null && id !== next);
-      g.setAttribute('aria-pressed', id === next ? 'true' : 'false');
+      const isActive = id === next;
+      g.classList.toggle('is-active', isActive);
+      g.classList.toggle('is-dimmed', next !== null && !isActive);
+      if (isActive) g.setAttribute('aria-current', 'true');
+      else g.removeAttribute('aria-current');
     });
   }
 
+  function toggle(g) {
+    const id = g.getAttribute('data-route');
+    apply(active === id ? null : id);
+  }
+
   groups.forEach((g) => {
-    g.setAttribute('aria-pressed', 'false');
-    g.addEventListener('click', () => {
-      const id = g.getAttribute('data-route');
-      apply(active === id ? null : id);
+    g.addEventListener('click', (e) => {
+      if (e.target.closest('a, button')) return;
+      toggle(g);
     });
     g.addEventListener('keydown', (e) => {
+      if (e.target !== g) return;
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        const id = g.getAttribute('data-route');
-        apply(active === id ? null : id);
+        toggle(g);
       } else if (e.key === 'Escape' && active !== null) {
         e.preventDefault();
         apply(null);
