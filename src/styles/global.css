@@ -332,6 +332,17 @@ details[open] > summary::after {
   opacity: 1;
 }
 
+/* Progressive disclosure — route detail (costs, wait times, info blocks) hidden until its route is selected */
+.route-detail {
+  opacity: 0;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+.metro-map-root.has-selection .route-group.is-active .route-detail {
+  opacity: 1;
+  pointer-events: auto;
+}
+
 /* Subtle hover lift on desktop (SVG routes only — mobile blocks already have padding) */
 @media (hover: hover) and (pointer: fine) {
   .metro-map-svg .route-group:hover {
