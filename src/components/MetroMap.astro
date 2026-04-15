@@ -76,10 +76,10 @@
             stroke="var(--color-primary)" stroke-width="3" fill="none" stroke-linecap="round" />
 
       <!-- GP: See your GP -->
-      <circle cx="250" cy="135" r="9" fill="var(--color-primary-light)" stroke="var(--color-primary)" stroke-width="2.5" />
+      <circle cx="250" cy="135" r="9" class="route-detail" fill="var(--color-primary-light)" stroke="var(--color-primary)" stroke-width="2.5" />
 
       <!-- GP: Mental health care plan -->
-      <circle cx="470" cy="135" r="9" fill="var(--color-primary-light)" stroke="var(--color-primary)" stroke-width="2.5" />
+      <circle cx="470" cy="135" r="9" class="route-detail" fill="var(--color-primary-light)" stroke="var(--color-primary)" stroke-width="2.5" />
 
       <!-- GP endpoints -->
       <circle cx="745" cy="80" r="7" fill="var(--color-primary-light)" stroke="var(--color-primary)" stroke-width="2" />
@@ -102,13 +102,15 @@
       </g>
 
       <!-- GP: See your GP -->
-      <text x="250" y="163" text-anchor="middle" class="metro-heading" font-size="13">See your GP</text>
+      <text x="250" y="163" text-anchor="middle" class="metro-heading route-detail" font-size="13">See your GP</text>
 
       <!-- GP: Mental health care plan (linked) -->
-      <a href="#care-plan">
-        <text x="470" y="118" text-anchor="middle" font-size="13" font-weight="700"
-              font-family="var(--font-display)" fill="var(--color-primary)" text-decoration="underline">Mental health care plan</text>
-      </a>
+      <g class="route-detail">
+        <a href="#care-plan">
+          <text x="470" y="118" text-anchor="middle" font-size="13" font-weight="700"
+                font-family="var(--font-display)" fill="var(--color-primary)" text-decoration="underline">Mental health care plan</text>
+        </a>
+      </g>
 
       <!-- GP endpoint: Psychologist -->
       <text x="762" y="77" text-anchor="start" class="metro-heading" font-size="13">Psychologist</text>
@@ -131,7 +133,7 @@
       <path d="M 250,144 C 290,200 320,220 370,220 L 738,220"
             stroke="var(--color-accent-purple)" stroke-width="3" fill="none" stroke-linecap="round" />
 
-      <text x="260" y="238" text-anchor="start" font-size="10" font-weight="600"
+      <text x="260" y="238" text-anchor="start" class="route-detail" font-size="10" font-weight="600"
             font-family="var(--font-sans)" fill="var(--color-accent-purple)">Specialist referral</text>
 
       <circle cx="745" cy="220" r="7" fill="var(--color-accent-purple-light)" stroke="var(--color-accent-purple)" stroke-width="2" />
@@ -158,21 +160,27 @@
       <path d="M 267,320 L 423,320"
             stroke="var(--color-accent-blue)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.65" />
 
+      <!-- Direct endpoint label (visible in default/dimmed state; hides when the route is active so it doesn't overlap the info block that fades in). -->
+      <text x="450" y="316" text-anchor="start" class="metro-heading route-endpoint-label" font-size="13"
+            fill="var(--color-accent-blue)" opacity="0.75">Go private</text>
+
       <!-- "Less common route" badge -->
-      <rect x="128" y="275" width="155" height="26" rx="13" fill="none"
-            stroke="var(--color-accent-blue)" stroke-width="1.5" opacity="0.65" />
-      <text x="205" y="293" text-anchor="middle" font-size="12" font-weight="600"
-            fill="var(--color-accent-blue)" opacity="0.75" font-family="var(--font-sans)">Less common route</text>
+      <g class="route-detail">
+        <rect x="128" y="275" width="155" height="26" rx="13" fill="none"
+              stroke="var(--color-accent-blue)" stroke-width="1.5" opacity="0.65" />
+        <text x="205" y="293" text-anchor="middle" font-size="12" font-weight="600"
+              fill="var(--color-accent-blue)" opacity="0.75" font-family="var(--font-sans)">Less common route</text>
+      </g>
 
       <!-- Direct: Find a practitioner -->
-      <circle cx="260" cy="320" r="7" fill="var(--color-accent-blue-light)" stroke="var(--color-accent-blue)" stroke-width="2" opacity="0.7" />
+      <circle cx="260" cy="320" r="7" class="route-detail" fill="var(--color-accent-blue-light)" stroke="var(--color-accent-blue)" stroke-width="2" opacity="0.7" />
       <!-- Direct: Start sessions -->
-      <circle cx="430" cy="320" r="7" fill="var(--color-accent-blue-light)" stroke="var(--color-accent-blue)" stroke-width="2" opacity="0.7" />
+      <circle cx="430" cy="320" r="7" class="route-detail" fill="var(--color-accent-blue-light)" stroke="var(--color-accent-blue)" stroke-width="2" opacity="0.7" />
 
       <!-- Direct: station labels -->
-      <text x="260" y="346" text-anchor="middle" font-size="12" font-weight="700"
+      <text x="260" y="346" text-anchor="middle" class="route-detail" font-size="12" font-weight="700"
             font-family="var(--font-display)" fill="var(--color-heading)" opacity="0.75">Find a practitioner</text>
-      <text x="430" y="346" text-anchor="middle" font-size="12" font-weight="700"
+      <text x="430" y="346" text-anchor="middle" class="route-detail" font-size="12" font-weight="700"
             font-family="var(--font-display)" fill="var(--color-heading)" opacity="0.75">Start sessions</text>
 
       <!-- Direct: Info text blocks -->
@@ -204,22 +212,28 @@
       <path d="M 267,420 L 538,420"
             stroke="var(--color-accent-amber)" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.75" />
 
+      <!-- Low-cost endpoint label (visible in default/dimmed state; hides when the route is active so it doesn't overlap the info block that fades in). -->
+      <text x="565" y="416" text-anchor="start" class="metro-heading route-endpoint-label" font-size="13"
+            fill="var(--color-accent-amber)" opacity="0.85">Low-cost services</text>
+
       <!-- "No referral needed" badge -->
-      <rect x="128" y="375" width="140" height="26" rx="13" fill="var(--color-accent-amber-light)" />
-      <text x="198" y="393" text-anchor="middle" font-size="12" font-weight="600"
-            fill="var(--color-accent-amber)" font-family="var(--font-sans)">No referral needed</text>
+      <g class="route-detail">
+        <rect x="128" y="375" width="140" height="26" rx="13" fill="var(--color-accent-amber-light)" />
+        <text x="198" y="393" text-anchor="middle" font-size="12" font-weight="600"
+              fill="var(--color-accent-amber)" font-family="var(--font-sans)">No referral needed</text>
+      </g>
 
       <!-- Low-cost stations -->
-      <circle cx="260" cy="420" r="7" fill="var(--color-accent-amber-light)" stroke="var(--color-accent-amber)" stroke-width="2" opacity="0.8" />
-      <circle cx="400" cy="420" r="7" fill="var(--color-accent-amber-light)" stroke="var(--color-accent-amber)" stroke-width="2" opacity="0.8" />
-      <circle cx="545" cy="420" r="7" fill="var(--color-accent-amber-light)" stroke="var(--color-accent-amber)" stroke-width="2" opacity="0.8" />
+      <circle cx="260" cy="420" r="7" class="route-detail" fill="var(--color-accent-amber-light)" stroke="var(--color-accent-amber)" stroke-width="2" opacity="0.8" />
+      <circle cx="400" cy="420" r="7" class="route-detail" fill="var(--color-accent-amber-light)" stroke="var(--color-accent-amber)" stroke-width="2" opacity="0.8" />
+      <circle cx="545" cy="420" r="7" class="route-detail" fill="var(--color-accent-amber-light)" stroke="var(--color-accent-amber)" stroke-width="2" opacity="0.8" />
 
       <!-- Low-cost: station labels -->
-      <text x="260" y="446" text-anchor="middle" font-size="12" font-weight="700"
+      <text x="260" y="446" text-anchor="middle" class="route-detail" font-size="12" font-weight="700"
             font-family="var(--font-display)" fill="var(--color-heading)" opacity="0.85">Find a service</text>
-      <text x="400" y="446" text-anchor="middle" font-size="12" font-weight="700"
+      <text x="400" y="446" text-anchor="middle" class="route-detail" font-size="12" font-weight="700"
             font-family="var(--font-display)" fill="var(--color-heading)" opacity="0.85">Assessment / intake</text>
-      <text x="545" y="446" text-anchor="middle" font-size="12" font-weight="700"
+      <text x="545" y="446" text-anchor="middle" class="route-detail" font-size="12" font-weight="700"
             font-family="var(--font-display)" fill="var(--color-heading)" opacity="0.85">Start sessions</text>
 
       <!-- Low-cost: services list -->
@@ -246,9 +260,11 @@
             stroke="var(--color-accent-red)" stroke-width="2.5" fill="none" stroke-linecap="round" />
 
       <!-- "Immediate, free" badge -->
-      <rect x="128" y="465" width="120" height="26" rx="13" fill="var(--color-accent-red-light)" />
-      <text x="188" y="483" text-anchor="middle" font-size="12" font-weight="600"
-            fill="var(--color-accent-red)" font-family="var(--font-sans)">Immediate, free</text>
+      <g class="route-detail">
+        <rect x="128" y="465" width="120" height="26" rx="13" fill="var(--color-accent-red-light)" />
+        <text x="188" y="483" text-anchor="middle" font-size="12" font-weight="600"
+              fill="var(--color-accent-red)" font-family="var(--font-sans)">Immediate, free</text>
+      </g>
 
       <!-- Crisis station -->
       <circle cx="260" cy="510" r="8" fill="var(--color-accent-red-light)" stroke="var(--color-accent-red)" stroke-width="2.5" />
@@ -257,7 +273,7 @@
       <text x="278" y="514" text-anchor="start" font-size="13" font-weight="700"
             font-family="var(--font-display)" fill="var(--color-accent-red)">I need help now</text>
 
-      <text x="430" y="497" text-anchor="start" font-size="11" fill="var(--color-body)"
+      <text x="430" y="497" text-anchor="start" class="route-detail" font-size="11" fill="var(--color-body)"
             font-family="var(--font-sans)">
         <tspan x="430" dy="0"><tspan font-weight="700" fill="var(--color-heading)">Emergency</tspan> <a href="tel:000">000</a></tspan>
         <tspan x="430" dy="15"><tspan font-weight="700" fill="var(--color-heading)">Lifeline</tspan> <a href="tel:131114">13 11 14</a></tspan>
@@ -287,7 +303,7 @@
     </div>
 
     <!-- Station: See your GP -->
-    <div class="flex gap-4">
+    <div class="flex gap-4 route-detail">
       <div class="flex flex-col items-center">
         <div class="w-4 h-4 rounded-full bg-primary-light border-[2.5px] border-primary shrink-0 mt-0.5"></div>
         <div class="w-[3px] flex-1 bg-primary rounded-full my-1"></div>
@@ -298,7 +314,7 @@
     </div>
 
     <!-- Station: Mental health care plan -->
-    <div class="flex gap-4">
+    <div class="flex gap-4 route-detail">
       <div class="flex flex-col items-center">
         <div class="w-4 h-4 rounded-full bg-primary-light border-[2.5px] border-primary shrink-0 mt-0.5"></div>
         <div class="w-[3px] flex-1 bg-primary rounded-full my-1"></div>
@@ -332,10 +348,10 @@
   <div class="mb-10 route-group" data-route="psychiatrist" tabindex="0" aria-keyshortcuts="Enter Space"
        aria-label="Psychiatrist route — separate specialist referral from your GP">
     <div class="mb-4">
-      <span class="inline-block text-xs font-semibold px-3 py-1 rounded-full"
+      <span class="route-detail inline-block text-xs font-semibold px-3 py-1 rounded-full"
             style="background: var(--color-accent-purple-light); color: var(--color-accent-purple)">Also from your GP</span>
     </div>
-    <p class="text-sm text-body mb-4">A separate referral — written on a different piece of paper from the Mental Health Care Plan.</p>
+    <p class="route-detail text-sm text-body mb-4">A separate referral — written on a different piece of paper from the Mental Health Care Plan.</p>
 
     <div class="flex gap-4">
       <div class="flex flex-col items-center">
@@ -353,11 +369,11 @@
   <div class="mb-10 route-group" data-route="direct" tabindex="0" aria-keyshortcuts="Enter Space"
        aria-label="Direct private route — no referral needed, full price">
     <div class="mb-4">
-      <span class="inline-block text-xs font-semibold border border-accent-blue text-accent-blue px-3 py-1 rounded-full">Less common route</span>
+      <span class="route-detail inline-block text-xs font-semibold border border-accent-blue text-accent-blue px-3 py-1 rounded-full">Less common route</span>
     </div>
 
     <!-- Station: Find a practitioner -->
-    <div class="flex gap-4">
+    <div class="flex gap-4 route-detail">
       <div class="flex flex-col items-center">
         <div class="w-3.5 h-3.5 rounded-full bg-accent-blue-light border-2 border-accent-blue shrink-0 mt-0.5"></div>
         <div class="w-[2px] flex-1 bg-accent-blue/50 rounded-full my-1"></div>
@@ -368,7 +384,7 @@
     </div>
 
     <!-- Station: Start sessions -->
-    <div class="flex gap-4">
+    <div class="flex gap-4 route-detail">
       <div class="flex flex-col items-center">
         <div class="w-3.5 h-3.5 rounded-full bg-accent-blue-light border-2 border-accent-blue shrink-0 mt-0.5"></div>
       </div>
@@ -390,11 +406,11 @@
   <div class="mb-10 route-group" data-route="low-cost" tabindex="0" aria-keyshortcuts="Enter Space"
        aria-label="Low-cost and community route — free or sliding-scale, no referral needed for most">
     <div class="mb-4">
-      <span class="inline-block text-xs font-semibold bg-accent-amber-light text-accent-amber px-3 py-1 rounded-full">No referral needed</span>
+      <span class="route-detail inline-block text-xs font-semibold bg-accent-amber-light text-accent-amber px-3 py-1 rounded-full">No referral needed</span>
     </div>
 
     <!-- Station: Find a service -->
-    <div class="flex gap-4">
+    <div class="flex gap-4 route-detail">
       <div class="flex flex-col items-center">
         <div class="w-3.5 h-3.5 rounded-full bg-accent-amber-light border-2 border-accent-amber shrink-0 mt-0.5"></div>
         <div class="w-[2px] flex-1 bg-accent-amber/50 rounded-full my-1"></div>
@@ -405,7 +421,7 @@
     </div>
 
     <!-- Station: Assessment / intake -->
-    <div class="flex gap-4">
+    <div class="flex gap-4 route-detail">
       <div class="flex flex-col items-center">
         <div class="w-3.5 h-3.5 rounded-full bg-accent-amber-light border-2 border-accent-amber shrink-0 mt-0.5"></div>
         <div class="w-[2px] flex-1 bg-accent-amber/50 rounded-full my-1"></div>
@@ -416,7 +432,7 @@
     </div>
 
     <!-- Station: Start sessions -->
-    <div class="flex gap-4">
+    <div class="flex gap-4 route-detail">
       <div class="flex flex-col items-center">
         <div class="w-3.5 h-3.5 rounded-full bg-accent-amber-light border-2 border-accent-amber shrink-0 mt-0.5"></div>
       </div>
@@ -437,7 +453,7 @@
   <div class="route-group" data-route="crisis" tabindex="0" aria-keyshortcuts="Enter Space"
        aria-label="Crisis route — free, 24/7 immediate help">
     <div class="mb-4">
-      <span class="inline-block text-xs font-semibold bg-accent-red-light text-accent-red px-3 py-1 rounded-full">Immediate, free</span>
+      <span class="route-detail inline-block text-xs font-semibold bg-accent-red-light text-accent-red px-3 py-1 rounded-full">Immediate, free</span>
     </div>
 
     <!-- Station: I need help now -->

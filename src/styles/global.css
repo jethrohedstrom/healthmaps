@@ -353,12 +353,25 @@ details[open] > summary::after {
 .route-detail {
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
   transition: opacity 300ms ease, visibility 0s 300ms;
 }
 .metro-map-root.has-selection .route-group.is-active .route-detail {
   opacity: 1;
   visibility: visible;
+  pointer-events: auto;
   transition: opacity 300ms ease, visibility 0s;
+}
+
+/* Endpoint labels ("Go private", "Low-cost services") are visible in the default/dimmed
+   state so users can see where each route leads. They fade out when their own route is
+   active because the detailed info block that fades in would otherwise overlap them. */
+.route-endpoint-label {
+  transition: opacity 300ms ease;
+}
+.metro-map-root.has-selection .route-group.is-active .route-endpoint-label {
+  opacity: 0;
+  pointer-events: none;
 }
 /* Mobile HTML participates in normal flow, so collapse hidden detail with display instead of opacity
    to avoid unexplained blank gaps below station labels. Desktop SVG is absolutely positioned so
@@ -366,6 +379,12 @@ details[open] > summary::after {
 @media (max-width: 767px) {
   .route-detail { display: none; }
   .metro-map-root.has-selection .route-group.is-active .route-detail { display: block; }
+  /* Mobile station rows use Tailwind `flex` — restore it here because our `display: block`
+     above is more specific than the `.flex` utility. */
+  .metro-map-root.has-selection .route-group.is-active .route-detail.flex { display: flex; }
+  /* Mobile pills ("Also from your GP", "Less common route", "No referral needed",
+     "Immediate, free") need to stay inline-block so they size to their label. */
+  .metro-map-root.has-selection .route-group.is-active .route-detail.inline-block { display: inline-block; }
 }
 
 /* Subtle hover lift on desktop (SVG routes only — mobile blocks already have padding) */
