@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PathwayCardVisual from '../components/PathwayCardVisual.astro';
-import CrisisFooterBar from '../components/CrisisFooterBar.astro';
 import MetroMap from '../components/MetroMap.astro';
 import { pathwayCards } from '../data/pathway-cards';
 
@@ -64,5 +63,4 @@ const otherCards = pathwayCards.filter(c => !c.isCrisis);
     </div>
   </section>
 
-  <CrisisFooterBar />
 </BaseLayout>
