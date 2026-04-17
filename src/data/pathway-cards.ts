@@ -48,47 +48,6 @@ export const accentVarMap: Record<string, string> = {
 
 export const pathwayCards: PathwayCard[] = [
   {
-    id: 'crisis',
-    icon: 'phone',
-    title: 'I need help now',
-    tagline: 'Free, 24/7, no appointment needed',
-    bestFor: 'Best for: immediate safety or someone in danger',
-    accentColor: 'border-l-accent-red',
-    oneLiner: 'You or someone you know is in immediate danger or severe distress.',
-    isCrisis: true,
-    facts: {
-      cost: 'Free',
-      wait: 'Immediate',
-    },
-    steps: [
-      {
-        number: 1,
-        title: 'If in immediate danger, call 000',
-        detail: 'Triple Zero (000) connects you to police, ambulance, or fire services. If someone is at risk of harm right now, this is the first call to make.',
-      },
-      {
-        number: 2,
-        title: 'Call Lifeline on 13 11 14',
-        detail: '24/7 crisis support and suicide prevention. You can also text 0477 13 11 14 or chat online at <a href="https://www.lifeline.org.au" target="_blank" rel="noopener noreferrer">lifeline.org.au</a>.',
-      },
-      {
-        number: 3,
-        title: 'Call Beyond Blue on 1300 22 4636',
-        detail: '24/7 mental health support. Also available via web chat at <a href="https://www.beyondblue.org.au" target="_blank" rel="noopener noreferrer">beyondblue.org.au</a>.',
-      },
-      {
-        number: 4,
-        title: 'Go to your nearest emergency department',
-        detail: 'If you or someone else needs immediate medical attention for a mental health crisis, go to the nearest hospital emergency department.',
-      },
-      {
-        number: 5,
-        title: 'Call your state\u2019s mental health crisis triage line',
-        detail: 'Each state has a crisis team that can assess the situation by phone and send a team to you if needed. Ask for your local number at any of the services above.',
-      },
-    ],
-  },
-  {
     id: 'medicare-gp',
     icon: 'stethoscope',
     title: 'See a psychologist through your GP',
