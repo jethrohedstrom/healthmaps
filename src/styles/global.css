@@ -324,11 +324,6 @@ details[open] > summary::after {
   fill: none;
   pointer-events: stroke;
 }
-/* Fork segments near the "You" node — narrower to reduce overlap between routes */
-.route-hit-fork {
-  stroke-width: 22;
-}
-
 /* Dim non-active routes when a selection exists */
 .metro-map-root.has-selection .route-group.is-dimmed {
   opacity: 0.3;
@@ -337,7 +332,7 @@ details[open] > summary::after {
 .metro-map-root.has-selection .route-group[data-route="crisis"].is-dimmed {
   opacity: 0.7;
 }
-/* Active route lifts to full intensity — overrides inline opacity="0.65/0.75" on Direct/Low-cost children. */
+/* Active route lifts to full intensity. */
 .metro-map-root.has-selection .route-group.is-active {
   opacity: 1;
 }
