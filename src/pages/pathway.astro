@@ -38,9 +38,9 @@ const otherCards = pathwayCards.filter(c => !c.isCrisis);
   </section>
   */}
 
-  {/* Pathway cards — commented out, preserved for later
+  <!-- Pathway cards -->
   <section class="bg-white">
-    <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20 pb-28">
+    <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
       <h2 class="text-xl font-bold text-heading mb-2">6 ways to access support</h2>
       <p class="text-body mb-10">Each pathway has different costs, wait times, and steps. Compare them below.</p>
 
@@ -54,15 +54,12 @@ const otherCards = pathwayCards.filter(c => !c.isCrisis);
     </div>
   </section>
 
-  <hr class="section-divider" />
-  */}
-
-  <!-- Variant C: Metro Map -->
-  <section class="bg-white">
+  <!-- Metro Map (secondary visual view) -->
+  <section class="bg-bg-light">
     <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
       <p class="uppercase tracking-widest text-sm text-primary mb-3 font-semibold">Visual overview</p>
-      <h2 class="text-xl font-bold text-heading mb-2">See the routes at a glance</h2>
-      <p class="text-body mb-10">Five routes to mental health support in Australia.</p>
+      <h2 class="text-xl font-bold text-heading mb-2">Prefer a visual overview?</h2>
+      <p class="text-body mb-10">The same pathways shown as a route map.</p>
       <MetroMap />
     </div>
   </section>
