@@ -1,6 +1,7 @@
 ---
 import StepByStep from './StepByStep.astro';
 import PathwayIcon from './PathwayIcon.astro';
+import { iconStyleMap } from '../data/pathway-cards';
 import type { PathwayCard } from '../data/pathway-cards';
 
 interface Props extends PathwayCard {}
@@ -8,22 +9,7 @@ interface Props extends PathwayCard {}
 const { id, icon, title, tagline, bestFor, accentColor, badge, oneLiner, isCrisis, facts, steps } = Astro.props;
 
 const bgClass = isCrisis ? 'bg-primary-light' : 'bg-white';
-
-/* Map accent border classes to icon container background + icon stroke colours.
-   Tailwind safelist — classes used via dynamic interpolation:
-   border-t-accent-amber border-t-primary border-t-accent-blue
-   border-t-accent-teal border-t-accent-purple border-t-accent-olive */
 const accentTopBorder = accentColor.replace('border-l-', 'border-t-');
-
-const iconStyleMap: Record<string, { bg: string; stroke: string }> = {
-  phone:       { bg: 'bg-amber-50',   stroke: 'text-accent-amber' },
-  stethoscope: { bg: 'bg-primary-light', stroke: 'text-primary' },
-  bolt:        { bg: 'bg-blue-50',    stroke: 'text-accent-blue' },
-  heart:       { bg: 'bg-teal-50',    stroke: 'text-accent-teal' },
-  clipboard:   { bg: 'bg-purple-50',  stroke: 'text-accent-purple' },
-  shield:      { bg: 'bg-lime-50',    stroke: 'text-accent-olive' },
-};
-
 const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-primary' };
 ---
 
@@ -39,34 +25,18 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
       <span class="inline-block text-xs font-semibold text-white bg-primary px-3 py-1 rounded-full mb-2">{badge}</span>
     )}
     <h3 class="text-xl md:text-2xl font-bold text-heading leading-snug">{title}</h3>
-    <p class="text-sm text-body/70 mt-1">{tagline}</p>
   </div>
 
   {/* One-liner */}
   <p class="text-base leading-relaxed text-body mb-5">{oneLiner}</p>
 
-  {/* Key facts as pills */}
+  {/* Cost pill */}
   <div class="flex flex-wrap gap-2 mb-5">
     <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
       <span class="text-body">Cost:</span>
       <span class="font-semibold text-heading">{facts.cost}</span>
     </span>
-    {facts.sessions && (
-      <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
-        <span class="text-body">Sessions:</span>
-        <span class="font-semibold text-heading">{facts.sessions}</span>
-      </span>
-    )}
-    {facts.wait && (
-      <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
-        <span class="text-body">Wait:</span>
-        <span class="font-semibold text-heading">{facts.wait}</span>
-      </span>
-    )}
   </div>
-
-  {/* Best for */}
-  <p class="text-sm text-body/80 mb-6">{bestFor}</p>
 
   {/* Expandable steps */}
   <details class="pathway-steps-toggle mt-auto">
@@ -74,6 +44,27 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
       See the steps ({steps.length})
     </summary>
     <div class="mt-5">
+      {/* Detail summary — tagline, extra pills, best-for */}
+      <div class="mb-6 space-y-3">
+        <p class="text-sm text-body/70">{tagline}</p>
+        {(facts.sessions || facts.wait) && (
+          <div class="flex flex-wrap gap-2">
+            {facts.sessions && (
+              <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
+                <span class="text-body">Sessions:</span>
+                <span class="font-semibold text-heading">{facts.sessions}</span>
+              </span>
+            )}
+            {facts.wait && (
+              <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
+                <span class="text-body">Wait:</span>
+                <span class="font-semibold text-heading">{facts.wait}</span>
+              </span>
+            )}
+          </div>
+        )}
+        <p class="text-sm text-body/80">{bestFor}</p>
+      </div>
       <StepByStep steps={steps} />
     </div>
   </details>

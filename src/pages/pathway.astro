@@ -4,12 +4,11 @@ import PathwayCardVisual from '../components/PathwayCardVisual.astro';
 import MetroMap from '../components/MetroMap.astro';
 import { pathwayCards } from '../data/pathway-cards';
 
-const crisisCard = pathwayCards.find(c => c.isCrisis)!;
 const otherCards = pathwayCards.filter(c => !c.isCrisis);
 ---
 <BaseLayout
   title="How to Access Mental Health Support"
-  description="Six pathways to mental health support in Australia — crisis help, Medicare, private, low-cost, psychiatrist referral, and NDIS."
+  description="Five pathways to mental health support in Australia — Medicare, private, low-cost, psychiatrist referral, and NDIS."
   hideCrisisPill={true}
 >
   <!-- Hero -->
@@ -40,12 +39,10 @@ const otherCards = pathwayCards.filter(c => !c.isCrisis);
   <!-- Pathway cards -->
   <section class="bg-white">
     <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
-      <h2 class="text-xl font-bold text-heading mb-2">6 ways to access support</h2>
+      <h2 class="text-xl font-bold text-heading mb-2">5 ways to access support</h2>
       <p class="text-body mb-10">Each pathway has different costs, wait times, and steps. Compare them below.</p>
 
-      <PathwayCardVisual {...crisisCard} />
-
-      <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {otherCards.map((card) => (
           <PathwayCardVisual {...card} />
         ))}
