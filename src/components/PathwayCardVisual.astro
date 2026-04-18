@@ -38,11 +38,11 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
     </span>
     <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
       <span class="text-body">Wait:</span>
-      <span class="font-semibold text-heading">{facts.wait}</span>
+      <span class="font-semibold text-heading">{facts.wait ?? 'Varies'}</span>
     </span>
     <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
       <span class="text-body">Sessions:</span>
-      <span class="font-semibold text-heading">{facts.sessions}</span>
+      <span class="font-semibold text-heading">{facts.sessions ?? 'Varies'}</span>
     </span>
   </div>
 

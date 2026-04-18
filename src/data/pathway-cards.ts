@@ -15,8 +15,8 @@ export interface PathwayCard {
   isCrisis: boolean;
   facts: {
     cost: string;
-    sessions: string;
-    wait: string;
+    sessions?: string;
+    wait?: string;
   };
   steps: PathwayStep[];
 }
@@ -53,11 +53,11 @@ export const pathwayCards: PathwayCard[] = [
     bestFor: 'Best for: ongoing support at the lowest cost, or for complex conditions and medication.',
     accentColor: 'border-l-primary',
     badge: 'Most common starting point',
-    oneLiner: 'You want professional support and are happy to start with your GP \u2014 they can refer you on to the right kind of practitioner for your situation.',
+    oneLiner: 'You want professional support and are happy to start with your GP. They can refer you on to the right kind of practitioner for your situation.',
     isCrisis: false,
     facts: {
       cost: '$50\u2013$550+ per session after rebate (depending on practitioner)', // REVIEW cost range
-      sessions: '10 per year for MHTP-funded; no annual cap for psychiatrist', // REVIEW
+      sessions: '10 per year for MHCP-funded; no annual cap for psychiatrist', // REVIEW
       wait: 'Days for GP; weeks\u2013months for psychologist; 2\u20136 months for psychiatrist',
     },
     steps: [
@@ -68,31 +68,31 @@ export const pathwayCards: PathwayCard[] = [
       },
       {
         number: 2,
-        title: 'Your GP creates a Mental Health Treatment Plan',
+        title: 'Your GP creates a Mental Health Care Plan',
         detail: 'Your GP will ask about how you\u2019ve been feeling, may use a short questionnaire, and write up a plan. This is what unlocks Medicare rebates for psychology sessions.',
       },
       {
         number: 3,
         title: 'Your GP refers you to the right practitioner',
-        // TODO: confirm referral process for mental health nurses \u2014 is it via the MHTP, a separate pathway, or employer/PHN-arranged? Clarify before publishing.
-        detail: 'An MHTP-based referral covers psychologists, social workers, or occupational therapists (up to 6 sessions initially). For a psychiatrist, your GP writes a separate specialist referral letter \u2014 this is its own Medicare item, not part of the MHTP. Mental health nurses may be available through some GP practices or PHN-funded programs.',
+        // REVIEW: confirm referral process for mental health nurses. Is it via the MHCP, a separate pathway, or employer/PHN-arranged? Clarify before publishing.
+        detail: 'An MHCP-based referral covers psychologists, social workers, or occupational therapists (up to 6 sessions initially). For a psychiatrist, your GP writes a separate specialist referral letter. This is its own Medicare item, not part of the MHCP. Mental health nurses may be available through some GP practices or PHN-funded programs.',
       },
       {
         number: 4,
         title: 'Find and book your practitioner',
-        detail: 'Search directories like <a href="https://www.psychologytoday.com/au" target="_blank" rel="noopener noreferrer">Psychology Today Australia</a>, the <a href="https://www.psychology.org.au/Find-a-Psychologist" target="_blank" rel="noopener noreferrer">APS directory</a>, or ask your GP for a recommendation. Psychiatrist wait times of 2\u20136 months are common \u2014 ask about cancellation lists.',
+        detail: 'Search directories like <a href="https://www.psychologytoday.com/au" target="_blank" rel="noopener noreferrer">Psychology Today Australia</a>, the <a href="https://www.psychology.org.au/Find-a-Psychologist" target="_blank" rel="noopener noreferrer">APS directory</a>, or ask your GP for a recommendation. Psychiatrist wait times of 2\u20136 months are common, so ask about cancellation lists.',
       },
       {
         number: 5,
-        title: 'Attend sessions \u2014 and return to your GP for a review',
-        // TODO: confirm whether psychiatrist pathway has a parallel review checkpoint \u2014 "no annual cap" suggests a different cadence to the MHTP review cycle.
-        detail: 'For MHTP-funded sessions (psychologist / social worker / OT), return to your GP after 6 sessions for a review \u2014 this unlocks 4 more, up to 10 per calendar year. Psychiatrist care isn\u2019t capped the same way; follow-up is arranged with the psychiatrist directly.',
+        title: 'Attend sessions, and return to your GP for a review',
+        // REVIEW: confirm whether psychiatrist pathway has a parallel review checkpoint. "No annual cap" suggests a different cadence to the MHCP review cycle.
+        detail: 'For MHCP-funded sessions (psychologist, social worker, or OT), return to your GP after 6 sessions for a review. This unlocks 4 more, up to 10 per calendar year. Psychiatrist care isn\u2019t capped the same way; follow-up is arranged with the psychiatrist directly.',
       },
       {
         number: 6,
-        title: 'MHTP-funded sessions reset each January',
-        // TODO: verify psychiatrist referral validity period \u2014 psychiatrist referrals usually last 3\u201312 months and aren\u2019t tied to the MHTP cycle, but worth confirming.
-        detail: 'The 10-session cap resets every calendar year. You\u2019ll need a new Mental Health Treatment Plan from your GP to start the next year\u2019s MHTP-funded sessions. Psychiatrist referrals aren\u2019t subject to this cycle.',
+        title: 'MHCP-funded sessions reset each January',
+        // REVIEW: verify psychiatrist referral validity period. Psychiatrist referrals usually last 3\u201312 months and aren\u2019t tied to the MHCP cycle, but worth confirming.
+        detail: 'The 10-session cap resets every calendar year. You\u2019ll need a new Mental Health Care Plan from your GP to start the next year\u2019s MHCP-funded sessions. Psychiatrist referrals aren\u2019t subject to this cycle.',
       },
     ],
   },
@@ -113,7 +113,7 @@ export const pathwayCards: PathwayCard[] = [
       {
         number: 1,
         title: 'Decide what kind of practitioner you want',
-        detail: 'Psychologist, counsellor, or social worker \u2014 each has different training and approach. See our <a href="/practitioners/">practitioners page</a> to compare.',
+        detail: 'Psychologist, counsellor, or social worker. Each has different training and approach. See our <a href="/practitioners/">practitioners page</a> to compare.',
       },
       {
         number: 2,
@@ -127,14 +127,14 @@ export const pathwayCards: PathwayCard[] = [
       },
       {
         number: 4,
-        title: 'No paperwork, no referral \u2014 just show up',
-        detail: 'You don\u2019t need a GP referral, Mental Health Treatment Plan, or any other documentation. Just turn up to your appointment.',
+        title: 'No paperwork or referral. Just show up',
+        detail: 'You don\u2019t need a GP referral, Mental Health Care Plan, or any other documentation. Just turn up to your appointment.',
       },
     ],
   },
   {
     id: 'digital-free',
-    icon: 'clipboard', // TODO: pick a more fitting icon for digital programs
+    icon: 'clipboard', // REVIEW: pick a more fitting icon for digital programs
     title: 'Free digital programs',
     bestFor: 'Best for: TODO',
     accentColor: 'border-l-accent-purple',
@@ -149,13 +149,13 @@ export const pathwayCards: PathwayCard[] = [
       {
         number: 1,
         title: 'TODO: copy pending deep research',
-        detail: 'Layout placeholder \u2014 content to follow.',
+        detail: 'Layout placeholder. Content to follow.',
       },
     ],
   },
   {
     id: 'digital-paid',
-    icon: 'shield', // TODO: pick a more fitting icon for paid therapy apps
+    icon: 'shield', // REVIEW: pick a more fitting icon for paid therapy apps
     title: 'Paid therapy apps',
     bestFor: 'Best for: TODO',
     accentColor: 'border-l-accent-olive',
@@ -170,7 +170,7 @@ export const pathwayCards: PathwayCard[] = [
       {
         number: 1,
         title: 'TODO: copy pending deep research',
-        detail: 'Layout placeholder \u2014 content to follow.',
+        detail: 'Layout placeholder. Content to follow.',
       },
     ],
   },
