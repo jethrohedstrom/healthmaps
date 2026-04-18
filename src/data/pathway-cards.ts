@@ -75,7 +75,7 @@ export const pathwayCards: PathwayCard[] = [
         number: 3,
         title: 'Your GP refers you to the right practitioner',
         // REVIEW: confirm referral process for mental health nurses. Is it via the MHCP, a separate pathway, or employer/PHN-arranged? Clarify before publishing.
-        detail: 'An MHCP-based referral covers psychologists, social workers, or occupational therapists (up to 6 sessions initially). For a psychiatrist, your GP writes a separate specialist referral letter. This is its own Medicare item, not part of the MHCP. Mental health nurses may be available through some GP practices or PHN-funded programs.',
+        detail: 'An MHCP-based referral covers psychologists, social workers, or occupational therapists (up to 6 sessions initially). For a psychiatrist, your GP writes a separate specialist referral letter, which is its own Medicare item, not part of the MHCP. Mental health nurses may be available through some GP practices or PHN-funded programs.',
       },
       {
         number: 4,
@@ -84,7 +84,7 @@ export const pathwayCards: PathwayCard[] = [
       },
       {
         number: 5,
-        title: 'Attend sessions, and return to your GP for a review',
+        title: 'Attend sessions, then return to your GP for a review',
         // REVIEW: confirm whether psychiatrist pathway has a parallel review checkpoint. "No annual cap" suggests a different cadence to the MHCP review cycle.
         detail: 'For MHCP-funded sessions (psychologist, social worker, or OT), return to your GP after 6 sessions for a review. This unlocks 4 more, up to 10 per calendar year. Psychiatrist care isn\u2019t capped the same way; follow-up is arranged with the psychiatrist directly.',
       },
@@ -127,7 +127,7 @@ export const pathwayCards: PathwayCard[] = [
       },
       {
         number: 4,
-        title: 'No paperwork or referral. Just show up',
+        title: 'No paperwork, no referral, just show up',
         detail: 'You don\u2019t need a GP referral, Mental Health Care Plan, or any other documentation. Just turn up to your appointment.',
       },
     ],
