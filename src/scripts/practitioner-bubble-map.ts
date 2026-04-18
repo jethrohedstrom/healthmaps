@@ -37,7 +37,7 @@ const bmData = {
       { text: "Nationally registered", cls: "badge-registered" },
       { text: "Medicare (with GP referral)", cls: "badge-medicare" }
     ],
-    desc: "A psychiatrist is a medical doctor who specialises in mental health. They can diagnose conditions, prescribe and manage medication, and provide therapy. Most people see a psychiatrist for conditions like ADHD, bipolar disorder, or treatment-resistant depression — or when a clear diagnosis is needed, or when specialist medications are required that a GP can't prescribe. You'll need a GP referral to access a Medicare rebate.",
+    desc: "A psychiatrist is a medical doctor who specialises in mental health. They can diagnose conditions, prescribe and manage medication, and provide therapy. Most people see a psychiatrist for conditions like ADHD, bipolar disorder, or treatment-resistant depression, when a clear diagnosis is needed, or when specialist medications are required that a GP can't prescribe. You'll need a GP referral to access a Medicare rebate.",
     costRows: [
       { label: "First session", fee: "$400 – $800", rebate: "$262.10", outOfPocket: "$138 – $538" },
       { label: "Follow-up sessions", fee: "$200 – $400", rebate: "$87.05 – $134.00", outOfPocket: "$66 – $266" }
@@ -56,7 +56,7 @@ const bmData = {
       { text: "No Medicare rebate", cls: "badge-no-medicare" },
       { text: "Voluntary accreditation (ACA/PACFA)", cls: "badge-voluntary" }
     ],
-    // REVIEW: health-system claim — verify "no benefit to getting a GP referral for counsellors" is accurate
+    // REVIEW: health-system claim, verify "no benefit to getting a GP referral for counsellors" is accurate
     desc: "A trained listener who helps you work through everyday challenges: stress, grief, relationships, life transitions. You don't need a GP appointment or referral, and there's no benefit to getting one, since counsellors sit outside Medicare entirely. Just book directly. In Australia, long wait times for psychologists are common. Counsellors are generally easier to access. Note: \u201ccounsellor\u201d is not a protected title. <a href=\"https://www.arcapregister.com.au/\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color:var(--color-primary);font-weight:600;text-decoration:underline;text-underline-offset:2px;\">Verify your practitioner's credentials</a>.",
     details: [
       { label: "Cost", value: "$80–$200" },
@@ -103,7 +103,7 @@ const bmData = {
     badges: [
       { text: "Nationally registered", cls: "badge-registered" }
     ],
-    desc: "Focuses on clinical care rather than structured therapy — monitoring your medication, checking physical health side effects, coordinating between your GP and psychiatrist, and providing crisis support. They are a registered nurse with specialist postgraduate training in mental health. Most people see a mental health nurse for free through community health teams or public hospitals, rather than in private practice.",
+    desc: "Focuses on clinical care rather than structured therapy: monitoring your medication, checking physical health side effects, coordinating between your GP and psychiatrist, and providing crisis support. They are a registered nurse with specialist postgraduate training in mental health. Most people see a mental health nurse for free through community health teams or public hospitals, rather than in private practice.",
     details: [
       { label: "Referral", value: "Yes (GP referral with Chronic Disease Management plan)" },
       { label: "Can prescribe", value: "No" }
@@ -434,7 +434,7 @@ const bmData = {
           }).join('') +
           '</div>'
         : '') +
-      (key === 'gp' ? '<div class="bm-mhcp-detail" style="overflow:hidden;max-height:0;opacity:0;transition:max-height 0.3s ease-out,opacity 0.3s ease-out;"><div style="background:#f8fafc;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#64748b;line-height:1.6;border-left:3px solid rgba(68,238,112,0.4);"><p style="font-weight:600;color:#1e293b;margin:0 0 4px;">What is a Mental Health Care Plan?</p><p style="margin:0;">A document your GP creates during your appointment that unlocks Medicare rebates for up to 10 psychology sessions per calendar year. Your GP handles it all — no extra paperwork on your end.</p><a href="/pathway/#step-2" style="display:inline-flex;align-items:center;gap:4px;color:var(--color-primary);font-weight:600;margin-top:6px;font-size:11px;text-decoration:none;">Learn more about the process <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></a></div></div>' : '') +
+      (key === 'gp' ? '<div class="bm-mhcp-detail" style="overflow:hidden;max-height:0;opacity:0;transition:max-height 0.3s ease-out,opacity 0.3s ease-out;"><div style="background:#f8fafc;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#64748b;line-height:1.6;border-left:3px solid rgba(68,238,112,0.4);"><p style="font-weight:600;color:#1e293b;margin:0 0 4px;">What is a Mental Health Care Plan?</p><p style="margin:0;">A document your GP creates during your appointment that unlocks Medicare rebates for up to 10 psychology sessions per calendar year. Your GP handles it all, with no extra paperwork on your end.</p><a href="/pathway/#step-2" style="display:inline-flex;align-items:center;gap:4px;color:var(--color-primary);font-weight:600;margin-top:6px;font-size:11px;text-decoration:none;">Learn more about the process <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></a></div></div>' : '') +
       (key === 'mh-nurse' ? '<div style="margin-top:14px;margin-bottom:14px;"><p style="font-size:13px;color:var(--color-body);line-height:1.6;margin:0 0 8px;">Not usually seen in private practice. Most people access mental health nurses for free through community health teams or public hospitals.</p><button class="bm-nurse-toggle" style="background:none;border:none;padding:0;font-size:13px;color:var(--color-primary);font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;text-decoration:underline;text-underline-offset:2px;">Medicare pricing in private practice <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="transition:transform 0.2s ease;"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg></button><div class="bm-nurse-detail" style="overflow:hidden;max-height:0;opacity:0;transition:max-height 0.3s ease-out,opacity 0.3s ease-out;"><div class="bm-cost-breakdown" style="margin-top:10px;"><div class="bm-cost-row"><div class="bm-cost-row-label">Per session</div><div class="bm-cost-row-items"><div class="bm-cost-item"><div class="bm-cost-item-label">Fee</div><div class="bm-cost-item-value">$100 – $180</div></div><div class="bm-cost-item"><div class="bm-cost-item-label">Medicare rebate</div><div class="bm-cost-item-value">$61.80</div></div><div class="bm-cost-separator"></div><div class="bm-cost-item bm-cost-item-highlight"><div class="bm-cost-item-label">Out of pocket</div><div class="bm-cost-item-value">$38 – $118</div></div></div></div></div><p style="font-size:11px;color:var(--color-body);line-height:1.5;margin:8px 0 0;font-style:italic;">5 sessions per year under a Chronic Disease Management plan, shared with other allied health services like physio.</p></div></div>' : '') +
       '<div class="bm-info-details">' +
         p.details.map(function(d) {
@@ -657,7 +657,7 @@ const bmData = {
 
       if (dragDirection === 'down') {
         if (touchDeltaY > 80) {
-          // Dismiss — animate from drag position to off-screen
+          // Dismiss: animate from drag position to off-screen
           popover.style.transform = 'translateY(100%)';
           backdrop.style.opacity = '';
           backdrop.classList.remove('bm-popover-backdrop-visible');
@@ -672,7 +672,7 @@ const bmData = {
             document.documentElement.classList.remove('bm-body-locked');
           }, 550);
         } else {
-          // Snap back — animate from drag position to translateY(0)
+          // Snap back: animate from drag position to translateY(0)
           popover.style.transform = '';
           backdrop.style.opacity = '';
         }

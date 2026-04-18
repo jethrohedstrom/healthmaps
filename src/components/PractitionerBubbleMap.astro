@@ -18,7 +18,7 @@
             </filter>
           </defs>
 
-          {/* Core blobs with goo filter — overlapping organic cluster */}
+          {/* Core blobs with goo filter: overlapping organic cluster */}
           <g filter="url(#goo)">
             <ellipse class="bm-blob" cx="230" cy="175" rx="115" ry="108"
               fill="#4a7fb5" opacity="1.0"
@@ -32,13 +32,13 @@
               fill="#5aab7b" opacity="1.0"
               data-prof="counsellor" />
 
-            {/* GP centre — rendered last so it draws on top */}
+            {/* GP centre: rendered last so it draws on top */}
             <ellipse class="bm-blob" cx="350" cy="270" rx="78" ry="72"
               fill="#5c6670" opacity="1.0"
               data-prof="gp" />
           </g>
 
-          {/* Hidden blobs — NO goo filter to avoid ugly long-distance connections */}
+          {/* Hidden blobs: NO goo filter to avoid ugly long-distance connections */}
           <g class="bm-hidden-blobs bm-hidden" id="extra-blobs-bm" aria-hidden="true">
             <ellipse class="bm-blob" cx="490" cy="410" rx="80" ry="72"
               fill="#c27a4a" opacity="1.0"
@@ -57,7 +57,7 @@
               data-prof="peer" />
           </g>
 
-          {/* Core labels — positioned to match blob centres */}
+          {/* Core labels: positioned to match blob centres */}
           <text x="230" y="168" class="bm-blob-label" font-size="15" text-anchor="middle" data-prof="psychologist">Psychologist</text>
           <text x="230" y="186" class="bm-blob-sub" font-size="10" text-anchor="middle" data-prof="psychologist">structured therapy</text>
 
@@ -243,7 +243,7 @@
     }
   }
 
-  /* Popover — desktop: absolute near bubble; mobile: bottom sheet */
+  /* Popover: desktop uses absolute near bubble; mobile uses a bottom sheet */
   .bubble-map .bm-popover {
     position: absolute;
     width: 360px;
@@ -508,7 +508,7 @@
     position: relative;
   }
 
-  /* Drag handle — mobile only */
+  /* Drag handle: mobile only */
   .bubble-map .bm-drag-handle {
     display: none;
   }

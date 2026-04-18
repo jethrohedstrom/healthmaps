@@ -1,5 +1,5 @@
 ---
-// PathwayTree — branching minimal-tree variant (Variant D) for /pathway.
+// PathwayTree: branching minimal-tree variant (Variant D) for /pathway.
 // Mockup reference: pathways page mockup B.png
 // All CSS scoped via .pt- class prefix. Vanilla JS in src/scripts/pathway-tree.ts.
 
@@ -25,7 +25,7 @@ const subBranches: Branch[] = [
   { id: 'allied',       title: 'Allied health', subtitle: 'OT, social worker, nurse',  color: '#5DCAA5', bg: '#E8F7F0', href: '#' },
 ];
 
-// Geometry — SVG viewBox matches card-grid math so dot centres land exactly
+// Geometry: SVG viewBox matches card-grid math so dot centres land exactly
 // on card centres at the component's max-width.
 const GAP = 14;
 
@@ -63,7 +63,7 @@ const SUB_DOT_Y = 100;
     <div class="pt-origin-stem" aria-hidden="true"></div>
   </div>
 
-  <!-- Desktop branching SVG (decorative — text description above covers meaning) -->
+  <!-- Desktop branching SVG (decorative; text description above covers meaning) -->
   <svg
     class="pt-branches"
     viewBox={`0 0 ${TOP_VB_W} ${TOP_VB_H}`}
@@ -198,7 +198,7 @@ const SUB_DOT_Y = 100;
     background: #9CA3AF;
   }
 
-  /* Branching SVG — scales to container width */
+  /* Branching SVG: scales to container width */
   .pt-branches {
     display: block;
     width: 100%;
@@ -218,7 +218,7 @@ const SUB_DOT_Y = 100;
     grid-template-columns: repeat(3, 1fr);
   }
 
-  /* Card — works for both <a> and <button> */
+  /* Card: works for both <a> and <button> */
   .pt-card {
     position: relative;
     display: block;
@@ -241,7 +241,7 @@ const SUB_DOT_Y = 100;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   }
 
-  /* Keep the global accessible focus ring (2px primary outline) — do NOT suppress it. */
+  /* Keep the global accessible focus ring (2px primary outline); do NOT suppress it. */
 
   .pt-card-title,
   .pt-card-sub {
@@ -252,7 +252,7 @@ const SUB_DOT_Y = 100;
     font-family: var(--font-display);
     font-size: 18px;
     font-weight: 700;
-    /* Darkened branch colour — passes WCAG AA for large text on the pastel bg */
+    /* Darkened branch colour: passes WCAG AA for large text on the pastel bg */
     color: color-mix(in srgb, var(--pt-color) 70%, #000);
     line-height: 1.2;
     margin-bottom: 4px;
@@ -261,7 +261,7 @@ const SUB_DOT_Y = 100;
   .pt-card-sub {
     font-size: 13px;
     font-weight: 500;
-    /* Darker still — passes WCAG AA for normal text on the pastel bg */
+    /* Darker still: passes WCAG AA for normal text on the pastel bg */
     color: color-mix(in srgb, var(--pt-color) 45%, #000);
     line-height: 1.35;
   }
@@ -298,7 +298,7 @@ const SUB_DOT_Y = 100;
     letter-spacing: 0.06em;
   }
 
-  /* "+" toggle indicator on the GP card — absolutely positioned so it
+  /* "+" toggle indicator on the GP card: absolutely positioned so it
      doesn't affect grid row heights. Rotates to "x" when expanded. */
   .pt-card-toggle::after {
     content: '+';

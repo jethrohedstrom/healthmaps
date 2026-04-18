@@ -1,4 +1,4 @@
-// Pathway Tree — vanilla JS toggle for the GP sub-tier expand/collapse.
+// Pathway Tree: vanilla JS toggle for the GP sub-tier expand/collapse.
 // Imported from src/components/PathwayTree.astro
 
 (function () {

@@ -68,8 +68,8 @@ const practitionerTypes = costsData.practitionerTypes;
         name="gpBilling"
         class="w-full border border-border rounded-lg px-4 py-2.5 text-body bg-white hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary"
       >
-        <option value="yes">Yes — no out-of-pocket cost for GP visits</option>
-        <option value="no">No — I pay a gap fee (~$40)</option>
+        <option value="yes">Yes, no out-of-pocket cost for GP visits</option>
+        <option value="no">No, I pay a gap fee (~$40)</option>
       </select>
     </div>
 
@@ -109,7 +109,7 @@ const practitionerTypes = costsData.practitionerTypes;
 
     <!-- REVIEW -->
     <p class="mt-4 text-xs text-body">
-      These are estimates only. Medicare rebate amounts may have changed — check
+      These are estimates only. Medicare rebate amounts may have changed; check
       <a href="https://www.servicesaustralia.gov.au/medicare" class="underline hover:text-primary transition-colors" target="_blank" rel="noopener">Services Australia</a>
       for current rates. Last updated: {costsData.lastUpdated}.
     </p>
@@ -178,7 +178,7 @@ const practitionerTypes = costsData.practitionerTypes;
     const breakdown = document.getElementById('result-breakdown');
     breakdown.innerHTML = `
       <p><strong>Per session:</strong> $${sessionFee.toFixed(2)} fee − $${rebatePerSession.toFixed(2)} rebate = <strong>$${Math.max(0, gapPerSession).toFixed(2)} gap</strong></p>
-      <p><strong>GP visits:</strong> ${gpVisits} (MHCP${numSessions > 6 ? ' + review' : ''})${gpBulkBilled ? ' — bulk-billed' : ` × $${gpCostPerVisit}`}</p>
+      <p><strong>GP visits:</strong> ${gpVisits} (MHCP${numSessions > 6 ? ' + review' : ''})${gpBulkBilled ? ' (bulk-billed)' : ` × $${gpCostPerVisit}`}</p>
     `;
 
     resultsDiv.classList.remove('hidden');

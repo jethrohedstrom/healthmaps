@@ -9,16 +9,16 @@ summary: "Your GP creates a plan that gives you access to Medicare-rebated psych
 <!-- REVIEW -->
 A Mental Health Care Plan (MHCP) is a document your GP creates during your appointment. It outlines your mental health goals and the treatment approach. Most importantly, it unlocks **Medicare rebates for up to 10 psychology sessions per calendar year**.
 
-You don't need to do anything special — just have the conversation with your GP, and they'll create the plan as part of that appointment.
+You don't need to do anything special: just have the conversation with your GP, and they'll create the plan as part of that appointment.
 
 ## What happens during the appointment
 
 <!-- REVIEW -->
 Your GP will:
 
-1. **Assess your mental health** — talking through your symptoms, history, and how you're coping.
-2. **Create the MHCP** — this includes your goals (e.g., "reduce anxiety", "improve sleep") and a recommended treatment approach.
-3. **Write a referral** — you'll get a referral letter to take to a psychologist (or other mental health professional).
+1. **Assess your mental health**, talking through your symptoms, history, and how you're coping.
+2. **Create the MHCP**, which includes your goals (e.g., "reduce anxiety", "improve sleep") and a recommended treatment approach.
+3. **Write a referral**. You'll get a referral letter to take to a psychologist (or other mental health professional).
 
 The whole process usually happens in one longer appointment.
 

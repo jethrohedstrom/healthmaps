@@ -1,18 +1,18 @@
 ---
 title: "How to Choose the Right Psychologist"
-summary: "What to look for, what to ask, and how to know if they're a good fit — plus what to do if they're not."
+summary: "What to look for, what to ask, and how to know if they're a good fit, plus what to do if they're not."
 category: "Finding Help"
 publishedDate: "2025-01-20"
 ---
 
 <!-- REVIEW -->
 
-Finding a psychologist is a bit like finding a good mechanic — qualifications matter, but so does the relationship.
+Finding a psychologist is a bit like finding a good mechanic: qualifications matter, but so does the relationship.
 
 ## What to check before booking
 
 1. **Are they registered?** Look them up on the [AHPRA register](https://www.ahpra.gov.au/Registration/Registers-of-Practitioners.aspx). All psychologists must be registered to practise in Australia.
-2. **Do they accept Medicare rebates?** Not all do — ask when you call.
+2. **Do they accept Medicare rebates?** Not all do, so ask when you call.
 3. **What's their session fee?** And what's the gap after the rebate?
 4. **Do they have experience with your issue?** A psychologist who specialises in anxiety may be a better fit than a generalist if anxiety is your main concern.
 5. **Do they offer telehealth?** Phone or video sessions can be more accessible.
@@ -37,6 +37,6 @@ After 2–3 sessions, ask yourself:
 
 You can switch at any time. Just:
 
-1. Tell your current psychologist (or just stop booking — you don't owe an explanation).
+1. Tell your current psychologist (or just stop booking; you don't owe an explanation).
 2. Ask your GP for an updated referral to the new psychologist.
-3. Your remaining Medicare sessions carry over — you don't lose them.
+3. Your remaining Medicare sessions carry over; you don't lose them.

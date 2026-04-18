@@ -5,7 +5,7 @@ rebate: "None (no Medicare rebate)"
 referralRequired: false
 waitTime: "1–4 weeks"
 bestFor: "Relationships, grief, life transitions"
-registrationStatus: "Unregulated title — look for ACA/PACFA"
+registrationStatus: "Unregulated title; look for ACA/PACFA"
 order: 3
 ---
 
@@ -30,7 +30,7 @@ Counsellors provide **talk therapy** for a range of personal, emotional, and rel
 
 - Generally shorter training requirements
 - No Medicare rebate available
-- No referral needed — you can book directly
+- No referral needed; you can book directly
 - Typically lower session fees
 - Often shorter wait times
 - May not be suitable for complex clinical conditions

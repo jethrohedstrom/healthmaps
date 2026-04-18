@@ -15,7 +15,7 @@ Some psychologists charge only the Medicare rebate amount, meaning your out-of-p
 
 ## 2. Use your EAP first
 
-If your employer offers an Employee Assistance Program, use those free sessions while you're waiting for a psychology appointment. It's not "wasting" them — it's getting support sooner.
+If your employer offers an Employee Assistance Program, use those free sessions while you're waiting for a psychology appointment. It's not "wasting" them; it's getting support sooner.
 
 ## 3. Check your private health insurance
 
@@ -23,7 +23,7 @@ Some extras policies cover part of the psychology gap. Check your policy or call
 
 ## 4. Ask about sliding scale fees
 
-Some psychologists offer reduced rates based on financial hardship. It's worth asking — the worst they can say is no.
+Some psychologists offer reduced rates based on financial hardship. It's worth asking; the worst they can say is no.
 
 ## 5. Consider a general psychologist vs. clinical
 
@@ -35,6 +35,6 @@ Telehealth sessions sometimes have lower fees, and they save you transport costs
 
 ## 7. Look into low-cost options
 
-- **headspace** (ages 12–25) — free or very low-cost sessions
-- **Community health centres** — often offer subsidised psychology
-- **University psychology clinics** — supervised trainee psychologists at reduced rates (typically $20–$50 per session)
+- **headspace** (ages 12–25): free or very low-cost sessions
+- **Community health centres:** often offer subsidised psychology
+- **University psychology clinics:** supervised trainee psychologists at reduced rates (typically $20–$50 per session)

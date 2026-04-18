@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* General Sans — body font (variable, locally bundled from Fontshare) */
+/* General Sans: body font (variable, locally bundled from Fontshare) */
 @font-face {
   font-family: 'General Sans';
   font-style: normal;
@@ -10,7 +10,7 @@
   src: url('../fonts/GeneralSans-Variable.woff2') format('woff2');
 }
 
-/* Switzer — heading font (variable, locally bundled from Fontshare) */
+/* Switzer: heading font (variable, locally bundled from Fontshare) */
 @font-face {
   font-family: 'Switzer';
   font-style: normal;
@@ -21,7 +21,7 @@
 
 /* Design tokens */
 @theme {
-  /* Colour palette — forest green, no warm accent */
+  /* Colour palette: forest green, no warm accent */
   --color-primary: #1B6B4A;
   --color-primary-light: #E8F5EE;
   --color-primary-mid: #3A8F68;
@@ -39,7 +39,7 @@
   --color-accent-olive: #65A30D;
   --color-accent-red: #B91C1C;
 
-  /* Light accent backgrounds — icon containers */
+  /* Light accent backgrounds: icon containers */
   --color-accent-amber-light: #FFFBEB;
   --color-accent-blue-light: #EFF6FF;
   --color-accent-teal-light: #F0FDFA;
@@ -79,7 +79,7 @@ h1, h2, h3, h4, h5, h6 {
   outline-offset: 2px;
 }
 
-/* Section divider — thin centered gray line between sections */
+/* Section divider: thin centered gray line between sections */
 .section-divider {
   border: none;
   border-top: 1px solid var(--color-border);
@@ -87,7 +87,7 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0 auto;
 }
 
-/* Card hover — subtle shadow only (no lift) */
+/* Card hover: subtle shadow only (no lift) */
 .card-hover {
   transition: all 0.2s ease;
 }
@@ -96,7 +96,7 @@ h1, h2, h3, h4, h5, h6 {
   border-color: rgba(27, 107, 74, 0.3);
 }
 
-/* Details/summary — clean chevron rotation, CSS-only */
+/* Details/summary: clean chevron rotation, CSS-only */
 details > summary {
   cursor: pointer;
   list-style: none;
@@ -128,7 +128,7 @@ details[open] > summary::after {
   transform: translateY(-40%) rotate(-135deg);
 }
 
-/* Accordion styles — for practitioners and pathway */
+/* Accordion styles: for practitioners and pathway */
 .accordion-item {
   border-bottom: 1px solid var(--color-border);
 }
@@ -149,7 +149,7 @@ details[open] > summary::after {
   margin-bottom: 1rem;
 }
 
-/* Practitioner summary cards — no chevron, no extra padding */
+/* Practitioner summary cards: no chevron, no extra padding */
 .practitioner-card > summary::after {
   display: none;
 }
@@ -171,12 +171,12 @@ details[open] > summary::after {
   top: 0;
 }
 
-/* Pathway card — summary styling */
+/* Pathway card: summary styling */
 .pathway-card > summary {
   padding-right: 2.5rem;
 }
 
-/* Journey Strip — timeline connector line (vertically centred on 44px button) */
+/* Journey Strip: timeline connector line (vertically centred on 44px button) */
 .journey-timeline::before {
   content: '';
   position: absolute;
@@ -188,7 +188,7 @@ details[open] > summary::after {
   z-index: 0;
 }
 
-/* Journey Strip — active dot fills with accent colour */
+/* Journey Strip: active dot fills with accent colour */
 .journey-dot--active > span {
   background-color: var(--dot-accent);
   border-color: var(--dot-accent);
@@ -200,7 +200,7 @@ details[open] > summary::after {
   transform: scale(1.35);
 }
 
-/* Journey Strip — mobile horizontal scroll */
+/* Journey Strip: mobile horizontal scroll */
 @media (max-width: 767px) {
   .journey-timeline {
     overflow-x: auto;
@@ -222,7 +222,7 @@ details[open] > summary::after {
   }
 }
 
-/* Pathway steps toggle — green chevron, no right-padding override */
+/* Pathway steps toggle: green chevron, no right-padding override */
 .pathway-steps-toggle > summary {
   padding-right: 1.5rem;
 }
@@ -231,7 +231,7 @@ details[open] > summary::after {
 }
 
 
-/* Metro map — SVG text typography */
+/* Metro map: SVG text typography */
 .metro-map-svg text {
   font-family: var(--font-sans);
   fill: var(--color-body);
@@ -248,7 +248,7 @@ details[open] > summary::after {
 .metro-map-svg a:hover text {
   fill: var(--color-primary-mid);
 }
-/* Inline tel: links inside SVG text — match the mobile HTML link style (primary colour + underline) */
+/* Inline tel: links inside SVG text: match the mobile HTML link style (primary colour + underline) */
 .metro-map-svg text a {
   fill: var(--color-primary);
   text-decoration: underline;
@@ -263,12 +263,12 @@ details[open] > summary::after {
   border-radius: 2px;
 }
 
-/* Metro map — interactivity (route selection + dim/active states) */
+/* Metro map: interactivity (route selection + dim/active states) */
 .metro-map-root {
   position: relative;
 }
 
-/* Reset button — floats over the top-right of the map so toggling its visibility doesn't shift layout */
+/* Reset button: floats over the top-right of the map so toggling its visibility doesn't shift layout */
 .metro-reset-wrap {
   position: absolute;
   top: 0;
@@ -305,7 +305,7 @@ details[open] > summary::after {
   pointer-events: none;
 }
 
-/* Route groups — tap targets + dim/active states */
+/* Route groups: tap targets + dim/active states */
 .route-group {
   cursor: pointer;
   outline: none;
@@ -317,7 +317,7 @@ details[open] > summary::after {
   border-radius: 6px;
 }
 
-/* Invisible hit-targets for SVG routes — trunk segments get generous width */
+/* Invisible hit-targets for SVG routes: trunk segments get generous width */
 .route-hit {
   stroke: transparent;
   stroke-width: 36;
@@ -385,7 +385,7 @@ details[open] > summary::after {
   .metro-map-root.has-selection .route-group.is-active .route-detail.inline-block { display: inline-block; }
 }
 
-/* Subtle hover lift on desktop (SVG routes only — mobile blocks already have padding) */
+/* Subtle hover lift on desktop (SVG routes only: mobile blocks already have padding) */
 @media (hover: hover) and (pointer: fine) {
   .metro-map-svg .route-group:hover {
     opacity: 1;
@@ -395,7 +395,7 @@ details[open] > summary::after {
   }
 }
 
-/* Prose/markdown content links — hover transition */
+/* Prose/markdown content links: hover transition */
 .prose a {
   color: var(--color-primary);
   text-decoration: underline;

@@ -4,7 +4,7 @@ cost: "Often bulk-billed (free)"
 rebate: "Bulk-billed or standard GP rebate"
 referralRequired: false
 waitTime: "Days"
-bestFor: "First step — assessment, referrals, Mental Health Care Plans"
+bestFor: "First step: assessment, referrals, Mental Health Care Plans"
 registrationStatus: "AHPRA registered"
 order: 0
 ---
@@ -12,7 +12,7 @@ order: 0
 <!-- REVIEW -->
 ## What they do
 
-Your regular doctor — where most mental health journeys start. GPs can assess your mental health, prescribe basic medication, and create a **Mental Health Care Plan (MHCP)**. That plan unlocks Medicare-funded sessions with a psychologist, social worker, or OT.
+A GP is where most mental health journeys start. GPs can assess your mental health, prescribe basic medication, and create a **Mental Health Care Plan (MHCP)**. That plan unlocks Medicare-funded sessions with a psychologist, social worker, or OT.
 
 ## When to see a GP
 
@@ -24,4 +24,4 @@ Your regular doctor — where most mental health journeys start. GPs can assess 
 
 ## Medicare access
 
-GP visits are often **bulk-billed** (free) or have a small gap fee. No referral needed — you can book directly.
+GP visits are often **bulk-billed** (free) or have a small gap fee. No referral needed: you can book directly.

@@ -11,7 +11,7 @@ order: 7
 <!-- REVIEW -->
 ## What they do
 
-Mental health nurses are registered nurses with additional training in mental health care. They provide **care coordination, ongoing support, and medication monitoring** for people living with mental health conditions — particularly more complex or chronic conditions. They often work alongside psychiatrists and GPs as part of a broader care team.
+Mental health nurses are registered nurses with additional training in mental health care. They provide **care coordination, ongoing support, and medication monitoring** for people living with mental health conditions, particularly more complex or chronic conditions. They often work alongside psychiatrists and GPs as part of a broader care team.
 
 ## When to see a mental health nurse
 

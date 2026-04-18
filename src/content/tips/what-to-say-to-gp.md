@@ -1,6 +1,6 @@
 ---
 title: "What to Say to Your GP About Mental Health"
-summary: "Exact phrases you can use when booking and during your appointment — so you don't have to figure it out on the spot."
+summary: "Exact phrases you can use when booking and during your appointment, so you don't have to figure it out on the spot."
 category: "Getting Started"
 publishedDate: "2025-01-10"
 ---
@@ -37,6 +37,6 @@ Some people worry their GP won't take them seriously. A few things that help:
 
 Not every GP is equally comfortable with mental health. If your GP dismisses your concerns or you don't feel heard:
 
-- **You can see a different GP.** You don't owe your GP loyalty — your mental health matters.
+- **You can see a different GP.** You don't owe your GP loyalty, and your mental health matters.
 - **Look for a GP who lists mental health as an interest** on the clinic's website.
 - **headspace** centres (for ages 12–25) have GPs who specialise in youth mental health.

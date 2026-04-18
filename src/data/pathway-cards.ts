@@ -8,7 +8,6 @@ export interface PathwayCard {
   id: string;
   icon: string;
   title: string;
-  tagline: string;
   bestFor: string;
   accentColor: string;
   badge?: string;
@@ -16,13 +15,13 @@ export interface PathwayCard {
   isCrisis: boolean;
   facts: {
     cost: string;
-    sessions?: string;
-    wait?: string;
+    sessions: string;
+    wait: string;
   };
   steps: PathwayStep[];
 }
 
-/* Shared style maps — used by PathwayCardVisual and JourneyStrip */
+/* Shared style maps: used by PathwayCardVisual and JourneyStrip */
 export const iconStyleMap: Record<string, { bg: string; stroke: string }> = {
   phone:       { bg: 'bg-accent-red-light',      stroke: 'text-accent-red' },
   stethoscope: { bg: 'bg-primary-light',         stroke: 'text-primary' },
@@ -42,25 +41,24 @@ export const accentVarMap: Record<string, string> = {
   'border-l-accent-olive':  'var(--color-accent-olive)',
 };
 
-// REVIEW — All costs, session limits, phone numbers, eligibility criteria,
+// REVIEW: All costs, session limits, phone numbers, eligibility criteria,
 // and process descriptions below are AI-drafted and need verification against
 // current Medicare, NDIS, and service provider information.
 
 export const pathwayCards: PathwayCard[] = [
   {
-    id: 'medicare-gp',
+    id: 'through-gp',
     icon: 'stethoscope',
-    title: 'See a psychologist through your GP',
-    tagline: '$50\u2013$220/session after Medicare rebate', // REVIEW cost range
-    bestFor: 'Best for: ongoing support at the lowest cost',
+    title: 'Through your GP (Medicare-subsidised)',
+    bestFor: 'Best for: ongoing support at the lowest cost, or for complex conditions and medication.',
     accentColor: 'border-l-primary',
     badge: 'Most common starting point',
-    oneLiner: 'You want professional support and are happy to start with your GP.',
+    oneLiner: 'You want professional support and are happy to start with your GP \u2014 they can refer you on to the right kind of practitioner for your situation.',
     isCrisis: false,
     facts: {
-      cost: '$50\u2013$220 per session after rebate', // REVIEW cost range
-      sessions: '10 per calendar year', // REVIEW session cap
-      wait: 'Days for GP; weeks\u2013months for psych',
+      cost: '$50\u2013$550+ per session after rebate (depending on practitioner)', // REVIEW cost range
+      sessions: '10 per year for MHTP-funded; no annual cap for psychiatrist', // REVIEW
+      wait: 'Days for GP; weeks\u2013months for psychologist; 2\u20136 months for psychiatrist',
     },
     steps: [
       {
@@ -75,34 +73,36 @@ export const pathwayCards: PathwayCard[] = [
       },
       {
         number: 3,
-        title: 'Get a referral for up to 6 sessions',
-        detail: 'Your GP refers you to a psychologist, social worker, or occupational therapist. The referral is valid for up to 6 sessions.',
+        title: 'Your GP refers you to the right practitioner',
+        // TODO: confirm referral process for mental health nurses \u2014 is it via the MHTP, a separate pathway, or employer/PHN-arranged? Clarify before publishing.
+        detail: 'An MHTP-based referral covers psychologists, social workers, or occupational therapists (up to 6 sessions initially). For a psychiatrist, your GP writes a separate specialist referral letter \u2014 this is its own Medicare item, not part of the MHTP. Mental health nurses may be available through some GP practices or PHN-funded programs.',
       },
       {
         number: 4,
         title: 'Find and book your practitioner',
-        detail: 'Search directories like <a href="https://www.psychologytoday.com/au" target="_blank" rel="noopener noreferrer">Psychology Today Australia</a>, the <a href="https://www.psychology.org.au/Find-a-Psychologist" target="_blank" rel="noopener noreferrer">APS directory</a>, or ask your GP for a recommendation. Check their fees, availability, and whether they offer telehealth.',
+        detail: 'Search directories like <a href="https://www.psychologytoday.com/au" target="_blank" rel="noopener noreferrer">Psychology Today Australia</a>, the <a href="https://www.psychology.org.au/Find-a-Psychologist" target="_blank" rel="noopener noreferrer">APS directory</a>, or ask your GP for a recommendation. Psychiatrist wait times of 2\u20136 months are common \u2014 ask about cancellation lists.',
       },
       {
         number: 5,
-        title: 'After 6 sessions, return to your GP for a review',
-        detail: 'Your GP reviews your progress and can refer you for 4 more sessions (10 total per calendar year).',
+        title: 'Attend sessions \u2014 and return to your GP for a review',
+        // TODO: confirm whether psychiatrist pathway has a parallel review checkpoint \u2014 "no annual cap" suggests a different cadence to the MHTP review cycle.
+        detail: 'For MHTP-funded sessions (psychologist / social worker / OT), return to your GP after 6 sessions for a review \u2014 this unlocks 4 more, up to 10 per calendar year. Psychiatrist care isn\u2019t capped the same way; follow-up is arranged with the psychiatrist directly.',
       },
       {
         number: 6,
-        title: 'Your sessions reset every January',
-        detail: 'The 10-session limit resets each calendar year. You\u2019ll need a new Mental Health Treatment Plan from your GP to start the next year\u2019s sessions.',
+        title: 'MHTP-funded sessions reset each January',
+        // TODO: verify psychiatrist referral validity period \u2014 psychiatrist referrals usually last 3\u201312 months and aren\u2019t tied to the MHTP cycle, but worth confirming.
+        detail: 'The 10-session cap resets every calendar year. You\u2019ll need a new Mental Health Treatment Plan from your GP to start the next year\u2019s MHTP-funded sessions. Psychiatrist referrals aren\u2019t subject to this cycle.',
       },
     ],
   },
   {
     id: 'private',
     icon: 'bolt',
-    title: 'Go direct \u2014 no GP, no waiting for a plan',
-    tagline: '$120\u2013$330+/session, no rebate', // REVIEW cost range
-    bestFor: 'Best for: getting started quickly without a GP visit',
+    title: 'Pay privately (skip the referral, no rebate)',
+    bestFor: 'Best for: getting started quickly without a GP visit.',
     accentColor: 'border-l-accent-blue',
-    oneLiner: 'You want to start quickly, you know what you\u2019re looking for, or you\u2019d rather not go through a GP.',
+    oneLiner: 'You want to start quickly and are happy to pay out-of-pocket.',
     isCrisis: false,
     facts: {
       cost: '$120\u2013$330+ per session (no rebate)', // REVIEW cost range
@@ -133,16 +133,58 @@ export const pathwayCards: PathwayCard[] = [
     ],
   },
   {
+    id: 'digital-free',
+    icon: 'clipboard', // TODO: pick a more fitting icon for digital programs
+    title: 'Free digital programs',
+    bestFor: 'Best for: TODO',
+    accentColor: 'border-l-accent-purple',
+    oneLiner: 'TODO: copy pending deep research',
+    isCrisis: false,
+    facts: {
+      cost: 'Free',
+      sessions: 'TBC',
+      wait: 'TBC',
+    },
+    steps: [
+      {
+        number: 1,
+        title: 'TODO: copy pending deep research',
+        detail: 'Layout placeholder \u2014 content to follow.',
+      },
+    ],
+  },
+  {
+    id: 'digital-paid',
+    icon: 'shield', // TODO: pick a more fitting icon for paid therapy apps
+    title: 'Paid therapy apps',
+    bestFor: 'Best for: TODO',
+    accentColor: 'border-l-accent-olive',
+    oneLiner: 'TODO: copy pending deep research',
+    isCrisis: false,
+    facts: {
+      cost: 'TBC',
+      sessions: 'TBC',
+      wait: 'TBC',
+    },
+    steps: [
+      {
+        number: 1,
+        title: 'TODO: copy pending deep research',
+        detail: 'Layout placeholder \u2014 content to follow.',
+      },
+    ],
+  },
+  {
     id: 'low-cost',
     icon: 'heart',
     title: 'Free or low-cost support',
-    tagline: 'Free or very low cost',
-    bestFor: 'Best for: people on a tight budget or without Medicare',
+    bestFor: 'Best for: people on a tight budget or without Medicare.',
     accentColor: 'border-l-accent-amber',
     oneLiner: 'Cost is a barrier, you\u2019re on a low income, or you want to access services without a Medicare gap fee.',
     isCrisis: false,
     facts: {
       cost: 'Free or very low cost',
+      sessions: 'Varies',
       wait: 'Varies by service',
     },
     steps: [
@@ -170,89 +212,6 @@ export const pathwayCards: PathwayCard[] = [
         number: 5,
         title: 'Ask your employer about an EAP',
         detail: 'Employee Assistance Programs typically offer 3\u20136 free, confidential sessions. Check with your HR team or workplace intranet.', // REVIEW session count
-      },
-    ],
-  },
-  {
-    id: 'psychiatrist',
-    icon: 'clipboard',
-    title: 'See a psychiatrist for specialist assessment or medication',
-    tagline: '$150\u2013$550+ out-of-pocket, 2\u20136 month wait', // REVIEW cost range
-    bestFor: 'Best for: complex conditions, diagnosis, or medication',
-    accentColor: 'border-l-accent-purple',
-    oneLiner: 'You think you may need medication, your condition is complex, or previous treatment hasn\u2019t worked.',
-    isCrisis: false,
-    facts: {
-      cost: '$150\u2013$550+ out-of-pocket (after rebate)', // REVIEW cost range
-      sessions: 'No annual cap', // REVIEW session rules
-      wait: '2\u20136 months typically',
-    },
-    steps: [
-      {
-        number: 1,
-        title: 'See your GP and ask for a psychiatrist referral',
-        detail: 'Unlike psychologists, you need a GP referral to see a psychiatrist and receive a Medicare rebate.',
-      },
-      {
-        number: 2,
-        title: 'Your GP writes a specialist referral letter',
-        detail: 'This letter includes your history, current symptoms, and what your GP is hoping the psychiatrist can help with.',
-      },
-      {
-        number: 3,
-        title: 'Call the psychiatrist\u2019s clinic to book',
-        detail: 'Ask about fees, wait times, and whether they have a cancellation list. Wait times of 2\u20136 months are common, especially for child psychiatry or regional areas.',
-      },
-      {
-        number: 4,
-        title: 'Attend your initial assessment',
-        detail: 'Usually 45\u201360 minutes. The psychiatrist will review your history, do an assessment, and discuss options.',
-      },
-      {
-        number: 5,
-        title: 'The psychiatrist recommends a treatment path',
-        detail: 'They may recommend medication, ongoing appointments, or refer you back to a psychologist for therapy alongside their care.',
-      },
-    ],
-  },
-  {
-    id: 'ndis',
-    icon: 'shield',
-    title: 'Mental health support through the NDIS',
-    tagline: '$0 out-of-pocket, NDIS-funded',
-    bestFor: 'Best for: people with an NDIS plan that includes mental health',
-    accentColor: 'border-l-accent-olive',
-    oneLiner: 'You have a severe, ongoing mental health condition (psychosocial disability) that significantly affects your daily life.',
-    isCrisis: false,
-    facts: {
-      cost: '$0 out-of-pocket (NDIS-funded)',
-      wait: 'Application takes months',
-    },
-    steps: [
-      {
-        number: 1,
-        title: 'Check if you may be eligible',
-        detail: 'The NDIS is for permanent and significant disability, not short-term conditions. Your psychosocial disability must substantially affect your ability to do everyday activities.', // REVIEW eligibility criteria
-      },
-      {
-        number: 2,
-        title: 'Gather evidence from your treating team',
-        detail: 'You\u2019ll need reports from your GP, psychiatrist, psychologist, or other treating professionals that document how your condition affects your daily life.',
-      },
-      {
-        number: 3,
-        title: 'Submit an access request to the NDIA',
-        detail: 'You can apply online, by phone (1800 800 110), or in person at an NDIA office. A support person or advocate can help you with the application.',
-      },
-      {
-        number: 4,
-        title: 'If approved, build your plan with a planner',
-        detail: 'Work with an NDIA planner or support coordinator to build a plan that covers the supports you need.',
-      },
-      {
-        number: 5,
-        title: 'Choose your providers',
-        detail: 'Psychologists, occupational therapists, peer workers, recovery coaches, and more. You choose who provides your supports.',
       },
     ],
   },

@@ -23,11 +23,11 @@ Psychiatrists are **medical doctors** who specialise in mental health. They can 
 
 ## Medicare access
 
-Requires a **GP referral** — the same kind of referral you'd get for any other specialist. You don't need a Mental Health Care Plan (MHCP) for a psychiatrist. Medicare rebates are generally higher than for psychologists, but so are the fees. **No cap on number of sessions** under Medicare.
+Requires a **GP referral**, the same kind of referral you'd get for any other specialist. You don't need a Mental Health Care Plan (MHCP) for a psychiatrist. Medicare rebates are generally higher than for psychologists, but so are the fees. **No cap on number of sessions** under Medicare.
 
 ## Key differences from psychologists
 
 - Can prescribe and manage medication
 - Medical doctor with specialist training
 - Longer wait times and higher costs
-- No MHCP needed — just a standard GP referral
+- No MHCP needed; just a standard GP referral

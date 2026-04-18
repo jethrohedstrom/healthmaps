@@ -1,5 +1,5 @@
 ---
-// MetroMap.astro — metro-style pathway diagram showing 5 routes to mental health support
+// MetroMap.astro: metro-style pathway diagram showing 5 routes to mental health support
 ---
 
 <!-- Screen reader description -->
@@ -11,10 +11,10 @@
   <p>Route 2: Ask the same GP for a separate specialist referral to a Psychiatrist
   (2–6 month wait). This referral is written on a different piece of paper from the
   Mental Health Care Plan.</p>
-  <p>Route 3 — Go private: Find a practitioner and start sessions directly. Options
+  <p>Route 3, Go private: Find a practitioner and start sessions directly. Options
   include Psychologist, Counsellor, Psychotherapist, or Social worker. Cost is
   $120–$330+ per session with no referral needed and no Medicare rebate.</p>
-  <p>Route 4 — Low-cost services: Find a service, attend an assessment or intake, and
+  <p>Route 4, Low-cost services: Find a service, attend an assessment or intake, and
   start sessions. Options include Medicare Mental Health Centre, community health
   services, headspace, and university clinics. Free or low-cost (sliding scale), with
   no referral needed for most services.</p>
@@ -24,7 +24,7 @@
 
 <div class="metro-map-root">
 
-  <!-- Reset control — shown only when a route is selected -->
+  <!-- Reset control: shown only when a route is selected -->
   <div class="metro-reset-wrap">
     <button type="button" class="metro-reset" aria-label="Clear selection and show all routes" hidden>
       <span aria-hidden="true">×</span> Show all routes
@@ -52,14 +52,14 @@
     <circle cx="55" cy="300" r="22" fill="var(--color-primary-light)" stroke="var(--color-primary)" stroke-width="3" />
     <text x="55" y="305" text-anchor="middle" class="metro-heading" font-size="15">You</text>
 
-    <!-- Instructional helper text near "You" — fades out once a route is selected -->
+    <!-- Instructional helper text near "You" (fades out once a route is selected) -->
     <text x="18" y="350" text-anchor="start" class="metro-instruction" font-size="11">
       Select a route to explore
     </text>
 
-    <!-- ── GP Route (green, y=100) — branches to Psychologist & Social worker/OT at terminus ── -->
+    <!-- ── GP Route (green, y=100): branches to Psychologist & Social worker/OT at terminus ── -->
     <g class="route-group" data-route="gp" tabindex="0" aria-keyshortcuts="Enter Space"
-       aria-label="GP and Medicare route — most common pathway">
+       aria-label="GP and Medicare route, most common pathway">
 
       <!-- Hit-targets -->
       <path d="M 75,300 C 140,300 160,100 200,100 L 720,100" class="route-hit" />
@@ -112,9 +112,9 @@
             font-family="var(--font-sans)">$50–$160/session</text>
     </g>
 
-    <!-- ── Psychiatrist Route (purple, y=200) — separate specialist referral, branches from GP station ── -->
+    <!-- ── Psychiatrist Route (purple, y=200): separate specialist referral, branches from GP station ── -->
     <g class="route-group" data-route="psychiatrist" tabindex="0" aria-keyshortcuts="Enter Space"
-       aria-label="Psychiatrist route — separate specialist referral from your GP">
+       aria-label="Psychiatrist route, separate specialist referral from your GP">
 
       <path d="M 200,107 C 240,200 280,200 320,200 L 760,200" class="route-hit" />
 
@@ -137,9 +137,9 @@
             font-family="var(--font-sans)">2–6 month wait</text>
     </g>
 
-    <!-- ── Direct Route (blue, y=300) — "You" rail runs straight right ── -->
+    <!-- ── Direct Route (blue, y=300): "You" rail runs straight right ── -->
     <g class="route-group" data-route="direct" tabindex="0" aria-keyshortcuts="Enter Space"
-       aria-label="Direct private route — no referral needed, full price">
+       aria-label="Direct private route, no referral needed, full price">
 
       <path d="M 77,300 L 760,300" class="route-hit" />
 
@@ -188,7 +188,7 @@
 
     <!-- ── Low-cost / Community Route (amber, y=400) ── -->
     <g class="route-group" data-route="low-cost" tabindex="0" aria-keyshortcuts="Enter Space"
-       aria-label="Low-cost and community route — free or sliding-scale, no referral needed for most">
+       aria-label="Low-cost and community route, free or sliding-scale, no referral needed for most">
 
       <path d="M 75,300 C 140,300 160,400 200,400 L 760,400" class="route-hit" />
 
@@ -237,7 +237,7 @@
 
     <!-- ── Crisis Route (red, y=500) ── -->
     <g class="route-group" data-route="crisis" tabindex="0" aria-keyshortcuts="Enter Space"
-       aria-label="Crisis route — free, 24/7 immediate help">
+       aria-label="Crisis route, free, 24/7 immediate help">
 
       <path d="M 75,300 C 160,300 170,500 200,500 L 760,500" class="route-hit" />
 
@@ -259,7 +259,7 @@
       <circle cx="760" cy="500" r="7" fill="var(--color-accent-red)" />
       <circle cx="760" cy="500" r="3" fill="white" />
 
-      <!-- Crisis numbers (always visible — must stay tappable regardless of selection) -->
+      <!-- Crisis numbers (always visible: must stay tappable regardless of selection) -->
       <text x="775" y="492" font-size="11" fill="var(--color-body)"
             font-family="var(--font-sans)">
         <tspan x="775" dy="0"><tspan font-weight="700" fill="var(--color-heading)">Emergency</tspan> <a href="tel:000">000</a></tspan>
@@ -284,7 +284,7 @@
 
   <!-- ── GP Route ── -->
   <div class="mb-10 route-group" data-route="gp" tabindex="0" aria-keyshortcuts="Enter Space"
-       aria-label="GP and Medicare route — most common pathway">
+       aria-label="GP and Medicare route, most common pathway">
     <div class="mb-4">
       <span class="inline-block text-xs font-semibold bg-primary text-white px-3 py-1 rounded-full">Most common route</span>
     </div>
@@ -333,12 +333,12 @@
 
   <!-- ── Specialist referral (Psychiatrist) route ── -->
   <div class="mb-10 route-group" data-route="psychiatrist" tabindex="0" aria-keyshortcuts="Enter Space"
-       aria-label="Psychiatrist route — separate specialist referral from your GP">
+       aria-label="Psychiatrist route, separate specialist referral from your GP">
     <div class="mb-4 route-detail">
       <span class="inline-block text-xs font-semibold px-3 py-1 rounded-full"
             style="background: var(--color-accent-purple-light); color: var(--color-accent-purple)">Also from your GP</span>
     </div>
-    <p class="route-detail text-sm text-body mb-4">A separate referral — written on a different piece of paper from the Mental Health Care Plan.</p>
+    <p class="route-detail text-sm text-body mb-4">A separate referral, written on a different piece of paper from the Mental Health Care Plan.</p>
 
     <div class="flex gap-4">
       <div class="flex flex-col items-center">
@@ -347,14 +347,14 @@
       </div>
       <div>
         <span class="font-semibold text-[15px]" style="color: var(--color-accent-purple)">Psychiatrist</span>
-        <span class="route-detail block text-sm text-body mt-1">Specialist referral — 2–6 month wait</span>
+        <span class="route-detail block text-sm text-body mt-1">Specialist referral, 2–6 month wait</span>
       </div>
     </div>
   </div>
 
   <!-- ── Direct Route ── -->
   <div class="mb-10 route-group" data-route="direct" tabindex="0" aria-keyshortcuts="Enter Space"
-       aria-label="Direct private route — no referral needed, full price">
+       aria-label="Direct private route, no referral needed, full price">
     <div class="mb-4 route-detail">
       <span class="inline-block text-xs font-semibold border border-accent-blue text-accent-blue px-3 py-1 rounded-full">Less common route</span>
     </div>
@@ -385,7 +385,7 @@
       <p>Psychologist, counsellor, psychotherapist, social worker</p>
       <p class="mt-3 font-medium text-heading">$120–$330+/session</p>
       <p>No referral needed</p>
-      <p>No Medicare rebate — full price</p>
+      <p>No Medicare rebate, full price</p>
     </div>
 
     <!-- Always-visible destination label (gives the collapsed route an identity + tap target in default state) -->
@@ -397,7 +397,7 @@
 
   <!-- ── Low-cost / Community Route ── -->
   <div class="mb-10 route-group" data-route="low-cost" tabindex="0" aria-keyshortcuts="Enter Space"
-       aria-label="Low-cost and community route — free or sliding-scale, no referral needed for most">
+       aria-label="Low-cost and community route, free or sliding-scale, no referral needed for most">
     <div class="mb-4 route-detail">
       <span class="inline-block text-xs font-semibold bg-accent-amber-light text-accent-amber px-3 py-1 rounded-full">No referral needed</span>
     </div>
@@ -450,7 +450,7 @@
 
   <!-- ── Crisis Route ── -->
   <div class="route-group" data-route="crisis" tabindex="0" aria-keyshortcuts="Enter Space"
-       aria-label="Crisis route — free, 24/7 immediate help">
+       aria-label="Crisis route, free, 24/7 immediate help">
     <div class="mb-4 route-detail">
       <span class="inline-block text-xs font-semibold bg-accent-red-light text-accent-red px-3 py-1 rounded-full">Immediate, free</span>
     </div>

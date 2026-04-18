@@ -11,11 +11,11 @@ Book a standard or long appointment with your GP (general practitioner). When bo
 > "I'd like to discuss my mental health."
 
 <!-- REVIEW -->
-A longer appointment (usually 20–40 minutes) gives your GP enough time to do a proper assessment. You can request a long appointment when booking — most clinics will accommodate this.
+A longer appointment (usually 20–40 minutes) gives your GP enough time to do a proper assessment. You can request a long appointment when booking, and most clinics will accommodate this.
 
 ## What to expect
 
-Your GP will ask about how you've been feeling, how long symptoms have lasted, and how they affect your daily life. This is a conversation, not a test — there are no wrong answers.
+Your GP will ask about how you've been feeling, how long symptoms have lasted, and how they affect your daily life. This is a conversation, not a test. There are no wrong answers.
 
 <!-- REVIEW -->
 They may use a short questionnaire (like the K10 or PHQ-9) to get a picture of your symptoms. This is completely normal and helps them decide the right support for you.

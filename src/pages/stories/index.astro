@@ -6,16 +6,16 @@ const stories = await getCollection('stories');
 ---
 <BaseLayout
   title="Stories"
-  description="Real-life experiences of Australians navigating the mental health system — from booking a GP to finding the right psychologist."
+  description="Real-life experiences of Australians navigating the mental health system, from booking a GP to finding the right psychologist."
 >
   <!-- Hero -->
   <section class="bg-white">
     <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
       <h1 class="text-3xl md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em]">Stories</h1>
       <p class="text-lg text-body">
-        Experiences from people who've navigated the mental health system. Every journey is different — these might help you see what to expect.
+        Experiences from people who've navigated the mental health system. Every journey is different, but these might help you see what to expect.
       </p>
-      <!-- REVIEW — Note: these are fictional composite stories for illustrative purposes -->
+      <!-- REVIEW: these are fictional composite stories for illustrative purposes -->
     </div>
   </section>
 
@@ -33,7 +33,7 @@ const stories = await getCollection('stories');
                   "{story.data.title}"
                 </h2>
                 <p class="text-sm text-body mt-1">
-                  {story.data.name}{story.data.age ? `, ${story.data.age}` : ''}{story.data.location ? ` — ${story.data.location}` : ''}
+                  {story.data.name}{story.data.age ? `, ${story.data.age}` : ''}{story.data.location ? `, ${story.data.location}` : ''}
                 </p>
                 <p class="text-body mt-3">{story.data.summary}</p>
               </article>

@@ -66,7 +66,7 @@ const stories = await getCollection('stories');
           <h2 class="text-2xl font-bold text-heading group-hover:text-primary transition-colors mb-2">
             What happens next?
           </h2>
-          <p class="text-base text-body">Follow the steps from GP visit to first session — including what a Mental Health Care Plan is and how referrals work.</p>
+          <p class="text-base text-body">Follow the steps from GP visit to first session, including what a Mental Health Care Plan is and how referrals work.</p>
         </a>
       </div>
     </div>
@@ -92,7 +92,7 @@ const stories = await getCollection('stories');
                     {story.data.title}
                   </h3>
                   <p class="text-sm text-body mb-3">
-                    {story.data.name}{story.data.age ? `, ${story.data.age}` : ''}{story.data.location ? ` — ${story.data.location}` : ''}
+                    {story.data.name}{story.data.age ? `, ${story.data.age}` : ''}{story.data.location ? `, ${story.data.location}` : ''}
                   </p>
                   <p class="text-body">{story.data.summary}</p>
                 </article>

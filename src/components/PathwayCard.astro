@@ -4,11 +4,11 @@ import type { PathwayCard } from '../data/pathway-cards';
 
 interface Props extends PathwayCard {}
 
-const { id, title, tagline, bestFor, accentColor, badge, oneLiner, isCrisis, facts, steps } = Astro.props;
+const { id, title, bestFor, accentColor, badge, oneLiner, isCrisis, facts, steps } = Astro.props;
 
 const bgClass = isCrisis ? 'bg-primary-light' : 'bg-white';
 
-/* Tailwind safelist — accent border classes used via dynamic interpolation:
+/* Tailwind safelist: accent border classes used via dynamic interpolation:
    border-l-accent-amber border-l-accent-red border-l-primary border-l-accent-blue
    border-l-accent-teal border-l-accent-purple border-l-accent-olive */
 ---
@@ -20,7 +20,6 @@ const bgClass = isCrisis ? 'bg-primary-light' : 'bg-white';
     )}
     <span class="text-lg font-bold text-heading leading-snug block">{title}</span>
     <span class="text-xs text-body/70 mt-1 block">{bestFor}</span>
-    <span class="text-sm text-body mt-1 block">{tagline}</span>
   </summary>
 
   <div class="px-5 md:px-6 pb-6">

@@ -6,7 +6,7 @@ import type { PathwayCard } from '../data/pathway-cards';
 
 interface Props extends PathwayCard {}
 
-const { id, icon, title, tagline, bestFor, accentColor, badge, oneLiner, isCrisis, facts, steps } = Astro.props;
+const { id, icon, title, bestFor, accentColor, badge, oneLiner, isCrisis, facts, steps } = Astro.props;
 
 const bgClass = isCrisis ? 'bg-primary-light' : 'bg-white';
 const accentTopBorder = accentColor.replace('border-l-', 'border-t-');
@@ -30,11 +30,19 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
   {/* One-liner */}
   <p class="text-base leading-relaxed text-body mb-5">{oneLiner}</p>
 
-  {/* Cost pill */}
+  {/* Metadata strip: Cost / Wait / Sessions (always 3 pills) */}
   <div class="flex flex-wrap gap-2 mb-5">
     <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
       <span class="text-body">Cost:</span>
       <span class="font-semibold text-heading">{facts.cost}</span>
+    </span>
+    <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
+      <span class="text-body">Wait:</span>
+      <span class="font-semibold text-heading">{facts.wait}</span>
+    </span>
+    <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
+      <span class="text-body">Sessions:</span>
+      <span class="font-semibold text-heading">{facts.sessions}</span>
     </span>
   </div>
 
@@ -44,27 +52,7 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
       See the steps ({steps.length})
     </summary>
     <div class="mt-5">
-      {/* Detail summary — tagline, extra pills, best-for */}
-      <div class="mb-6 space-y-3">
-        <p class="text-sm text-body/70">{tagline}</p>
-        {(facts.sessions || facts.wait) && (
-          <div class="flex flex-wrap gap-2">
-            {facts.sessions && (
-              <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
-                <span class="text-body">Sessions:</span>
-                <span class="font-semibold text-heading">{facts.sessions}</span>
-              </span>
-            )}
-            {facts.wait && (
-              <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
-                <span class="text-body">Wait:</span>
-                <span class="font-semibold text-heading">{facts.wait}</span>
-              </span>
-            )}
-          </div>
-        )}
-        <p class="text-sm text-body/80">{bestFor}</p>
-      </div>
+      <p class="text-sm text-body/80 mb-6">{bestFor}</p>
       <StepByStep steps={steps} />
     </div>
   </details>

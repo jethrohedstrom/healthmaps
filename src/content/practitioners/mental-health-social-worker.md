@@ -11,7 +11,7 @@ order: 5
 <!-- REVIEW -->
 ## What they do
 
-Mental health social workers are trained to understand how **social, emotional, and environmental factors** affect mental health. They help with issues like relationship breakdowns, housing stress, financial difficulties, family conflict, and workplace problems — particularly where these are contributing to anxiety, depression, or other mental health conditions.
+Mental health social workers are trained to understand how **social, emotional, and environmental factors** affect mental health. They help with issues like relationship breakdowns, housing stress, financial difficulties, family conflict, and workplace problems, particularly where these are contributing to anxiety, depression, or other mental health conditions.
 
 They use evidence-based therapies including CBT, narrative therapy, and strengths-based approaches. They must be **accredited by the Australian Association of Social Workers (AASW)** to provide Medicare-rebated sessions.
 

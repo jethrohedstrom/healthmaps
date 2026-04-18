@@ -11,7 +11,7 @@ order: 6
 <!-- REVIEW -->
 ## What they do
 
-Mental health occupational therapists (OTs) focus on **functional recovery** — helping you get back to doing the things that matter in your daily life. They work on practical skills like managing routines, returning to work or study, building independence, and developing coping strategies for everyday situations.
+Mental health occupational therapists (OTs) focus on **functional recovery**: helping you get back to doing the things that matter in your daily life. They work on practical skills like managing routines, returning to work or study, building independence, and developing coping strategies for everyday situations.
 
 They must hold a **mental health accreditation** to provide Medicare-rebated sessions under the Better Access scheme.
 

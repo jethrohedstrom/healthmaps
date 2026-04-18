@@ -21,7 +21,7 @@ const { Content } = await render(story);
     <a href="/stories/" class="text-sm text-body hover:text-primary transition-colors mb-6 inline-block">&larr; All stories</a>
     <h1 class="text-3xl md:text-[2.25rem] font-bold text-heading mb-2 tracking-[-0.01em]">"{story.data.title}"</h1>
     <p class="text-body mb-8">
-      {story.data.name}{story.data.age ? `, ${story.data.age}` : ''}{story.data.location ? ` — ${story.data.location}` : ''}
+      {story.data.name}{story.data.age ? `, ${story.data.age}` : ''}{story.data.location ? `, ${story.data.location}` : ''}
     </p>
     <div class="prose max-w-none text-body">
       <Content />
