@@ -31,9 +31,13 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
   <p class="text-base leading-relaxed text-body mb-5">{oneLiner}</p>
 
   {/* Progressive disclosure: details, metadata, and steps hidden by default */}
-  <details class="pathway-details-toggle mt-auto">
-    <summary class="inline-flex items-center gap-2 text-sm font-semibold text-primary cursor-pointer select-none hover:text-primary-mid transition-colors">
-      <span class="pathway-toggle-label"></span>
+  <details class="pathway-details-toggle">
+    <summary
+      class="inline-flex items-center text-sm font-semibold text-primary cursor-pointer select-none hover:text-primary-mid transition-colors"
+      aria-label={`Show details for ${title}`}
+    >
+      <span class="pathway-label-show">Show details</span>
+      <span class="pathway-label-hide">Hide details</span>
     </summary>
     <div class="mt-5">
       <div class="flex flex-wrap gap-2 mb-5">

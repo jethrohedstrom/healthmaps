@@ -229,11 +229,12 @@ details[open] > summary::after {
 .pathway-details-toggle > summary::after {
   border-color: var(--color-primary);
 }
-.pathway-details-toggle .pathway-toggle-label::before {
-  content: "Show details";
+.pathway-details-toggle .pathway-label-hide,
+.pathway-details-toggle[open] .pathway-label-show {
+  display: none;
 }
-.pathway-details-toggle[open] .pathway-toggle-label::before {
-  content: "Hide details";
+.pathway-details-toggle[open] .pathway-label-hide {
+  display: inline;
 }
 
 
