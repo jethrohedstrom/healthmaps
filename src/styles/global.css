@@ -222,12 +222,18 @@ details[open] > summary::after {
   }
 }
 
-/* Pathway steps toggle: green chevron, no right-padding override */
-.pathway-steps-toggle > summary {
+/* Pathway card progressive-disclosure toggle: green chevron + Show/Hide label swap */
+.pathway-details-toggle > summary {
   padding-right: 1.5rem;
 }
-.pathway-steps-toggle > summary::after {
+.pathway-details-toggle > summary::after {
   border-color: var(--color-primary);
+}
+.pathway-details-toggle .pathway-toggle-label::before {
+  content: "Show details";
+}
+.pathway-details-toggle[open] .pathway-toggle-label::before {
+  content: "Hide details";
 }
 
 
