@@ -27,10 +27,7 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
     <h3 class="text-xl md:text-2xl font-bold text-heading leading-snug">{title}</h3>
   </div>
 
-  {/* One-liner */}
-  <p class="text-base leading-relaxed text-body mb-5">{oneLiner}</p>
-
-  {/* Progressive disclosure: details, metadata, and steps hidden by default */}
+  {/* Progressive disclosure: one-liner, metadata, and steps hidden by default */}
   <details class="pathway-details-toggle">
     <summary class="inline-flex items-center text-sm font-semibold text-primary cursor-pointer select-none hover:text-primary-mid transition-colors">
       <span class="sr-only">{title}: </span>
@@ -38,6 +35,7 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
       <span class="pathway-label-hide">Hide details</span>
     </summary>
     <div class="mt-5">
+      <p class="text-base leading-relaxed text-body mb-5">{oneLiner}</p>
       <div class="flex flex-wrap gap-2 mb-5">
         <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
           <span class="text-body">Cost:</span>
