@@ -237,6 +237,20 @@ details[open] > summary::after {
   display: inline;
 }
 
+/* Make whole pathway card clickable to toggle expansion */
+.pathway-card-clickable {
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+}
+@media (hover: hover) {
+  .pathway-card-clickable:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+}
+.pathway-card-clickable:active {
+  transform: scale(0.997);
+}
+
 
 /* Metro map: SVG text typography */
 .metro-map-svg text {

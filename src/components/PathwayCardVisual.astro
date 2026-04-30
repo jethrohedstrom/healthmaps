@@ -13,7 +13,7 @@ const accentTopBorder = accentColor.replace('border-l-', 'border-t-');
 const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-primary' };
 ---
 
-<div id={id} class={`rounded-xl shadow-sm border-t-4 ${accentTopBorder} ${bgClass} p-6 md:p-8 flex flex-col`}>
+<div id={id} data-pathway-card class={`pathway-card-clickable rounded-xl shadow-sm border-t-4 ${accentTopBorder} ${bgClass} p-6 md:p-8 flex flex-col`}>
   {/* Icon */}
   <div class={`w-12 h-12 ${iconStyle.bg} rounded-xl flex items-center justify-center mb-5`}>
     <PathwayIcon icon={icon} class={`w-6 h-6 ${iconStyle.stroke}`} />
@@ -55,3 +55,16 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
     </div>
   </details>
 </div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-pathway-card]').forEach((card) => {
+    card.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement | null;
+      if (!target) return;
+      if (target.closest('a, button, summary, [role="button"], input, label, select, textarea')) return;
+      const details = card.querySelector<HTMLDetailsElement>('details.pathway-details-toggle');
+      if (!details) return;
+      details.open = !details.open;
+    });
+  });
+</script>
