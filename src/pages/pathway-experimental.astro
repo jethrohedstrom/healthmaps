@@ -3,27 +3,27 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import MetroMap from '../components/MetroMap.astro';
 ---
 <BaseLayout
-  title="Experimental — Visual Overview"
-  description="Experimental visual overview of the pathway page. Not linked from nav."
-  hideCrisisPill={true}
+  title="Pathway visual overview (experimental)"
+  description="An experimental visual overview of mental health support pathways. Not linked from navigation."
+  noindex={true}
 >
-  <!-- Experimental note -->
+  <!-- Hero -->
   <section class="bg-white">
-    <div class="max-w-[960px] mx-auto px-4 pt-10 pb-2">
-      <div class="rounded-xl border border-border bg-bg-light px-4 py-3 text-sm text-body">
+    <div class="max-w-[720px] mx-auto px-4 py-12 md:py-16">
+      <div class="rounded-xl border border-border bg-bg-light px-4 py-3 text-sm text-body mb-8">
         <span class="font-semibold text-heading">Experimental</span> — not linked from nav.
       </div>
+      <h1 class="text-3xl md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em]">Pathway visual overview</h1>
+      <p class="text-lg leading-relaxed text-body">
+        Mental health support pathways shown as a route map.
+      </p>
     </div>
   </section>
 
-  <!-- Metro Map (visual overview) -->
+  <!-- Metro Map -->
   <section class="bg-bg-light">
     <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
-      <p class="uppercase tracking-widest text-sm text-primary mb-3 font-semibold">Visual overview</p>
-      <h2 class="text-xl font-bold text-heading mb-2">Prefer a visual overview?</h2>
-      <p class="text-body mb-10">The same pathways shown as a route map.</p>
       <MetroMap />
     </div>
   </section>
-
 </BaseLayout>
