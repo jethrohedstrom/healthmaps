@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PathwayCardVisual from '../components/PathwayCardVisual.astro';
-import MetroMap from '../components/MetroMap.astro';
 import { pathwayCards } from '../data/pathway-cards';
 
 ---
@@ -77,16 +76,6 @@ import { pathwayCards } from '../data/pathway-cards';
           <a href="/ndis" class="text-primary font-semibold underline underline-offset-2">Learn about the NDIS pathway</a>.
         </p>
       </aside>
-    </div>
-  </section>
-
-  <!-- Metro Map (secondary visual view) -->
-  <section class="bg-bg-light">
-    <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
-      <p class="uppercase tracking-widest text-sm text-primary mb-3 font-semibold">Visual overview</p>
-      <h2 class="text-xl font-bold text-heading mb-2">Prefer a visual overview?</h2>
-      <p class="text-body mb-10">The same pathways shown as a route map.</p>
-      <MetroMap />
     </div>
   </section>
 
