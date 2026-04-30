@@ -227,7 +227,7 @@ details[open] > summary::after {
   padding-right: 1.5rem;
 }
 .pathway-details-toggle > summary::after {
-  border-color: var(--color-primary);
+  border-color: currentColor;
 }
 .pathway-details-toggle .pathway-label-hide,
 .pathway-details-toggle[open] .pathway-label-show {
