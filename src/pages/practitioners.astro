@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
+import MHCPInline from '../components/MHCPInline.astro';
 ---
 <BaseLayout
   title="Who should I see?"
@@ -40,18 +41,8 @@ import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
           <div>
             <h3 class="text-lg font-semibold text-heading mb-2">Not sure where to start? See your GP.</h3>
             <p class="text-body text-sm leading-relaxed">
-              Your GP can assess your situation, create a <button type="button" id="mhcp-toggle" class="text-primary font-semibold underline underline-offset-2 cursor-pointer hover:text-primary/80 transition-colors">Mental Health Care Plan</button>, and refer you to the right professional. This is the most common first step, and it unlocks Medicare rebates.
+              Your GP can assess your situation, create a <MHCPInline />, and refer you to the right professional. This is the most common first step, and it unlocks Medicare rebates.
             </p>
-            <div id="mhcp-explanation" class="overflow-hidden max-h-0 opacity-0 transition-all duration-300 ease-out">
-              <div class="bg-white rounded-lg p-4 mt-3 text-sm text-body leading-relaxed border-l-[3px] border-primary/40">
-                <p class="font-semibold text-heading mb-1">What is a Mental Health Care Plan?</p>
-                <p>A document your GP creates during your appointment that unlocks Medicare rebates for up to 10 psychology sessions per calendar year. Your GP handles it all, with no extra paperwork on your end.</p>
-                <a href="/pathway/#step-2" class="inline-flex items-center gap-1 text-primary font-semibold mt-2 hover:text-primary/80 transition-colors text-xs">
-                  Learn more about the process
-                  <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
-                </a>
-              </div>
-            </div>
             <div class="gp-callout-buttons flex flex-col sm:flex-row gap-3 mt-4">
               <a
                 href="/pathway/"
@@ -204,19 +195,5 @@ import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
       }
     }
 
-    const mhcpToggle = document.getElementById('mhcp-toggle');
-    const mhcpExplanation = document.getElementById('mhcp-explanation');
-    if (mhcpToggle && mhcpExplanation) {
-      mhcpToggle.addEventListener('click', () => {
-        const isOpen = mhcpExplanation.classList.contains('max-h-96');
-        if (isOpen) {
-          mhcpExplanation.classList.remove('max-h-96', 'opacity-100');
-          mhcpExplanation.classList.add('max-h-0', 'opacity-0');
-        } else {
-          mhcpExplanation.classList.remove('max-h-0', 'opacity-0');
-          mhcpExplanation.classList.add('max-h-96', 'opacity-100');
-        }
-      });
-    }
   </script>
 </BaseLayout>

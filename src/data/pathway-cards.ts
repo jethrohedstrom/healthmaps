@@ -57,7 +57,7 @@ export const pathwayCards: PathwayCard[] = [
     isCrisis: false,
     facts: {
       cost: '$50\u2013$550+ per session after rebate (depending on practitioner)', // REVIEW cost range
-      sessions: '10 per year for MHCP-funded; no annual cap for psychiatrist', // REVIEW
+      sessions: '10 per year for Mental Health Care Plan (MHCP)-funded; no annual cap for psychiatrist', // REVIEW
       wait: 'Days for GP; weeks\u2013months for psychologist; 2\u20136 months for psychiatrist',
     },
     steps: [
