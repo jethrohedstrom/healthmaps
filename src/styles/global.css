@@ -229,11 +229,11 @@ details[open] > summary::after {
 .pathway-details-toggle > summary::after {
   border-color: currentColor;
 }
-.pathway-details-toggle .pathway-label-hide,
-.pathway-details-toggle[open] .pathway-label-show {
+.pathway-details-toggle > summary .pathway-label-hide,
+.pathway-details-toggle[open] > summary .pathway-label-show {
   display: none;
 }
-.pathway-details-toggle[open] .pathway-label-hide {
+.pathway-details-toggle[open] > summary .pathway-label-hide {
   display: inline;
 }
 
@@ -249,6 +249,82 @@ details[open] > summary::after {
 }
 .pathway-card-clickable:active {
   transform: scale(0.997);
+}
+
+/* GP progressive-disclosure card: smooth height animation for nested <details>.
+   Modern Chrome/Safari/Firefox honour interpolate-size + ::details-content;
+   older browsers fall back to instant open with no regression. */
+.pathway-details-toggle,
+.pathway-step-item {
+  interpolate-size: allow-keywords;
+}
+.pathway-details-toggle::details-content,
+.pathway-step-item::details-content {
+  block-size: 0;
+  overflow: clip;
+  transition: block-size 0.25s ease, content-visibility 0.25s allow-discrete;
+}
+.pathway-details-toggle[open]::details-content,
+.pathway-step-item[open]::details-content {
+  block-size: auto;
+}
+
+/* Step-by-step mini-accordions (Level 2) */
+.pathway-step-accordions {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid var(--color-border);
+}
+.pathway-step-accordions > li {
+  border-bottom: 1px solid var(--color-border);
+}
+.pathway-step-item > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 2rem 0.875rem 0;
+  cursor: pointer;
+  user-select: none;
+}
+.pathway-step-number {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  border: 2px solid var(--color-border);
+  background: white;
+  color: var(--color-body);
+  font-weight: 700;
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+.pathway-step-item[open] .pathway-step-number {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+.pathway-step-title {
+  font-weight: 600;
+  color: var(--color-heading);
+  line-height: 1.4;
+}
+.pathway-step-detail {
+  padding: 0 0 1.25rem 2.875rem;
+  color: var(--color-body);
+  line-height: 1.625;
+}
+.pathway-step-detail a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 500;
+}
+.pathway-step-detail a:hover {
+  color: var(--color-primary-mid);
 }
 
 

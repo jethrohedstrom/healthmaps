@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PathwayCardVisual from '../components/PathwayCardVisual.astro';
+import PathwayCardGPProgressive from '../components/PathwayCardGPProgressive.astro';
 import { pathwayCards } from '../data/pathway-cards';
 
 ---
@@ -63,7 +64,9 @@ import { pathwayCards } from '../data/pathway-cards';
       <div class="bg-primary-light rounded-2xl p-6 md:p-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
           {pathwayCards.map((card) => (
-            <PathwayCardVisual {...card} />
+            card.id === 'through-gp'
+              ? <PathwayCardGPProgressive {...card} />
+              : <PathwayCardVisual {...card} />
           ))}
         </div>
       </div>
