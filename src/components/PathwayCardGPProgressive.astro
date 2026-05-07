@@ -43,6 +43,22 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
           <span class="text-body">Wait:</span>
           <span class="font-semibold text-heading">{facts.wait ?? 'Varies'}</span>
         </span>
+        <div class="w-full bg-bg-light rounded-lg px-3 py-3 flex flex-col gap-2.5">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+            <span class="text-[13px] text-body sm:w-32 sm:shrink-0">See GP</span>
+            <div class="flex-none w-full h-2 sm:flex-1 bg-white rounded">
+              <div class="h-full bg-primary rounded" style="width:12%"></div>
+            </div>
+            <span class="text-[13px] font-semibold text-primary sm:shrink-0">A few days</span>
+          </div>
+          <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+            <span class="text-[13px] text-body sm:w-32 sm:shrink-0">See practitioner</span>
+            <div class="flex-none w-full h-2 sm:flex-1 bg-white rounded">
+              <div class="h-full bg-primary rounded" style="width:65%"></div>
+            </div>
+            <span class="text-[13px] font-semibold text-primary sm:shrink-0">A few weeks</span>
+          </div>
+        </div>
         <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
           <span class="text-body">Sessions:</span>
           <span class="font-semibold text-heading">{facts.sessions ?? 'Varies'}</span>

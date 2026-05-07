@@ -56,9 +56,9 @@ export const pathwayCards: PathwayCard[] = [
     oneLiner: 'You want professional support and are happy to start with your GP. They can refer you on to the right kind of practitioner for your situation.',
     isCrisis: false,
     facts: {
-      cost: '$50\u2013$550+ per session after rebate (depending on practitioner)', // REVIEW cost range
+      cost: 'Most people pay $50\u2013$200 per session', // REVIEW cost range
       sessions: '10 per year for Mental Health Care Plan (MHCP)-funded; no annual cap for psychiatrist', // REVIEW
-      wait: 'Days for GP; weeks\u2013months for psychologist; 2\u20136 months for psychiatrist',
+      wait: 'A few days for a GP; a few weeks for a psychologist or other practitioner',
     },
     steps: [
       {
