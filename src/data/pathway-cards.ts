@@ -11,7 +11,7 @@ export interface PathwayCard {
   bestFor: string;
   accentColor: string;
   badge?: string;
-  oneLiner: string;
+  oneLiner?: string;
   isCrisis: boolean;
   facts: {
     cost: string;
@@ -53,11 +53,10 @@ export const pathwayCards: PathwayCard[] = [
     bestFor: 'Best for: most people starting out.',
     accentColor: 'border-l-primary',
     badge: 'Most common starting point',
-    oneLiner: 'You want professional support and are happy to start with your GP. They can refer you on to the right kind of practitioner for your situation.',
     isCrisis: false,
     facts: {
       cost: 'Most people pay $50\u2013$200 per session', // REVIEW cost range
-      sessions: '10 per year for Mental Health Care Plan (MHCP)-funded; no annual cap for psychiatrist', // REVIEW
+      sessions: 'Up to 10 subsidised sessions per year',
       wait: 'A few days for a GP; a few weeks for a psychologist or other practitioner',
     },
     steps: [

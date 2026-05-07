@@ -5,7 +5,7 @@ import type { PathwayCard } from '../data/pathway-cards';
 
 interface Props extends PathwayCard {}
 
-const { id, icon, title, bestFor, accentColor, badge, oneLiner, facts, steps } = Astro.props;
+const { id, icon, title, bestFor, accentColor, badge, facts, steps } = Astro.props;
 
 const accentTopBorder = accentColor.replace('border-l-', 'border-t-');
 const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-primary' };
@@ -34,7 +34,7 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
       <span class="pathway-label-hide">Hide details</span>
     </summary>
     <div class="pathway-l1-body mt-5">
-      <div class="flex flex-wrap gap-2 mb-5">
+      <div class="flex flex-wrap gap-2 mb-6">
         <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
           <span class="text-body">Cost:</span>
           <span class="font-semibold text-heading">{facts.cost}</span>
@@ -64,8 +64,6 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
           <span class="font-semibold text-heading">{facts.sessions ?? 'Varies'}</span>
         </span>
       </div>
-
-      <p class="text-base leading-relaxed text-body mb-6">{oneLiner}</p>
 
       {/* L2 */}
       <details class="pathway-details-toggle pathway-details-toggle--nested">
