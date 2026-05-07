@@ -49,8 +49,8 @@ export const pathwayCards: PathwayCard[] = [
   {
     id: 'through-gp',
     icon: 'stethoscope',
-    title: 'Through your GP (Medicare-subsidised)',
-    bestFor: 'Best for: ongoing support at the lowest cost, or for complex conditions and medication.',
+    title: 'Start with your GP',
+    bestFor: 'Best for: most people starting out.',
     accentColor: 'border-l-primary',
     badge: 'Most common starting point',
     oneLiner: 'You want professional support and are happy to start with your GP. They can refer you on to the right kind of practitioner for your situation.',
