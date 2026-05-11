@@ -55,8 +55,8 @@ export const pathwayCards: PathwayCard[] = [
     badge: 'Most common starting point',
     isCrisis: false,
     facts: {
-      cost: 'Most people pay $50\u2013$200 per session', // REVIEW cost range
-      sessions: 'Up to 10 subsidised sessions per year',
+      cost: '$50\u2013$200 per session', // REVIEW cost range
+      sessions: 'Up to 10 per year',
       wait: 'A few days for a GP; a few weeks for a psychologist or other practitioner',
     },
     steps: [
