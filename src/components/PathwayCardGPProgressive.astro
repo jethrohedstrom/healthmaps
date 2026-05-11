@@ -5,13 +5,13 @@ import type { PathwayCard } from '../data/pathway-cards';
 
 interface Props extends PathwayCard {}
 
-const { id, icon, title, bestFor, accentColor, badge, facts, steps } = Astro.props;
+const { id, icon, title, bestFor, accentColor, badge, steps } = Astro.props;
 
 const accentTopBorder = accentColor.replace('border-l-', 'border-t-');
 const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-primary' };
 ---
 
-<div id={id} class={`rounded-xl shadow-sm border-t-4 ${accentTopBorder} bg-white p-6 md:p-8 flex flex-col`}>
+<div id={id} data-pathway-card class={`pathway-card-clickable rounded-xl shadow-sm border-t-4 ${accentTopBorder} bg-white p-6 md:p-8 flex flex-col`}>
   {/* L0: always visible */}
   <div class={`w-12 h-12 ${iconStyle.bg} rounded-xl flex items-center justify-center mb-5`}>
     <PathwayIcon icon={icon} class={`w-6 h-6 ${iconStyle.stroke}`} />
@@ -34,14 +34,21 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
       <span class="pathway-label-hide">Hide details</span>
     </summary>
     <div class="pathway-l1-body mt-5">
+      {/*
+        L1 pills are hardcoded here (rather than read from facts.cost / facts.sessions)
+        so the headline number can be bolded and the qualifier kept regular weight.
+        If the canonical strings in pathway-cards.ts change for the GP card, update them here too.
+      */}
       <div class="flex flex-wrap gap-2 mb-6">
         <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
           <span class="text-body">Cost:</span>
-          <span class="font-semibold text-heading">{facts.cost}</span>
+          <span class="font-semibold text-heading">$50&ndash;$200</span>
+          <span class="text-body">per session</span>
         </span>
         <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
-          <span class="text-body">Wait:</span>
-          <span class="font-semibold text-heading">{facts.wait ?? 'Varies'}</span>
+          <span class="text-body">Sessions:</span>
+          <span class="font-semibold text-heading">Up to 10</span>
+          <span class="text-body">per year</span>
         </span>
         <div class="w-full bg-bg-light rounded-lg px-3 py-3 flex flex-col gap-2.5">
           <div class="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
@@ -59,10 +66,6 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
             <span class="text-[13px] font-semibold text-primary sm:shrink-0">A few weeks</span>
           </div>
         </div>
-        <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
-          <span class="text-body">Sessions:</span>
-          <span class="font-semibold text-heading">{facts.sessions ?? 'Varies'}</span>
-        </span>
       </div>
 
       {/* L2 */}
@@ -89,3 +92,8 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
     </div>
   </details>
 </div>
+
+{/* Tap-anywhere-to-toggle handler lives in PathwayCardVisual.astro, which
+    queries all [data-pathway-card] elements on the page — so the GP card
+    is wired up there automatically. Duplicating the script here would
+    attach two click listeners per card and cancel itself out. */}
