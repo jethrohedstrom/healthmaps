@@ -61,9 +61,9 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
           <span class="pathway-label-show">How does this work?</span>
           <span class="pathway-label-hide">Hide steps</span>
         </summary>
-        <ol class="pathway-step-accordions mt-4">
-          {steps.map((step) => (
-            <li>
+        <ol class="pathway-step-accordions mt-4" data-gp-step-reveal data-step-total={steps.length}>
+          {steps.map((step, idx) => (
+            <li data-step-index={step.number} hidden={idx > 0}>
               <details class="pathway-step-item">
                 <summary class="pathway-step-summary">
                   <span class="pathway-step-number" aria-hidden="true">{step.number}</span>
@@ -74,12 +74,36 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
             </li>
           ))}
         </ol>
+        <div class="pathway-gp-progress mt-5 pt-4 border-t border-border">
+          <p class="text-xs text-body mb-2" id="pathway-gp-progress-label" data-gp-progress-label>
+            Step 1 of {steps.length}
+          </p>
+          <div
+            class="pathway-gp-progress-track h-1.5 rounded-full bg-bg-light overflow-hidden"
+            role="progressbar"
+            aria-valuemin="1"
+            aria-valuemax={steps.length}
+            aria-valuenow="1"
+            aria-labelledby="pathway-gp-progress-label"
+            data-gp-progressbar
+          >
+            <div
+              class="pathway-gp-progress-fill h-full bg-primary pathway-gp-progress-fill-motion"
+              style={`width: ${(100 / steps.length).toFixed(4)}%`}
+              data-gp-progress-fill
+            />
+          </div>
+          <p class="sr-only" aria-live="polite" aria-atomic="true" data-gp-progress-live></p>
+        </div>
       </details>
     </div>
   </details>
 </div>
 
-{/* Tap-anywhere-to-toggle handler lives in PathwayCardVisual.astro, which
-    queries all [data-pathway-card] elements on the page — so the GP card
-    is wired up there automatically. Duplicating the script here would
-    attach two click listeners per card and cancel itself out. */}
+{/*
+  Tap-anywhere-to-toggle handler lives in PathwayCardVisual.astro, which
+  queries all [data-pathway-card] elements — the GP card is included.
+*/}
+<script>
+  import '../scripts/gp-pathway-progressive-steps.ts';
+</script>
