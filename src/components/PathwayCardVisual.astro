@@ -1,12 +1,13 @@
 ---
 import StepByStep from './StepByStep.astro';
 import PathwayIcon from './PathwayIcon.astro';
+import PathwayTimeHorizon from './PathwayTimeHorizon.astro';
 import { iconStyleMap } from '../data/pathway-cards';
 import type { PathwayCard } from '../data/pathway-cards';
 
 interface Props extends PathwayCard {}
 
-const { id, icon, title, bestFor, accentColor, badge, oneLiner, isCrisis, facts, steps } = Astro.props;
+const { id, icon, title, bestFor, accentColor, badge, oneLiner, isCrisis, facts, steps, timeHorizon } = Astro.props;
 
 const bgClass = isCrisis ? 'bg-primary-light' : 'bg-white';
 const accentTopBorder = accentColor.replace('border-l-', 'border-t-');
@@ -34,21 +35,24 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
       <span class="pathway-label-show">Show details</span>
       <span class="pathway-label-hide">Hide details</span>
     </summary>
-    <div class="mt-5">
+    <div class="pathway-l1-body mt-5">
       <p class="text-base leading-relaxed text-body mb-5">{oneLiner}</p>
       <div class="flex flex-wrap gap-2 mb-5">
         <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
           <span class="text-body">Cost:</span>
           <span class="font-semibold text-heading">{facts.cost}</span>
         </span>
-        <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
-          <span class="text-body">Wait:</span>
-          <span class="font-semibold text-heading">{facts.wait ?? 'Varies'}</span>
-        </span>
+        {!timeHorizon && (
+          <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
+            <span class="text-body">Wait:</span>
+            <span class="font-semibold text-heading">{facts.wait ?? 'Varies'}</span>
+          </span>
+        )}
         <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
           <span class="text-body">Sessions:</span>
           <span class="font-semibold text-heading">{facts.sessions ?? 'Varies'}</span>
         </span>
+        {timeHorizon && <PathwayTimeHorizon pins={timeHorizon.pins} />}
       </div>
       <p class="text-sm text-body/80 mb-6">{bestFor}</p>
       <StepByStep steps={steps} />
@@ -61,7 +65,7 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
     card.addEventListener('click', (event) => {
       const target = event.target as HTMLElement | null;
       if (!target) return;
-      if (target.closest('a, button, summary, [role="button"], input, label, select, textarea')) return;
+      if (target.closest('.pathway-l1-body, a, button, summary, [role="button"], input, label, select, textarea')) return;
       const details = card.querySelector<HTMLDetailsElement>('details.pathway-details-toggle');
       if (!details) return;
       details.open = !details.open;

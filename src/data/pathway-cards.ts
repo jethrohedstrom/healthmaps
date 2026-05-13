@@ -1,3 +1,5 @@
+import { pinFromBucket, type PathwayCardTimeHorizon } from './pathway-time-horizon';
+
 export interface PathwayStep {
   number: number;
   title: string;
@@ -18,6 +20,8 @@ export interface PathwayCard {
     sessions?: string;
     wait?: string;
   };
+  /** When set, PathwayTimeHorizon renders and the Wait pill is omitted where applicable. */
+  timeHorizon?: PathwayCardTimeHorizon;
   steps: PathwayStep[];
 }
 
@@ -58,6 +62,12 @@ export const pathwayCards: PathwayCard[] = [
       cost: '$50\u2013$200 per session', // REVIEW cost range
       sessions: 'Up to 10 per year',
       wait: 'A few days for a GP; a few weeks for a psychologist or other practitioner',
+    },
+    timeHorizon: {
+      pins: [
+        { label: 'GP', sub: 'a few days', leftPct: 12 },
+        { label: 'Practitioner', sub: 'a few weeks', leftPct: 68 },
+      ],
     },
     steps: [
       {
@@ -107,6 +117,11 @@ export const pathwayCards: PathwayCard[] = [
       cost: '$120\u2013$330+ per session (no rebate)', // REVIEW cost range
       sessions: 'No limit',
       wait: 'Days to 2 weeks',
+    },
+    timeHorizon: {
+      pins: [
+        pinFromBucket('First appointment', 'one-two-weeks', 'days to 2 weeks'),
+      ],
     },
     steps: [
       {
@@ -185,6 +200,16 @@ export const pathwayCards: PathwayCard[] = [
       cost: 'Free or very low cost',
       sessions: 'Varies',
       wait: 'Varies by service',
+    },
+    // REVIEW: explicit pin position — not a README bucket; revisit when wait copy is concrete.
+    timeHorizon: {
+      pins: [
+        {
+          label: 'Depends on service',
+          sub: 'varies by service',
+          leftPct: 45,
+        },
+      ],
     },
     steps: [
       {

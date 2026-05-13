@@ -1,0 +1,112 @@
+---
+import type { PathwayTimeHorizonPin } from '../data/pathway-time-horizon';
+
+interface Props {
+  pins: PathwayTimeHorizonPin[];
+}
+
+const { pins } = Astro.props;
+---
+
+<div class="time-horizon w-full" role="group" aria-label="Time to first appointment">
+  <div class="time-horizon__label">Time to first appointment</div>
+  <div class="time-horizon__track-wrap">
+    <div class="time-horizon__track" aria-hidden="true"></div>
+
+    {pins.map((pin) => (
+      <div class="time-horizon__pin" style={`left: ${pin.leftPct}%;`}>
+        <div class="time-horizon__pin-stem" aria-hidden="true"></div>
+        <div class="time-horizon__pin-dot" aria-hidden="true"></div>
+        <div class="time-horizon__pin-label">{pin.label}</div>
+        <div class="time-horizon__pin-sub">{pin.sub}</div>
+      </div>
+    ))}
+
+    <span class="time-horizon__cap time-horizon__cap--left">Today</span>
+    <span class="time-horizon__cap time-horizon__cap--right">1 month</span>
+  </div>
+</div>
+
+<style>
+  /* V6a time horizon: shared timeline with one or two pins.
+     Spec: design_handoff_time_horizon/README.md. All values are deliberate —
+     don't tweak in isolation; check the reference HTML alongside. */
+  .time-horizon {
+    background: var(--color-bg-light);
+    padding: 22px 24px 18px;
+    border-radius: 8px;
+    position: relative;
+  }
+  .time-horizon__label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--color-body);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .time-horizon__track-wrap {
+    position: relative;
+    /* 94px (vs the reference's 80px) gives the caps their own row beneath the
+       pin sub-text. The reference assumes a 480px card; ours sits in a 2-col
+       grid at ~440px, so caps + pin labels collide on the same row. */
+    height: 94px;
+    margin-top: 10px;
+  }
+  .time-horizon__track {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 14px;
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(to right, var(--color-primary-light), #f1f5f3);
+  }
+  .time-horizon__pin {
+    position: absolute;
+    top: -2px;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+  .time-horizon__pin-stem {
+    width: 2px;
+    height: 14px;
+    margin: 0 auto;
+    background: var(--color-primary);
+  }
+  .time-horizon__pin-dot {
+    width: 12px;
+    height: 12px;
+    margin: 0 auto;
+    border-radius: 999px;
+    background: var(--color-primary);
+    box-shadow: 0 0 0 4px white;
+  }
+  .time-horizon__pin-label {
+    margin-top: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--color-heading);
+    white-space: nowrap;
+  }
+  .time-horizon__pin-sub {
+    font-size: 11px;
+    color: var(--color-body);
+    white-space: nowrap;
+  }
+  .time-horizon__cap {
+    position: absolute;
+    top: 74px;
+    font-size: 10px;
+    color: var(--color-body);
+  }
+  .time-horizon__cap--left  { left: 0; }
+  .time-horizon__cap--right { right: 0; }
+
+  @media (max-width: 359px) {
+    .time-horizon__label,
+    .time-horizon__cap--right {
+      display: none;
+    }
+  }
+</style>
