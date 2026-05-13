@@ -10,32 +10,26 @@ import { pathwayCards } from '../data/pathway-cards';
   description="Ways to access mental health support in Australia: through your GP, privately, free or low-cost services, and digital programs."
   hideCrisisPill={true}
 >
-  <!-- Hero -->
+  <!-- Hero + crisis signpost (single section for vertical rhythm) -->
   <section class="bg-white">
-    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
+    <div class="max-w-[720px] mx-auto px-4 pt-16 md:pt-20 pb-16 md:pb-20">
       <h1 class="text-3xl md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em]">How to access mental health support in Australia</h1>
       <p class="text-lg leading-relaxed text-body">
         There are several ways to get mental health support. Here's how each one works, and what it costs.
       </p>
-    </div>
-  </section>
-
-  <!-- Crisis signpost -->
-  <section class="bg-white">
-    <div class="max-w-[960px] mx-auto px-4">
-      <div class="max-w-xs mx-auto rounded-xl shadow-sm border-2 border-accent-red bg-accent-red-light px-4 py-3 text-center">
-        <div class="w-10 h-10 bg-accent-red-light rounded-xl flex items-center justify-center mx-auto mb-3">
-          <svg class="w-5 h-5 text-accent-red" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
-          </svg>
+      <div class="mt-6 flex items-center gap-3 rounded-lg bg-accent-red-wash px-4 py-3 text-sm text-body">
+        <svg class="w-4 h-4 shrink-0 text-accent-red-soft" fill="none" stroke="currentColor" stroke-width="1.75" viewBox="0 0 24 24" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+        </svg>
+        <div class="flex-1 min-w-0">
+          <strong class="font-semibold text-heading">In a crisis right now?</strong>
+          <span class="text-body">
+            Lifeline <a href="tel:131114" class="font-semibold text-heading underline underline-offset-[3px] decoration-1">13 11 14</a>
+            <span class="text-body/60 mx-1.5">·</span>
+            Emergency <a href="tel:000" class="font-semibold text-heading underline underline-offset-[3px] decoration-1">000</a>
+          </span>
         </div>
-        <h2 class="text-lg font-bold text-heading mb-1">In crisis or need help now?</h2>
-        <p class="text-sm text-body mb-1">
-          Emergency <a href="tel:000" class="font-semibold text-heading underline underline-offset-2">000</a>
-          &nbsp;&middot;&nbsp;
-          Lifeline <a href="tel:131114" class="font-semibold text-heading underline underline-offset-2">13 11 14</a>
-        </p>
-        <p class="text-xs text-body/80">Free, 24/7</p>
+        <span class="text-xs text-body/60 shrink-0 hidden sm:inline">Free, 24/7</span>
       </div>
     </div>
   </section>
