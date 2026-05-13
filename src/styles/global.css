@@ -344,17 +344,6 @@ details[open] > summary::after {
   color: var(--color-primary-mid);
 }
 
-/* GP card: progress bar fill animation (respect reduced motion) */
-.pathway-gp-progress-fill-motion {
-  transition: width 0.2s ease;
-}
-@media (prefers-reduced-motion: reduce) {
-  .pathway-gp-progress-fill-motion {
-    transition: none;
-  }
-}
-
-
 /* Metro map: SVG text typography */
 .metro-map-svg text {
   font-family: var(--font-sans);
