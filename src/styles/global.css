@@ -240,13 +240,17 @@ details[open] > summary::after {
 }
 
 /* Nested L2 row (GP card “How does this work?”): full-width, touch-friendly hit target */
+.pathway-details-toggle--nested {
+  margin-top: 0.375rem; /* nudge control down from pills */
+}
+
 .pathway-details-toggle--nested > summary {
   display: flex;
   width: 100%;
   align-items: center;
   min-height: 2.75rem; /* ~44px */
-  padding-top: 0.625rem;
-  padding-bottom: 0.625rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.875rem; /* extra below – tap zone sits a little lower on the row */
   box-sizing: border-box;
 }
 
