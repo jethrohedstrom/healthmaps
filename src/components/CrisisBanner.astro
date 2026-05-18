@@ -1,65 +1,116 @@
 ---
-// Crisis helpline pill + card popup, displayed on every page. Never remove.
+// Crisis helpline pill + modal, displayed on every page. Never remove.
 ---
-<div role="complementary" aria-label="Crisis support numbers" class="fixed bottom-6 right-6 z-50" id="crisis-widget">
-  <!-- Pill trigger -->
+<div role="complementary" aria-label="Crisis support numbers" class="fixed bottom-6 right-6 z-50">
   <button
     id="crisis-pill"
     type="button"
     aria-expanded="false"
-    aria-controls="crisis-card"
+    aria-controls="crisis-modal"
+    aria-haspopup="dialog"
     class="flex items-center justify-center gap-0 md:gap-2 rounded-full md:rounded-xl bg-dark text-white w-12 h-12 md:w-auto md:h-auto md:px-6 md:py-3.5 shadow-lg hover:bg-dark/90 transition-colors text-sm font-semibold cursor-pointer"
   >
     <svg class="w-5 h-5 md:w-4 md:h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
       <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
     </svg>
-    <span class="hidden md:inline">Need help?</span>
+    <span class="hidden md:inline">Urgent help</span>
   </button>
+</div>
 
-  <!-- Card popup -->
-  <div
-    id="crisis-card"
-    role="region"
-    aria-label="Crisis support phone numbers"
-    class="absolute bottom-full right-0 mb-3 w-72 max-w-[calc(100vw-2rem)] rounded-xl bg-dark text-white shadow-xl p-6 origin-bottom-right transition-all duration-200 ease-out opacity-0 scale-95 pointer-events-none"
-  >
-    <!-- Close button -->
+<div
+  id="crisis-modal"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="crisis-modal-title"
+  aria-describedby="crisis-modal-desc"
+  class="fixed inset-0 items-center justify-center p-4"
+  style="display: none; z-index: 60;"
+>
+  <div data-crisis-backdrop class="absolute inset-0 bg-heading/40 backdrop-blur-sm"></div>
+
+  <div class="relative bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto p-8 md:p-10">
     <button
-      id="crisis-close"
+      data-crisis-close
       type="button"
-      class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full hover:bg-white/20 transition-colors cursor-pointer"
-      aria-label="Close crisis support panel"
+      class="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full text-body hover:bg-bg-light transition-colors cursor-pointer"
+      aria-label="Close"
     >
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
       </svg>
     </button>
 
-    <h2 class="text-base font-bold mb-4 font-display">Crisis Support</h2>
+    <h2 id="crisis-modal-title" class="font-display text-2xl font-bold text-heading mb-2 pr-8">
+      If you need help right now
+    </h2>
+    <p id="crisis-modal-desc" class="text-sm text-body mb-6">
+      Free, confidential Australian support lines.
+    </p>
 
-    <ul class="space-y-3 text-sm">
+    <ul class="space-y-2">
       <li>
-        <a href="tel:131114" class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-white/15 transition-colors">
-          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
-          </svg>
-          <span><strong>Lifeline</strong> 13 11 14</span>
+        <a href="tel:000" class="flex items-start gap-4 rounded-xl border border-border p-4 hover:bg-bg-light transition-colors">
+          <span class="shrink-0 w-10 h-10 rounded-xl bg-primary-light text-primary flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+            </svg>
+          </span>
+          <span class="min-w-0 flex-1">
+            <span class="block text-heading font-semibold tabular-nums">Emergency &middot; 000</span>
+            <span class="block text-sm text-body mt-0.5">Life-threatening emergencies, 24/7</span>
+          </span>
         </a>
       </li>
       <li>
-        <a href="tel:1300224636" class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-white/15 transition-colors">
-          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
-          </svg>
-          <span><strong>Beyond Blue</strong> 1300 22 4636</span>
+        <a href="tel:131114" class="flex items-start gap-4 rounded-xl border border-border p-4 hover:bg-bg-light transition-colors">
+          <span class="shrink-0 w-10 h-10 rounded-xl bg-primary-light text-primary flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+            </svg>
+          </span>
+          <span class="min-w-0 flex-1">
+            <span class="block text-heading font-semibold tabular-nums">Lifeline &middot; 13 11 14</span>
+            <span class="block text-sm text-body mt-0.5">Anyone in crisis, 24/7</span>
+          </span>
         </a>
       </li>
       <li>
-        <a href="tel:000" class="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-white/15 transition-colors font-semibold">
-          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
-          </svg>
-          <span><strong>Emergency</strong> 000</span>
+        <a href="tel:1300224636" class="flex items-start gap-4 rounded-xl border border-border p-4 hover:bg-bg-light transition-colors">
+          <span class="shrink-0 w-10 h-10 rounded-xl bg-primary-light text-primary flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+            </svg>
+          </span>
+          <span class="min-w-0 flex-1">
+            <span class="block text-heading font-semibold tabular-nums">Beyond Blue &middot; 1300 22 4636</span>
+            <span class="block text-sm text-body mt-0.5">Depression and anxiety support, 24/7</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a href="tel:139276" class="flex items-start gap-4 rounded-xl border border-border p-4 hover:bg-bg-light transition-colors">
+          <span class="shrink-0 w-10 h-10 rounded-xl bg-primary-light text-primary flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+            </svg>
+          </span>
+          <span class="min-w-0 flex-1">
+            <span class="block text-heading font-semibold tabular-nums">13YARN &middot; 13 92 76</span>
+            <span class="block text-sm text-body mt-0.5">For Aboriginal and Torres Strait Islander people, 24/7</span>
+          </span>
+        </a>
+      </li>
+      <li>
+        <a href="tel:1800551800" class="flex items-start gap-4 rounded-xl border border-border p-4 hover:bg-bg-light transition-colors">
+          <span class="shrink-0 w-10 h-10 rounded-xl bg-primary-light text-primary flex items-center justify-center">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 0 0 2.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 0 1-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 0 0-1.091-.852H4.5A2.25 2.25 0 0 0 2.25 4.5v2.25Z" />
+            </svg>
+          </span>
+          <span class="min-w-0 flex-1">
+            <span class="block text-heading font-semibold tabular-nums">Kids Helpline &middot; 1800 55 1800</span>
+            <span class="block text-sm text-body mt-0.5">For ages 5&ndash;25, 24/7</span>
+          </span>
         </a>
       </li>
     </ul>
@@ -67,48 +118,57 @@
 </div>
 
 <script>
-  const pill = document.getElementById('crisis-pill')!;
-  const card = document.getElementById('crisis-card')!;
-  const closeBtn = document.getElementById('crisis-close')!;
-
-  function open() {
-    card.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-    card.classList.add('opacity-100', 'scale-100');
-    pill.setAttribute('aria-expanded', 'true');
+  function getModal() {
+    return document.getElementById('crisis-modal');
   }
-
-  function close() {
-    card.classList.remove('opacity-100', 'scale-100');
-    card.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-    pill.setAttribute('aria-expanded', 'false');
+  function getPill() {
+    return document.getElementById('crisis-pill');
   }
-
   function isOpen() {
-    return pill.getAttribute('aria-expanded') === 'true';
+    const pill = getPill();
+    return pill?.getAttribute('aria-expanded') === 'true';
+  }
+  function openModal() {
+    const modal = getModal();
+    const pill = getPill();
+    if (!modal || !pill) return;
+    modal.style.display = 'flex';
+    pill.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+    const closeBtn = modal.querySelector<HTMLButtonElement>('[data-crisis-close]');
+    closeBtn?.focus();
+  }
+  function closeModal() {
+    const modal = getModal();
+    const pill = getPill();
+    if (!modal || !pill) return;
+    modal.style.display = 'none';
+    pill.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    pill.focus();
   }
 
-  pill.addEventListener('click', () => {
-    isOpen() ? close() : open();
-  });
-
-  closeBtn.addEventListener('click', () => {
-    close();
-    pill.focus();
-  });
-
-  // Close on outside click
   document.addEventListener('click', (e) => {
-    const widget = document.getElementById('crisis-widget')!;
-    if (isOpen() && !widget.contains(e.target as Node)) {
-      close();
+    const target = e.target as HTMLElement | null;
+    if (!target) return;
+    if (target.closest('#crisis-pill')) {
+      e.preventDefault();
+      isOpen() ? closeModal() : openModal();
+      return;
+    }
+    if (target.closest('[data-crisis-close]')) {
+      e.preventDefault();
+      closeModal();
+      return;
+    }
+    if (target.matches('[data-crisis-backdrop]')) {
+      closeModal();
     }
   });
 
-  // Close on Escape
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && isOpen()) {
-      close();
-      pill.focus();
+      closeModal();
     }
   });
 </script>
