@@ -1,8 +1,11 @@
 // GP card: progressive step reveal + progress bar (PathwayCardGPProgressive.astro).
 
 (function () {
-  const card = document.getElementById('through-gp');
-  if (!card) return;
+  const cardEl = document.getElementById('through-gp');
+  if (!cardEl) return;
+
+  /** Narrowed root for nested closures (astro check TS control-flow quirk). */
+  const card: HTMLElement = cardEl;
 
   const ol = card.querySelector<HTMLOListElement>('[data-gp-step-reveal]');
   if (!ol) return;
@@ -36,6 +39,35 @@
   }
 
   refreshProgress(false);
+
+  function openGpCardForStep(stepNumber: number) {
+    const l1 = card.querySelector<HTMLDetailsElement>('details.pathway-details-toggle:not(.pathway-details-toggle--nested)');
+    if (l1) l1.open = true;
+
+    const nested = card.querySelector<HTMLDetailsElement>('details.pathway-details-toggle--nested');
+    if (nested) nested.open = true;
+
+    for (let i = 1; i <= stepNumber; i++) {
+      const li = stepListRoot.querySelector<HTMLLIElement>(`li[data-step-index="${i}"]`);
+      if (li) li.removeAttribute('hidden');
+    }
+
+    refreshProgress(false);
+
+    const target = document.getElementById(`step-${stepNumber}`);
+    if (target) target.scrollIntoView({ block: 'start' });
+  }
+
+  function handleStepHash() {
+    const match = location.hash.match(/^#step-(\d+)$/);
+    if (!match) return;
+    const stepNumber = Number(match[1]);
+    if (!Number.isFinite(stepNumber) || stepNumber < 1) return;
+    openGpCardForStep(stepNumber);
+  }
+
+  handleStepHash();
+  window.addEventListener('hashchange', handleStepHash);
 
   card.querySelectorAll<HTMLDetailsElement>('.pathway-step-item').forEach((detail) => {
     detail.addEventListener('toggle', () => {

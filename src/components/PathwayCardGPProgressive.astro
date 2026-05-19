@@ -63,7 +63,7 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
         </summary>
         <ol class="pathway-step-accordions mt-4" data-gp-step-reveal data-step-total={steps.length}>
           {steps.map((step, idx) => (
-            <li data-step-index={step.number} hidden={idx > 0}>
+            <li id={`step-${step.number}`} class="scroll-mt-24" data-step-index={step.number} hidden={idx > 0}>
               <details class="pathway-step-item">
                 <summary class="pathway-step-summary">
                   <span class="pathway-step-number" aria-hidden="true">{step.number}</span>
@@ -101,8 +101,7 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
 </div>
 
 {/*
-  Tap-anywhere-to-toggle handler lives in PathwayCardVisual.astro, which
-  queries all [data-pathway-card] elements — the GP card is included.
+  Tap-anywhere-to-toggle: pathway-card-click.ts (imported from pathway.astro).
 */}
 <script>
   import '../scripts/gp-pathway-progressive-steps.ts';

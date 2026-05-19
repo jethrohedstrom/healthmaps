@@ -4,18 +4,71 @@ import PathwayCardVisual from '../components/PathwayCardVisual.astro';
 import PathwayCardGPProgressive from '../components/PathwayCardGPProgressive.astro';
 import { pathwayCards } from '../data/pathway-cards';
 
+const gpCard = pathwayCards.find((c) => c.id === 'through-gp')!;
+const otherCards = pathwayCards.filter((c) => c.id !== 'through-gp');
 ---
 <BaseLayout
   title="How to Access Mental Health Support"
   description="Ways to access mental health support in Australia: through your GP, privately, free or low-cost services, and digital programs."
 >
-  <!-- Hero -->
   <section class="bg-white">
-    <div class="max-w-[720px] mx-auto px-4 pt-16 md:pt-20 pb-16 md:pb-20">
-      <h1 class="text-3xl md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em]">How to access mental health support in Australia</h1>
-      <p class="text-lg leading-relaxed text-body">
-        There are several ways to get mental health support. Here's how each one works, and what it costs.
-      </p>
+    <div class="max-w-[1240px] mx-auto px-4 md:px-6 pt-12 md:pt-20 pb-10 md:pb-16">
+      <div class="grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-14 items-center">
+        <div>
+          <div class="inline-flex items-center gap-2 mb-4 text-xs font-bold uppercase tracking-[0.14em] text-primary">
+            <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+            Getting started
+          </div>
+          <h1 class="text-[1.75rem] md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em] leading-tight">How to access mental health support in Australia</h1>
+          <p class="text-lg leading-relaxed text-body max-w-[42rem] mb-6">
+            There are several ways to get support. Most people start with their GP — but you don't have to.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a
+              href="#pathways"
+              class="bg-primary text-white px-5 py-3 rounded-xl font-semibold text-sm hover:bg-primary-mid transition-colors"
+            >
+              Compare all 5 pathways
+            </a>
+            <button
+              type="button"
+              disabled
+              class="border border-border text-heading px-5 py-3 rounded-xl font-semibold text-sm opacity-75 cursor-not-allowed"
+            >
+              Not sure? Take the quiz
+            </button>
+          </div>
+        </div>
+
+        <div class="relative">
+          <PathwayCardGPProgressive {...gpCard} />
+          <p class="mt-3 text-right text-sm text-body/70 flex items-center justify-end gap-1.5">
+            4 more pathways below
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pathways" class="bg-bg-light scroll-mt-24">
+    <div class="max-w-[1240px] mx-auto px-4 md:px-6 py-12 md:py-16">
+      <p class="text-sm uppercase tracking-widest text-body font-semibold mb-6">The other 4 pathways</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+        {otherCards.map((card) => (
+          <PathwayCardVisual {...card} />
+        ))}
+      </div>
+
+      <aside class="mt-8 max-w-3xl mx-auto rounded-xl border border-border bg-white p-6 md:p-8 shadow-sm">
+        <p class="uppercase tracking-widest text-xs text-primary mb-2 font-semibold">Also worth knowing</p>
+        <h3 class="text-lg font-bold text-heading mb-2">NDIS-funded mental health support</h3>
+        <p class="text-body leading-relaxed">
+          If you have a severe, long-term mental health condition (psychosocial disability) that substantially affects your daily life, you may be eligible for NDIS-funded support.
+          <a href="/ndis" class="text-primary font-semibold underline underline-offset-2">Learn about the NDIS pathway</a>.
+        </p>
+      </aside>
     </div>
   </section>
 
@@ -34,31 +87,8 @@ import { pathwayCards } from '../data/pathway-cards';
   </section>
   */}
 
-  <!-- Pathway cards -->
-  <section class="bg-white">
-    <div class="max-w-[960px] mx-auto px-4 py-16 md:py-20">
-      <h2 class="text-xl font-bold text-heading mb-2">Ways to access support</h2>
-      <p class="text-body mb-10">Each pathway has different costs, wait times, and steps. Compare them below.</p>
-
-      <div class="bg-primary-light rounded-2xl p-6 md:p-8">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
-          {pathwayCards.map((card) => (
-            card.id === 'through-gp'
-              ? <PathwayCardGPProgressive {...card} />
-              : <PathwayCardVisual {...card} />
-          ))}
-        </div>
-      </div>
-
-      <aside class="mt-10 max-w-3xl mx-auto rounded-xl border border-border bg-bg-light p-6 md:p-8">
-        <p class="uppercase tracking-widest text-xs text-primary mb-2 font-semibold">Also worth knowing</p>
-        <h3 class="text-lg font-bold text-heading mb-2">NDIS-funded mental health support</h3>
-        <p class="text-body leading-relaxed">
-          If you have a severe, long-term mental health condition (psychosocial disability) that substantially affects your daily life, you may be eligible for NDIS-funded support.
-          <a href="/ndis" class="text-primary font-semibold underline underline-offset-2">Learn about the NDIS pathway</a>.
-        </p>
-      </aside>
-    </div>
-  </section>
+  <script>
+    import '../scripts/pathway-card-click.ts';
+  </script>
 
 </BaseLayout>
