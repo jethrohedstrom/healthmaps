@@ -42,17 +42,11 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
           <span class="text-body">Cost:</span>
           <span class="font-semibold text-heading">{facts.cost}</span>
         </span>
-        {!timeHorizon && (
-          <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
-            <span class="text-body">Wait:</span>
-            <span class="font-semibold text-heading">{facts.wait ?? 'Varies'}</span>
-          </span>
-        )}
         <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
           <span class="text-body">Sessions:</span>
           <span class="font-semibold text-heading">{facts.sessions ?? 'Varies'}</span>
         </span>
-        {timeHorizon && <PathwayTimeHorizon pins={timeHorizon.pins} />}
+        <PathwayTimeHorizon events={timeHorizon?.events} />
       </div>
       <p class="text-sm text-body/80 mb-6">{bestFor}</p>
       <StepByStep steps={steps} />

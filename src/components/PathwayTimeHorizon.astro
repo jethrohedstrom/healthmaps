@@ -1,111 +1,250 @@
 ---
-import type { PathwayTimeHorizonPin } from '../data/pathway-time-horizon';
+import { WAIT_BUCKETS, type PathwayTimelineEvent } from '../data/pathway-time-horizon';
 
 interface Props {
-  pins: PathwayTimeHorizonPin[];
+  events?: PathwayTimelineEvent[];
 }
 
-const { pins } = Astro.props;
+const W = 432;
+const H = 220;
+const PAD_X = 24;
+const CY = 92;
+const AMP = 22;
+const USABLE_W = W - PAD_X * 2;
+const TODAY_POS = 3;
+
+const ZONE_LABEL_Y = 204;
+const ZONE_BASELINE_Y = 188;
+const ZONE_TICK_TOP_Y = 178;
+const ZONES = [
+  { label: 'DAYS', centerPct: 14 },
+  { label: 'WEEKS', centerPct: 44 },
+  { label: 'MONTHS', centerPct: 80 },
+];
+const ZONE_BOUNDARY_PCTS = [28, 60];
+
+const { events = [] } = Astro.props;
+const hasEvents = events.length > 0;
+
+function xy(pct: number): [number, number] {
+  const t = pct / 100;
+  const x = PAD_X + t * USABLE_W;
+  const y = CY + Math.sin(t * Math.PI * 4) * AMP;
+  return [x, y];
+}
+
+function pathIsBelow(pct: number): boolean {
+  return Math.sin((pct / 100) * Math.PI * 4) >= 0;
+}
+
+const pathD = Array.from({ length: 101 }, (_, pct) => {
+  const [x, y] = xy(pct);
+  return `${pct === 0 ? 'M' : 'L'} ${x.toFixed(2)} ${y.toFixed(2)}`;
+}).join(' ');
+
+const todayLabelBelow = pathIsBelow(TODAY_POS);
+
+const positionedEvents = events.map((ev) => ({
+  label: ev.label,
+  sub: ev.subOverride ?? WAIT_BUCKETS[ev.bucket].sub,
+  pos: WAIT_BUCKETS[ev.bucket].pos,
+}));
+
+let previousPos = Number.NEGATIVE_INFINITY;
+let previousLabelBelow: boolean | null = null;
+
+const labeledEvents = positionedEvents.map((ev) => {
+  let labelBelow = pathIsBelow(ev.pos);
+  if (Math.abs(ev.pos - previousPos) < 12 && previousLabelBelow !== null) {
+    labelBelow = !previousLabelBelow;
+  }
+
+  previousPos = ev.pos;
+  previousLabelBelow = labelBelow;
+
+  return {
+    ...ev,
+    labelBelow,
+  };
+});
 ---
 
-<div class="time-horizon w-full" role="group" aria-label="Time to first appointment">
-  <div class="time-horizon__label">Time to first appointment</div>
-  <div class="time-horizon__track-wrap">
-    <div class="time-horizon__track" aria-hidden="true"></div>
+<div class="winding-path-wrap" role="group" aria-label="Typical timeline">
+  <div class="winding-path-label">Typical timeline</div>
+  {hasEvents ? (
+    <svg class="winding-path" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet">
+      <path
+        d={pathD}
+        stroke="var(--color-path)"
+        stroke-width="2.5"
+        stroke-linecap="round"
+        stroke-dasharray="3 6"
+        fill="none"
+        aria-hidden="true"
+      />
 
-    {pins.map((pin) => (
-      <div class="time-horizon__pin" style={`left: ${pin.leftPct}%;`}>
-        <div class="time-horizon__pin-stem" aria-hidden="true"></div>
-        <div class="time-horizon__pin-dot" aria-hidden="true"></div>
-        <div class="time-horizon__pin-label">{pin.label}</div>
-        <div class="time-horizon__pin-sub">{pin.sub}</div>
-      </div>
-    ))}
+      <line
+        class="winding-path-zone-line"
+        x1={PAD_X}
+        x2={W - PAD_X}
+        y1={ZONE_BASELINE_Y}
+        y2={ZONE_BASELINE_Y}
+        stroke="var(--color-border-soft, var(--color-border))"
+        stroke-width="1"
+        aria-hidden="true"
+      />
+      {ZONE_BOUNDARY_PCTS.map((pct) => {
+        const x = PAD_X + (pct / 100) * USABLE_W;
+        return (
+          <line
+            class="winding-path-zone-line"
+            x1={x}
+            x2={x}
+            y1={ZONE_TICK_TOP_Y}
+            y2={ZONE_BASELINE_Y}
+            stroke="var(--color-border-soft, var(--color-border))"
+            stroke-width="1"
+            aria-hidden="true"
+          />
+        );
+      })}
+      {ZONES.map((zone) => {
+        const x = PAD_X + (zone.centerPct / 100) * USABLE_W;
+        return (
+          <text
+            class="winding-path-zone"
+            data-knockout
+            x={x}
+            y={ZONE_LABEL_Y}
+            font-size="9"
+            font-weight="700"
+            text-anchor="middle"
+            fill="var(--color-body)"
+          >
+            {zone.label}
+          </text>
+        );
+      })}
 
-    <span class="time-horizon__cap time-horizon__cap--left">Today</span>
-    <span class="time-horizon__cap time-horizon__cap--right">1 month</span>
-  </div>
+      {(() => {
+        const [x, y] = xy(TODAY_POS);
+        const mainDy = todayLabelBelow ? 24 : -16;
+        return (
+          <>
+            <circle cx={x} cy={y} r="9" fill="var(--color-bg-light)" />
+            <circle
+              cx={x}
+              cy={y}
+              r="7"
+              fill="white"
+              stroke="var(--color-primary)"
+              stroke-width="2"
+            />
+            <text
+              data-knockout
+              x={x}
+              y={y + mainDy}
+              font-size="11"
+              font-weight="700"
+              text-anchor="middle"
+              fill="var(--color-primary)"
+            >
+              Today
+            </text>
+          </>
+        );
+      })()}
+
+      {labeledEvents.map((ev) => {
+        const [x, y] = xy(ev.pos);
+        const mainDy = ev.labelBelow ? 24 : -16;
+        const subDy = ev.labelBelow ? 36 : -4;
+        return (
+          <>
+            <circle cx={x} cy={y} r="11" fill="var(--color-bg-light)" />
+            <circle cx={x} cy={y} r="7" fill="var(--color-primary)" />
+            <text
+              data-knockout
+              x={x}
+              y={y + mainDy}
+              font-size="11"
+              font-weight="700"
+              text-anchor="middle"
+              fill="var(--color-primary-deep, var(--color-primary))"
+            >
+              {ev.label}
+            </text>
+            {ev.sub && (
+              <text
+                data-knockout
+                x={x}
+                y={y + subDy}
+                font-size="9.5"
+                font-weight="400"
+                text-anchor="middle"
+                fill="var(--color-body)"
+              >
+                {ev.sub}
+              </text>
+            )}
+          </>
+        );
+      })}
+    </svg>
+  ) : (
+    <p class="winding-path-varies">Wait time varies by service.</p>
+  )}
 </div>
 
+<script>
+  document.querySelectorAll('svg.winding-path').forEach((svg) => {
+    svg.querySelectorAll('rect[data-knockout-bg]').forEach((rect) => rect.remove());
+    svg.querySelectorAll<SVGTextElement>('text[data-knockout]').forEach((t) => {
+      const bb = t.getBBox();
+      const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      rect.setAttribute('x', String(bb.x - 3));
+      rect.setAttribute('y', String(bb.y - 1));
+      rect.setAttribute('width', String(bb.width + 6));
+      rect.setAttribute('height', String(bb.height + 2));
+      rect.setAttribute('rx', '2');
+      rect.setAttribute('fill', 'var(--color-bg-light)');
+      rect.setAttribute('data-knockout-bg', '');
+      t.parentNode?.insertBefore(rect, t);
+    });
+  });
+</script>
+
 <style>
-  /* V6a time horizon: shared timeline with one or two pins.
-     Spec: design_handoff_time_horizon/README.md. All values are deliberate —
-     don't tweak in isolation; check the reference HTML alongside. */
-  .time-horizon {
+  .winding-path-wrap {
     background: var(--color-bg-light);
-    padding: 22px 24px 18px;
+    padding: 22px 22px 14px;
     border-radius: 8px;
-    position: relative;
   }
-  .time-horizon__label {
+  .winding-path-label {
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.08em;
     color: var(--color-body);
     text-transform: uppercase;
-    margin-bottom: 14px;
+    margin-bottom: 4px;
   }
-  .time-horizon__track-wrap {
-    position: relative;
-    /* 94px (vs the reference's 80px) gives the caps their own row beneath the
-       pin sub-text. The reference assumes a 480px card; ours sits in a 2-col
-       grid at ~440px, so caps + pin labels collide on the same row. */
-    height: 94px;
-    margin-top: 10px;
+  .winding-path {
+    width: 100%;
+    height: auto;
+    display: block;
   }
-  .time-horizon__track {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 14px;
-    height: 6px;
-    border-radius: 999px;
-    background: linear-gradient(to right, var(--color-primary-light), #f1f5f3);
+  .winding-path text {
+    font-family: var(--font-sans, ui-sans-serif, system-ui);
   }
-  .time-horizon__pin {
-    position: absolute;
-    top: -2px;
-    transform: translateX(-50%);
-    text-align: center;
-  }
-  .time-horizon__pin-stem {
-    width: 2px;
-    height: 14px;
-    margin: 0 auto;
-    background: var(--color-primary);
-  }
-  .time-horizon__pin-dot {
-    width: 12px;
-    height: 12px;
-    margin: 0 auto;
-    border-radius: 999px;
-    background: var(--color-primary);
-    box-shadow: 0 0 0 4px white;
-  }
-  .time-horizon__pin-label {
-    margin-top: 8px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--color-heading);
-    white-space: nowrap;
-  }
-  .time-horizon__pin-sub {
-    font-size: 11px;
+  .winding-path-varies {
+    font-size: 13px;
     color: var(--color-body);
-    white-space: nowrap;
+    margin: 8px 0 0;
   }
-  .time-horizon__cap {
-    position: absolute;
-    top: 74px;
-    font-size: 10px;
-    color: var(--color-body);
-  }
-  .time-horizon__cap--left  { left: 0; }
-  .time-horizon__cap--right { right: 0; }
 
   @media (max-width: 359px) {
-    .time-horizon__label,
-    .time-horizon__cap--right {
+    .winding-path-zone,
+    .winding-path-zone-line {
       display: none;
     }
   }

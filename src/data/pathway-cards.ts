@@ -1,4 +1,4 @@
-import { pinFromBucket, type PathwayCardTimeHorizon } from './pathway-time-horizon';
+import { event, type PathwayCardTimeHorizon } from './pathway-time-horizon';
 
 export interface PathwayStep {
   number: number;
@@ -20,7 +20,7 @@ export interface PathwayCard {
     sessions?: string;
     wait?: string;
   };
-  /** When set, PathwayTimeHorizon renders and the Wait pill is omitted where applicable. */
+  /** Optional event data for PathwayTimeHorizon; omitted cards render its "varies" fallback. */
   timeHorizon?: PathwayCardTimeHorizon;
   steps: PathwayStep[];
 }
@@ -51,6 +51,8 @@ export const accentVarMap: Record<string, string> = {
 
 export const pathwayCards: PathwayCard[] = [
   {
+    // TODO(journey-calendar): Product call pending on whether to add a third
+    // psychiatrist event here (three-six-months) in addition to GP + Psychologist.
     id: 'through-gp',
     icon: 'stethoscope',
     title: 'Start with your GP',
@@ -64,9 +66,9 @@ export const pathwayCards: PathwayCard[] = [
       wait: 'A few days for a GP; a few weeks for a psychologist or other practitioner',
     },
     timeHorizon: {
-      pins: [
-        { label: 'GP', sub: 'a few days', leftPct: 12 },
-        { label: 'Practitioner', sub: 'a few weeks', leftPct: 68 },
+      events: [
+        event('GP', 'few-days'),
+        event('Psychologist', 'few-weeks'),
       ],
     },
     steps: [
@@ -119,8 +121,8 @@ export const pathwayCards: PathwayCard[] = [
       wait: 'Days to 2 weeks',
     },
     timeHorizon: {
-      pins: [
-        pinFromBucket('First appointment', 'one-two-weeks', 'days to 2 weeks'),
+      events: [
+        event('Practitioner', 'one-two-weeks', 'days to 2 weeks'),
       ],
     },
     steps: [
@@ -159,6 +161,11 @@ export const pathwayCards: PathwayCard[] = [
       sessions: 'TBC',
       wait: 'TBC',
     },
+    timeHorizon: {
+      events: [
+        event('Program', 'same-day'),
+      ],
+    },
     steps: [
       {
         number: 1,
@@ -180,6 +187,11 @@ export const pathwayCards: PathwayCard[] = [
       sessions: 'TBC',
       wait: 'TBC',
     },
+    timeHorizon: {
+      events: [
+        event('App', 'same-day'),
+      ],
+    },
     steps: [
       {
         number: 1,
@@ -200,16 +212,6 @@ export const pathwayCards: PathwayCard[] = [
       cost: 'Free or very low cost',
       sessions: 'Varies',
       wait: 'Varies by service',
-    },
-    // REVIEW: explicit pin position — not a README bucket; revisit when wait copy is concrete.
-    timeHorizon: {
-      pins: [
-        {
-          label: 'Depends on service',
-          sub: 'varies by service',
-          leftPct: 45,
-        },
-      ],
     },
     steps: [
       {

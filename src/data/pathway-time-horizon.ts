@@ -1,33 +1,43 @@
 /**
- * V6a pin buckets — fixed positions only (design_handoff_time_horizon/README.md).
- * Do not compute leftPct from raw day counts.
+ * Winding-path timeline — bucket positions and event types.
+ * Spec: design_handoff_journey_calendar/README.md. Do not compute positions
+ * from raw day counts; only use these named buckets.
  */
 export const WAIT_BUCKETS = {
-  'few-days': { leftPct: 12, sub: 'a few days' },
-  'around-week': { leftPct: 25, sub: 'around a week' },
-  'one-two-weeks': { leftPct: 40, sub: '1\u20132 weeks' },
-  'few-weeks': { leftPct: 68, sub: 'a few weeks' },
-  'several-weeks': { leftPct: 85, sub: 'several weeks' },
+  'same-day': { pos: 8, sub: 'same day' },
+  'few-days': { pos: 16, sub: 'a few days' },
+  'around-week': { pos: 24, sub: 'around a week' },
+  'one-two-weeks': { pos: 34, sub: '1\u20132 weeks' },
+  'few-weeks': { pos: 46, sub: 'a few weeks' },
+  'several-weeks': { pos: 56, sub: 'several weeks' },
+  'one-month': { pos: 66, sub: '~1 month' },
+  'one-two-months': { pos: 74, sub: '1\u20132 months' },
+  'two-three-months': { pos: 82, sub: '2\u20133 months' },
+  'three-six-months': { pos: 90, sub: '3\u20136 months' },
+  'six-plus-months': { pos: 96, sub: '6+ months' },
 } as const;
 
 export type WaitBucket = keyof typeof WAIT_BUCKETS;
 
-export interface PathwayTimeHorizonPin {
+export interface PathwayTimelineEvent {
+  /** Pin label, e.g. "GP", "Psychologist", "Psychiatrist" */
   label: string;
-  sub: string;
-  leftPct: number;
+  /** Wait bucket — determines the dot's position along the path */
+  bucket: WaitBucket;
+  /** Optional override for the sub-label copy (defaults to the bucket's `sub`) */
+  subOverride?: string;
 }
 
-/** Attach to a pathway card; render via PathwayTimeHorizon.astro (1 or 2 pins). */
 export interface PathwayCardTimeHorizon {
-  pins: PathwayTimeHorizonPin[];
+  /** `today` is rendered automatically; just provide upcoming appointments. */
+  events: PathwayTimelineEvent[];
 }
 
-export function pinFromBucket(
+/** Helper used in `pathway-cards.ts` to keep call sites readable. */
+export function event(
   label: string,
   bucket: WaitBucket,
   subOverride?: string
-): PathwayTimeHorizonPin {
-  const b = WAIT_BUCKETS[bucket];
-  return { label, sub: subOverride ?? b.sub, leftPct: b.leftPct };
+): PathwayTimelineEvent {
+  return { label, bucket, subOverride };
 }
