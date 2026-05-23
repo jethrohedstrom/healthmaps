@@ -12,16 +12,17 @@ const accentTopBorder = accentColor.replace('border-l-', 'border-t-');
 const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-primary' };
 ---
 
-<div id={id} data-pathway-card class={`pathway-card-clickable rounded-xl shadow-sm border-t-4 ${accentTopBorder} bg-white p-6 md:p-8 flex flex-col`}>
+<div id={id} data-pathway-card class={`pathway-card-clickable relative rounded-xl shadow-lg hover:shadow-xl transition-shadow border-t-4 ${accentTopBorder} bg-white p-6 md:p-8 flex flex-col`}>
+  {badge && (
+    <span class="absolute -top-3 left-6 inline-flex text-xs font-semibold text-white bg-primary px-3 py-1 rounded-full shadow-sm z-10">{badge}</span>
+  )}
+
   {/* L0: always visible */}
   <div class={`w-12 h-12 ${iconStyle.bg} rounded-xl flex items-center justify-center mb-5`}>
     <PathwayIcon icon={icon} class={`w-6 h-6 ${iconStyle.stroke}`} />
   </div>
 
   <div class="mb-3">
-    {badge && (
-      <span class="inline-block text-xs font-semibold text-white bg-primary px-3 py-1 rounded-full mb-2">{badge}</span>
-    )}
     <h3 class="text-xl md:text-2xl font-bold text-heading leading-snug">{title}</h3>
   </div>
 
