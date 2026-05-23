@@ -22,6 +22,10 @@ const ZONES = [
   { label: 'MONTHS', centerPct: 80 },
 ];
 const ZONE_BOUNDARY_PCTS = [28, 60];
+const LABEL_MAIN_DY_BELOW = 24;
+const LABEL_SUB_DY_BELOW = 36;
+const LABEL_MAIN_DY_ABOVE = -24;
+const LABEL_SUB_DY_ABOVE = -12;
 
 const { events = [] } = Astro.props;
 const hasEvents = events.length > 0;
@@ -67,139 +71,162 @@ const labeledEvents = positionedEvents.map((ev) => {
     labelBelow,
   };
 });
+
+const [todayX, todayY] = xy(TODAY_POS);
+const todayMainDy = todayLabelBelow ? LABEL_MAIN_DY_BELOW : LABEL_MAIN_DY_ABOVE;
+
+const renderedEvents = labeledEvents.map((ev) => {
+  const [x, y] = xy(ev.pos);
+  return {
+    ...ev,
+    x,
+    y,
+    mainDy: ev.labelBelow ? LABEL_MAIN_DY_BELOW : LABEL_MAIN_DY_ABOVE,
+    subDy: ev.labelBelow ? LABEL_SUB_DY_BELOW : LABEL_SUB_DY_ABOVE,
+  };
+});
 ---
 
 <div class="winding-path-wrap" role="group" aria-label="Typical timeline">
-  <div class="winding-path-label">Typical timeline</div>
-  {hasEvents ? (
-    <svg class="winding-path" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet">
-      <path
-        d={pathD}
-        stroke="var(--color-path)"
-        stroke-width="2.5"
-        stroke-linecap="round"
-        stroke-dasharray="3 6"
-        fill="none"
-        aria-hidden="true"
-      />
+  <div class="winding-path-inner">
+    <div class="winding-path-label">Typical timeline</div>
+    {hasEvents ? (
+      <svg class="winding-path" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet">
+        <g data-layer="track">
+          <path
+            d={pathD}
+            stroke="var(--color-path)"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-dasharray="3 6"
+            fill="none"
+            aria-hidden="true"
+          />
 
-      <line
-        class="winding-path-zone-line"
-        x1={PAD_X}
-        x2={W - PAD_X}
-        y1={ZONE_BASELINE_Y}
-        y2={ZONE_BASELINE_Y}
-        stroke="var(--color-border-soft, var(--color-border))"
-        stroke-width="1"
-        aria-hidden="true"
-      />
-      {ZONE_BOUNDARY_PCTS.map((pct) => {
-        const x = PAD_X + (pct / 100) * USABLE_W;
-        return (
           <line
             class="winding-path-zone-line"
-            x1={x}
-            x2={x}
-            y1={ZONE_TICK_TOP_Y}
+            x1={PAD_X}
+            x2={W - PAD_X}
+            y1={ZONE_BASELINE_Y}
             y2={ZONE_BASELINE_Y}
             stroke="var(--color-border-soft, var(--color-border))"
             stroke-width="1"
             aria-hidden="true"
           />
-        );
-      })}
-      {ZONES.map((zone) => {
-        const x = PAD_X + (zone.centerPct / 100) * USABLE_W;
-        return (
-          <text
-            class="winding-path-zone"
-            data-knockout
-            x={x}
-            y={ZONE_LABEL_Y}
-            font-size="9"
-            font-weight="700"
-            text-anchor="middle"
-            fill="var(--color-body)"
-          >
-            {zone.label}
-          </text>
-        );
-      })}
+          {ZONE_BOUNDARY_PCTS.map((pct) => {
+            const x = PAD_X + (pct / 100) * USABLE_W;
+            return (
+              <line
+                class="winding-path-zone-line"
+                x1={x}
+                x2={x}
+                y1={ZONE_TICK_TOP_Y}
+                y2={ZONE_BASELINE_Y}
+                stroke="var(--color-border-soft, var(--color-border))"
+                stroke-width="1"
+                aria-hidden="true"
+              />
+            );
+          })}
+        </g>
 
-      {(() => {
-        const [x, y] = xy(TODAY_POS);
-        const mainDy = todayLabelBelow ? 24 : -16;
-        return (
-          <>
-            <circle cx={x} cy={y} r="9" fill="var(--color-bg-light)" />
-            <circle
-              cx={x}
-              cy={y}
-              r="7"
-              fill="white"
-              stroke="var(--color-primary)"
-              stroke-width="2"
-            />
-            <text
-              data-knockout
-              x={x}
-              y={y + mainDy}
-              font-size="11"
-              font-weight="700"
-              text-anchor="middle"
-              fill="var(--color-primary)"
-            >
-              Today
-            </text>
-          </>
-        );
-      })()}
+        <g data-layer="knockouts" />
 
-      {labeledEvents.map((ev) => {
-        const [x, y] = xy(ev.pos);
-        const mainDy = ev.labelBelow ? 24 : -16;
-        const subDy = ev.labelBelow ? 36 : -4;
-        return (
-          <>
-            <circle cx={x} cy={y} r="11" fill="var(--color-bg-light)" />
-            <circle cx={x} cy={y} r="7" fill="var(--color-primary)" />
-            <text
-              data-knockout
-              x={x}
-              y={y + mainDy}
-              font-size="11"
-              font-weight="700"
-              text-anchor="middle"
-              fill="var(--color-primary-deep, var(--color-primary))"
-            >
-              {ev.label}
-            </text>
-            {ev.sub && (
+        <g data-layer="markers">
+          <circle cx={todayX} cy={todayY} r="9" fill="var(--color-bg-light)" />
+          <circle
+            cx={todayX}
+            cy={todayY}
+            r="7"
+            fill="white"
+            stroke="var(--color-primary)"
+            stroke-width="2"
+          />
+          {renderedEvents.map((ev) => (
+            <>
+              <circle cx={ev.x} cy={ev.y} r="11" fill="var(--color-bg-light)" />
+              <circle cx={ev.x} cy={ev.y} r="7" fill="var(--color-primary)" />
+            </>
+          ))}
+        </g>
+
+        <g data-layer="labels">
+          {ZONES.map((zone) => {
+            const x = PAD_X + (zone.centerPct / 100) * USABLE_W;
+            return (
               <text
+                class="winding-path-zone"
                 data-knockout
                 x={x}
-                y={y + subDy}
-                font-size="9.5"
-                font-weight="400"
+                y={ZONE_LABEL_Y}
+                font-size="9"
+                font-weight="700"
                 text-anchor="middle"
                 fill="var(--color-body)"
               >
-                {ev.sub}
+                {zone.label}
               </text>
-            )}
-          </>
-        );
-      })}
-    </svg>
-  ) : (
-    <p class="winding-path-varies">Wait time varies by service.</p>
-  )}
+            );
+          })}
+
+          <text
+            data-knockout
+            x={todayX}
+            y={todayY + todayMainDy}
+            font-size="11"
+            font-weight="700"
+            text-anchor="middle"
+            fill="var(--color-primary)"
+          >
+            Today
+          </text>
+
+          {renderedEvents.map((ev) => (
+            <>
+              <text
+                data-knockout
+                x={ev.x}
+                y={ev.y + ev.mainDy}
+                font-size="11"
+                font-weight="700"
+                text-anchor="middle"
+                fill="var(--color-primary-deep, var(--color-primary))"
+              >
+                {ev.label}
+              </text>
+              {ev.sub && (
+                <text
+                  data-knockout
+                  x={ev.x}
+                  y={ev.y + ev.subDy}
+                  font-size="9.5"
+                  font-weight="400"
+                  text-anchor="middle"
+                  fill="var(--color-body)"
+                >
+                  {ev.sub}
+                </text>
+              )}
+            </>
+          ))}
+        </g>
+      </svg>
+    ) : (
+      <p class="winding-path-varies">Wait time varies by service.</p>
+    )}
+  </div>
 </div>
 
 <script>
   document.querySelectorAll('svg.winding-path').forEach((svg) => {
-    svg.querySelectorAll('rect[data-knockout-bg]').forEach((rect) => rect.remove());
-    svg.querySelectorAll<SVGTextElement>('text[data-knockout]').forEach((t) => {
+    const knockoutLayer = svg.querySelector('g[data-layer="knockouts"]');
+    const labelsLayer = svg.querySelector('g[data-layer="labels"]');
+
+    if (!knockoutLayer || !labelsLayer) return;
+
+    knockoutLayer.querySelectorAll('rect[data-knockout-bg]').forEach((rect) => rect.remove());
+
+    labelsLayer.querySelectorAll<SVGTextElement>('text[data-knockout]').forEach((t) => {
       const bb = t.getBBox();
       const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
       rect.setAttribute('x', String(bb.x - 3));
@@ -209,7 +236,7 @@ const labeledEvents = positionedEvents.map((ev) => {
       rect.setAttribute('rx', '2');
       rect.setAttribute('fill', 'var(--color-bg-light)');
       rect.setAttribute('data-knockout-bg', '');
-      t.parentNode?.insertBefore(rect, t);
+      knockoutLayer.appendChild(rect);
     });
   });
 </script>
@@ -219,6 +246,11 @@ const labeledEvents = positionedEvents.map((ev) => {
     background: var(--color-bg-light);
     padding: 22px 22px 14px;
     border-radius: 8px;
+    flex-basis: 100%;
+  }
+  .winding-path-inner {
+    width: min(100%, 28rem);
+    margin-inline: auto;
   }
   .winding-path-label {
     font-size: 11px;
@@ -226,7 +258,8 @@ const labeledEvents = positionedEvents.map((ev) => {
     letter-spacing: 0.08em;
     color: var(--color-body);
     text-transform: uppercase;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+    text-align: center;
   }
   .winding-path {
     width: 100%;
@@ -240,6 +273,7 @@ const labeledEvents = positionedEvents.map((ev) => {
     font-size: 13px;
     color: var(--color-body);
     margin: 8px 0 0;
+    text-align: center;
   }
 
   @media (max-width: 359px) {
