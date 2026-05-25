@@ -8,7 +8,7 @@ import MHCPInline from '../components/MHCPInline.astro';
   description="Compare mental health professionals in Australia, including psychologists, psychiatrists, counsellors, social workers, and more. Understand costs, Medicare rebates, and referral requirements."
 >
   <!-- Hero + bubble map -->
-  <section class="bg-white">
+  <section>
     <div class="max-w-[1100px] mx-auto px-4 pt-10 md:pt-20 pb-8 md:pb-10">
       <h1 class="text-3xl md:text-[2.5rem] font-bold text-heading mb-2 tracking-[-0.01em] text-center">Who should I see?</h1>
       <PractitionerBubbleMap />
@@ -16,9 +16,9 @@ import MHCPInline from '../components/MHCPInline.astro';
   </section>
 
   <!-- "Does it actually matter?" accordion -->
-  <section class="bg-white">
+  <section>
     <div class="max-w-[960px] mx-auto px-4 pt-2 pb-16 md:pb-20 flex justify-center">
-      <details id="hero-accordion" class="accordion-item scroll-mt-24 bg-bg-light rounded-lg px-6 md:px-10 py-4">
+      <details id="hero-accordion" class="accordion-item scroll-mt-24 bg-paper-cream rounded-lg px-6 md:px-10 py-4">
         <summary class="text-lg font-semibold text-heading w-fit mx-auto">Does it actually matter?</summary>
         <div class="accordion-content space-y-5 text-lg leading-relaxed text-body mt-4">
           <p>For many people, the title and training of the professional (i.e. counsellor, psychologist, psychotherapist) matters less than the sense that they trust and get along with their professional.</p>
@@ -29,7 +29,7 @@ import MHCPInline from '../components/MHCPInline.astro';
   </section>
 
   <!-- GP callout -->
-  <section class="bg-white">
+  <section>
     <div class="max-w-[960px] mx-auto px-4 pb-10 md:pb-12">
       <div class="bg-primary-light rounded-xl p-8 md:p-10">
         <div class="flex flex-col md:flex-row md:items-start gap-4">
@@ -68,7 +68,7 @@ import MHCPInline from '../components/MHCPInline.astro';
   </section>
 
   <!-- CTA -->
-  <section class="bg-bg-light">
+  <section class="bg-paper-cream">
     <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20 text-center">
       <h2 class="text-xl font-semibold text-heading mb-3">Want to estimate your out-of-pocket costs?</h2>
       <a href="/calculator/" class="inline-block bg-primary text-white px-10 py-4 rounded-xl font-semibold shadow-sm hover:bg-primary/90 transition-colors">

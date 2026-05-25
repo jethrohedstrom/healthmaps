@@ -30,6 +30,10 @@
   --color-border: #e5e7eb;
   --color-path: #c8d8d0;
   --color-bg-light: #f8fafc;
+  /* Softer surfaces — pathway page treatment */
+  --color-page-sage: #EEF4EF;     /* page background (replaces white on pathway page) */
+  --color-paper-cream: #FBFAF6;   /* paper-sheet surface for hero + secondary cards */
+  --color-paper-border: rgba(15, 74, 50, 0.06);  /* faint sage-tinted border on paper surfaces */
   --color-dark: #0f172a;
 
   /* Pathway card accent colours */

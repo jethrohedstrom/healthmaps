@@ -17,7 +17,7 @@ const grouped = tips.reduce((acc, tip) => {
   description="Practical tips for navigating Australia's mental health system: what to say to your GP, how to choose a psychologist, and how to reduce costs."
 >
   <!-- Hero -->
-  <section class="bg-white">
+  <section>
     <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
       <h1 class="text-3xl md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em]">Practical Tips</h1>
       <p class="text-lg text-body">
@@ -27,7 +27,7 @@ const grouped = tips.reduce((acc, tip) => {
   </section>
 
   <!-- Tips by Category -->
-  <section class="bg-bg-light">
+  <section class="bg-paper-cream">
     <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
       {Object.entries(grouped).map(([category, categoryTips]) => (
         <div class="mb-10 last:mb-0">

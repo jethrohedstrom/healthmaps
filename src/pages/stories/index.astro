@@ -9,7 +9,7 @@ const stories = await getCollection('stories');
   description="Real-life experiences of Australians navigating the mental health system, from booking a GP to finding the right psychologist."
 >
   <!-- Hero -->
-  <section class="bg-white">
+  <section>
     <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
       <h1 class="text-3xl md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em]">Stories</h1>
       <p class="text-lg text-body">
@@ -20,7 +20,7 @@ const stories = await getCollection('stories');
   </section>
 
   <!-- Story Cards -->
-  <section class="bg-bg-light">
+  <section class="bg-paper-cream">
     <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
       {stories.length === 0 ? (
         <p class="text-body text-center">Stories coming soon.</p>
