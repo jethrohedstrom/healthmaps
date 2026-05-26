@@ -141,10 +141,15 @@ const bmData = {
 
   let moreVisible = false;
   const bmSvg = wrapper.querySelector('.bm-map-svg') as SVGSVGElement;
-  const FULL_VB = '0 0 700 540';
-  const MOBILE_VB = '80 40 560 500';
+  const MOBILE_MEDIA_QUERY = '(max-width: 767px)';
+  const FULL_VB = bmSvg?.getAttribute('data-viewbox-full') || '0 0 700 540';
+  const MOBILE_VB = bmSvg?.getAttribute('data-viewbox-mobile') || FULL_VB;
   // Keep identical scale between states to avoid perceived blob size jumps.
-  const MOBILE_VB_EXPANDED = '80 40 560 500';
+  const MOBILE_VB_EXPANDED = bmSvg?.getAttribute('data-viewbox-mobile-expanded') || MOBILE_VB;
+
+  function isMobileViewport() {
+    return window.matchMedia(MOBILE_MEDIA_QUERY).matches;
+  }
 
   // --- Mobile blob repositioning ---
   // Shift only edge hidden blobs inward when expanded to avoid clipping.
@@ -160,7 +165,7 @@ const bmData = {
   });
 
   function repositionMobileBlobs() {
-    const mobile = window.innerWidth < 768;
+    const mobile = isMobileViewport();
     origX.forEach(function(origVal, el) {
       const prof = el.getAttribute('data-prof') || '';
       const shift = mobileShifts[prof] || 0;
@@ -174,10 +179,11 @@ const bmData = {
 
   function updateViewBox() {
     if (!bmSvg) return;
-    if (window.innerWidth < 768) {
-      bmSvg.setAttribute('viewBox', moreVisible ? MOBILE_VB_EXPANDED : MOBILE_VB);
-    } else {
-      bmSvg.setAttribute('viewBox', FULL_VB);
+    const targetViewBox = isMobileViewport()
+      ? (moreVisible ? MOBILE_VB_EXPANDED : MOBILE_VB)
+      : FULL_VB;
+    if (bmSvg.getAttribute('viewBox') !== targetViewBox) {
+      bmSvg.setAttribute('viewBox', targetViewBox);
     }
     repositionMobileBlobs();
   }
@@ -236,7 +242,7 @@ const bmData = {
   updateViewBox();
 
   function isMobile() {
-    return window.innerWidth < 768;
+    return isMobileViewport();
   }
 
   function positionPopover(blobEl: SVGElement) {

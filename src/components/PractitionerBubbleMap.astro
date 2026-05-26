@@ -9,7 +9,16 @@
   <div class="bm-layout">
     <div class="bm-map-col">
       <div class="bm-map-container">
-        <svg class="bm-map-svg" viewBox="0 0 700 540" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Interactive map of mental health professionals in Australia. Tap a bubble to learn more.">
+        <svg
+          class="bm-map-svg"
+          viewBox="0 0 700 540"
+          data-viewbox-full="0 0 700 540"
+          data-viewbox-mobile="80 40 560 500"
+          data-viewbox-mobile-expanded="80 40 560 500"
+          xmlns="http://www.w3.org/2000/svg"
+          role="img"
+          aria-label="Interactive map of mental health professionals in Australia. Tap a bubble to learn more."
+        >
           <defs>
             <filter id="goo">
               <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur"/>
@@ -97,6 +106,19 @@
     </div>
   </div>
 </div>
+
+<script is:inline>
+  (function() {
+    const mobileQuery = '(max-width: 767px)';
+    document.querySelectorAll('.bubble-map .bm-map-svg').forEach(function(node) {
+      if (!(node instanceof SVGSVGElement)) return;
+      const fullViewBox = node.getAttribute('data-viewbox-full') || '0 0 700 540';
+      const mobileViewBox = node.getAttribute('data-viewbox-mobile') || fullViewBox;
+      const initialViewBox = window.matchMedia(mobileQuery).matches ? mobileViewBox : fullViewBox;
+      node.setAttribute('viewBox', initialViewBox);
+    });
+  })();
+</script>
 
 <script>
   import '../scripts/practitioner-bubble-map.ts';
