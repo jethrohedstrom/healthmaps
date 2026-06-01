@@ -3,6 +3,7 @@ import '../styles/global.css';
 import CrisisBanner from '../components/CrisisBanner.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import ScrollProgress from '../components/ScrollProgress.astro';
 
 interface Props {
   title: string;
@@ -46,6 +47,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://healthma
     <meta name="generator" content={Astro.generator} />
   </head>
   <body class="min-h-screen flex flex-col bg-page-sage">
+    <ScrollProgress />
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <Header />
     <main id="main-content" class="flex-1">
