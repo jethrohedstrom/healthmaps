@@ -3,7 +3,10 @@
 
 <div class="bubble-map">
   <div class="bm-header">
-    <p class="bm-subtitle">Tap a bubble to see what they do</p>
+    <span class="bm-hint">
+      <span class="bm-hint-dot" aria-hidden="true"></span>
+      Tap a bubble to see what they do
+    </span>
   </div>
 
   <div class="bm-layout">
@@ -12,7 +15,7 @@
         <svg
           class="bm-map-svg"
           viewBox="0 0 700 540"
-          data-viewbox-full="0 0 700 540"
+          data-viewbox-full="0 66 700 474"
           data-viewbox-mobile="80 40 560 500"
           data-viewbox-mobile-expanded="80 40 560 500"
           xmlns="http://www.w3.org/2000/svg"
@@ -131,10 +134,12 @@
   }
 
   .bubble-map .bm-header {
+    position: relative;
+    z-index: 5;
     text-align: center;
-    padding: 0 24px 8px;
+    padding: 0 24px 0;
     max-width: 560px;
-    margin: 0 auto;
+    margin: 40px auto 0;
   }
 
   .bubble-map .bm-layout {
@@ -155,20 +160,37 @@
     margin-bottom: 8px;
   }
 
-  .bubble-map .bm-subtitle {
-    color: #64748b;
-    font-size: 15px;
-    line-height: 1.6;
+  .bubble-map .bm-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--color-primary);
+    background: #fff;
+    padding: 8px 16px 8px 14px;
+    border-radius: 999px;
+    box-shadow: 0 6px 22px rgba(27, 74, 50, 0.18), 0 1px 3px rgba(27, 74, 50, 0.10);
+  }
+
+  .bubble-map .bm-hint-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--color-primary-mid);
+    flex: 0 0 auto;
   }
 
   .bubble-map .bm-map-container {
-    margin: 12px auto 0;
+    margin: -28px auto 0;
     padding: 0 12px;
   }
 
   @media (max-width: 767px) {
     .bubble-map .bm-header {
-      padding: 0 12px 8px;
+      padding: 0 12px 4px;
     }
     .bubble-map .bm-map-container {
       padding: 0;
