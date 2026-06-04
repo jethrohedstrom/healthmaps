@@ -12,7 +12,7 @@ const accentTopBorder = accentColor.replace('border-l-', 'border-t-');
 const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-primary' };
 ---
 
-<div id={id} data-pathway-card data-progressive-card data-legacy-step-hash data-scroll-into-view-on-expand class={`pathway-card-clickable relative rounded-xl shadow-[0_24px_50px_-28px_rgba(15,74,50,0.28)] hover:shadow-xl transition-shadow border-t-4 ${accentTopBorder} bg-white p-6 md:p-8 flex flex-col`}>
+<div id={id} data-pathway-card data-progressive-card data-legacy-step-hash class={`pathway-card-clickable relative rounded-xl shadow-[0_24px_50px_-28px_rgba(15,74,50,0.28)] hover:shadow-xl transition-shadow border-t-4 ${accentTopBorder} bg-white p-6 md:p-8 flex flex-col`}>
   {badge && (
     <span class="absolute -top-3 left-6 inline-flex text-xs font-semibold text-white bg-primary px-3 py-1 rounded-full shadow-sm z-10">{badge}</span>
   )}

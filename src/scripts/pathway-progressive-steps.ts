@@ -42,23 +42,25 @@ function initProgressiveCard(card: HTMLElement) {
   const l1Details = card.querySelector<HTMLDetailsElement>(
     'details.pathway-details-toggle:not(.pathway-details-toggle--nested)'
   );
+  const nestedDetails = card.querySelector<HTMLDetailsElement>('details.pathway-details-toggle--nested');
 
-  // Opt-in: only cards that ask for it scroll themselves into view on L1 expand
-  // (the GP hero card, which otherwise pushes its content below the fold).
-  const scrollIntoViewOnExpand = card.hasAttribute('data-scroll-into-view-on-expand');
-
-  // Set while a hash deep-link drives the L1 open, so its scroll-to-step wins.
-  // Consumed (cleared) by the L1 toggle handler below.
+  // Set while a hash deep-link drives the L1/L2 open, so its scroll-to-step wins.
+  // Consumed (cleared) by the matching toggle handler below.
   let suppressL1Scroll = false;
+  let suppressNestedScroll = false;
 
-  function scrollCardUnderHeader() {
+  // Smoothly bring `anchor`'s top just under the sticky header on accordion open.
+  // Down-only: never yanks the page up when the anchor already sits at/above the
+  // target. Uses ease-in-out so the scroll ramps gently up and down (no jolt at
+  // click time), with a distance-scaled duration; honours reduced-motion.
+  function scrollAnchorUnderHeader(anchor: HTMLElement) {
     const header = document.querySelector<HTMLElement>('header');
     const offset = (header?.offsetHeight ?? 0) + 16;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     requestAnimationFrame(() => {
       const startY = window.scrollY;
-      const targetY = Math.max(0, card.getBoundingClientRect().top + startY - offset);
+      const targetY = Math.max(0, anchor.getBoundingClientRect().top + startY - offset);
 
       if (reduceMotion) {
         if (targetY > startY + 8) window.scrollTo({ top: targetY, behavior: 'auto' });
@@ -66,16 +68,17 @@ function initProgressiveCard(card: HTMLElement) {
       }
       if (targetY <= startY + 8) return;
 
-      const revealMs = l1Details
-        ? (parseFloat(getComputedStyle(l1Details, '::details-content').transitionDuration) || 0) * 1000
-        : 0;
-      const duration = revealMs > 0 ? revealMs : 300;
-      const easeOut = (t: number) => 1 - Math.pow(1 - t, 3);
+      // Scale the glide to the distance travelled: short hops stay snappy, longer
+      // jumps get more time to ease rather than rushing.
+      const distance = targetY - startY;
+      const duration = Math.min(720, Math.max(420, distance * 0.6));
+      const easeInOut = (t: number) =>
+        t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
       const t0 = performance.now();
 
       const step = () => {
         const t = Math.min(1, (performance.now() - t0) / duration);
-        const y = startY + (targetY - startY) * easeOut(t);
+        const y = startY + distance * easeInOut(t);
         window.scrollTo({ top: y, behavior: 'instant' as ScrollBehavior });
         if (t < 1) requestAnimationFrame(step);
       };
@@ -83,14 +86,28 @@ function initProgressiveCard(card: HTMLElement) {
     });
   }
 
-  if (l1Details && scrollIntoViewOnExpand) {
+  if (l1Details) {
     l1Details.addEventListener('toggle', () => {
       if (!l1Details.open) return;
       if (suppressL1Scroll) {
         suppressL1Scroll = false;
         return;
       }
-      scrollCardUnderHeader();
+      // Anchor to the whole card: brings icon/title + revealed body into view and
+      // also settles the desktop full-width grid reflow that L1-open triggers.
+      scrollAnchorUnderHeader(card);
+    });
+  }
+
+  if (nestedDetails) {
+    nestedDetails.addEventListener('toggle', () => {
+      if (!nestedDetails.open) return;
+      if (suppressNestedScroll) {
+        suppressNestedScroll = false;
+        return;
+      }
+      const nestedSummary = nestedDetails.querySelector<HTMLElement>(':scope > summary');
+      scrollAnchorUnderHeader(nestedSummary ?? nestedDetails);
     });
   }
 
@@ -101,7 +118,10 @@ function initProgressiveCard(card: HTMLElement) {
     }
 
     const nested = card.querySelector<HTMLDetailsElement>('details.pathway-details-toggle--nested');
-    if (nested) nested.open = true;
+    if (nested && !nested.open) {
+      suppressNestedScroll = true;
+      nested.open = true;
+    }
 
     for (let i = 1; i <= stepNumber; i++) {
       const li = stepListRoot.querySelector<HTMLLIElement>(`li[data-step-index="${i}"]`);
@@ -137,6 +157,11 @@ function initProgressiveCard(card: HTMLElement) {
     detail.addEventListener('toggle', () => {
       if (!detail.open) return;
       if (detail.closest('[data-progressive-card]') !== card) return;
+
+      // Settle the opened step under the header so its detail (and the next
+      // revealed step) are visible. Runs on every open, including re-opens.
+      const stepSummary = detail.querySelector<HTMLElement>(':scope > summary');
+      scrollAnchorUnderHeader(stepSummary ?? detail);
 
       const li = detail.closest('li');
       if (!li || !stepListRoot.contains(li)) return;
