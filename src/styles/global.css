@@ -229,6 +229,10 @@ details[open] > summary::after {
   }
 }
 
+/* Pathway hero: two-column layout on desktop. Grid reflow on GP expand was removed —
+   the 350ms sideways centering slide read as unpolished, especially on re-expand
+   when scroll was already pinned (run6 logs: cardLeft 664→343 with scrollY fixed). */
+
 /* Pathway card progressive-disclosure toggle: green chevron + Show/Hide label swap */
 .pathway-details-toggle > summary {
   padding-right: 1.5rem;
@@ -284,7 +288,7 @@ details[open] > summary::after {
 .pathway-step-item::details-content {
   block-size: 0;
   overflow: clip;
-  transition: block-size 0.25s ease, content-visibility 0.25s allow-discrete;
+  transition: block-size 0.3s ease-out, content-visibility 0.3s allow-discrete;
 }
 .pathway-details-toggle[open]::details-content,
 .pathway-step-item[open]::details-content {

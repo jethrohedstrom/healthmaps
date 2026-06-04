@@ -22,6 +22,8 @@ export interface PathwayCard {
   };
   /** Optional event data for PathwayTimeHorizon; omitted cards render its "varies" fallback. */
   timeHorizon?: PathwayCardTimeHorizon;
+  /** When true, steps fan out one-by-one with a progress bar (PathwayCardVisual progressive mode). */
+  progressive?: boolean;
   steps: PathwayStep[];
 }
 
@@ -125,6 +127,7 @@ export const pathwayCards: PathwayCard[] = [
         event('Practitioner', 'one-two-weeks', 'days to 2 weeks'),
       ],
     },
+    progressive: true,
     steps: [
       {
         number: 1,
@@ -166,6 +169,7 @@ export const pathwayCards: PathwayCard[] = [
         event('Program', 'same-day'),
       ],
     },
+    progressive: true,
     steps: [
       {
         number: 1,
@@ -192,6 +196,7 @@ export const pathwayCards: PathwayCard[] = [
         event('App', 'same-day'),
       ],
     },
+    progressive: true,
     steps: [
       {
         number: 1,
@@ -213,6 +218,7 @@ export const pathwayCards: PathwayCard[] = [
       sessions: 'Varies',
       wait: 'Varies by service',
     },
+    progressive: true,
     steps: [
       {
         number: 1,
