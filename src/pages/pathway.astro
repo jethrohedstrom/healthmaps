@@ -4,12 +4,13 @@ import PathwayCardVisual from '../components/PathwayCardVisual.astro';
 import PathwayCardGPProgressive from '../components/PathwayCardGPProgressive.astro';
 import { pathwayCards } from '../data/pathway-cards';
 
-const gpCard = pathwayCards.find((c) => c.id === 'through-gp')!;
-const otherCards = pathwayCards.filter((c) => c.id !== 'through-gp');
+const liveCards = pathwayCards.filter((c) => !c.draft);
+const gpCard = liveCards.find((c) => c.id === 'through-gp')!;
+const otherCards = liveCards.filter((c) => c.id !== 'through-gp');
 ---
 <BaseLayout
   title="How to Access Mental Health Support"
-  description="Ways to access mental health support in Australia: through your GP, privately, free or low-cost services, and digital programs."
+  description="Ways to access mental health support in Australia: through your GP, privately, or through free and low-cost services."
 >
   <section>
     <div class="max-w-[1240px] mx-auto px-4 md:px-6 pt-8 md:pt-20 pb-10 md:pb-16">
@@ -29,15 +30,8 @@ const otherCards = pathwayCards.filter((c) => c.id !== 'through-gp');
               href="#pathways"
               class="bg-primary text-white px-5 py-3 rounded-xl font-semibold text-sm hover:bg-primary-mid transition-colors"
             >
-              Compare all 5 pathways
+              Compare all {liveCards.length} pathways
             </a>
-            <button
-              type="button"
-              disabled
-              class="border border-border text-heading px-5 py-3 rounded-xl font-semibold text-sm opacity-75 cursor-not-allowed"
-            >
-              Not sure? Take the quiz
-            </button>
           </div>
         </div>
 
@@ -48,7 +42,7 @@ const otherCards = pathwayCards.filter((c) => c.id !== 'through-gp');
                 href="#pathways"
                 class="inline-flex items-center gap-1.5 text-sm font-medium text-body/70 hover:text-primary transition-colors"
               >
-                <span>4 more pathways below</span>
+                <span>{otherCards.length} more pathways below</span>
                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
               </a>
             </div>
@@ -60,7 +54,7 @@ const otherCards = pathwayCards.filter((c) => c.id !== 'through-gp');
 
   <section id="pathways" class="scroll-mt-24">
     <div class="max-w-[1240px] mx-auto px-4 md:px-6 py-12 md:py-16">
-      <p class="text-sm uppercase tracking-widest text-body font-semibold mb-6">The other 4 pathways</p>
+      <p class="text-sm uppercase tracking-widest text-body font-semibold mb-6">The other {otherCards.length} pathways</p>
 
       <div class="pathway-grid grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
         {otherCards.map((card) => (
@@ -73,7 +67,7 @@ const otherCards = pathwayCards.filter((c) => c.id !== 'through-gp');
         <h3 class="text-lg font-bold text-heading mb-2">NDIS-funded mental health support</h3>
         <p class="text-body leading-relaxed">
           If you have a severe, long-term mental health condition (psychosocial disability) that substantially affects your daily life, you may be eligible for NDIS-funded support.
-          <a href="/ndis" class="text-primary font-semibold underline underline-offset-2">Learn about the NDIS pathway</a>.
+          <a href="https://www.ndis.gov.au/understanding/how-ndis-works/mental-health-and-ndis" target="_blank" rel="noopener noreferrer" class="text-primary font-semibold underline underline-offset-2">Learn about NDIS mental health support</a>.
         </p>
       </aside>
     </div>

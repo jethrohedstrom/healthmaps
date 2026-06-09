@@ -24,6 +24,8 @@ export interface PathwayCard {
   timeHorizon?: PathwayCardTimeHorizon;
   /** When true, steps fan out one-by-one with a progress bar (PathwayCardVisual progressive mode). */
   progressive?: boolean;
+  /** Drafts are excluded from rendering until their copy is finalised. */
+  draft?: boolean;
   steps: PathwayStep[];
 }
 
@@ -153,6 +155,7 @@ export const pathwayCards: PathwayCard[] = [
   },
   {
     id: 'digital-free',
+    draft: true, // copy pending deep research — hidden from the live page
     icon: 'clipboard', // REVIEW: pick a more fitting icon for digital programs
     title: 'Free digital programs',
     bestFor: 'Best for: TODO',
@@ -180,6 +183,7 @@ export const pathwayCards: PathwayCard[] = [
   },
   {
     id: 'digital-paid',
+    draft: true, // copy pending deep research — hidden from the live page
     icon: 'shield', // REVIEW: pick a more fitting icon for paid therapy apps
     title: 'Paid therapy apps',
     bestFor: 'Best for: TODO',
