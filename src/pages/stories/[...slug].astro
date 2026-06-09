@@ -23,6 +23,10 @@ const { Content } = await render(story);
     <p class="text-body mb-8">
       {story.data.name}{story.data.age ? `, ${story.data.age}` : ''}{story.data.location ? `, ${story.data.location}` : ''}
     </p>
+    {/* Remove this note once real, consented stories replace the composites */}
+    <p class="text-sm text-body bg-bg-light rounded-lg px-5 py-3 mb-8">
+      This is an illustrative story based on common experiences, not a real person's account.
+    </p>
     <div class="prose max-w-none text-body">
       <Content />
     </div>

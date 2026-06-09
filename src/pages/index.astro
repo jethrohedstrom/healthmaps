@@ -35,13 +35,7 @@ const stories = await getCollection('stories');
             Who should I see?
           </h2>
           <p class="text-base text-body">
-            Psychologist?<br />
-            Counsellor?<br />
-            Psychiatrist?<br />
-            EAP?<br />
-            Private therapist?<br />
-            Crisis support?<br /><br />
-            We explain what each one actually does.
+            Psychologist, counsellor, psychiatrist, EAP, or crisis support — we explain what each one actually does.
           </p>
           <span class="inline-flex items-center gap-1 text-primary font-semibold mt-8 group-hover:gap-2 transition-all">
             Compare professionals
@@ -91,7 +85,7 @@ const stories = await getCollection('stories');
         <div class="max-w-6xl mx-auto px-6 py-24 md:py-32">
           <div class="text-center mb-14">
             <h2 class="text-3xl md:text-4xl font-bold text-heading mb-4">Stories from Others</h2>
-            <p class="text-body max-w-xl mx-auto">Real experiences navigating Australia's mental health system.</p>
+            <p class="text-body max-w-xl mx-auto">Illustrative stories about navigating Australia's mental health system.</p>
           </div>
           <div class="grid md:grid-cols-2 gap-8">
             {stories.slice(0, 2).map(story => (
