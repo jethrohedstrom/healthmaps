@@ -209,7 +209,7 @@ const bmData = {
         labels?.classList.remove('bm-hidden');
         labels?.classList.add('bm-visible');
         labels?.setAttribute('aria-hidden', 'false');
-        showMoreBtn.textContent = '\u2190 Show fewer professionals';
+        showMoreBtn.textContent = '\uff0d Show fewer professionals';
       } else {
         // Close popover synchronously (no 200ms race with relayout)
         if (activeKey) {
@@ -222,7 +222,7 @@ const bmData = {
         labels?.classList.add('bm-hidden');
         labels?.classList.remove('bm-visible');
         labels?.setAttribute('aria-hidden', 'true');
-        showMoreBtn.textContent = '\uff0b Show all professionals';
+        showMoreBtn.textContent = '\uff0b Add 4 more to the map';
       }
       updateViewBox();
       requestAnimationFrame(function() {
