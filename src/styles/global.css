@@ -277,6 +277,49 @@ details[open] > summary::after {
   transform: scale(0.997);
 }
 
+/* Expanded "other pathway" card takes its own full-width row on desktop, so it
+   no longer leaves a lopsided 2-column row. Mobile is single-column already, so
+   this only applies at md+. The `> details[open]` direct-child match targets only
+   the card's top-level accordion, not the nested progressive steps inside it. */
+@media (min-width: 768px) {
+  .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) {
+    grid-column: 1 / -1;
+  }
+  /* On a full-width expanded card, centre the content as a readable column
+     (720px = design-system body-text width) rather than letting it stretch to
+     ~1128px or cling to the left edge. The timeline infographic is centre-anchored
+     by design, so the rest of the content is centred too — title, intro, pills,
+     icon and "best for" all share the timeline's axis for a cohesive feature card.
+     Scoped to expanded + desktop, so collapsed/mobile cards are untouched. */
+  .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) > .pathway-card-inner {
+    max-width: 45rem; /* 720px — matches .claude/rules/spacing.md body-text cap */
+    width: 100%;
+    margin-inline: auto;
+    text-align: center;
+  }
+  /* Centre the fixed-width icon box (first element child of the wrapper). */
+  .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) > .pathway-card-inner > div:first-child {
+    margin-inline: auto;
+  }
+  /* Centre the cost/sessions pills row above the timeline. */
+  .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) .pathway-l1-body > .flex.flex-wrap {
+    justify-content: center;
+  }
+  /* Keep the numbered step list left-aligned for readability. */
+  .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) .pathway-step-accordions,
+  .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) .pathway-step-detail {
+    text-align: left;
+  }
+  /* Centre the nested "How does this work?" / "Hide steps" toggle. It is a
+     full-width flex row by default (touch target) which can't be centred by
+     text-align; make it content-width inline-flex like the top toggle so it
+     centres, chevron tucked in beside the label. Mobile keeps the full-width row. */
+  .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) .pathway-details-toggle--nested > summary {
+    display: inline-flex;
+    width: auto;
+  }
+}
+
 /* GP progressive-disclosure card: smooth height animation for nested <details>.
    Modern Chrome/Safari/Firefox honour interpolate-size + ::details-content;
    older browsers fall back to instant open with no regression. */
