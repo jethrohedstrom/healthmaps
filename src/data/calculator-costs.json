@@ -1,17 +1,21 @@
 {
-  "lastUpdated": "2025-01-01",
+  "lastUpdated": "2026-06-10",
   "note": "Medicare rebate amounts are approximate and may change. Check Services Australia for current rates.",
+  "reviewNotes": [
+    "REVIEW: psychologist rebates verified 2026-06-10 against MBS items 80110 ($98.95) and 80010 ($145.25).",
+    "REVIEW: psychiatrist rebates NOT yet verified — calculator previously said $214.40 initial / $108.85 follow-up while the bubble map says $262.10 / $87.05-$134.00. MBS item 291 (referred initial, 45+ min) was ~$254.95 in 2025. Reconcile against MBS items 291/296/300-308 and update both sources."
+  ],
   "practitionerTypes": [
     {
       "id": "general-psychologist",
       "label": "General Psychologist",
-      "rebatePerSession": 93.35,
+      "rebatePerSession": 98.95,
       "requiresMHCP": true
     },
     {
       "id": "clinical-psychologist",
       "label": "Clinical Psychologist",
-      "rebatePerSession": 149.25,
+      "rebatePerSession": 145.25,
       "requiresMHCP": true
     },
     {

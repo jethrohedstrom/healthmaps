@@ -1,6 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CostCalculator from '../components/CostCalculator.astro';
+import costs from '../data/calculator-costs.json';
+
+const lastVerified = new Date(costs.lastUpdated).toLocaleDateString('en-AU', {
+  month: 'long',
+  year: 'numeric',
+});
 ---
 <BaseLayout
   title="Cost Calculator"
@@ -20,6 +26,7 @@ import CostCalculator from '../components/CostCalculator.astro';
   <section class="bg-paper-cream">
     <div class="max-w-xl mx-auto px-4 py-16 md:py-20">
       <CostCalculator />
+      <p class="text-sm text-gray-500 text-center mt-6">Rebate figures last checked: {lastVerified}</p>
     </div>
   </section>
 
@@ -30,7 +37,7 @@ import CostCalculator from '../components/CostCalculator.astro';
       <div class="space-y-5 text-body">
         <!-- REVIEW -->
         <p>
-          When you see a psychologist with a valid <strong>Mental Health Care Plan (MHCP)</strong> and GP referral,
+          When you see a psychologist with a valid <a href="/pathway/#through-gp" class="font-semibold text-primary underline underline-offset-2">Mental Health Care Plan (MHCP)</a> and GP referral,
           Medicare pays back a fixed amount per session, called the <strong>rebate</strong>. The difference between
           the session fee and the rebate is your <strong>out-of-pocket cost</strong> (also called the "gap").
         </p>
@@ -42,6 +49,29 @@ import CostCalculator from '../components/CostCalculator.astro';
           Some psychologists <strong>bulk-bill</strong>, meaning they charge only the Medicare rebate amount, so your
           out-of-pocket cost is $0. However, bulk-billing psychologists often have longer wait times.
         </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Next steps -->
+  <section class="bg-paper-cream">
+    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20 text-center">
+      <h2 class="text-xl font-semibold text-heading mb-6">Know your numbers? Here's what's next.</h2>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a
+          href="/tips/what-to-say-to-gp/"
+          class="inline-flex items-center justify-center gap-1.5 font-semibold text-heading bg-white border border-border px-6 py-3 rounded-xl hover:border-primary hover:text-primary transition-colors"
+        >
+          What to say to your GP
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+        </a>
+        <a
+          href="/pathway/"
+          class="inline-flex items-center justify-center gap-1.5 bg-primary text-white px-6 py-3 rounded-xl font-semibold shadow-sm hover:bg-primary/90 transition-colors"
+        >
+          See the full pathway
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
+        </a>
       </div>
     </div>
   </section>
