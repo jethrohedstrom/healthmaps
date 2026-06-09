@@ -6,9 +6,9 @@ const bmData = {
       { text: "Nationally registered", cls: "badge-registered" },
       { text: "Medicare", cls: "badge-medicare" }
     ],
-    desc: "A doctor (GP) is where most mental health journeys start. They can diagnose mental health conditions, prescribe medication, and set you up with a <button type=\"button\" class=\"bm-mhcp-toggle\" style=\"color:var(--color-primary);font-weight:600;text-decoration:underline;text-underline-offset:2px;cursor:pointer;background:none;border:none;padding:0;font-size:inherit;font-family:inherit;line-height:inherit;\">Mental Health Care Plan (MHCP)</button>, which unlocks Medicare-funded sessions with a psychologist, social worker, or OT. Some people only need their GP for medication and check-ins. For talk therapy, your GP will refer you to one of these other professionals.",
+    desc: "<p>A doctor (GP) is where most mental health journeys start.</p><ul><li>Can diagnose mental health conditions and prescribe medication</li><li>Sets you up with a <button type=\"button\" class=\"bm-mhcp-toggle\" style=\"color:var(--color-primary);font-weight:600;text-decoration:underline;text-underline-offset:2px;cursor:pointer;background:none;border:none;padding:0;font-size:inherit;font-family:inherit;line-height:inherit;text-align:left;\">Mental Health Care Plan (MHCP)</button>, which unlocks Medicare-funded sessions with a psychologist, social worker, or OT</li><li>For talk therapy, your GP refers you on — some people only need their GP for medication and check-ins</li></ul>",
     details: [
-      { label: "Cost", value: "Free – $100+<br><a href=\"#\" style=\"font-size:11px;color:var(--color-primary);font-weight:600;text-decoration:none;white-space:nowrap;\">More on pricing →</a>" },
+      { label: "Cost", value: "Free – $100+<br><a href=\"/calculator/\" style=\"font-size:11px;color:var(--color-primary);font-weight:600;text-decoration:none;white-space:nowrap;\">More on pricing →</a>" },
       { label: "Referral", value: "None needed" },
       { label: "Can prescribe", value: "Yes" },
       { label: "Wait", value: "Typically 0–5 days" }
@@ -21,7 +21,7 @@ const bmData = {
       { text: "Nationally registered", cls: "badge-registered" },
       { text: "Medicare (with GP referral)", cls: "badge-medicare" }
     ],
-    desc: "The most common professional people see through Medicare for mental health. They work with you on specific problems using techniques that are backed by research. You'll need a GP referral to access Medicare rebates. There are two types: general psychologists and clinical psychologists. Clinical psychologists have additional specialist training and attract a higher Medicare rebate.",
+    desc: "<p>The most common professional people see through Medicare for mental health.</p><ul><li>Works with you on specific problems using research-backed techniques</li><li>GP referral needed to access Medicare rebates</li><li>Two types — general and clinical. Clinical psychologists have extra specialist training and a higher Medicare rebate</li></ul>",
     details: [
       { label: "Cost", value: "$150–$300" },
       { label: "Medicare rebate", value: "$98.95 (general) / $145.25 (clinical)" },
@@ -37,7 +37,7 @@ const bmData = {
       { text: "Nationally registered", cls: "badge-registered" },
       { text: "Medicare (with GP referral)", cls: "badge-medicare" }
     ],
-    desc: "A psychiatrist is a medical doctor who specialises in mental health. They can diagnose conditions, prescribe and manage medication, and provide therapy. Most people see a psychiatrist for conditions like ADHD, bipolar disorder, or treatment-resistant depression, when a clear diagnosis is needed, or when specialist medications are required that a GP can't prescribe. You'll need a GP referral to access a Medicare rebate.",
+    desc: "<p>A medical doctor who specialises in mental health.</p><ul><li>Can diagnose conditions, prescribe and manage medication, and provide therapy</li><li>Most often seen for ADHD, bipolar disorder, treatment-resistant depression, or when specialist medications are needed that a GP can't prescribe</li><li>GP referral needed to access a Medicare rebate</li></ul>",
     costRows: [
       { label: "First session", fee: "$400 – $800", rebate: "$262.10", outOfPocket: "$138 – $538" },
       { label: "Follow-up sessions", fee: "$200 – $400", rebate: "$87.05 – $134.00", outOfPocket: "$66 – $266" }
@@ -57,7 +57,7 @@ const bmData = {
       { text: "Voluntary accreditation (ACA/PACFA)", cls: "badge-voluntary" }
     ],
     // REVIEW: health-system claim, verify "no benefit to getting a GP referral for counsellors" is accurate
-    desc: "A trained listener who helps you work through everyday challenges: stress, grief, relationships, life transitions. You don't need a GP appointment or referral, and there's no benefit to getting one, since counsellors sit outside Medicare entirely. Just book directly. In Australia, long wait times for psychologists are common. Counsellors are generally easier to access. Note: \u201ccounsellor\u201d is not a protected title. <a href=\"https://www.arcapregister.com.au/\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color:var(--color-primary);font-weight:600;text-decoration:underline;text-underline-offset:2px;\">Verify your practitioner's credentials</a>.",
+    desc: "<p>A trained listener who helps you work through everyday challenges: stress, grief, relationships, life transitions.</p><ul><li>Book directly \u2014 no GP appointment or referral needed, and no benefit to getting one, since counsellors sit outside Medicare entirely</li><li>Generally easier to access than psychologists, where long waits are common</li><li>\u201cCounsellor\u201d is not a protected title \u2014 <a href=\"https://www.arcapregister.com.au/\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color:var(--color-primary);font-weight:600;text-decoration:underline;text-underline-offset:2px;\">verify your practitioner's credentials</a></li></ul>",
     details: [
       { label: "Cost", value: "$80–$200" },
       { label: "Medicare", value: "No" },
@@ -72,7 +72,7 @@ const bmData = {
       { text: "Professionally accredited (AASW)", cls: "badge-voluntary" },
       { text: "Medicare (with GP referral)", cls: "badge-medicare" }
     ],
-    desc: "Most people associate social workers with welfare, but Accredited Mental Health Social Workers are specialist therapists with extra training in mental health. Their strength is looking at the bigger picture \u2014 how things like housing, finances, relationships, and family situations affect your mental health, and helping you navigate those systems alongside therapy.",
+    desc: "<p>Most people associate social workers with welfare, but Accredited Mental Health Social Workers are specialist therapists with extra training in mental health.</p><ul><li>Strength is the bigger picture \u2014 how housing, finances, relationships, and family situations affect your mental health</li><li>Helps you navigate those systems alongside therapy</li></ul>",
     details: [
       { label: "Cost", value: "$150–$250" },
       { label: "Medicare rebate", value: "$87.25" },
@@ -88,7 +88,7 @@ const bmData = {
       { text: "Nationally registered", cls: "badge-registered" },
       { text: "Medicare (with GP referral)", cls: "badge-medicare" }
     ],
-    desc: "Most people don\u2019t think of OTs for mental health, but mental health OTs have specialist endorsement and extra training beyond standard OT registration. They focus on the practical side of recovery. Things like rebuilding daily routines, getting back to work, and managing tasks that feel overwhelming. They take a hands-on approach, working with you on real-life skills and strategies.",
+    desc: "<p>Most people don\u2019t think of OTs for mental health, but mental health OTs have specialist endorsement and extra training beyond standard OT registration.</p><ul><li>Focuses on the practical side of recovery \u2014 rebuilding daily routines, getting back to work, managing tasks that feel overwhelming</li><li>Hands-on approach, working with you on real-life skills and strategies</li></ul>",
     details: [
       { label: "Cost", value: "$170–$260" },
       { label: "Medicare rebate", value: "$87.25" },
@@ -103,7 +103,7 @@ const bmData = {
     badges: [
       { text: "Nationally registered", cls: "badge-registered" }
     ],
-    desc: "Focuses on clinical care rather than structured therapy: monitoring your medication, checking physical health side effects, coordinating between your GP and psychiatrist, and providing crisis support. They are a registered nurse with specialist postgraduate training in mental health. Most people see a mental health nurse for free through community health teams or public hospitals, rather than in private practice.",
+    desc: "<p>A registered nurse with specialist postgraduate training in mental health.</p><ul><li>Clinical care rather than structured therapy — medication monitoring, physical health side effects, crisis support</li><li>Coordinates between your GP and psychiatrist</li></ul>",
     details: [
       { label: "Referral", value: "Yes (GP referral with Chronic Disease Management plan)" },
       { label: "Can prescribe", value: "No" }
@@ -116,7 +116,7 @@ const bmData = {
       { text: "Not regulated", cls: "badge-unregulated" },
       { text: "No Medicare rebate", cls: "badge-no-medicare" }
     ],
-    desc: "Peer workers draw on their own experience of mental health challenges and recovery to support others going through similar things. They don\u2019t diagnose or treat. Instead, they offer understanding, hope, and help navigating the mental health system from someone who\u2019s been there. There are qualifications available (like a Cert IV in Mental Health Peer Work) but none are legally required to practice. Most peer worker services are free through public health services, community organisations, or NDIS plans.",
+    desc: "<p>Draws on their own experience of mental health challenges and recovery to support others going through similar things.</p><ul><li>Doesn\u2019t diagnose or treat \u2014 offers understanding, hope, and help navigating the system from someone who\u2019s been there</li><li>Qualifications exist (like a Cert IV in Mental Health Peer Work) but none are legally required</li><li>Usually free through public health services, community organisations, or NDIS plans</li></ul>",
     details: [
       { label: "Cost", value: "Usually free (through services)" },
       { label: "Medicare", value: "No" },
