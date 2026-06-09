@@ -130,7 +130,7 @@ To update calculator costs: edit `src/data/calculator-costs.json`.
 ## Obsidian Vault
 
 Project research, design notes, user testing, meeting notes, and planning docs live in Obsidian:
-`/Users/jethrohedstrom/Library/Mobile Documents/iCloud~md~obsidian/Documents/Healthcare Navigation Project /`
+`~/obsidian-vault/`
 
 Read from this vault when you need background context on design decisions, target audience, information architecture, or project direction.
 
