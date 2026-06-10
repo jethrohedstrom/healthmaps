@@ -1,28 +1,18 @@
 ---
-import PathwayIcon from './PathwayIcon.astro';
 import PathwayTimeHorizon from './PathwayTimeHorizon.astro';
-import { iconStyleMap } from '../data/pathway-cards';
 import type { PathwayCard } from '../data/pathway-cards';
 
 interface Props extends PathwayCard {}
 
-const { id, icon, title, bestFor, accentColor, badge, steps, timeHorizon } = Astro.props;
-
-const accentTopBorder = accentColor.replace('border-l-', 'border-t-');
-const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-primary' };
+const { id, title, bestFor, badge, steps, timeHorizon } = Astro.props;
 ---
 
-<div id={id} data-pathway-card data-progressive-card data-legacy-step-hash class={`pathway-card-clickable relative rounded-xl shadow-[0_24px_50px_-28px_rgba(15,74,50,0.28)] hover:shadow-xl transition-shadow border-t-4 ${accentTopBorder} bg-white p-6 md:p-8 flex flex-col`}>
-  {badge && (
-    <span class="absolute -top-3 left-6 inline-flex text-xs font-semibold text-white bg-primary px-3 py-1 rounded-full shadow-sm z-10">{badge}</span>
-  )}
-
+<div id={id} data-pathway-card data-progressive-card data-legacy-step-hash class="pathway-card-clickable rounded-xl border border-border shadow-sm bg-white p-6 md:p-8 flex flex-col">
   {/* L0: always visible */}
-  <div class={`w-12 h-12 ${iconStyle.bg} rounded-xl flex items-center justify-center mb-5`}>
-    <PathwayIcon icon={icon} class={`w-6 h-6 ${iconStyle.stroke}`} />
-  </div>
-
   <div class="mb-3">
+    {badge && (
+      <p class="text-xs font-semibold uppercase tracking-widest text-body mb-2">{badge}</p>
+    )}
     <h3 class="text-xl md:text-2xl font-bold text-heading leading-snug">{title}</h3>
   </div>
 
@@ -37,21 +27,21 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
     </summary>
     <div class="pathway-l1-body mt-5">
       {/*
-        L1 pills are hardcoded here (rather than read from facts.cost / facts.sessions)
+        L1 facts are hardcoded here (rather than read from facts.cost / facts.sessions)
         so the headline number can be bolded and the qualifier kept regular weight.
         If the canonical strings in pathway-cards.ts change for the GP card, update them here too.
       */}
-      <div class="flex flex-wrap gap-2 mb-6">
-        <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
-          <span class="text-body">Cost:</span>
-          <span class="font-semibold text-heading">$50&ndash;$200</span>
-          <span class="text-body">per session</span>
-        </span>
-        <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
-          <span class="text-body">Sessions:</span>
-          <span class="font-semibold text-heading">Up to 10</span>
-          <span class="text-body">per year</span>
-        </span>
+      <dl class="pathway-facts text-sm border-y border-border divide-y divide-border mb-4">
+        <div class="flex justify-between gap-4 py-2.5">
+          <dt class="text-body">Cost</dt>
+          <dd class="font-medium text-heading text-right"><span class="font-semibold">$50&ndash;$200</span> per session</dd>
+        </div>
+        <div class="flex justify-between gap-4 py-2.5">
+          <dt class="text-body">Sessions</dt>
+          <dd class="font-medium text-heading text-right"><span class="font-semibold">Up to 10</span> per year</dd>
+        </div>
+      </dl>
+      <div class="mb-6">
         <PathwayTimeHorizon events={timeHorizon?.events} />
       </div>
 

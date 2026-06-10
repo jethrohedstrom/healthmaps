@@ -1,30 +1,21 @@
 ---
 import StepByStep from './StepByStep.astro';
-import PathwayIcon from './PathwayIcon.astro';
 import PathwayTimeHorizon from './PathwayTimeHorizon.astro';
-import { iconStyleMap } from '../data/pathway-cards';
 import type { PathwayCard } from '../data/pathway-cards';
 
 interface Props extends PathwayCard {}
 
-const { id, icon, title, bestFor, accentColor, badge, oneLiner, isCrisis, facts, steps, timeHorizon, progressive } = Astro.props;
+const { id, title, bestFor, badge, oneLiner, isCrisis, facts, steps, timeHorizon, progressive } = Astro.props;
 
-const bgClass = isCrisis ? 'bg-primary-light' : 'bg-paper-cream';
-const accentTopBorder = accentColor.replace('border-l-', 'border-t-');
-const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-primary' };
+const bgClass = isCrisis ? 'bg-primary-light' : 'bg-white';
 ---
 
-<div id={id} data-pathway-card data-progressive-card={progressive ? '' : undefined} class={`pathway-card-clickable rounded-xl shadow-sm border-t-4 ${accentTopBorder} ${bgClass} p-6 md:p-8 flex flex-col`}>
+<div id={id} data-pathway-card data-progressive-card={progressive ? '' : undefined} class={`pathway-card-clickable rounded-xl border border-border shadow-sm ${bgClass} p-6 md:p-8 flex flex-col`}>
   <div class="pathway-card-inner flex flex-col">
-  {/* Icon */}
-  <div class={`w-12 h-12 ${iconStyle.bg} rounded-xl flex items-center justify-center mb-5`}>
-    <PathwayIcon icon={icon} class={`w-6 h-6 ${iconStyle.stroke}`} />
-  </div>
-
   {/* Badge + Title */}
   <div class="mb-3">
     {badge && (
-      <span class="inline-block text-xs font-semibold text-white bg-primary px-3 py-1 rounded-full mb-2">{badge}</span>
+      <p class="text-xs font-semibold uppercase tracking-widest text-body mb-2">{badge}</p>
     )}
     <h3 class="text-xl md:text-2xl font-bold text-heading leading-snug">{title}</h3>
   </div>
@@ -38,15 +29,17 @@ const iconStyle = iconStyleMap[icon] ?? { bg: 'bg-primary-light', stroke: 'text-
     </summary>
     <div class="pathway-l1-body mt-5">
       <p class="text-base leading-relaxed text-body mb-5">{oneLiner}</p>
-      <div class="flex flex-wrap gap-2 mb-5">
-        <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
-          <span class="text-body">Cost:</span>
-          <span class="font-semibold text-heading">{facts.cost}</span>
-        </span>
-        <span class="inline-flex items-center gap-1.5 text-sm bg-bg-light px-3 py-1.5 rounded-lg">
-          <span class="text-body">Sessions:</span>
-          <span class="font-semibold text-heading">{facts.sessions ?? 'Varies'}</span>
-        </span>
+      <dl class="pathway-facts text-sm border-y border-border divide-y divide-border mb-4">
+        <div class="flex justify-between gap-4 py-2.5">
+          <dt class="text-body">Cost</dt>
+          <dd class="font-semibold text-heading text-right">{facts.cost}</dd>
+        </div>
+        <div class="flex justify-between gap-4 py-2.5">
+          <dt class="text-body">Sessions</dt>
+          <dd class="font-semibold text-heading text-right">{facts.sessions ?? 'Varies'}</dd>
+        </div>
+      </dl>
+      <div class="mb-5">
         <PathwayTimeHorizon events={timeHorizon?.events} />
       </div>
       <p class="text-sm text-body/80 mb-6">{bestFor}</p>

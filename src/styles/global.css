@@ -288,8 +288,8 @@ details[open] > summary::after {
   /* On a full-width expanded card, centre the content as a readable column
      (720px = design-system body-text width) rather than letting it stretch to
      ~1128px or cling to the left edge. The timeline infographic is centre-anchored
-     by design, so the rest of the content is centred too — title, intro, pills,
-     icon and "best for" all share the timeline's axis for a cohesive feature card.
+     by design, so the rest of the content is centred too — title, intro, facts
+     and "best for" all share the timeline's axis for a cohesive feature card.
      Scoped to expanded + desktop, so collapsed/mobile cards are untouched. */
   .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) > .pathway-card-inner {
     max-width: 45rem; /* 720px — matches .claude/rules/spacing.md body-text cap */
@@ -297,13 +297,10 @@ details[open] > summary::after {
     margin-inline: auto;
     text-align: center;
   }
-  /* Centre the fixed-width icon box (first element child of the wrapper). */
-  .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) > .pathway-card-inner > div:first-child {
+  /* Cap the cost/sessions facts list to a readable width above the timeline. */
+  .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) .pathway-l1-body > .pathway-facts {
+    max-width: 28rem;
     margin-inline: auto;
-  }
-  /* Centre the cost/sessions pills row above the timeline. */
-  .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) .pathway-l1-body > .flex.flex-wrap {
-    justify-content: center;
   }
   /* Keep the numbered step list left-aligned for readability. */
   .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) .pathway-step-accordions,
