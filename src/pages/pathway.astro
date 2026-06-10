@@ -13,10 +13,10 @@ const otherCards = liveCards.filter((c) => c.id !== 'through-gp');
   description="Ways to access mental health support in Australia: through your GP, privately, or through free and low-cost services."
 >
   <section>
-    <div class="max-w-[1240px] mx-auto px-5 md:px-10 lg:px-14 pt-16 md:pt-24 pb-16 md:pb-20">
+    <div class="max-w-[1240px] mx-auto px-5 md:px-10 lg:px-14 pt-12 md:pt-16 pb-4">
       <div>
         <div class="pathway-hero-grid grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-14 items-start">
-        <div class="pathway-hero-aside lg:pt-6">
+        <div class="pathway-hero-aside lg:pt-8">
           <h1 class="text-[1.75rem] md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em] leading-tight">How to access mental health support in Australia</h1>
           <p class="text-lg leading-relaxed text-body max-w-[42rem] mb-6">
             There are several ways to get support. Most people start with their GP, but you don't have to.
@@ -33,7 +33,7 @@ const otherCards = liveCards.filter((c) => c.id !== 'through-gp');
 
           <div class="relative">
             <PathwayCardGPProgressive {...gpCard} />
-            <div class="mt-6 flex justify-end">
+            <div class="mt-8 flex justify-end">
               <a
                 href="#pathways"
                 class="inline-flex items-center gap-1.5 text-sm font-medium text-body/70 hover:text-primary transition-colors"
@@ -49,7 +49,7 @@ const otherCards = liveCards.filter((c) => c.id !== 'through-gp');
   </section>
 
   <section id="pathways" class="scroll-mt-24">
-    <div class="max-w-[1240px] mx-auto px-5 md:px-10 lg:px-14 py-16 md:py-24">
+    <div class="max-w-[1240px] mx-auto px-5 md:px-10 lg:px-14 pt-6 pb-16 md:pb-24">
       <p class="text-sm uppercase tracking-widest text-body font-semibold mb-8">The other {otherCards.length} pathways</p>
 
       <div class="pathway-grid grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-stretch">
