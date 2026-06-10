@@ -114,7 +114,7 @@ export const pathwayCards: PathwayCard[] = [
   {
     id: 'private',
     icon: 'bolt',
-    title: 'Pay privately (skip the referral, no rebate)',
+    title: 'Go straight to a practitioner',
     bestFor: 'Best for: getting started quickly without a GP visit.',
     accentColor: 'border-l-accent-blue',
     oneLiner: 'You want to start quickly and are happy to pay out-of-pocket.',
@@ -134,7 +134,8 @@ export const pathwayCards: PathwayCard[] = [
       {
         number: 1,
         title: 'Decide what kind of practitioner you want',
-        detail: 'Psychologist, counsellor, or social worker. Each has different training and approach. See our <a href="/practitioners/">practitioners page</a> to compare.',
+        // REVIEW: verify psychiatrist booking/referral claim — most private psychiatrists require a GP referral, and the Medicare rebate depends on one.
+        detail: 'Psychologist, counsellor, accredited mental health social worker, or psychiatrist. Each has different training and approach — see our <a href="/practitioners/">practitioners page</a> to compare. Psychiatrists are the exception here: you’ll almost always want a GP referral first, both for the Medicare rebate and because most private psychiatrists won’t book you in without one.',
       },
       {
         number: 2,
@@ -149,7 +150,7 @@ export const pathwayCards: PathwayCard[] = [
       {
         number: 4,
         title: 'No paperwork, no referral, just show up',
-        detail: 'You don\u2019t need a GP referral, Mental Health Care Plan, or any other documentation. Just turn up to your appointment.',
+        detail: 'You don\u2019t need a GP referral, Mental Health Care Plan, or any other documentation (psychiatrists aside). Just turn up to your appointment.',
       },
     ],
   },
