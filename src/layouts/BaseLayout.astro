@@ -21,7 +21,8 @@ const {
   noindex = false,
 } = Astro.props;
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://healthmaps.au');
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://healthmaps.com.au');
+const ogImageURL = new URL(ogImage, Astro.site ?? 'https://healthmaps.com.au');
 ---
 <!DOCTYPE html>
 <html lang="en-AU">
@@ -38,8 +39,14 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://healthma
     <meta property="og:title" content={`${title} | HealthMaps`} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
-    <meta property="og:image" content={ogImage} />
+    <meta property="og:image" content={ogImageURL} />
     <meta property="og:locale" content="en_AU" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} | HealthMaps`} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
 
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

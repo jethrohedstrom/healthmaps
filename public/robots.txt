@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://healthmaps.au/sitemap-index.xml
+Sitemap: https://healthmaps.com.au/sitemap-index.xml
