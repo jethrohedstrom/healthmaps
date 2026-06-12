@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="Disclaimer"
+  description="What HealthMaps is and isn't: general information about Australia's mental health system, not medical advice."
+>
+  <!-- Hero -->
+  <section>
+    <div class="max-w-[720px] mx-auto px-4 pt-16 md:pt-24 pb-12 md:pb-16">
+      <p class="text-sm uppercase tracking-widest text-body font-semibold mb-3">Site policy</p>
+      <h1 class="text-3xl md:text-[2.5rem] font-bold text-heading mb-5 tracking-[-0.01em] leading-tight">Disclaimer</h1>
+      <p class="text-lg text-body leading-relaxed max-w-[36rem]">
+        Plain-language version first: this site explains how the system works. It doesn't know your
+        situation, and it's not a substitute for a health professional who does.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-paper-cream">
+    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20 space-y-14 md:space-y-16">
+      <!-- REVIEW: all sections below are AI-drafted — please review wording, and consider a legal once-over before launch -->
+      <div>
+        <h2 class="text-2xl font-bold text-heading mb-4">General information, not medical advice</h2>
+        <p class="text-body leading-relaxed">
+          Everything on HealthMaps is general information about navigating the Australian mental health
+          system. It is not medical, psychological or legal advice, and it isn't tailored to your
+          circumstances. Nothing here can diagnose a condition or tell you which treatment is right for
+          you. For advice about your own health, see a GP or a qualified mental health professional.
+        </p>
+      </div>
+
+      <div class="rounded-xl bg-white border border-border shadow-sm p-6 md:p-8">
+        <h2 class="text-2xl font-bold text-heading mb-3">This is not a crisis service</h2>
+        <p class="text-body leading-relaxed">
+          HealthMaps is an information website — no one monitors it, and we can't respond to urgent
+          situations.
+        </p>
+        <div class="mt-5 border-t border-border divide-y divide-border">
+          <div class="py-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <p class="text-body leading-relaxed">If you or someone else is in immediate danger</p>
+            <a href="tel:000" class="font-display text-2xl font-bold text-primary whitespace-nowrap">000</a>
+          </div>
+          <div class="py-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <p class="text-body leading-relaxed">If you're in crisis or need to talk to someone now — Lifeline, free and available 24/7</p>
+            <a href="tel:131114" class="font-display text-2xl font-bold text-primary whitespace-nowrap">13 11 14</a>
+          </div>
+        </div>
+        <p class="text-sm text-body mt-4">
+          More crisis options are in the "Urgent help" button on every page.
+        </p>
+      </div>
+
+      <div class="divide-y divide-border border-t border-border">
+        <div class="py-8">
+          <h2 class="text-xl font-bold text-heading mb-3">Costs and Medicare figures are estimates</h2>
+          <p class="text-body leading-relaxed">
+            Fees, gap payments and Medicare rebates change over time and vary between practitioners and
+            locations. Figures on this site — including the cost calculator — are indicative estimates to
+            help you plan, not quotes. Always confirm fees and rebates with the practice before you book,
+            and check current rebate amounts with
+            <a href="https://www.servicesaustralia.gov.au/medicare" class="text-primary font-semibold underline underline-offset-2" rel="noopener">Services Australia</a>.
+          </p>
+        </div>
+        <div class="py-8">
+          <h2 class="text-xl font-bold text-heading mb-3">Stories are illustrative</h2>
+          <p class="text-body leading-relaxed">
+            The stories on this site are illustrative composites based on common experiences of navigating
+            the system. They are not accounts from real, identifiable people, and they aren't testimonials
+            for any practitioner, service or treatment.
+          </p>
+        </div>
+        <div class="py-8">
+          <h2 class="text-xl font-bold text-heading mb-3">Keeping information current</h2>
+          <p class="text-body leading-relaxed">
+            We do our best to keep information accurate and up to date, and we correct errors when we find
+            them or when readers point them out. Even so, details — especially costs, rebate amounts and
+            referral rules — can change before we catch up. If something here looks out of date, please
+            tell us at
+            <a href="mailto:jethrohedstrom@gmail.com" class="text-primary font-semibold underline underline-offset-2">jethrohedstrom@gmail.com</a>.
+            <!-- REVIEW: if you commit to a review cadence on the About page, mirror it here -->
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-10 border-t border-border">
+        <h2 class="text-2xl font-bold text-heading mb-4">No endorsements</h2>
+        <p class="text-body leading-relaxed">
+          HealthMaps is independent. We don't accept payment from practitioners or services, and a
+          mention of any service type on this site is explanation, not endorsement. Links to external
+          websites are provided for convenience; we aren't responsible for their content.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

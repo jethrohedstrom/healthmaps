@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout
+  title="Privacy"
+  description="How HealthMaps handles your privacy: no accounts, no cookies, no tracking scripts, no personal information collected."
+>
+  <!-- Hero -->
+  <section>
+    <div class="max-w-[720px] mx-auto px-4 pt-16 md:pt-24 pb-12 md:pb-16">
+      <p class="text-sm uppercase tracking-widest text-body font-semibold mb-3">Site policy</p>
+      <h1 class="text-3xl md:text-[2.5rem] font-bold text-heading mb-5 tracking-[-0.01em] leading-tight">Privacy</h1>
+      <p class="text-lg text-body leading-relaxed max-w-[36rem]">
+        The short version: we don't collect personal information about you, and there are no tracking
+        cookies on this site.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-paper-cream">
+    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20 space-y-14 md:space-y-16">
+      <!-- REVIEW: AI-drafted — confirm each claim matches reality before launch (especially the analytics section) -->
+      <aside class="rounded-xl bg-bg-light p-6 md:p-8">
+        <p class="uppercase tracking-widest text-xs text-body mb-3 font-semibold">At a glance</p>
+        <!-- REVIEW: confirm each at-a-glance row matches the prose below -->
+        <dl class="divide-y divide-border text-sm">
+          <div class="py-3 flex justify-between gap-6">
+            <dt class="text-body">Accounts or sign-up forms</dt>
+            <dd class="font-semibold text-heading text-right">None</dd>
+          </div>
+          <div class="py-3 flex justify-between gap-6">
+            <dt class="text-body">Cookies</dt>
+            <dd class="font-semibold text-heading text-right">None</dd>
+          </div>
+          <div class="py-3 flex justify-between gap-6">
+            <dt class="text-body">Tracking scripts</dt>
+            <dd class="font-semibold text-heading text-right">None</dd>
+          </div>
+          <div class="py-3 flex justify-between gap-6">
+            <dt class="text-body">Analytics</dt>
+            <dd class="font-semibold text-heading text-right">Aggregate server logs (Netlify)</dd>
+          </div>
+          <div class="py-3 flex justify-between gap-6">
+            <dt class="text-body">Your email, if you write to us</dt>
+            <dd class="font-semibold text-heading text-right">Used only to reply</dd>
+          </div>
+        </dl>
+      </aside>
+
+      <div>
+        <h2 class="text-2xl font-bold text-heading mb-4">What we collect</h2>
+        <p class="text-body leading-relaxed mb-4">
+          HealthMaps is a simple information website. There are no accounts, no sign-up forms, and
+          nothing you type into the site (like the cost calculator) is sent or stored anywhere — it
+          runs entirely in your browser.
+        </p>
+        <p class="text-body leading-relaxed">
+          We use server-side analytics provided by our hosting service (Netlify) to see aggregate
+          numbers — how many people visit and which pages they read. This works from standard server
+          logs, places no cookies in your browser, runs no tracking scripts, and doesn't build a profile
+          of you. We can't identify individual visitors and don't try to.
+          <!-- REVIEW: confirm Netlify Analytics is what the $9/month covers; if you're not using it, simplify this paragraph -->
+        </p>
+      </div>
+
+      <div class="divide-y divide-border border-t border-border">
+        <div class="py-8">
+          <h2 class="text-xl font-bold text-heading mb-3">Cookies</h2>
+          <p class="text-body leading-relaxed">
+            This site doesn't set cookies. That's also why you don't see a cookie banner.
+          </p>
+        </div>
+        <div class="py-8">
+          <h2 class="text-xl font-bold text-heading mb-3">If you email us</h2>
+          <p class="text-body leading-relaxed">
+            If you contact us by email, we'll see your email address and whatever you choose to tell us.
+            We use it only to reply, we don't add you to any list, and we don't share it with anyone.
+            Given the subject matter of this site, please share only what you're comfortable sharing.
+          </p>
+        </div>
+        <div class="py-8">
+          <h2 class="text-xl font-bold text-heading mb-3">Where the site is hosted</h2>
+          <p class="text-body leading-relaxed">
+            The site is hosted by <a href="https://www.netlify.com/" class="text-primary font-semibold underline underline-offset-2" rel="noopener">Netlify</a>,
+            whose servers may be located outside Australia. Like any web host, Netlify's infrastructure
+            processes standard technical data (such as IP addresses) to deliver pages to your browser.
+            See <a href="https://www.netlify.com/privacy/" class="text-primary font-semibold underline underline-offset-2" rel="noopener">Netlify's privacy policy</a> for details.
+          </p>
+        </div>
+        <div class="py-8">
+          <h2 class="text-xl font-bold text-heading mb-3">External links</h2>
+          <p class="text-body leading-relaxed">
+            We link to external services (like Services Australia and crisis support lines). Those sites
+            have their own privacy practices, which we don't control.
+          </p>
+        </div>
+      </div>
+
+      <div class="pt-10 border-t border-border">
+        <h2 class="text-2xl font-bold text-heading mb-4">Questions</h2>
+        <p class="text-body leading-relaxed">
+          This policy reflects how the site works as of June 2026. If the site changes in a way that
+          affects privacy — for example, adding a feedback form — this page will be updated first.
+          Questions about privacy: email
+          <a href="mailto:jethrohedstrom@gmail.com" class="text-primary font-semibold underline underline-offset-2">jethrohedstrom@gmail.com</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
