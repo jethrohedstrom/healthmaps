@@ -64,6 +64,16 @@ everything else keeps its flag and is listed under "Kept flagged" or "Needs your
 8. `disclaimer.astro:81` — mirror the review cadence from About once you've picked one.
 9. **Stories**: both are flagged as fictional composites and the site already says so visibly (index + story pages). Decide eventually whether to collect real, consented stories.
 
+## Heads-up: two content collections are currently unrendered
+
+The static audit found that `getCollection('pathway')` and `getCollection('alternatives')`
+are referenced **nowhere** — the live pathway page renders entirely from
+`src/data/pathway-cards.ts`. The markdown in `src/content/pathway/` and
+`src/content/alternatives/` was still verified and corrected (it's the natural source if
+those sections come back), but right now it ships nothing to the site, and CLAUDE.md's
+project-structure description is stale on this point. Worth deciding whether to wire them
+back in or remove them.
+
 ## Still flagged in code (intentionally)
 
 - `pathway-cards.ts` draft digital cards (`digital-free`, `digital-paid`) — parked, hidden from the live page, unverified placeholders.
