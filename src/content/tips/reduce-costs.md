@@ -5,8 +5,6 @@ category: "Costs"
 publishedDate: "2025-02-01"
 ---
 
-<!-- REVIEW -->
-
 Seeing a psychologist doesn't have to break the bank. Here are practical ways to reduce costs.
 
 ## 1. Find a bulk-billing psychologist
@@ -27,7 +25,7 @@ Some psychologists offer reduced rates based on financial hardship. It's worth a
 
 ## 5. Consider a general psychologist vs. clinical
 
-General psychologists often charge lower fees. The Medicare rebate is lower too (~$93 vs ~$149), but the gap may still be smaller. For many common issues like anxiety and depression, a general psychologist is perfectly appropriate.
+General psychologists often charge lower fees. The Medicare rebate is lower too ($98.95 vs $145.25), but the gap may still be smaller. For many common issues like anxiety and depression, a general psychologist is perfectly appropriate.
 
 ## 6. Try telehealth
 
@@ -37,4 +35,4 @@ Telehealth sessions sometimes have lower fees, and they save you transport costs
 
 - **headspace** (ages 12–25): free or very low-cost sessions
 - **Community health centres:** often offer subsidised psychology
-- **University psychology clinics:** supervised trainee psychologists at reduced rates (typically $20–$50 per session)
+- **University psychology clinics:** supervised trainee psychologists at reduced rates (typically $10–$50 per session, some free)

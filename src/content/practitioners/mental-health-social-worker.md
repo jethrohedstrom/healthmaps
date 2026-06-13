@@ -1,14 +1,13 @@
 ---
 title: "Mental Health Social Worker"
-cost: "$100–$200 per session"
-rebate: "~$87.25 (with MHCP)"
+cost: "$150–$250 per session"
+rebate: "~$87.25 (with MHCP referral)"
 referralRequired: true
 bestFor: "Life circumstances affecting mental health"
 registrationStatus: "AASW accredited"
 order: 5
 ---
 
-<!-- REVIEW -->
 ## What they do
 
 Mental health social workers are trained to understand how **social, emotional, and environmental factors** affect mental health. They help with issues like relationship breakdowns, housing stress, financial difficulties, family conflict, and workplace problems, particularly where these are contributing to anxiety, depression, or other mental health conditions.

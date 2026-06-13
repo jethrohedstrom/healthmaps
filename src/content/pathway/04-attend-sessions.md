@@ -6,7 +6,6 @@ summary: "Go to your appointments, claim Medicare rebates, and review with your 
 
 ## Your first session
 
-<!-- REVIEW -->
 Your first session is usually an **intake or assessment session**. Your psychologist will:
 
 - Ask about your background, what brought you in, and what you'd like to work on
@@ -17,7 +16,6 @@ Bring your **MHCP, referral letter, and Medicare card** to the first session.
 
 ## Claiming your Medicare rebate
 
-<!-- REVIEW -->
 There are two ways to claim:
 
 1. **At the clinic**: many clinics process your rebate on the spot. You pay the full fee, and the rebate goes back to your bank account within a few days.
@@ -27,7 +25,6 @@ The rebate amount depends on the type of practitioner and session length. Your o
 
 ## GP review after 6 sessions
 
-<!-- REVIEW -->
 After your first **6 sessions**, you'll need a brief GP appointment to review your progress. This is a requirement to access sessions 7–10.
 
 This is usually a short appointment where your GP checks in on how things are going and updates your MHCP if needed. It's not a barrier, just a check-in.

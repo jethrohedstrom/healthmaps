@@ -1,7 +1,7 @@
 ---
 title: "Psychiatrist"
-cost: "$300–$600+ per session"
-rebate: "$150–$300+ (varies by session type)"
+cost: "$400–$800 first session; $200–$400 follow-up"
+rebate: "$262.10 initial / $87.05–$134 follow-up"
 referralRequired: true
 waitTime: "4–26 weeks"
 bestFor: "Complex conditions, medication management"
@@ -9,7 +9,6 @@ registrationStatus: "AHPRA registered (medical specialist)"
 order: 2
 ---
 
-<!-- REVIEW -->
 ## What they do
 
 Psychiatrists are **medical doctors** who specialise in mental health. They can **diagnose conditions, prescribe medication, and provide therapy**. They have the most extensive training of all mental health professionals.

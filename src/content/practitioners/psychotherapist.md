@@ -9,7 +9,6 @@ registrationStatus: "Unregulated title; look for PACFA/ACA"
 order: 4
 ---
 
-<!-- REVIEW -->
 ## What they do
 
 Psychotherapists provide **in-depth talk therapy**, often focusing on underlying patterns, past experiences, and long-term personal growth. Approaches include psychodynamic therapy, schema therapy, and gestalt therapy.

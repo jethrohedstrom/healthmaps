@@ -9,7 +9,6 @@ registrationStatus: "Unregulated title; look for ACA/PACFA"
 order: 3
 ---
 
-<!-- REVIEW -->
 ## What they do
 
 Counsellors provide **talk therapy** for a range of personal, emotional, and relational issues. They use approaches like person-centred therapy, solution-focused therapy, and narrative therapy.

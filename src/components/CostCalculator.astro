@@ -107,7 +107,6 @@ const practitionerTypes = costsData.practitionerTypes;
 
     <div id="result-breakdown" class="mt-4 text-sm text-body space-y-1"></div>
 
-    <!-- REVIEW -->
     <p class="mt-4 text-xs text-body">
       These are estimates only. Medicare rebate amounts may have changed; check
       <a href="https://www.servicesaustralia.gov.au/medicare" class="underline hover:text-primary transition-colors" target="_blank" rel="noopener">Services Australia</a>
@@ -161,9 +160,11 @@ const practitionerTypes = costsData.practitionerTypes;
     const totalFees = sessionFee * numSessions;
     const totalRebate = rebatePerSession * numSessions;
 
-    // GP costs: initial MHCP appointment + review after 6 sessions
-    let gpVisits = 1; // Initial MHCP
-    if (numSessions > 6) gpVisits = 2; // + review
+    // GP costs: initial MHCP/referral appointment, plus the after-6-sessions
+    // review — but only MHCP pathways have that review (psychiatrists don't).
+    const requiresMHCP = prac ? prac.requiresMHCP : true;
+    let gpVisits = 1; // Initial MHCP or referral
+    if (requiresMHCP && numSessions > 6) gpVisits = 2; // + review
     const gpCostPerVisit = gpBulkBilled ? 0 : gpCostPrivate;
     const totalGpCost = gpVisits * gpCostPerVisit;
 
@@ -178,7 +179,7 @@ const practitionerTypes = costsData.practitionerTypes;
     const breakdown = document.getElementById('result-breakdown');
     breakdown.innerHTML = `
       <p><strong>Per session:</strong> $${sessionFee.toFixed(2)} fee − $${rebatePerSession.toFixed(2)} rebate = <strong>$${Math.max(0, gapPerSession).toFixed(2)} gap</strong></p>
-      <p><strong>GP visits:</strong> ${gpVisits} (MHCP${numSessions > 6 ? ' + review' : ''})${gpBulkBilled ? ' (bulk-billed)' : ` × $${gpCostPerVisit}`}</p>
+      <p><strong>GP visits:</strong> ${gpVisits} (${requiresMHCP ? 'MHCP' : 'referral'}${gpVisits > 1 ? ' + review' : ''})${gpBulkBilled ? ' (bulk-billed)' : ` × $${gpCostPerVisit}`}</p>
     `;
 
     resultsDiv.classList.remove('hidden');

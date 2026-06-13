@@ -4,7 +4,6 @@ summary: "If you or someone you know is in crisis, contact these services immedi
 order: 3
 ---
 
-<!-- REVIEW -->
 ## If you need help right now
 
 These services are **free, confidential, and available 24/7**:

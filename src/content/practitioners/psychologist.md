@@ -1,7 +1,7 @@
 ---
 title: "Psychologist"
 cost: "$150–$300 per session"
-rebate: "$98.95 (standard) / $145.25 (clinical)"
+rebate: "$98.95 (general) / $145.25 (clinical)"
 referralRequired: true
 waitTime: "2–12 weeks"
 bestFor: "Structured therapy: anxiety, depression, trauma"
@@ -9,7 +9,6 @@ registrationStatus: "AHPRA registered"
 order: 1
 ---
 
-<!-- REVIEW -->
 ## What they do
 
 Psychologists are university-trained professionals who use evidence-based therapies to treat mental health conditions. Common approaches include Cognitive Behavioural Therapy (CBT), Acceptance and Commitment Therapy (ACT), and Dialectical Behaviour Therapy (DBT). They **cannot prescribe medication**.
