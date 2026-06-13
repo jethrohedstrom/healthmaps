@@ -5,7 +5,7 @@
   <div class="bm-header">
     <span class="bm-hint">
       <span class="bm-hint-dot" aria-hidden="true"></span>
-      Tap a bubble to see what they do
+      Tap a bubble to see what they do — add 2–3 to compare
     </span>
   </div>
 
@@ -232,6 +232,13 @@
     stroke-width: 2;
   }
 
+  /* Compare selection: dim everything that isn't selected */
+  .bubble-map.bm-has-selection .bm-blob:not(.bm-sel),
+  .bubble-map.bm-has-selection .bm-blob-label:not(.bm-sel),
+  .bubble-map.bm-has-selection .bm-blob-sub:not(.bm-sel) {
+    opacity: 0.45;
+  }
+
   .bubble-map .bm-blob:focus {
     outline: none;
   }
@@ -409,26 +416,29 @@
     font-weight: 600;
   }
 
-  .bubble-map .badge-registered {
-    background: #e0edff;
-    color: #1e40af;
+  .bubble-map .bm-compare-btn {
+    display: block;
+    width: 100%;
+    margin: 4px 0 12px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: 2px solid var(--color-primary);
+    background: #ffffff;
+    color: var(--color-primary);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
   }
-  .bubble-map .badge-medicare {
-    background: #f0fdf4;
-    color: #166534;
+
+  .bubble-map .bm-compare-btn.bm-compare-btn-active {
+    background: var(--color-primary);
+    color: #ffffff;
   }
-  .bubble-map .badge-no-medicare {
-    background: #fef2f2;
-    color: #991b1b;
-  }
-  .bubble-map .badge-unregulated {
-    background: #fef3c7;
-    color: #92400e;
-  }
-  .bubble-map .badge-voluntary {
-    background: #f3e8ff;
-    color: #6b21a8;
-  }
+
+  /* Badge colour classes (.badge-registered etc) live in global.css,
+     shared with the practitioner comparison table. */
 
   .bubble-map .bm-info-desc {
     color: #64748b;

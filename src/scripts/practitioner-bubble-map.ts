@@ -222,6 +222,16 @@ const bmData = {
         labels?.classList.remove('bm-visible');
         labels?.setAttribute('aria-hidden', 'true');
         showMoreBtn.textContent = '\uff0b Add 4 more to the map';
+        // Hidden bubbles can't stay in the comparison
+        let pruned = false;
+        HIDDEN_PROFS.forEach(function(prof) {
+          const i = selectedKeys.indexOf(prof);
+          if (i !== -1) {
+            selectedKeys.splice(i, 1);
+            pruned = true;
+          }
+        });
+        if (pruned) dispatchSelection();
       }
       updateViewBox();
       requestAnimationFrame(function() {
@@ -237,6 +247,59 @@ const bmData = {
   const mapContainer = wrapper!.querySelector('.bm-map-container') as HTMLElement;
   let activeKey: string | null = null;
   let hideTimeout: number | null = null;
+
+  // --- Compare selection (source of truth for PractitionerCompare) ---
+  const MAX_COMPARE = 3;
+  const HIDDEN_PROFS = ['social-worker', 'ot', 'mh-nurse', 'peer'];
+  const selectedKeys: string[] = [];
+
+  function syncSelectionClasses() {
+    wrapper!.classList.toggle('bm-has-selection', selectedKeys.length > 0);
+    wrapper!.querySelectorAll('[data-prof]').forEach(function(el) {
+      const selected = selectedKeys.indexOf(el.getAttribute('data-prof') || '') !== -1;
+      el.classList.toggle('bm-sel', selected);
+      if (el.classList.contains('bm-blob')) {
+        el.classList.toggle('bm-blob-active', selected);
+      }
+    });
+  }
+
+  function dispatchSelection() {
+    syncSelectionClasses();
+    document.dispatchEvent(new CustomEvent('bubble-selection-change', {
+      detail: { keys: selectedKeys.slice() }
+    }));
+  }
+
+  function toggleCompare(key: string): 'added' | 'removed' | 'full' {
+    const i = selectedKeys.indexOf(key);
+    if (i !== -1) {
+      selectedKeys.splice(i, 1);
+      dispatchSelection();
+      return 'removed';
+    }
+    if (selectedKeys.length >= MAX_COMPARE) return 'full';
+    selectedKeys.push(key);
+    dispatchSelection();
+    return 'added';
+  }
+
+  function compareBtnLabel(key: string): string {
+    if (selectedKeys.indexOf(key) !== -1) return '✓ Added to compare — tap to remove';
+    if (selectedKeys.length >= MAX_COMPARE) return 'Compare list full (3 max)';
+    return '＋ Add to compare';
+  }
+
+  // The comparison table's per-column × buttons dispatch this
+  document.addEventListener('bm-compare-remove', function(e) {
+    const key = (e as CustomEvent).detail && (e as CustomEvent).detail.key;
+    if (!key) return;
+    const i = selectedKeys.indexOf(key);
+    if (i !== -1) {
+      selectedKeys.splice(i, 1);
+      dispatchSelection();
+    }
+  });
 
   updateViewBox();
 
@@ -365,6 +428,7 @@ const bmData = {
       '<div class="bm-info-badges">' +
         p.badges.map(function(b) { return '<span class="bm-info-badge ' + b.cls + '">' + b.text + '</span>'; }).join('') +
       '</div>' +
+      '<button type="button" class="bm-compare-btn"></button>' +
       '<div class="bm-info-desc">' + p.desc + '</div>' +
       ('costRows' in p && (p as any).costRows
         ? '<div class="bm-cost-breakdown">' +
@@ -407,6 +471,26 @@ const bmData = {
       closeBtn.addEventListener('click', function(e) {
         e.stopPropagation();
         hideBmInfo();
+      });
+    }
+
+    // Wire "Add to compare" button
+    const compareBtn = popover.querySelector('.bm-compare-btn') as HTMLButtonElement | null;
+    if (compareBtn) {
+      compareBtn.textContent = compareBtnLabel(key);
+      compareBtn.classList.toggle('bm-compare-btn-active', selectedKeys.indexOf(key) !== -1);
+      compareBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const result = toggleCompare(key);
+        if (result === 'full') {
+          compareBtn.textContent = 'Compare list full — remove one first';
+          window.setTimeout(function() {
+            compareBtn.textContent = compareBtnLabel(key);
+          }, 1800);
+          return;
+        }
+        compareBtn.textContent = compareBtnLabel(key);
+        compareBtn.classList.toggle('bm-compare-btn-active', result === 'added');
       });
     }
 

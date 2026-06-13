@@ -25,10 +25,15 @@ const practitioners = defineCollection({
     title: z.string(),
     cost: z.string(),
     rebate: z.string(),
+    /** True only when you can't book at all without a referral (psychiatrist, MH nurse). */
     referralRequired: z.boolean(),
+    /** Nuance when the boolean alone misleads, e.g. "GP referral needed for Medicare rebate". */
+    referralNote: z.string().optional(),
     waitTime: z.string().optional(),
     bestFor: z.string().optional(),
     registrationStatus: z.string().optional(),
+    /** data-prof key of the matching bubble on the practitioners-page map. */
+    bubbleKey: z.string().optional(),
     order: z.number().optional(),
   }),
 });
