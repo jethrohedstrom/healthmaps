@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
-import PractitionerCompare from '../components/PractitionerCompare.astro';
 import MHCPInline from '../components/MHCPInline.astro';
 ---
 <BaseLayout
@@ -13,13 +12,6 @@ import MHCPInline from '../components/MHCPInline.astro';
     <div class="max-w-[1100px] mx-auto px-4 pt-10 md:pt-20 pb-8 md:pb-10">
       <h1 class="text-3xl md:text-[2.5rem] font-bold text-heading mb-3 tracking-[-0.01em] text-center">Who should I see?</h1>
       <PractitionerBubbleMap />
-    </div>
-  </section>
-
-  <!-- Side-by-side comparison (populated when 2-3 bubbles are selected) -->
-  <section>
-    <div class="max-w-[960px] mx-auto px-4 pb-8 md:pb-10">
-      <PractitionerCompare />
     </div>
   </section>
 

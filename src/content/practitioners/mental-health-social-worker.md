@@ -3,11 +3,9 @@ title: "Mental Health Social Worker"
 cost: "$150–$250 per session"
 rebate: "~$87.25 (with MHCP referral)"
 referralRequired: false
-referralNote: "GP referral needed for Medicare rebate"
 bestFor: "Life circumstances affecting mental health"
 registrationStatus: "AASW accredited"
 order: 5
-bubbleKey: "social-worker"
 ---
 
 ## What they do

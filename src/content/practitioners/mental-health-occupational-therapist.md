@@ -3,11 +3,9 @@ title: "Mental Health Occupational Therapist"
 cost: "$170–$260 per session"
 rebate: "~$87.25 (with MHCP referral)"
 referralRequired: false
-referralNote: "GP referral needed for Medicare rebate"
 bestFor: "Daily functioning, return to work/study"
 registrationStatus: "AHPRA registered"
 order: 6
-bubbleKey: "ot"
 ---
 
 ## What they do

@@ -77,5 +77,6 @@ back in or remove them.
 ## Still flagged in code (intentionally)
 
 - `pathway-cards.ts` draft digital cards (`digital-free`, `digital-paid`) — parked, hidden from the live page, unverified placeholders.
-- `peer-support-worker.md` (new file, added for the comparison tool) — drafted from the bubble-map copy which was itself written earlier; flagged for your read-through.
 - Calculator session dropdown labels "10 (max Medicare)" — slightly off for psychiatrist mode (no 10-session cap), cosmetic only.
+
+_Note: the practitioner comparison tool was removed after this review (June 2026). The `peer-support-worker.md` file it introduced was deleted with it; the health-content corrections to the other practitioner files remain._

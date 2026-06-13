@@ -3,12 +3,10 @@ title: "Psychologist"
 cost: "$150–$300 per session"
 rebate: "$98.95 (general) / $145.25 (clinical)"
 referralRequired: false
-referralNote: "GP referral needed for Medicare rebate"
 waitTime: "2–12 weeks"
 bestFor: "Structured therapy: anxiety, depression, trauma"
 registrationStatus: "AHPRA registered"
 order: 1
-bubbleKey: "psychologist"
 ---
 
 ## What they do

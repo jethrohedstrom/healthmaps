@@ -3,11 +3,9 @@ title: "Mental Health Nurse"
 cost: "$100–$180 (often free via public services)"
 rebate: "$61.80 (GP chronic condition management plan)"
 referralRequired: true
-referralNote: "Via GP chronic condition management plan; free public services vary"
 bestFor: "Ongoing care coordination, clinical support"
 registrationStatus: "AHPRA registered"
 order: 7
-bubbleKey: "mh-nurse"
 waitTime: "Varies (often via public services)"
 ---
 

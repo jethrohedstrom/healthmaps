@@ -7,7 +7,6 @@ waitTime: "Days"
 bestFor: "First step: assessment, referrals, Mental Health Care Plans"
 registrationStatus: "AHPRA registered"
 order: 0
-bubbleKey: "gp"
 ---
 
 ## What they do

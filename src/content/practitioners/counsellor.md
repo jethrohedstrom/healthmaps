@@ -7,7 +7,6 @@ waitTime: "1–4 weeks"
 bestFor: "Relationships, grief, life transitions"
 registrationStatus: "Unregulated title; look for ACA/PACFA"
 order: 3
-bubbleKey: "counsellor"
 ---
 
 ## What they do
