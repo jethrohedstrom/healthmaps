@@ -131,12 +131,19 @@ const bmData = {
 
   wrapper.querySelectorAll('.bm-blob[data-prof]').forEach(function(el) {
     (el as SVGElement).style.cursor = 'pointer';
-    el.setAttribute('tabindex', '0');
+    // Blobs inside the collapsed aria-hidden group must stay out of the tab order
+    el.setAttribute('tabindex', el.closest('.bm-hidden-blobs') ? '-1' : '0');
     el.setAttribute('role', 'button');
     const key = el.getAttribute('data-prof');
     const label = bmData[key as keyof typeof bmData]?.name || key;
     el.setAttribute('aria-label', 'Learn about ' + label);
   });
+
+  function syncHiddenBlobTabindex(visible: boolean) {
+    wrapper!.querySelectorAll('.bm-hidden-blobs .bm-blob[data-prof]').forEach(function(el) {
+      el.setAttribute('tabindex', visible ? '0' : '-1');
+    });
+  }
 
   let moreVisible = false;
   const bmSvg = wrapper.querySelector('.bm-map-svg') as SVGSVGElement;
@@ -208,6 +215,7 @@ const bmData = {
         labels?.classList.remove('bm-hidden');
         labels?.classList.add('bm-visible');
         labels?.setAttribute('aria-hidden', 'false');
+        syncHiddenBlobTabindex(true);
         showMoreBtn.textContent = '\uff0d Show fewer professionals';
       } else {
         // Close popover synchronously (no 200ms race with relayout)
@@ -221,6 +229,7 @@ const bmData = {
         labels?.classList.add('bm-hidden');
         labels?.classList.remove('bm-visible');
         labels?.setAttribute('aria-hidden', 'true');
+        syncHiddenBlobTabindex(false);
         showMoreBtn.textContent = '\uff0b Add 4 more to the map';
         // Hidden bubbles can't stay in the comparison
         let pruned = false;

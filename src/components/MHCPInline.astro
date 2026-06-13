@@ -20,6 +20,7 @@ const label = variant === 'acronym' ? 'MHCP' : 'Mental Health Care Plan (MHCP)';
       <span class="block">A document your GP creates during your appointment that unlocks Medicare rebates for up to 10 psychology sessions per calendar year. Your GP handles it all, with no extra paperwork on your end.</span>
       <a
         href="/pathway/#step-2"
+        tabindex="-1"
         class="inline-flex items-center gap-1 text-primary font-semibold mt-2 hover:text-primary/80 transition-colors text-xs"
       >
         Learn more about the process
@@ -33,16 +34,19 @@ const label = variant === 'acronym' ? 'MHCP' : 'Mental Health Care Plan (MHCP)';
   document.querySelectorAll<HTMLButtonElement>('.mhcp-inline-toggle').forEach((btn) => {
     const explanation = btn.parentElement?.querySelector<HTMLElement>('.mhcp-inline-explanation');
     if (!explanation) return;
+    const link = explanation.querySelector<HTMLAnchorElement>('a');
     btn.addEventListener('click', () => {
       const isOpen = explanation.classList.contains('max-h-96');
       if (isOpen) {
         explanation.classList.remove('max-h-96', 'opacity-100');
         explanation.classList.add('max-h-0', 'opacity-0');
         explanation.setAttribute('aria-hidden', 'true');
+        link?.setAttribute('tabindex', '-1');
       } else {
         explanation.classList.remove('max-h-0', 'opacity-0');
         explanation.classList.add('max-h-96', 'opacity-100');
         explanation.setAttribute('aria-hidden', 'false');
+        link?.removeAttribute('tabindex');
       }
     });
   });
