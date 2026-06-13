@@ -6,7 +6,6 @@ summary: "Search for a psychologist, check their availability and fees, then boo
 
 ## How to find a psychologist
 
-<!-- REVIEW -->
 You can find a psychologist through:
 
 - **[Psychology Today Australia](https://www.psychologytoday.com/au)**: search by location, issue, and whether they offer Medicare rebates.

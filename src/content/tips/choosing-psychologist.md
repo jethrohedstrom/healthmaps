@@ -5,8 +5,6 @@ category: "Finding Help"
 publishedDate: "2025-01-20"
 ---
 
-<!-- REVIEW -->
-
 Finding a psychologist is a bit like finding a good mechanic: qualifications matter, but so does the relationship.
 
 ## What to check before booking

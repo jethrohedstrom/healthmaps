@@ -40,7 +40,7 @@ const bmData = {
     desc: "<p>A medical doctor who specialises in mental health.</p><ul><li>Can diagnose conditions, prescribe and manage medication, and provide therapy</li><li>Most often seen for ADHD, bipolar disorder, treatment-resistant depression, or when specialist medications are needed that a GP can't prescribe</li><li>GP referral needed to access a Medicare rebate</li></ul>",
     costRows: [
       { label: "First session", fee: "$400 – $800", rebate: "$262.10", outOfPocket: "$138 – $538" },
-      { label: "Follow-up sessions", fee: "$200 – $400", rebate: "$87.05 – $134.00", outOfPocket: "$66 – $266" }
+      { label: "Follow-up sessions", fee: "$200 – $400", rebate: "$87.05 – $134.00", outOfPocket: "$66 – $313" }
     ],
     details: [
       { label: "Wait", value: "1 – 6 months" },
@@ -56,7 +56,6 @@ const bmData = {
       { text: "No Medicare rebate", cls: "badge-no-medicare" },
       { text: "Voluntary accreditation (ACA/PACFA)", cls: "badge-voluntary" }
     ],
-    // REVIEW: health-system claim, verify "no benefit to getting a GP referral for counsellors" is accurate
     desc: "<p>A trained listener who helps you work through everyday challenges: stress, grief, relationships, life transitions.</p><ul><li>Book directly \u2014 no GP appointment or referral needed, and no benefit to getting one, since counsellors sit outside Medicare entirely</li><li>Generally easier to access than psychologists, where long waits are common</li><li>\u201cCounsellor\u201d is not a protected title \u2014 <a href=\"https://www.arcapregister.com.au/\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"color:var(--color-primary);font-weight:600;text-decoration:underline;text-underline-offset:2px;\">verify your practitioner's credentials</a></li></ul>",
     details: [
       { label: "Cost", value: "$80–$200" },
@@ -105,7 +104,7 @@ const bmData = {
     ],
     desc: "<p>A registered nurse with specialist postgraduate training in mental health.</p><ul><li>Clinical care rather than structured therapy — medication monitoring, physical health side effects, crisis support</li><li>Coordinates between your GP and psychiatrist</li></ul>",
     details: [
-      { label: "Referral", value: "Yes (GP referral with Chronic Disease Management plan)" },
+      { label: "Referral", value: "Yes (GP chronic condition management plan)" },
       { label: "Can prescribe", value: "No" }
     ]
   },
@@ -132,12 +131,19 @@ const bmData = {
 
   wrapper.querySelectorAll('.bm-blob[data-prof]').forEach(function(el) {
     (el as SVGElement).style.cursor = 'pointer';
-    el.setAttribute('tabindex', '0');
+    // Blobs inside the collapsed aria-hidden group must stay out of the tab order
+    el.setAttribute('tabindex', el.closest('.bm-hidden-blobs') ? '-1' : '0');
     el.setAttribute('role', 'button');
     const key = el.getAttribute('data-prof');
     const label = bmData[key as keyof typeof bmData]?.name || key;
     el.setAttribute('aria-label', 'Learn about ' + label);
   });
+
+  function syncHiddenBlobTabindex(visible: boolean) {
+    wrapper!.querySelectorAll('.bm-hidden-blobs .bm-blob[data-prof]').forEach(function(el) {
+      el.setAttribute('tabindex', visible ? '0' : '-1');
+    });
+  }
 
   let moreVisible = false;
   const bmSvg = wrapper.querySelector('.bm-map-svg') as SVGSVGElement;
@@ -209,6 +215,7 @@ const bmData = {
         labels?.classList.remove('bm-hidden');
         labels?.classList.add('bm-visible');
         labels?.setAttribute('aria-hidden', 'false');
+        syncHiddenBlobTabindex(true);
         showMoreBtn.textContent = '\uff0d Show fewer professionals';
       } else {
         // Close popover synchronously (no 200ms race with relayout)
@@ -222,6 +229,7 @@ const bmData = {
         labels?.classList.add('bm-hidden');
         labels?.classList.remove('bm-visible');
         labels?.setAttribute('aria-hidden', 'true');
+        syncHiddenBlobTabindex(false);
         showMoreBtn.textContent = '\uff0b Add 4 more to the map';
       }
       updateViewBox();
@@ -392,7 +400,7 @@ const bmData = {
           '</div>'
         : '') +
       (key === 'gp' ? '<div class="bm-mhcp-detail" style="overflow:hidden;max-height:0;opacity:0;transition:max-height 0.3s ease-out,opacity 0.3s ease-out;"><div style="background:#f8fafc;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:12px;color:#64748b;line-height:1.6;border-left:3px solid rgba(68,238,112,0.4);"><p style="font-weight:600;color:#1e293b;margin:0 0 4px;">What is a Mental Health Care Plan?</p><p style="margin:0;">A document your GP creates during your appointment that unlocks Medicare rebates for up to 10 psychology sessions per calendar year. Your GP handles it all, with no extra paperwork on your end.</p><a href="/pathway/#step-2" style="display:inline-flex;align-items:center;gap:4px;color:var(--color-primary);font-weight:600;margin-top:6px;font-size:11px;text-decoration:none;">Learn more about the process <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg></a></div></div>' : '') +
-      (key === 'mh-nurse' ? '<div style="margin-top:14px;margin-bottom:14px;"><p style="font-size:13px;color:var(--color-body);line-height:1.6;margin:0 0 8px;">Not usually seen in private practice. Most people access mental health nurses for free through community health teams or public hospitals.</p><button class="bm-nurse-toggle" style="background:none;border:none;padding:0;font-size:13px;color:var(--color-primary);font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;text-decoration:underline;text-underline-offset:2px;">Medicare pricing in private practice <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="transition:transform 0.2s ease;"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg></button><div class="bm-nurse-detail" style="overflow:hidden;max-height:0;opacity:0;transition:max-height 0.3s ease-out,opacity 0.3s ease-out;"><div class="bm-cost-breakdown" style="margin-top:10px;"><div class="bm-cost-row"><div class="bm-cost-row-label">Per session</div><div class="bm-cost-row-items"><div class="bm-cost-item"><div class="bm-cost-item-label">Fee</div><div class="bm-cost-item-value">$100 – $180</div></div><div class="bm-cost-item"><div class="bm-cost-item-label">Medicare rebate</div><div class="bm-cost-item-value">$61.80</div></div><div class="bm-cost-separator"></div><div class="bm-cost-item bm-cost-item-highlight"><div class="bm-cost-item-label">Out of pocket</div><div class="bm-cost-item-value">$38 – $118</div></div></div></div></div><p style="font-size:11px;color:var(--color-body);line-height:1.5;margin:8px 0 0;font-style:italic;">5 sessions per year under a Chronic Disease Management plan, shared with other allied health services like physio.</p></div></div>' : '') +
+      (key === 'mh-nurse' ? '<div style="margin-top:14px;margin-bottom:14px;"><p style="font-size:13px;color:var(--color-body);line-height:1.6;margin:0 0 8px;">Not usually seen in private practice. Most people access mental health nurses for free through community health teams or public hospitals.</p><button class="bm-nurse-toggle" style="background:none;border:none;padding:0;font-size:13px;color:var(--color-primary);font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:4px;text-decoration:underline;text-underline-offset:2px;">Medicare pricing in private practice <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="transition:transform 0.2s ease;"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg></button><div class="bm-nurse-detail" style="overflow:hidden;max-height:0;opacity:0;transition:max-height 0.3s ease-out,opacity 0.3s ease-out;"><div class="bm-cost-breakdown" style="margin-top:10px;"><div class="bm-cost-row"><div class="bm-cost-row-label">Per session</div><div class="bm-cost-row-items"><div class="bm-cost-item"><div class="bm-cost-item-label">Fee</div><div class="bm-cost-item-value">$100 – $180</div></div><div class="bm-cost-item"><div class="bm-cost-item-label">Medicare rebate</div><div class="bm-cost-item-value">$61.80</div></div><div class="bm-cost-separator"></div><div class="bm-cost-item bm-cost-item-highlight"><div class="bm-cost-item-label">Out of pocket</div><div class="bm-cost-item-value">$38 – $118</div></div></div></div></div><p style="font-size:11px;color:var(--color-body);line-height:1.5;margin:8px 0 0;font-style:italic;">5 sessions per year under a GP chronic condition management plan, shared with other allied health services like physio.</p></div></div>' : '') +
       '<div class="bm-info-details">' +
         p.details.map(function(d) {
           return '<div class="bm-info-detail">' +

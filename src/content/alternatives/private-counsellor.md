@@ -4,7 +4,6 @@ summary: "See a counsellor or therapist without a referral. You pay the full fee
 order: 2
 ---
 
-<!-- REVIEW -->
 ## What is a private counsellor?
 
 A private counsellor or therapist is a mental health professional you can see without a GP referral or MHCP. You pay the full session fee yourself, and **Medicare rebates don't apply** to counsellors (only to registered psychologists and some other allied health professionals with a valid MHCP referral).

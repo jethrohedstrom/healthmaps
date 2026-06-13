@@ -49,9 +49,10 @@ export const accentVarMap: Record<string, string> = {
   'border-l-accent-olive':  'var(--color-accent-olive)',
 };
 
-// REVIEW: All costs, session limits, phone numbers, eligibility criteria,
-// and process descriptions below are AI-drafted and need verification against
-// current Medicare, NDIS, and service provider information.
+// Costs, session limits, phone numbers and process descriptions on the live
+// cards verified June 2026 against MBS/Services Australia/provider sources —
+// see docs/health-content-review.md. Draft cards (digital-free, digital-paid)
+// remain unverified placeholders.
 
 export const pathwayCards: PathwayCard[] = [
   {
@@ -65,7 +66,7 @@ export const pathwayCards: PathwayCard[] = [
     badge: 'Most common starting point',
     isCrisis: false,
     facts: {
-      cost: '$50\u2013$200 per session', // REVIEW cost range
+      cost: '$50\u2013$200 per session',
       sessions: 'Up to 10 per year',
       wait: 'A few days for a GP; a few weeks for a psychologist or other practitioner',
     },
@@ -89,8 +90,7 @@ export const pathwayCards: PathwayCard[] = [
       {
         number: 3,
         title: 'Your GP refers you to the right practitioner',
-        // REVIEW: confirm referral process for mental health nurses. Is it via the MHCP, a separate pathway, or employer/PHN-arranged? Clarify before publishing.
-        detail: 'An MHCP-based referral covers psychologists, social workers, or occupational therapists (up to 6 sessions initially). For a psychiatrist, your GP writes a separate specialist referral letter, which is its own Medicare item, not part of the MHCP. Mental health nurses may be available through some GP practices or PHN-funded programs.',
+        detail: 'An MHCP-based referral covers psychologists, social workers, or occupational therapists (up to 6 sessions initially). For a psychiatrist, your GP writes a separate specialist referral letter, which is its own Medicare item, not part of the MHCP. Mental health nurses sit outside the MHCP: in private practice they’re rebated via a GP chronic condition management plan, but most people see them free through public services or PHN-funded programs.',
       },
       {
         number: 4,
@@ -100,14 +100,12 @@ export const pathwayCards: PathwayCard[] = [
       {
         number: 5,
         title: 'Attend sessions, then return to your GP for a review',
-        // REVIEW: confirm whether psychiatrist pathway has a parallel review checkpoint. "No annual cap" suggests a different cadence to the MHCP review cycle.
         detail: 'For MHCP-funded sessions (psychologist, social worker, or OT), return to your GP after 6 sessions for a review. This unlocks 4 more, up to 10 per calendar year. Psychiatrist care isn\u2019t capped the same way; follow-up is arranged with the psychiatrist directly.',
       },
       {
         number: 6,
         title: 'MHCP-funded sessions reset each January',
-        // REVIEW: verify psychiatrist referral validity period. Psychiatrist referrals usually last 3\u201312 months and aren\u2019t tied to the MHCP cycle, but worth confirming.
-        detail: 'The 10-session cap resets every calendar year. You\u2019ll need a new Mental Health Care Plan from your GP to start the next year\u2019s MHCP-funded sessions. Psychiatrist referrals aren\u2019t subject to this cycle.',
+        detail: 'The 10-session cap resets every calendar year. Your plan itself doesn\u2019t expire \u2014 you\u2019ll just need a new referral from your GP for the new year\u2019s sessions (and your GP may review the plan while you\u2019re there). GP referrals to psychiatrists last 12 months by default and aren\u2019t tied to this cycle.',
       },
     ],
   },
@@ -120,7 +118,7 @@ export const pathwayCards: PathwayCard[] = [
     oneLiner: 'You want to start quickly and are happy to pay out-of-pocket.',
     isCrisis: false,
     facts: {
-      cost: '$120\u2013$330+ per session (no rebate)', // REVIEW cost range
+      cost: '$80\u2013$330+ per session (no rebate)',
       sessions: 'No limit',
       wait: 'Days to 2 weeks',
     },
@@ -134,7 +132,6 @@ export const pathwayCards: PathwayCard[] = [
       {
         number: 1,
         title: 'Decide what kind of practitioner you want',
-        // REVIEW: verify psychiatrist booking/referral claim — most private psychiatrists require a GP referral, and the Medicare rebate depends on one.
         detail: 'Psychologist, counsellor, accredited mental health social worker, or psychiatrist. Each has different training and approach — see our <a href="/practitioners/">practitioners page</a> to compare. Psychiatrists are the exception here: you’ll almost always want a GP referral first, both for the Medicare rebate and because most private psychiatrists won’t book you in without one.',
       },
       {
@@ -243,12 +240,12 @@ export const pathwayCards: PathwayCard[] = [
       {
         number: 4,
         title: 'Ask about university training clinics',
-        detail: 'University psychology clinics offer sessions at $10\u2013$80 on a sliding scale. You\u2019ll see a trainee supervised by a registered psychologist.', // REVIEW cost range
+        detail: 'University psychology clinics offer sessions at $10\u2013$50 on a sliding scale (some free). You\u2019ll see a trainee supervised by a registered psychologist.',
       },
       {
         number: 5,
         title: 'Ask your employer about an EAP',
-        detail: 'Employee Assistance Programs typically offer 3\u20136 free, confidential sessions. Check with your HR team or workplace intranet.', // REVIEW session count
+        detail: 'Employee Assistance Programs typically offer 3\u20136 free, confidential sessions. Check with your HR team or workplace intranet.',
       },
     ],
   },

@@ -4,7 +4,6 @@ summary: "Free short-term counselling through your employer. No GP referral need
 order: 1
 ---
 
-<!-- REVIEW -->
 ## What is an EAP?
 
 An Employee Assistance Program (EAP) is a confidential counselling service provided by many Australian employers. Sessions are **completely free** and usually available to you and your immediate family members.

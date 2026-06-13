@@ -5,8 +5,6 @@ category: "Getting Started"
 publishedDate: "2025-01-10"
 ---
 
-<!-- REVIEW -->
-
 It's completely normal to feel awkward or unsure about what to say. Here are some ready-to-use phrases.
 
 ## When booking the appointment

@@ -54,6 +54,18 @@
   --color-accent-red-soft: #94303a; /* desaturated red — icon / accents */
   --color-accent-red-wash: #FBF7F7; /* warm off-white, barely red — strip bg */
 
+  /* Status badge colours (bubble map + practitioner comparison table) */
+  --color-badge-blue-bg: #e0edff;
+  --color-badge-blue-text: #1e40af;
+  --color-badge-green-bg: #f0fdf4;
+  --color-badge-green-text: #166534;
+  --color-badge-red-bg: #fef2f2;
+  --color-badge-red-text: #991b1b;
+  --color-badge-amber-bg: #fef3c7;
+  --color-badge-amber-text: #92400e;
+  --color-badge-purple-bg: #f3e8ff;
+  --color-badge-purple-text: #6b21a8;
+
   --shadow-sm: 0px 1px 2px rgba(0,0,0,0.05);
 
   /* Typography */
@@ -84,6 +96,35 @@ h1, h2, h3, h4, h5, h6 {
 :focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+/* Status badges, shared by the bubble map popover and the comparison table */
+.badge-pill {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 600;
+}
+.badge-registered {
+  background: var(--color-badge-blue-bg);
+  color: var(--color-badge-blue-text);
+}
+.badge-medicare {
+  background: var(--color-badge-green-bg);
+  color: var(--color-badge-green-text);
+}
+.badge-no-medicare {
+  background: var(--color-badge-red-bg);
+  color: var(--color-badge-red-text);
+}
+.badge-unregulated {
+  background: var(--color-badge-amber-bg);
+  color: var(--color-badge-amber-text);
+}
+.badge-voluntary {
+  background: var(--color-badge-purple-bg);
+  color: var(--color-badge-purple-text);
 }
 
 /* Section divider: thin centered gray line between sections */

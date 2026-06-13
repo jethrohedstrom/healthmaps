@@ -1,6 +1,6 @@
 ---
 title: "GP (General Practitioner)"
-cost: "Often bulk-billed (free)"
+cost: "Free (bulk-billed) – $100+"
 rebate: "Bulk-billed or standard GP rebate"
 referralRequired: false
 waitTime: "Days"
@@ -9,7 +9,6 @@ registrationStatus: "AHPRA registered"
 order: 0
 ---
 
-<!-- REVIEW -->
 ## What they do
 
 A GP is where most mental health journeys start. GPs can assess your mental health, prescribe basic medication, and create a **Mental Health Care Plan (MHCP)**. That plan unlocks Medicare-funded sessions with a psychologist, social worker, or OT.
