@@ -76,7 +76,7 @@ back in or remove them.
 
 ## Still flagged in code (intentionally)
 
-- `pathway-cards.ts` draft digital cards (`digital-free`, `digital-paid`) — parked, hidden from the live page, unverified placeholders.
+- `pathway-cards.ts` `self-guided` card — live (June 2026), replacing the old `digital-free`/`digital-paid` draft cards. Steps are deliberately generic-but-true: no specific program/app names yet (pending deep research), and the evidence/funding/cost claims ("evidence-based", "university-run and government-funded", "$10–$90/mo") are not yet verified against sources.
 - Calculator session dropdown labels "10 (max Medicare)" — slightly off for psychiatrist mode (no 10-session cap), cosmetic only.
 
 _Note: the practitioner comparison tool was removed after this review (June 2026). The `peer-support-worker.md` file it introduced was deleted with it; the health-content corrections to the other practitioner files remain._

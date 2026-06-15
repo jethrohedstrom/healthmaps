@@ -320,17 +320,14 @@ details[open] > summary::after {
   transform: scale(0.997);
 }
 
-/* Expanded "other pathway" card takes its own full-width row on desktop, so it
-   no longer leaves a lopsided 2-column row. Mobile is single-column already, so
-   this only applies at md+. The `> details[open]` direct-child match targets only
-   the card's top-level accordion, not the nested progressive steps inside it. */
+/* The cards stack in a single-column flex layout, so every card is already
+   full-width; the rules below only restyle a card's *content* once its top-level
+   accordion is open. The `> details[open]` direct-child match targets only the
+   card's top-level accordion, not the nested progressive steps inside it. */
 @media (min-width: 768px) {
-  .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) {
-    grid-column: 1 / -1;
-  }
   /* On a full-width expanded card, centre the content as a readable column
      (720px = design-system body-text width) rather than letting it stretch to
-     ~1128px or cling to the left edge. The timeline infographic is centre-anchored
+     the full ~960px card width or cling to the left edge. The timeline infographic is centre-anchored
      by design, so the rest of the content is centred too — title, intro, facts
      and "best for" all share the timeline's axis for a cohesive feature card.
      Scoped to expanded + desktop, so collapsed/mobile cards are untouched. */
