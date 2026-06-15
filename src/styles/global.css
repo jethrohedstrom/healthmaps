@@ -76,6 +76,8 @@
 /* Base styles */
 html {
   scroll-behavior: smooth;
+  /* Paints the overscroll/rubber-band area (above the sticky header) to match it */
+  background-color: var(--color-paper-cream);
 }
 
 body {
