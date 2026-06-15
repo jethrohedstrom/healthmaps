@@ -467,6 +467,162 @@
     color: #1e293b;
   }
 
+  /* Approachable, question-led panel (Psychologist).
+     One emphasis per row: question is a quiet label, the answer carries the weight. */
+  .bubble-map .bm-lead {
+    color: var(--color-body);
+    font-size: 15px;
+    line-height: 1.55;
+    margin: 6px 0 16px;
+  }
+
+  .bubble-map .bm-qa {
+    padding: 13px 0;
+    border-top: 1px solid #eef2f5;
+  }
+
+  .bubble-map .bm-qa:first-of-type {
+    border-top: none;
+    padding-top: 2px;
+  }
+
+  .bubble-map .bm-qa:last-of-type {
+    padding-bottom: 0;
+  }
+
+  .bubble-map .bm-qa-q {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #8391a5;
+    margin-bottom: 4px;
+  }
+
+  .bubble-map .bm-qa-a {
+    font-size: 15px;
+    line-height: 1.5;
+    color: var(--color-body);
+    font-weight: 400;
+  }
+
+  .bubble-map .bm-qa-fig {
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+
+  /* Inline Medicare-rebate chip (soft outlined affordance) */
+  .bubble-map .bm-rebate-toggle {
+    font-family: var(--font-sans);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--color-primary);
+    background: #f2faf5;
+    border: 1px solid rgba(27, 107, 74, 0.10);
+    border-radius: 7px;
+    padding: 1px 6px 1px 7px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    line-height: 1.35;
+    vertical-align: 1px;
+    transition: background 0.15s ease, border-color 0.15s ease;
+  }
+
+  .bubble-map .bm-rebate-toggle:hover {
+    background: #e7f4ed;
+    border-color: rgba(27, 107, 74, 0.18);
+  }
+
+  .bubble-map .bm-rebate-toggle svg {
+    transition: transform 0.25s ease;
+  }
+
+  /* Collapsible panels: inline Medicare explainer + "More detail" */
+  .bubble-map .bm-rebate-detail,
+  .bubble-map .bm-more-detail {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+  }
+
+  .bubble-map .bm-rebate-detail-inner {
+    margin-top: 12px;
+    padding: 13px 15px;
+    background: var(--color-primary-light);
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-body);
+  }
+
+  .bubble-map .bm-rebate-detail-inner strong {
+    color: var(--color-heading);
+    font-weight: 600;
+  }
+
+  .bubble-map .bm-rebate-detail-inner a {
+    color: var(--color-primary);
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 8px;
+    font-size: 12.5px;
+  }
+
+  .bubble-map .bm-rebate-detail-inner a:hover {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .bubble-map .bm-more-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-top: 14px;
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-primary);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .bubble-map .bm-more-toggle svg {
+    transition: transform 0.25s ease;
+  }
+
+  .bubble-map .bm-more-detail-inner {
+    margin-top: 12px;
+    padding: 14px 16px;
+    background: var(--color-bg-light);
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--color-body);
+  }
+
+  .bubble-map .bm-more-detail-inner dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 5px 14px;
+    margin: 0;
+  }
+
+  .bubble-map .bm-more-detail-inner dt {
+    font-weight: 600;
+    color: var(--color-heading);
+  }
+
+  .bubble-map .bm-more-detail-inner dd {
+    color: var(--color-body);
+    margin: 0;
+  }
+
   .bubble-map .bm-cost-breakdown {
     display: flex;
     flex-direction: column;
