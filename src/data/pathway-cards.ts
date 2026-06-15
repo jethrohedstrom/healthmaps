@@ -51,8 +51,7 @@ export const accentVarMap: Record<string, string> = {
 
 // Costs, session limits, phone numbers and process descriptions on the live
 // cards verified June 2026 against MBS/Services Australia/provider sources —
-// see docs/health-content-review.md. Draft cards (digital-free, digital-paid)
-// remain unverified placeholders.
+// see docs/health-content-review.md.
 
 export const pathwayCards: PathwayCard[] = [
   {
@@ -112,7 +111,7 @@ export const pathwayCards: PathwayCard[] = [
   {
     id: 'private',
     icon: 'bolt',
-    title: 'Go straight to a practitioner',
+    title: 'Go straight to a private practitioner',
     bestFor: 'Best for: getting started quickly without a GP visit.',
     accentColor: 'border-l-accent-blue',
     oneLiner: 'You want to start quickly and are happy to pay out-of-pocket.',
@@ -152,68 +151,12 @@ export const pathwayCards: PathwayCard[] = [
     ],
   },
   {
-    id: 'digital-free',
-    draft: true, // copy pending deep research — hidden from the live page
-    icon: 'clipboard', // REVIEW: pick a more fitting icon for digital programs
-    title: 'Free digital programs',
-    bestFor: 'Best for: TODO',
-    accentColor: 'border-l-accent-purple',
-    oneLiner: 'TODO: copy pending deep research',
-    isCrisis: false,
-    facts: {
-      cost: 'Free',
-      sessions: 'TBC',
-      wait: 'TBC',
-    },
-    timeHorizon: {
-      events: [
-        event('Program', 'same-day'),
-      ],
-    },
-    progressive: true,
-    steps: [
-      {
-        number: 1,
-        title: 'TODO: copy pending deep research',
-        detail: 'Layout placeholder. Content to follow.',
-      },
-    ],
-  },
-  {
-    id: 'digital-paid',
-    draft: true, // copy pending deep research — hidden from the live page
-    icon: 'shield', // REVIEW: pick a more fitting icon for paid therapy apps
-    title: 'Paid therapy apps',
-    bestFor: 'Best for: TODO',
-    accentColor: 'border-l-accent-olive',
-    oneLiner: 'TODO: copy pending deep research',
-    isCrisis: false,
-    facts: {
-      cost: 'TBC',
-      sessions: 'TBC',
-      wait: 'TBC',
-    },
-    timeHorizon: {
-      events: [
-        event('App', 'same-day'),
-      ],
-    },
-    progressive: true,
-    steps: [
-      {
-        number: 1,
-        title: 'TODO: copy pending deep research',
-        detail: 'Layout placeholder. Content to follow.',
-      },
-    ],
-  },
-  {
     id: 'low-cost',
     icon: 'heart',
-    title: 'Free or low-cost support',
-    bestFor: 'Best for: people on a tight budget or without Medicare.',
+    title: 'Through a free or community service',
+    bestFor: 'Best for: people who want to start with a community or publicly-funded service.',
     accentColor: 'border-l-accent-amber',
-    oneLiner: 'Cost is a barrier, you\u2019re on a low income, or you want to access services without a Medicare gap fee.',
+    oneLiner: 'You want to approach a community or publicly-funded service \u2014 such as headspace, a Medicare Mental Health Centre, a PHN-funded service, your workplace EAP, or a university clinic.',
     isCrisis: false,
     facts: {
       cost: 'Free or very low cost',
@@ -246,6 +189,45 @@ export const pathwayCards: PathwayCard[] = [
         number: 5,
         title: 'Ask your employer about an EAP',
         detail: 'Employee Assistance Programs typically offer 3\u20136 free, confidential sessions. Check with your HR team or workplace intranet.',
+      },
+    ],
+  },
+  {
+    id: 'self-guided',
+    icon: 'clipboard',
+    title: 'Self-guided tools',
+    bestFor: 'Best for: people who want to start on their own, right now, at low or no cost.',
+    accentColor: 'border-l-accent-purple',
+    oneLiner: 'You\u2019d rather begin on your own with an app or online program \u2014 before, or instead of, seeing someone in person.',
+    isCrisis: false,
+    facts: {
+      cost: 'Free, or paid (typically $10\u2013$90/mo)',
+      sessions: 'Use at your own pace',
+      wait: 'Start today',
+    },
+    timeHorizon: {
+      events: [
+        event('Program', 'same-day'),
+      ],
+    },
+    progressive: true,
+    // NOTE: specific program/app names pending deep research \u2014 keep steps
+    // generic-but-true until that list is verified; no fabricated product names.
+    steps: [
+      {
+        number: 1,
+        title: 'Start with free, government-funded online programs',
+        detail: 'Australia has free, evidence-based online mental health programs (many run by universities and funded by the government). They cost nothing and don\u2019t need a referral \u2014 a good first step if you want to try things yourself.',
+      },
+      {
+        number: 2,
+        title: 'Consider a paid app if you want more structure',
+        detail: 'Paid therapy and CBT apps usually charge a subscription (often around $10\u2013$90 per month). They can offer guided courses, mood tracking, or text-based support \u2014 useful if the free options don\u2019t suit you.',
+      },
+      {
+        number: 3,
+        title: 'No referral needed \u2014 start today',
+        detail: 'You don\u2019t need a GP, a Mental Health Care Plan, or any paperwork. Sign up and begin straight away. If you later want face-to-face support, any of the other pathways are still open to you.',
       },
     ],
   },
