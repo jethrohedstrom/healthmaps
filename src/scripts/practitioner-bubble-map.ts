@@ -648,20 +648,30 @@ const bmData = {
       });
     }
 
-    // Wire "More detail" + inline Medicare-rebate collapses (approachable layout)
-    function wireBmCollapse(toggle: Element | null, detail: Element | null) {
+    // Decorative chevron/arrow icons: hide from assistive tech (buttons/links carry the label).
+    popover.querySelectorAll('svg').forEach(function(svg) {
+      svg.setAttribute('aria-hidden', 'true');
+    });
+
+    // Wire "More detail" + inline Medicare-rebate collapses (approachable layout).
+    // Open/closed state is tracked with the .is-open class — which also drives
+    // visibility:hidden in CSS so collapsed links leave the tab order / AT tree.
+    function wireBmCollapse(toggle: Element | null, detail: Element | null, regionId: string) {
       if (!toggle || !detail) return;
+      const el = detail as HTMLElement;
+      if (!el.id) el.id = regionId;
+      toggle.setAttribute('aria-controls', el.id);
       toggle.addEventListener('click', function(e) {
         e.stopPropagation();
-        const el = detail as HTMLElement;
         const chevron = toggle.querySelector('svg') as SVGElement | null;
-        const isOpen = !!el.style.maxHeight && el.style.maxHeight !== '0px';
-        if (isOpen) {
-          el.style.maxHeight = '0';
+        if (el.classList.contains('is-open')) {
+          el.classList.remove('is-open');
+          el.style.maxHeight = '0px';
           el.style.opacity = '0';
           toggle.setAttribute('aria-expanded', 'false');
           if (chevron) chevron.style.transform = 'rotate(0deg)';
         } else {
+          el.classList.add('is-open');
           el.style.maxHeight = el.scrollHeight + 'px';
           el.style.opacity = '1';
           toggle.setAttribute('aria-expanded', 'true');
@@ -669,8 +679,8 @@ const bmData = {
         }
       });
     }
-    wireBmCollapse(popover.querySelector('.bm-more-toggle'), popover.querySelector('.bm-more-detail'));
-    wireBmCollapse(popover.querySelector('.bm-rebate-toggle'), popover.querySelector('.bm-rebate-detail'));
+    wireBmCollapse(popover.querySelector('.bm-more-toggle'), popover.querySelector('.bm-more-detail'), 'bm-more-detail-region');
+    wireBmCollapse(popover.querySelector('.bm-rebate-toggle'), popover.querySelector('.bm-rebate-detail'), 'bm-rebate-detail-region');
 
     // Position near the clicked blob (desktop only)
     const blobEl = wrapper!.querySelector('.bm-blob[data-prof="' + key + '"]') as SVGElement | null;

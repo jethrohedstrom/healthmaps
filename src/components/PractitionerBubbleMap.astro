@@ -493,7 +493,7 @@
   .bubble-map .bm-qa-q {
     font-size: 12.5px;
     font-weight: 600;
-    color: #8391a5;
+    color: #64748b;
     margin-bottom: 4px;
   }
 
@@ -537,13 +537,22 @@
     transition: transform 0.25s ease;
   }
 
-  /* Collapsible panels: inline Medicare explainer + "More detail" */
+  /* Collapsible panels: inline Medicare explainer + "More detail".
+     visibility:hidden keeps the collapsed links out of the tab order / AT tree;
+     delayed so it only flips to hidden after the collapse transition finishes. */
   .bubble-map .bm-rebate-detail,
   .bubble-map .bm-more-detail {
     overflow: hidden;
     max-height: 0;
     opacity: 0;
-    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    visibility: hidden;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out, visibility 0s 0.3s;
+  }
+
+  .bubble-map .bm-rebate-detail.is-open,
+  .bubble-map .bm-more-detail.is-open {
+    visibility: visible;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out, visibility 0s;
   }
 
   .bubble-map .bm-rebate-detail-inner {
