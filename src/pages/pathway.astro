@@ -10,7 +10,7 @@ const otherCards = liveCards.filter((c) => c.id !== 'through-gp');
 ---
 <BaseLayout
   title="How to Access Mental Health Support"
-  description="Ways to access mental health support in Australia: through your GP, privately, or through free and low-cost services."
+  description="Ways to start with mental health support in Australia: through your GP, a private practitioner, a free or community service, or self-guided tools."
 >
   <section>
     <div class="max-w-[1240px] mx-auto px-5 md:px-10 lg:px-14 pt-16 md:pt-24 pb-16 md:pb-20">
@@ -26,7 +26,7 @@ const otherCards = liveCards.filter((c) => c.id !== 'through-gp');
               href="#pathways"
               class="bg-primary text-white px-5 py-3 rounded-xl font-semibold text-sm hover:bg-primary-mid transition-colors"
             >
-              Compare all {liveCards.length} pathways
+              Compare all {liveCards.length} ways to start
             </a>
           </div>
         </div>
@@ -38,7 +38,7 @@ const otherCards = liveCards.filter((c) => c.id !== 'through-gp');
                 href="#pathways"
                 class="inline-flex items-center gap-1.5 text-sm font-medium text-body hover:text-primary transition-colors"
               >
-                <span>{otherCards.length} more pathways below</span>
+                <span>{otherCards.length} more ways to start below</span>
                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
               </a>
             </div>
@@ -50,9 +50,9 @@ const otherCards = liveCards.filter((c) => c.id !== 'through-gp');
 
   <section id="pathways" class="scroll-mt-24">
     <div class="max-w-[1240px] mx-auto px-5 md:px-10 lg:px-14 py-16 md:py-24">
-      <p class="text-sm uppercase tracking-widest text-body font-semibold mb-8">The other {otherCards.length} pathways</p>
+      <p class="text-sm uppercase tracking-widest text-body font-semibold mb-8">The other {otherCards.length} ways to start</p>
 
-      <div class="pathway-grid grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-stretch">
+      <div class="pathway-grid flex flex-col gap-6 lg:gap-8 max-w-[960px] mx-auto">
         {otherCards.map((card) => (
           <PathwayCardVisual {...card} />
         ))}
