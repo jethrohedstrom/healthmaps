@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Maps — Bubble panels: Before / After (all 8)</title>
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+  <link href="https://api.fontshare.com/v2/css?f[]=general-sans@200,400,500,600,700&f[]=switzer@400,500,600,700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --color-primary:#1B6B4A; --color-primary-light:#E8F5EE; --color-primary-mid:#3A8F68;
+      --color-heading:#1e293b; --color-body:#475569; --color-border:#e5e7eb; --color-bg-light:#f8fafc;
+      --font-sans:'General Sans',system-ui,sans-serif; --font-display:'Switzer',system-ui,sans-serif;
+    }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:var(--font-sans);color:var(--color-heading);background:#EEF4EF;padding:3rem 1.5rem 5rem;-webkit-font-smoothing:antialiased}
+    .intro{max-width:880px;margin:0 auto 2.5rem}
+    .intro h1{font-family:var(--font-display);font-size:28px;font-weight:700;letter-spacing:-.02em;margin-bottom:.5rem}
+    .intro p{color:var(--color-body);font-size:15px;line-height:1.6}
+    .legend{display:flex;gap:28px;margin-top:14px;font-size:13px;font-weight:600}
+    .legend span{display:inline-flex;align-items:center;gap:7px;text-transform:uppercase;letter-spacing:1px;color:#94a3b8}
+    .legend b{color:var(--color-primary)}
+
+    .row{max-width:820px;margin:0 auto 40px}
+    .row-label{font-family:var(--font-display);font-size:18px;font-weight:700;color:#1e293b;margin:0 0 14px;padding-bottom:8px;border-bottom:2px solid var(--color-primary-light)}
+    .pair{display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap}
+    .side{flex:1 1 360px;min-width:320px}
+    .side-tag{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px}
+    .side-before .side-tag{color:#94a3b8}
+    .side-after .side-tag{color:var(--color-primary)}
+
+    /* ---- shared popover shell ---- */
+    .panel{background:#fff;border-radius:14px;padding:20px;box-shadow:0 8px 30px rgba(0,0,0,.10),0 2px 8px rgba(0,0,0,.06);position:relative}
+    .topline{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+    .dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+    .name{font-size:17px;font-weight:700;color:var(--color-heading)}
+
+    /* ---- BEFORE: badges + desc + grid ---- */
+    .cur-badges{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+    .cur-badge{padding:2px 9px;border-radius:100px;font-size:12px;font-weight:600}
+    .badge-registered{background:#e0edff;color:#1e40af}
+    .badge-medicare{background:#f0fdf4;color:#166534}
+    .badge-no-medicare{background:#fef2f2;color:#991b1b}
+    .badge-unregulated{background:#fef3c7;color:#92400e}
+    .badge-voluntary{background:#f3e8ff;color:#6b21a8}
+    .cur-desc{color:var(--color-body);font-size:15px;line-height:1.55;margin-bottom:12px}
+    .cur-desc p{margin:0 0 8px}
+    .cur-desc ul{margin:0;padding-left:18px}
+    .cur-desc li{margin-bottom:6px}
+    .cur-desc li::marker{color:var(--color-primary-mid)}
+    .cur-desc a{color:var(--color-primary);font-weight:600}
+    .cur-desc .mhcp{color:var(--color-primary);font-weight:600;text-decoration:underline;text-underline-offset:2px}
+    .cur-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+    .cur-cell{padding:8px 10px;background:var(--color-bg-light);border-radius:10px}
+    .cur-cell-label{font-size:11px;text-transform:uppercase;letter-spacing:1.2px;color:#94a3b8;font-weight:600;margin-bottom:2px}
+    .cur-cell-value{font-size:15px;font-weight:700;color:var(--color-heading)}
+
+    /* ---- AFTER: question-led ---- */
+    .lead{color:var(--color-body);font-size:15px;line-height:1.55;margin:6px 0 16px}
+    .qa{padding:13px 0;border-top:1px solid #eef2f5}
+    .qa:first-of-type{border-top:none;padding-top:2px}
+    .qa:last-of-type{padding-bottom:0}
+    .qa-q{font-size:12.5px;font-weight:600;color:#8391a5;margin-bottom:4px}
+    .qa-a{font-size:15px;line-height:1.5;color:var(--color-body)}
+    .qa-fig{color:var(--color-primary);font-weight:700}
+    .rebate-chip{font-family:var(--font-sans);font-size:13.5px;font-weight:600;color:var(--color-primary);background:#f2faf5;border:1px solid rgba(27,107,74,.10);border-radius:7px;padding:1px 6px 1px 7px;cursor:pointer;display:inline-flex;align-items:center;gap:2px;line-height:1.35;vertical-align:1px;transition:background .15s}
+    .rebate-chip:hover{background:#e7f4ed}
+    .rebate-chip svg{transition:transform .25s}
+    .rebate-chip[aria-expanded="true"] svg{transform:rotate(180deg)}
+    .rebate-explainer{overflow:hidden;max-height:0;opacity:0;transition:max-height .3s ease-out,opacity .3s ease-out}
+    .rebate-explainer.open{max-height:260px;opacity:1}
+    .rebate-explainer-inner{margin-top:12px;padding:13px 15px;background:var(--color-primary-light);border-radius:12px;font-size:13px;line-height:1.6;color:var(--color-body)}
+    .rebate-explainer-inner strong{color:var(--color-heading);font-weight:600}
+    .rebate-explainer-inner a{color:var(--color-primary);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:12.5px}
+    .more-toggle{background:none;border:none;padding:0;margin-top:14px;font-family:var(--font-sans);font-size:14px;font-weight:600;color:var(--color-primary);cursor:pointer;display:inline-flex;align-items:center;gap:5px}
+    .more-toggle svg{transition:transform .25s}
+    .more-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
+    .more-detail{overflow:hidden;max-height:0;opacity:0;transition:max-height .3s ease-out,opacity .3s ease-out}
+    .more-detail.open{max-height:400px;opacity:1}
+    .more-inner{margin-top:12px;padding:14px 16px;background:var(--color-bg-light);border-radius:12px;font-size:13px;line-height:1.65;color:var(--color-body)}
+    .more-inner dl{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;margin:0}
+    .more-inner dt{font-weight:600;color:var(--color-heading)}
+    .more-inner dd{color:var(--color-body)}
+  </style>
+</head>
+<body>
+  <div class="intro">
+    <h1>Bubble panels — Before / After</h1>
+    <p>The practitioner bubble-map popover, old vs new, for all 8 practitioners. Left is what was live before
+    today (regulatory badges, a blurb, and a data grid). Right is today's question-led panel: a plain lead, the
+    real out-of-pocket cost up front, the questions people actually ask, an inline "tap to explain" chip, and a
+    "More detail" collapse. Tap the green chips and "More detail" on the right-hand panels.</p>
+    <div class="legend"><span>← <b>BEFORE</b></span><span><b>AFTER</b> →</span></div>
+  </div>
+  <div id="rows"></div>
+
+  <script>
+  const before = {
+    gp:{color:"#5c6670",name:"GP (General Practitioner)",badges:[["Nationally registered","badge-registered"],["Medicare","badge-medicare"]],
+      desc:'<p>A doctor (GP) is where most mental health journeys start.</p><ul><li>Can diagnose mental health conditions and prescribe medication</li><li>Sets you up with a <span class="mhcp">Mental Health Care Plan (MHCP)</span>, which unlocks Medicare-funded sessions with a psychologist, social worker, or OT</li><li>For talk therapy, your GP refers you on — some people only need their GP for medication and check-ins</li></ul>',
+      details:[["Cost","Free – $100+"],["Referral","None needed"],["Can prescribe","Yes"],["Wait","Typically 0–5 days"]]},
+    psychologist:{color:"#4a7fb5",name:"Psychologist",badges:[["Nationally registered","badge-registered"],["Medicare (with GP referral)","badge-medicare"]],
+      desc:'<p>The most common professional people see through Medicare for mental health.</p><ul><li>Works with you on specific problems using research-backed techniques</li><li>GP referral needed to access Medicare rebates</li><li>Two types — general and clinical. Clinical psychologists have extra specialist training and a higher Medicare rebate</li></ul>',
+      details:[["Cost","$150–$300"],["Medicare rebate","$98.95 (general) / $145.25 (clinical)"],["Sessions","10 per year (Better Access)"],["Referral","Not required. GP referral needed for Medicare rebate."],["Can prescribe","No"]]},
+    psychiatrist:{color:"#7e6aad",name:"Psychiatrist",badges:[["Nationally registered","badge-registered"],["Medicare (with GP referral)","badge-medicare"]],
+      desc:'<p>A medical doctor who specialises in mental health.</p><ul><li>Can diagnose conditions, prescribe and manage medication, and provide therapy</li><li>Most often seen for ADHD, bipolar disorder, treatment-resistant depression, or when specialist medications are needed that a GP can\'t prescribe</li><li>GP referral needed to access a Medicare rebate</li></ul>',
+      details:[["First session fee","$400 – $800"],["First session rebate","$262.10"],["First out of pocket","$138 – $538"],["Wait","1 – 6 months"],["Referral","GP referral needed"],["Can prescribe","Yes"]]},
+    counsellor:{color:"#5aab7b",name:"Counsellor",badges:[["Title not regulated","badge-unregulated"],["No Medicare rebate","badge-no-medicare"],["Voluntary accreditation (ACA/PACFA)","badge-voluntary"]],
+      desc:'<p>A trained listener who helps you work through everyday challenges: stress, grief, relationships, life transitions.</p><ul><li>Book directly — no GP appointment or referral needed, and no benefit to getting one, since counsellors sit outside Medicare entirely</li><li>Generally easier to access than psychologists, where long waits are common</li><li>“Counsellor” is not a protected title — verify your practitioner\'s credentials</li></ul>',
+      details:[["Cost","$80–$200"],["Medicare","No"],["Referral","Not needed"],["Can prescribe","No"]]},
+    "social-worker":{color:"#c27a4a",name:"Mental Health Social Worker",badges:[["Professionally accredited (AASW)","badge-voluntary"],["Medicare (with GP referral)","badge-medicare"]],
+      desc:'<p>Most people associate social workers with welfare, but Accredited Mental Health Social Workers are specialist therapists with extra training in mental health.</p><ul><li>Strength is the bigger picture — how housing, finances, relationships, and family situations affect your mental health</li><li>Helps you navigate those systems alongside therapy</li></ul>',
+      details:[["Cost","$150–$250"],["Medicare rebate","$87.25"],["Sessions","10 per year (Better Access)"],["Referral","Not required. GP referral needed for Medicare rebate."],["Can prescribe","No"]]},
+    ot:{color:"#b5894a",name:"Mental Health OT",badges:[["Nationally registered","badge-registered"],["Medicare (with GP referral)","badge-medicare"]],
+      desc:'<p>Most people don’t think of OTs for mental health, but mental health OTs have specialist endorsement and extra training beyond standard OT registration.</p><ul><li>Focuses on the practical side of recovery — rebuilding daily routines, getting back to work, managing tasks that feel overwhelming</li><li>Hands-on approach, working with you on real-life skills and strategies</li></ul>',
+      details:[["Cost","$170–$260"],["Medicare rebate","$87.25"],["Sessions","10 per year (Better Access)"],["Referral","Not required. GP referral needed for Medicare rebate."],["Can prescribe","No"]]},
+    "mh-nurse":{color:"#c25a6a",name:"Mental Health Nurse",badges:[["Nationally registered","badge-registered"]],
+      desc:'<p>A registered nurse with specialist postgraduate training in mental health.</p><ul><li>Clinical care rather than structured therapy — medication monitoring, physical health side effects, crisis support</li><li>Coordinates between your GP and psychiatrist</li></ul>',
+      details:[["Referral","Yes (GP chronic condition management plan)"],["Can prescribe","No"]]},
+    peer:{color:"#8a8a8a",name:"Peer Support Worker",badges:[["Not regulated","badge-unregulated"],["No Medicare rebate","badge-no-medicare"]],
+      desc:'<p>Draws on their own experience of mental health challenges and recovery to support others going through similar things.</p><ul><li>Doesn’t diagnose or treat — offers understanding, hope, and help navigating the system from someone who’s been there</li><li>Qualifications exist (like a Cert IV in Mental Health Peer Work) but none are legally required</li><li>Usually free through public health services, community organisations, or NDIS plans</li></ul>',
+      details:[["Cost","Usually free (through services)"],["Medicare","No"],["Referral","Not needed"],["Training","Cert IV available but not required"]]}
+  };
+
+  const chev = '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/></svg>';
+  const arrow = '<svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/></svg>';
+
+  const after = {
+    gp:{color:"#5c6670",name:"GP (General Practitioner)",lead:"Where most mental health journeys start. A doctor who can diagnose, prescribe, and set up your Medicare-funded sessions.",
+      qa:[{q:"What will it cost me?",a:'Free if your GP bulk-bills, up to <span class="qa-fig">$100+</span> with a gap fee.'},
+          {q:"Do I need a referral?",a:"No. You can book a GP directly, and you'll usually be seen within a few days."},
+          {q:"How do they sort out therapy?",a:'They set you up with a {{chip}}, which unlocks up to 10 Medicare-funded sessions with a psychologist, social worker or OT.',chip:{label:"Mental Health Care Plan",detail:'A Mental Health Care Plan is a short document your GP writes during your appointment. It unlocks Medicare rebates for up to 10 sessions a year, with no extra paperwork on your end.<a href="#">See how the process works '+arrow+'</a>'}}],
+      more:'<dl><dt>Cost</dt><dd>Free (bulk-billed) to $100+ with a gap fee</dd><dt>Referral</dt><dd>None needed to see a GP</dd><dt>Can prescribe</dt><dd>Yes</dd><dt>Wait</dt><dd>Typically 0–5 days</dd></dl>'},
+    psychologist:{color:"#4a7fb5",name:"Psychologist",lead:"The therapist most people see first. Structured, evidence-based therapy for anxiety, depression and trauma.",
+      qa:[{q:"What will it cost me?",a:'Usually <span class="qa-fig">$100–$200</span> a session, after the Medicare rebate.'},
+          {q:"Do I need a referral?",a:'Technically no. But most people get a GP referral first, so Medicare covers part of each session through the {{chip}}.',chip:{label:"Medicare rebate",detail:'Your GP writes you a <strong>Mental Health Care Plan</strong>. It lets Medicare cover part of up to 10 sessions a year. Without one, you pay the full fee.<a href="#">See how the plan works '+arrow+'</a>'}},
+          {q:"How long's the wait?",a:"Usually 2–12 weeks."}],
+      more:'<dl><dt>Full fee</dt><dd>$150–$300 per session</dd><dt>Medicare rebate</dt><dd>$98.95 general, $145.25 clinical</dd><dt>General vs clinical</dt><dd>Clinical psychologists have extra specialist training and a higher rebate.</dd><dt>Can prescribe</dt><dd>No</dd><dt>Registration</dt><dd>AHPRA registered</dd></dl>'},
+    psychiatrist:{color:"#7e6aad",name:"Psychiatrist",lead:"A medical specialist for complex or hard-to-treat conditions, like ADHD, bipolar, or depression that hasn't responded to other treatment.",
+      qa:[{q:"What will it cost me?",a:'The priciest option. Around <span class="qa-fig">$140–$540</span> out of pocket for the first session, and less for follow-ups, after the Medicare rebate.'},
+          {q:"Do I need a referral?",a:"Yes. You can't book a psychiatrist without a GP referral."},
+          {q:"How long's the wait?",a:"Often 1 to 6 months."}],
+      more:'<dl><dt>First session</dt><dd>$400–$800 fee, $262.10 rebate, ~$140–$540 out of pocket</dd><dt>Follow-ups</dt><dd>$200–$400 fee, $87–$134 rebate, ~$65–$315 out of pocket</dd><dt>Sessions</dt><dd>No yearly cap</dd><dt>Can prescribe</dt><dd>Yes</dd></dl>'},
+    counsellor:{color:"#5aab7b",name:"Counsellor",lead:"A trained listener for everyday challenges like stress, grief, relationships and life changes. Usually easier to get into than a psychologist.",
+      qa:[{q:"What will it cost me?",a:'<span class="qa-fig">$80–$200</span> a session. There is no Medicare rebate, so that is the full cost.'},
+          {q:"Do I need a referral?",a:"No, and there is no benefit to getting one, since counsellors sit outside Medicare."},
+          {q:"Is my counsellor qualified?",a:'“Counsellor” is not a protected title, so it is worth a quick {{chip}}.',chip:{label:"credentials check",detail:'Anyone can call themselves a counsellor. Look for membership of the <strong>ACA</strong> or <strong>PACFA</strong>, the two main professional bodies.<a href="https://www.arcapregister.com.au/" target="_blank" rel="noopener noreferrer">Verify your practitioner '+arrow+'</a>'}}],
+      more:'<dl><dt>Cost</dt><dd>$80–$200 (no Medicare rebate)</dd><dt>Referral</dt><dd>Not needed</dd><dt>Accreditation</dt><dd>Voluntary (ACA / PACFA)</dd><dt>Can prescribe</dt><dd>No</dd></dl>'},
+    "social-worker":{color:"#c27a4a",name:"Mental Health Social Worker",lead:"A therapist who looks at the bigger picture, how housing, money, family and relationships affect your mental health, and helps you navigate them.",
+      qa:[{q:"What will it cost me?",a:'Usually <span class="qa-fig">$65–$165</span> out of pocket after the Medicare rebate.'},
+          {q:"Do I need a referral?",a:'Not to book one, but most people get a GP referral first, so Medicare covers part of each session through the {{chip}}.',chip:{label:"Medicare rebate",detail:'Your GP writes you a <strong>Mental Health Care Plan</strong>. It lets Medicare cover part of up to 10 sessions a year. Without one, you pay the full fee.<a href="#">See how the plan works '+arrow+'</a>'}},
+          {q:"What makes them different?",a:"Their strength is the practical side: sorting out housing, money and family pressures alongside therapy."}],
+      more:'<dl><dt>Full fee</dt><dd>$150–$250 per session</dd><dt>Medicare rebate</dt><dd>$87.25 (with a GP plan)</dd><dt>Sessions</dt><dd>10 per year (Better Access)</dd><dt>Can prescribe</dt><dd>No</dd></dl>'},
+    ot:{color:"#b5894a",name:"Mental Health OT",lead:"Focuses on the practical side of recovery, rebuilding routines, getting back to work or study, and managing daily tasks that feel overwhelming.",
+      qa:[{q:"What will it cost me?",a:'Usually <span class="qa-fig">$85–$175</span> out of pocket after the Medicare rebate.'},
+          {q:"Do I need a referral?",a:'Not to book one, but most people get a GP referral first, so Medicare covers part of each session through the {{chip}}.',chip:{label:"Medicare rebate",detail:'Your GP writes you a <strong>Mental Health Care Plan</strong>. It lets Medicare cover part of up to 10 sessions a year. Without one, you pay the full fee.<a href="#">See how the plan works '+arrow+'</a>'}},
+          {q:"What makes them different?",a:"Hands-on and practical, working with you on real-life skills rather than exploring the past."}],
+      more:'<dl><dt>Full fee</dt><dd>$170–$260 per session</dd><dt>Medicare rebate</dt><dd>$87.25 (with a GP plan)</dd><dt>Sessions</dt><dd>10 per year (Better Access)</dd><dt>Can prescribe</dt><dd>No</dd></dl>'},
+    "mh-nurse":{color:"#c25a6a",name:"Mental Health Nurse",lead:"A nurse with specialist mental health training, for clinical care, medication monitoring and crisis support, rather than talk therapy.",
+      qa:[{q:"What will it cost me?",a:'Usually <span class="qa-fig">free</span> through public or community services. In private practice, about $40–$120 out of pocket after a rebate.'},
+          {q:"Do I need a referral?",a:'For private sessions, yes, through a {{chip}}.',chip:{label:"GP chronic-condition plan",detail:'This is a different Medicare plan from the Mental Health Care Plan. It covers 5 allied-health sessions a year, shared with services like physio. Most people, though, see a mental health nurse for free through public or community teams.'}},
+          {q:"What do they help with?",a:"Medication side effects, staying well day to day, and coordinating between your GP and psychiatrist."}],
+      more:'<dl><dt>Private fee</dt><dd>$100–$180 per session</dd><dt>Medicare rebate</dt><dd>$61.80 (chronic-condition plan)</dd><dt>Most common access</dt><dd>Free via public / community services</dd><dt>Can prescribe</dt><dd>No</dd></dl>'},
+    peer:{color:"#8a8a8a",name:"Peer Support Worker",lead:"Someone who has been through mental health challenges themselves, offering understanding, hope and help finding your way through the system.",
+      qa:[{q:"What will it cost me?",a:'Usually <span class="qa-fig">free</span>, through public services, community organisations or an NDIS plan.'},
+          {q:"Do I need a referral?",a:"No. You can reach out through a service directly."},
+          {q:"What can they help with?",a:"Not diagnosis or treatment, but lived-experience support alongside your clinical care."}],
+      more:'<dl><dt>Cost</dt><dd>Usually free (services or NDIS)</dd><dt>Medicare</dt><dd>No</dd><dt>Training</dt><dd>Cert IV exists but is not required</dd><dt>Role</dt><dd>Complements clinical care, does not replace it</dd></dl>'}
+  };
+
+  const order = ["gp","psychologist","psychiatrist","counsellor","social-worker","ot","mh-nurse","peer"];
+
+  function beforePanel(d){
+    const badges = d.badges.map(b=>'<span class="cur-badge '+b[1]+'">'+b[0]+'</span>').join('');
+    const grid = d.details.map(x=>'<div class="cur-cell"><div class="cur-cell-label">'+x[0]+'</div><div class="cur-cell-value">'+x[1]+'</div></div>').join('');
+    return '<div class="panel"><div class="topline"><div class="dot" style="background:'+d.color+'"></div><div class="name">'+d.name+'</div></div>'
+      +'<div class="cur-badges">'+badges+'</div><div class="cur-desc">'+d.desc+'</div><div class="cur-grid">'+grid+'</div></div>';
+  }
+  function afterPanel(d,key){
+    const qa = d.qa.map((item,i)=>{
+      let a = item.a, extra='';
+      if(item.chip){
+        const id='exp-'+key+'-'+i;
+        a = a.replace('{{chip}}','<button class="rebate-chip" aria-expanded="false" data-target="'+id+'">'+item.chip.label+chev+'</button>');
+        extra = '<div class="rebate-explainer" id="'+id+'"><div class="rebate-explainer-inner">'+item.chip.detail+'</div></div>';
+      }
+      return '<div class="qa"><div class="qa-q">'+item.q+'</div><div class="qa-a">'+a+'</div>'+extra+'</div>';
+    }).join('');
+    const mid='more-'+key;
+    return '<div class="panel"><div class="topline"><div class="dot" style="background:'+d.color+'"></div><div class="name">'+d.name+'</div></div>'
+      +'<p class="lead">'+d.lead+'</p>'+qa
+      +'<button class="more-toggle" aria-expanded="false" data-target="'+mid+'">More detail '+chev+'</button>'
+      +'<div class="more-detail" id="'+mid+'"><div class="more-inner">'+d.more+'</div></div></div>';
+  }
+
+  document.getElementById('rows').innerHTML = order.map(k=>
+    '<div class="row"><div class="row-label">'+after[k].name+'</div><div class="pair">'
+    +'<div class="side side-before"><div class="side-tag">Before</div>'+beforePanel(before[k])+'</div>'
+    +'<div class="side side-after"><div class="side-tag">After</div>'+afterPanel(after[k],k)+'</div>'
+    +'</div></div>'
+  ).join('');
+
+  document.querySelectorAll('.more-toggle, .rebate-chip').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const t=document.getElementById(btn.dataset.target);
+      const open=t.classList.toggle('open');
+      btn.setAttribute('aria-expanded',open?'true':'false');
+    });
+  });
+  </script>
+</body>
+</html>
