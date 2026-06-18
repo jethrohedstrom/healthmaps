@@ -1,6 +1,5 @@
 ---
 description: Finish a change — simplify, review, verify (run it for real), security pass, write the diary, stage a commit
-disable-model-invocation: true
 allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git diff:*), Bash(git log:*)
 ---
 
