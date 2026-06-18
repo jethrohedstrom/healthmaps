@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PathwayQuiz from '../components/PathwayQuiz.astro';
 import PathwayCardVisual from '../components/PathwayCardVisual.astro';
 import PathwayCardGPProgressive from '../components/PathwayCardGPProgressive.astro';
 import { pathwayCards } from '../data/pathway-cards';
@@ -7,10 +8,12 @@ import { pathwayCards } from '../data/pathway-cards';
 const liveCards = pathwayCards.filter((c) => !c.draft);
 const gpCard = liveCards.find((c) => c.id === 'through-gp')!;
 const otherCards = liveCards.filter((c) => c.id !== 'through-gp');
+const visiblePathwayCount = liveCards.length + 1; // Crisis support is a hard-route section, not a scored card.
+const otherPathwayCount = otherCards.length + 1;
 ---
 <BaseLayout
   title="How to Access Mental Health Support"
-  description="Ways to start with mental health support in Australia: through your GP, a private practitioner, a free or community service, or self-guided tools."
+  description="Ways to start with mental health support in Australia: through your GP, a private practitioner, a free or community service, self-guided tools, or crisis support."
 >
   <section>
     <div class="max-w-[1240px] mx-auto px-5 md:px-10 lg:px-14 pt-16 md:pt-24 pb-16 md:pb-20">
@@ -26,7 +29,7 @@ const otherCards = liveCards.filter((c) => c.id !== 'through-gp');
               href="#pathways"
               class="bg-primary text-white px-5 py-3 rounded-xl font-semibold text-sm hover:bg-primary-mid transition-colors"
             >
-              Compare all {liveCards.length} ways to start
+              Compare all {visiblePathwayCount} ways to start
             </a>
           </div>
         </div>
@@ -38,7 +41,7 @@ const otherCards = liveCards.filter((c) => c.id !== 'through-gp');
                 href="#pathways"
                 class="inline-flex items-center gap-1.5 text-sm font-medium text-body hover:text-primary transition-colors"
               >
-                <span>{otherCards.length} more ways to start below</span>
+                <span>{otherPathwayCount} more ways to start below</span>
                 <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
               </a>
             </div>
@@ -48,15 +51,40 @@ const otherCards = liveCards.filter((c) => c.id !== 'through-gp');
     </div>
   </section>
 
+  <PathwayQuiz />
+
   <section id="pathways" class="scroll-mt-24">
     <div class="max-w-[1240px] mx-auto px-5 md:px-10 lg:px-14 py-16 md:py-24">
-      <p class="text-sm uppercase tracking-widest text-body font-semibold mb-8">The other {otherCards.length} ways to start</p>
+      <p class="text-sm uppercase tracking-widest text-body font-semibold mb-8">The other {otherPathwayCount} ways to start</p>
 
       <div class="pathway-grid flex flex-col gap-6 lg:gap-8 max-w-[960px] mx-auto">
         {otherCards.map((card) => (
           <PathwayCardVisual {...card} />
         ))}
       </div>
+
+      <!-- REVIEW: Crisis section copy mirrors verified crisis support content from src/content/alternatives/crisis.md. -->
+      <section id="crisis" tabindex="-1" class="scroll-mt-24 mt-6 lg:mt-8 max-w-[960px] mx-auto rounded-xl border border-accent-red/20 border-l-4 border-l-accent-red bg-accent-red-light p-6 md:p-8 shadow-sm">
+        <p class="text-xs font-semibold uppercase tracking-widest text-accent-red mb-2">Immediate help</p>
+        <h2 class="text-xl md:text-2xl font-bold text-heading leading-snug mb-3">Crisis support</h2>
+        <p class="text-base leading-relaxed text-body mb-5">
+          If you or someone else is in immediate danger, call <a href="tel:000" class="text-primary font-semibold underline underline-offset-2">000</a>. If you need to talk to someone now, these services are free and confidential.
+        </p>
+        <div class="grid gap-3 md:grid-cols-2">
+          <a href="tel:131114" class="rounded-lg bg-white px-4 py-3 text-heading font-semibold border border-border hover:border-primary">
+            Lifeline: 13 11 14
+          </a>
+          <a href="tel:1300224636" class="rounded-lg bg-white px-4 py-3 text-heading font-semibold border border-border hover:border-primary">
+            Beyond Blue: 1300 22 4636
+          </a>
+          <a href="tel:1300659467" class="rounded-lg bg-white px-4 py-3 text-heading font-semibold border border-border hover:border-primary">
+            Suicide Call Back Service: 1300 659 467
+          </a>
+          <a href="tel:139276" class="rounded-lg bg-white px-4 py-3 text-heading font-semibold border border-border hover:border-primary">
+            13YARN: 13 92 76
+          </a>
+        </div>
+      </section>
 
       <aside class="mt-8 max-w-3xl mx-auto rounded-xl bg-bg-light p-6 md:p-8">
         <p class="uppercase tracking-widest text-xs text-body mb-2 font-semibold">Also worth knowing</p>
@@ -68,21 +96,6 @@ const otherCards = liveCards.filter((c) => c.id !== 'through-gp');
       </aside>
     </div>
   </section>
-
-  {/* Quiz placeholder: commented out, preserved for later
-  <section class="bg-bg-light">
-    <div class="max-w-[720px] mx-auto px-4 py-12 md:py-16 text-center">
-      <p class="text-lg font-semibold text-heading mb-4">Not sure where to start?</p>
-      <button
-        type="button"
-        disabled
-        class="inline-block bg-primary text-white px-10 py-4 rounded-xl font-semibold shadow-sm opacity-75 cursor-not-allowed"
-      >
-        Take the quiz (coming soon)
-      </button>
-    </div>
-  </section>
-  */}
 
   <script>
     import '../scripts/pathway-card-click.ts';

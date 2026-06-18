@@ -1,0 +1,196 @@
+---
+---
+
+<section id="pathway-quiz" data-pathway-quiz class="bg-paper-cream border-y border-paper-border">
+  <div class="max-w-[860px] mx-auto px-5 md:px-10 py-12 md:py-16">
+    <div class="pathway-quiz-card rounded-2xl bg-white border border-border shadow-sm p-5 md:p-8">
+      <div class="mb-8">
+        <p class="text-xs font-semibold uppercase tracking-widest text-body">Find a starting point</p>
+      </div>
+
+      <p class="sr-only" aria-live="polite" aria-atomic="true" data-quiz-live></p>
+
+      <div data-quiz-screen="intro" class="pathway-quiz-screen">
+        <p class="text-sm font-semibold text-primary mb-3">About 2 minutes. No sign-up.</p>
+        <h2 id="pathway-quiz-intro-title" tabindex="-1" data-quiz-heading class="text-2xl md:text-3xl font-bold text-heading tracking-[-0.01em] leading-tight mb-4">
+          Not sure where to start?
+        </h2>
+        <p class="text-lg leading-relaxed text-body mb-3">
+          Answer 4 quick questions and we will suggest a good first step for your situation.
+        </p>
+        <p class="text-base leading-relaxed text-body mb-8">
+          No details are sent anywhere. Your progress only stays in this browser tab for this session.
+        </p>
+        <button type="button" data-quiz-start class="pathway-quiz-primary-button min-h-11 rounded-xl bg-primary px-6 py-3 text-base font-semibold text-white">
+          Start the quiz
+        </button>
+      </div>
+
+      <div data-quiz-screen="question" data-question-index="0" class="pathway-quiz-screen" hidden>
+        <p class="text-sm font-semibold text-primary mb-3">Question 1 of 4</p>
+        <h2 tabindex="-1" data-quiz-heading class="text-2xl md:text-3xl font-bold text-heading tracking-[-0.01em] leading-tight mb-4">
+          When would you like to get support?
+        </h2>
+        <div class="pathway-quiz-answer-list" role="group" aria-label="When would you like to get support?">
+          <button type="button" data-quiz-answer data-score-low-cost="2" data-score-self-guided="1" data-score-private="1" data-answer-label="Today or this week" class="pathway-quiz-answer">
+            Today or this week
+          </button>
+          <button type="button" data-quiz-answer data-score-through-gp="1" data-score-private="1" data-score-low-cost="1" data-answer-label="Soon, but I can wait a little" class="pathway-quiz-answer">
+            Soon, but I can wait a little
+          </button>
+          <button type="button" data-quiz-answer data-score-self-guided="2" data-score-through-gp="1" data-answer-label="Just exploring for now" class="pathway-quiz-answer">
+            Just exploring for now
+          </button>
+        </div>
+      </div>
+
+      <div data-quiz-screen="question" data-question-index="1" class="pathway-quiz-screen" hidden>
+        <p class="text-sm font-semibold text-primary mb-3">Question 2 of 4</p>
+        <h2 tabindex="-1" data-quiz-heading class="text-2xl md:text-3xl font-bold text-heading tracking-[-0.01em] leading-tight mb-4">
+          What works best for your budget right now?
+        </h2>
+        <div class="pathway-quiz-answer-list" role="group" aria-label="What works best for your budget right now?">
+          <button type="button" data-quiz-answer data-score-low-cost="3" data-score-self-guided="1" data-answer-label="I need free or low-cost options" class="pathway-quiz-answer">
+            I need free or low-cost options
+          </button>
+          <button type="button" data-quiz-answer data-score-through-gp="3" data-answer-label="I can pay something if there is a Medicare rebate" class="pathway-quiz-answer">
+            I can pay something if there is a Medicare rebate
+          </button>
+          <button type="button" data-quiz-answer data-score-private="3" data-answer-label="I am happy to pay privately to start faster" class="pathway-quiz-answer">
+            I am happy to pay privately to start faster
+          </button>
+        </div>
+      </div>
+
+      <div data-quiz-screen="question" data-question-index="2" class="pathway-quiz-screen" hidden>
+        <p class="text-sm font-semibold text-primary mb-3">Question 3 of 4</p>
+        <h2 tabindex="-1" data-quiz-heading class="text-2xl md:text-3xl font-bold text-heading tracking-[-0.01em] leading-tight mb-4">
+          How would you prefer to start?
+        </h2>
+        <div class="pathway-quiz-answer-list" role="group" aria-label="How would you prefer to start?">
+          <button type="button" data-quiz-answer data-score-through-gp="2" data-score-low-cost="1" data-answer-label="I would like a professional to guide me" class="pathway-quiz-answer">
+            I would like a professional to guide me
+          </button>
+          <button type="button" data-quiz-answer data-score-private="2" data-score-through-gp="1" data-answer-label="I know I want a therapist, just point me there" class="pathway-quiz-answer">
+            I know I want a therapist, just point me there
+          </button>
+          <button type="button" data-quiz-answer data-score-self-guided="3" data-answer-label="I would rather start on my own, privately" class="pathway-quiz-answer">
+            I would rather start on my own, privately
+          </button>
+          <button type="button" data-quiz-answer data-score-low-cost="3" data-answer-label="I would like local or community help" class="pathway-quiz-answer">
+            I would like local or community help
+          </button>
+        </div>
+      </div>
+
+      <div data-quiz-screen="question" data-question-index="3" class="pathway-quiz-screen" hidden>
+        <p class="text-sm font-semibold text-primary mb-3">Question 4 of 4</p>
+        <h2 tabindex="-1" data-quiz-heading class="text-2xl md:text-3xl font-bold text-heading tracking-[-0.01em] leading-tight mb-4">
+          Do you have a regular GP you can see?
+        </h2>
+        <div class="pathway-quiz-answer-list" role="group" aria-label="Do you have a regular GP you can see?">
+          <button type="button" data-quiz-answer data-score-through-gp="3" data-answer-label="Yes" class="pathway-quiz-answer">
+            Yes
+          </button>
+          <button type="button" data-quiz-answer data-score-through-gp="2" data-answer-label="I can get to one, but it may take a little time" class="pathway-quiz-answer">
+            I can get to one, but it may take a little time
+          </button>
+          <button type="button" data-quiz-answer data-score-low-cost="1" data-score-private="1" data-score-self-guided="1" data-answer-label="No / not sure" class="pathway-quiz-answer">
+            No / not sure
+          </button>
+        </div>
+      </div>
+
+      <div data-quiz-screen="result" class="pathway-quiz-screen" hidden>
+        <p class="text-sm font-semibold text-primary mb-3">Suggested starting point</p>
+        <h2 tabindex="-1" data-quiz-heading data-result-title class="text-2xl md:text-3xl font-bold text-heading tracking-[-0.01em] leading-tight mb-4">
+          Your result
+        </h2>
+        <p data-result-summary class="text-lg leading-relaxed text-body mb-6"></p>
+        <div class="rounded-xl bg-bg-light border border-border p-4 mb-6">
+          <p class="text-sm font-semibold text-heading mb-1">Another good option</p>
+          <p data-runner-up class="text-base leading-relaxed text-body"></p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3">
+          <a href="#through-gp" data-result-link class="pathway-quiz-primary-button inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-6 py-3 text-base font-semibold text-white">
+            Go to this pathway
+          </a>
+          <button type="button" data-quiz-reset class="pathway-quiz-secondary-button min-h-11 rounded-xl border border-border bg-white px-6 py-3 text-base font-semibold text-heading">
+            Start over
+          </button>
+        </div>
+      </div>
+
+      <p class="mt-8 border-t border-border pt-4 text-sm text-body">
+        Need urgent help instead?
+        <a href="#crisis" data-quiz-crisis-link class="pathway-quiz-crisis-link font-semibold text-primary underline underline-offset-4 hover:text-primary-mid">
+          Get crisis support
+        </a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  import '../scripts/pathway-quiz.ts';
+</script>
+
+<style>
+  .pathway-quiz-screen[hidden] {
+    display: none;
+  }
+
+  .pathway-quiz-answer-list {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .pathway-quiz-answer {
+    min-height: 3.5rem;
+    width: 100%;
+    border: 1px solid var(--color-border);
+    border-radius: 0.875rem;
+    background: white;
+    color: var(--color-heading);
+    padding: 0.875rem 1rem;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .pathway-quiz-answer:hover {
+    border-color: var(--color-primary);
+    background: var(--color-primary-light);
+  }
+
+  .pathway-quiz-answer:disabled {
+    cursor: wait;
+    opacity: 0.7;
+  }
+
+  .pathway-quiz-answer:focus-visible,
+  .pathway-quiz-primary-button:focus-visible,
+  .pathway-quiz-secondary-button:focus-visible,
+  .pathway-quiz-crisis-link:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .pathway-quiz-screen:not([hidden]) {
+      animation: pathwayQuizEnter 180ms ease-out;
+    }
+  }
+
+  @keyframes pathwayQuizEnter {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
