@@ -59,7 +59,7 @@ export const pathwayCards: PathwayCard[] = [
     // psychiatrist event here (three-six-months) in addition to GP + Psychologist.
     id: 'through-gp',
     icon: 'stethoscope',
-    title: 'Start with your GP',
+    title: 'Start with a GP',
     bestFor: 'Best for: most people starting out.',
     accentColor: 'border-l-primary',
     badge: 'Most common starting point',

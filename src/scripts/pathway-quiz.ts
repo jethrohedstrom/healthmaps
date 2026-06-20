@@ -25,8 +25,8 @@ interface ResultContent {
 
 const resultContent: Record<ScoredPathwayId, ResultContent> = {
   'through-gp': {
-    title: 'Start with your GP',
-    summary: 'A good first step for you is starting with your GP. This fits when you want professional guidance and a pathway to Medicare-rebated sessions.',
+    title: 'Start with a GP',
+    summary: 'A good first step for you is starting with a GP. This fits when you want professional guidance and a pathway to Medicare-rebated sessions.',
     secondarySummary: 'Useful if you want professional guidance and a pathway to Medicare-rebated sessions.',
     href: '#through-gp',
   },
