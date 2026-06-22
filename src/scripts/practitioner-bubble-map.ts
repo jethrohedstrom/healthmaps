@@ -300,27 +300,17 @@ const bmData = {
 
   wrapper.querySelectorAll('.bm-blob[data-prof]').forEach(function(el) {
     (el as SVGElement).style.cursor = 'pointer';
-    // Blobs inside the collapsed aria-hidden group must stay out of the tab order
-    el.setAttribute('tabindex', el.closest('.bm-hidden-blobs') ? '-1' : '0');
+    el.setAttribute('tabindex', '0');
     el.setAttribute('role', 'button');
     const key = el.getAttribute('data-prof');
     const label = bmData[key as keyof typeof bmData]?.name || key;
     el.setAttribute('aria-label', 'Learn about ' + label);
   });
 
-  function syncHiddenBlobTabindex(visible: boolean) {
-    wrapper!.querySelectorAll('.bm-hidden-blobs .bm-blob[data-prof]').forEach(function(el) {
-      el.setAttribute('tabindex', visible ? '0' : '-1');
-    });
-  }
-
-  let moreVisible = false;
   const bmSvg = wrapper.querySelector('.bm-map-svg') as SVGSVGElement;
   const MOBILE_MEDIA_QUERY = '(max-width: 767px)';
   const FULL_VB = bmSvg?.getAttribute('data-viewbox-full') || '0 0 700 540';
   const MOBILE_VB = bmSvg?.getAttribute('data-viewbox-mobile') || FULL_VB;
-  // Keep identical scale between states to avoid perceived blob size jumps.
-  const MOBILE_VB_EXPANDED = bmSvg?.getAttribute('data-viewbox-mobile-expanded') || MOBILE_VB;
 
   function isMobileViewport() {
     return window.matchMedia(MOBILE_MEDIA_QUERY).matches;
@@ -354,60 +344,11 @@ const bmData = {
 
   function updateViewBox() {
     if (!bmSvg) return;
-    const targetViewBox = isMobileViewport()
-      ? (moreVisible ? MOBILE_VB_EXPANDED : MOBILE_VB)
-      : FULL_VB;
+    const targetViewBox = isMobileViewport() ? MOBILE_VB : FULL_VB;
     if (bmSvg.getAttribute('viewBox') !== targetViewBox) {
       bmSvg.setAttribute('viewBox', targetViewBox);
     }
     repositionMobileBlobs();
-  }
-
-  const showMoreBtn = document.getElementById('showMoreBtn-bm');
-  if (showMoreBtn) {
-    showMoreBtn.addEventListener('click', function() {
-      const prevScrollY = window.scrollY;
-      moreVisible = !moreVisible;
-      const blobs = document.getElementById('extra-blobs-bm');
-      const labels = document.getElementById('extra-labels-bm');
-
-      showMoreBtn.setAttribute('aria-expanded', String(moreVisible));
-      if (moreVisible) {
-        // Close popover synchronously before relayout to avoid
-        // mobile viewport scroll jumps when toggling map state.
-        if (activeKey) {
-          hideBmInfo(true);
-        }
-        blobs?.classList.remove('bm-hidden');
-        blobs?.classList.add('bm-visible');
-        blobs?.setAttribute('aria-hidden', 'false');
-        labels?.classList.remove('bm-hidden');
-        labels?.classList.add('bm-visible');
-        labels?.setAttribute('aria-hidden', 'false');
-        syncHiddenBlobTabindex(true);
-        showMoreBtn.textContent = '\uff0d Show fewer professionals';
-      } else {
-        // Close popover synchronously (no 200ms race with relayout)
-        if (activeKey) {
-          hideBmInfo(true);
-        }
-        // Now change visibility
-        blobs?.classList.add('bm-hidden');
-        blobs?.classList.remove('bm-visible');
-        blobs?.setAttribute('aria-hidden', 'true');
-        labels?.classList.add('bm-hidden');
-        labels?.classList.remove('bm-visible');
-        labels?.setAttribute('aria-hidden', 'true');
-        syncHiddenBlobTabindex(false);
-        showMoreBtn.textContent = '\uff0b Add 4 more to the map';
-      }
-      updateViewBox();
-      requestAnimationFrame(function() {
-        if (window.scrollY !== prevScrollY) {
-          window.scrollTo(0, prevScrollY);
-        }
-      });
-    });
   }
 
   const popover = document.getElementById('bm-popover') as HTMLElement;
