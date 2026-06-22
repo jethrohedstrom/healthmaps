@@ -25,7 +25,8 @@ const practitioners = defineCollection({
     title: z.string(),
     cost: z.string(),
     rebate: z.string(),
-    /** True only when you can't book at all without a referral (psychiatrist, MH nurse). */
+    /** True when a referral is required to book at all. Note: a psychiatrist can be seen
+     *  privately without one — a referral there only unlocks the Medicare rebate. */
     referralRequired: z.boolean(),
     waitTime: z.string().optional(),
     bestFor: z.string().optional(),

@@ -89,7 +89,7 @@ const bmData = {
     ],
     details: [
       { label: "Wait", value: "1 – 6 months" },
-      { label: "Referral", value: "GP referral needed" },
+      { label: "Referral", value: "Needed for Medicare rebate" },
       { label: "Can prescribe", value: "Yes" }
     ],
     approachable: {
@@ -104,7 +104,7 @@ const bmData = {
         },
         {
           q: "Do I need a referral?",
-          a: "Yes. You can't book a psychiatrist without a GP referral."
+          a: "Not to be seen — you can book a private psychiatrist without one. A GP referral only unlocks the Medicare rebate; without it you pay the full fee, but there's also no Medicare record of the visit, which some people prefer for privacy."
         },
         {
           q: "How long's the wait?",
