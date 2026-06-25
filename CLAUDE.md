@@ -61,11 +61,13 @@ src/
 │   ├── stories/               Story index + dynamic pages
 │   ├── tips/                  Tips index + dynamic pages
 │   └── 404.astro
-├── fonts/
-│   ├── GeneralSans-Variable.woff2   General Sans — body (Fontshare)
-│   └── Switzer-Variable.woff2       Switzer — headings (Fontshare)
 └── styles/
     └── global.css             Tailwind v4 @theme tokens + font-faces
+
+public/
+└── fonts/                     ← served at /fonts/... ; @font-face in global.css
+    ├── GeneralSans-Variable.woff2   General Sans — body (Fontshare)
+    └── Switzer-Variable.woff2       Switzer — headings (Fontshare)
 ```
 
 ## Critical Rules
