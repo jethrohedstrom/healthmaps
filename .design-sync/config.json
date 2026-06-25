@@ -1,0 +1,7 @@
+{
+  "projectId": "a033db83-511f-4edd-9cd5-b2f63fcf41d5",
+  "projectName": "HealthMaps Design System",
+  "shape": "off-script",
+  "scope": "tokens-and-fonts-only",
+  "notes": "Astro/.astro repo — components cannot be bundled into runtime components for Claude Design, so this sync ships design tokens + fonts only (no Button/Card runtime components). Source of truth: src/styles/global.css and public/fonts/. Bundle authored by hand; the package/storybook converter does not apply to this repo shape."
+}
