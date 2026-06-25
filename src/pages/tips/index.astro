@@ -18,7 +18,7 @@ const grouped = tips.reduce((acc, tip) => {
 >
   <!-- Hero -->
   <section>
-    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
+    <div class="max-w-body mx-auto px-4 py-16 md:py-20">
       <h1 class="text-3xl md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em]">Practical Tips</h1>
       <p class="text-lg text-body">
         Useful advice for each stage of the process, from your first GP visit to getting the most out of your sessions.
@@ -28,7 +28,7 @@ const grouped = tips.reduce((acc, tip) => {
 
   <!-- Tips by Category -->
   <section class="bg-paper-cream">
-    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
+    <div class="max-w-body mx-auto px-4 py-16 md:py-20">
       {Object.entries(grouped).map(([category, categoryTips]) => (
         <div class="mb-10 last:mb-0">
           <h2 class="text-xl font-bold text-heading mb-4">{category}</h2>

@@ -10,7 +10,7 @@ const stories = await getCollection('stories');
 >
   <!-- Hero -->
   <section>
-    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
+    <div class="max-w-body mx-auto px-4 py-16 md:py-20">
       <h1 class="text-3xl md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em]">Stories</h1>
       <p class="text-lg text-body">
         Stories about navigating the mental health system. Every journey is different, but these might help you see what to expect.
@@ -23,7 +23,7 @@ const stories = await getCollection('stories');
 
   <!-- Story Cards -->
   <section class="bg-paper-cream">
-    <div class="max-w-[720px] mx-auto px-4 py-16 md:py-20">
+    <div class="max-w-body mx-auto px-4 py-16 md:py-20">
       {stories.length === 0 ? (
         <p class="text-body text-center">Stories coming soon.</p>
       ) : (

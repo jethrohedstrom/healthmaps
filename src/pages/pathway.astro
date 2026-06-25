@@ -57,14 +57,14 @@ const otherPathwayCount = otherCards.length + 1;
     <div class="max-w-[1240px] mx-auto px-5 md:px-10 lg:px-14 py-16 md:py-24">
       <p class="text-sm uppercase tracking-widest text-body font-semibold mb-8">The other {otherPathwayCount} ways to start</p>
 
-      <div class="pathway-grid flex flex-col gap-6 lg:gap-8 max-w-[960px] mx-auto">
+      <div class="pathway-grid flex flex-col gap-6 lg:gap-8 max-w-card mx-auto">
         {otherCards.map((card) => (
           <PathwayCardVisual {...card} />
         ))}
       </div>
 
       <!-- REVIEW: Crisis section copy mirrors verified crisis support content from src/content/alternatives/crisis.md. -->
-      <section id="crisis" tabindex="-1" class="scroll-mt-24 mt-6 lg:mt-8 max-w-[960px] mx-auto rounded-xl border border-accent-red/20 border-l-4 border-l-accent-red bg-accent-red-light p-6 md:p-8 shadow-sm">
+      <section id="crisis" tabindex="-1" class="scroll-mt-24 mt-6 lg:mt-8 max-w-card mx-auto rounded-xl border border-accent-red/20 border-l-4 border-l-accent-red bg-accent-red-light p-6 md:p-8 shadow-sm">
         <p class="text-xs font-semibold uppercase tracking-widest text-accent-red mb-2">Immediate help</p>
         <h2 class="text-xl md:text-2xl font-bold text-heading leading-snug mb-3">Crisis support</h2>
         <p class="text-base leading-relaxed text-body mb-5">
