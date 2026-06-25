@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
 import PathwayQuiz from '../components/PathwayQuiz.astro';
 import PathwayCardVisual from '../components/PathwayCardVisual.astro';
 import PathwayCardGPProgressive from '../components/PathwayCardGPProgressive.astro';
@@ -25,12 +26,7 @@ const otherPathwayCount = otherCards.length + 1;
             There are several ways to get support. Most people start with their GP, but you don't have to.
           </p>
           <div class="flex flex-wrap gap-3">
-            <a
-              href="#pathways"
-              class="bg-primary text-white px-5 py-3 rounded-xl font-semibold text-sm hover:bg-primary-mid transition-colors"
-            >
-              Compare all {visiblePathwayCount} ways to start
-            </a>
+            <Button href="#pathways" size="sm">Compare all {visiblePathwayCount} ways to start</Button>
           </div>
         </div>
 

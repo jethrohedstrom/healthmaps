@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
 import CostCalculator from '../components/CostCalculator.astro';
 import costs from '../data/calculator-costs.json';
 
@@ -64,13 +65,10 @@ const lastVerified = new Date(costs.lastUpdated).toLocaleDateString('en-AU', {
           What to say to your GP
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
         </a>
-        <a
-          href="/pathway/"
-          class="inline-flex items-center justify-center gap-1.5 bg-primary text-white px-6 py-3 rounded-xl font-semibold shadow-sm hover:bg-primary/90 transition-colors"
-        >
+        <Button href="/pathway/" size="md" class="gap-1.5">
           See the full pathway
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
-        </a>
+        </Button>
       </div>
     </div>
   </section>

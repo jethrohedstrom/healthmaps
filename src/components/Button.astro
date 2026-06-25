@@ -1,0 +1,51 @@
+---
+/**
+ * Button — canonical primary call-to-action.
+ * Renders an <a> when `href` is set, otherwise a <button>.
+ * Size variants match the established CTA sizes: lg (px-10 py-4), md (px-6 py-3), sm (px-5 py-3).
+ * Pass `class` for one-offs (e.g. `w-full`, icon `gap-1.5`). Extra attrs (id, data-*, aria-*) pass through.
+ */
+interface Props {
+  href?: string;
+  variant?: 'primary';
+  size?: 'lg' | 'md' | 'sm';
+  type?: 'button' | 'submit' | 'reset';
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'lg',
+  type = 'button',
+  class: extra = '',
+  ...rest
+} = Astro.props;
+
+const base =
+  'inline-flex items-center justify-center rounded-xl font-semibold transition-colors';
+
+const variants = {
+  primary: 'bg-primary text-white shadow-sm hover:bg-primary/90',
+} as const;
+
+const sizes = {
+  lg: 'px-10 py-4 text-base',
+  md: 'px-6 py-3 text-base',
+  sm: 'px-5 py-3 text-sm',
+} as const;
+
+const cls = [base, variants[variant], sizes[size], extra].filter(Boolean).join(' ');
+---
+{
+  href ? (
+    <a href={href} class={cls} {...rest}>
+      <slot />
+    </a>
+  ) : (
+    <button type={type} class={cls} {...rest}>
+      <slot />
+    </button>
+  )
+}

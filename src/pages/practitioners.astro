@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
 import PractitionerBubbleMap from '../components/PractitionerBubbleMap.astro';
 import MHCPInline from '../components/MHCPInline.astro';
 ---
@@ -71,9 +72,7 @@ import MHCPInline from '../components/MHCPInline.astro';
   <section class="bg-paper-cream">
     <div class="max-w-body mx-auto px-4 py-16 md:py-20 text-center">
       <h2 class="text-xl font-semibold text-heading mb-3">Want to estimate your out-of-pocket costs?</h2>
-      <a href="/calculator/" class="inline-block bg-primary text-white px-10 py-4 rounded-xl font-semibold shadow-sm hover:bg-primary/90 transition-colors">
-        Use the Cost Calculator
-      </a>
+      <Button href="/calculator/" size="lg">Use the Cost Calculator</Button>
     </div>
   </section>
 

@@ -1,0 +1,30 @@
+---
+/**
+ * Card — canonical surface (design.md spec): white, rounded-xl, shadow-sm, no border.
+ * With `href` it renders an interactive card link (card-hover + group for inner hover effects);
+ * otherwise a plain <div>. Pass padding/layout via `class` (e.g. `p-8 md:p-12`).
+ */
+interface Props {
+  href?: string;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { href, class: extra = '', ...rest } = Astro.props;
+
+const base = 'bg-white rounded-xl shadow-sm';
+const cls = [href ? 'card-hover group block text-left' : '', base, extra]
+  .filter(Boolean)
+  .join(' ');
+---
+{
+  href ? (
+    <a href={href} class={cls} {...rest}>
+      <slot />
+    </a>
+  ) : (
+    <div class={cls} {...rest}>
+      <slot />
+    </div>
+  )
+}
