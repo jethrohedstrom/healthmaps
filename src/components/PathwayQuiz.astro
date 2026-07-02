@@ -39,32 +39,29 @@ const questions: { question: string; answers: { label: string; scores: Record<st
 ];
 ---
 
-<!-- Flat split quiz card (design handoff 6a). Deliberately no box-shadow.
-     The bottom rail sits outside the screens but inside [data-pathway-quiz],
-     so it persists on every quiz screen and event delegation still reaches it. -->
+<!-- Flat quiz card (design handoff 6a, simplified). Deliberately no box-shadow. -->
 <div data-pathway-quiz class="max-w-[640px] mx-auto text-left bg-paper-cream border border-ink-green/16 rounded-[14px] overflow-hidden">
   <p class="sr-only" aria-live="polite" aria-atomic="true" data-quiz-live></p>
 
-  <div data-quiz-screen="intro" class="pathway-quiz-screen flex flex-col sm:flex-row sm:items-stretch">
-    <div class="sm:flex-[1.3] pt-[30px] px-8 pb-[26px]">
-      <h2 tabindex="-1" data-quiz-heading class="pathway-quiz-heading">
-        Not sure where to start?
-      </h2>
-      <p class="text-[15.5px] leading-[1.55] text-body mt-[9px]">
-        Answer four quick questions and we&rsquo;ll suggest a good first step for your situation.
-      </p>
-    </div>
-    <div class="shrink-0 h-px mx-8 bg-ink-green/12 sm:h-auto sm:w-px sm:mx-0 sm:my-[22px]"></div>
-    <div class="sm:flex-1 py-[26px] px-8 flex flex-col justify-center gap-[13px]">
-      <button type="button" data-quiz-start class="pathway-quiz-primary-button w-full min-h-11 rounded-[10px] bg-primary hover:bg-primary-dark transition-colors duration-150 px-5 py-[13px] text-center text-base font-semibold text-white">
-        Start the quiz
-      </button>
-      <ul class="flex flex-col gap-[5px] text-[13px] text-meta-sage" role="list">
-        <li class="flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary opacity-55 shrink-0" aria-hidden="true"></span>&#8776; 2 minutes</li>
-        <li class="flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary opacity-55 shrink-0" aria-hidden="true"></span>No sign-up</li>
-        <li class="flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-primary opacity-55 shrink-0" aria-hidden="true"></span>Stays in your browser</li>
-      </ul>
-    </div>
+  <div data-quiz-screen="intro" class="pathway-quiz-screen px-8 pt-10 pb-11 sm:px-12 sm:pt-12 sm:pb-[52px] text-center">
+    <!-- Route motif: four stops (the four questions), filled terminus (your suggested step). -->
+    <svg class="mx-auto mb-6 text-primary" width="88" height="10" viewBox="0 0 88 10" fill="none" aria-hidden="true">
+      <line x1="5" y1="5" x2="83" y2="5" stroke="currentColor" stroke-opacity="0.25" stroke-width="1.5" />
+      <circle cx="5" cy="5" r="3" fill="currentColor" fill-opacity="0.35" />
+      <circle cx="31" cy="5" r="3" fill="currentColor" fill-opacity="0.35" />
+      <circle cx="57" cy="5" r="3" fill="currentColor" fill-opacity="0.35" />
+      <circle cx="83" cy="5" r="4" fill="currentColor" />
+    </svg>
+    <h2 tabindex="-1" data-quiz-heading class="pathway-quiz-heading pathway-quiz-heading--intro">
+      Not sure where to start?
+    </h2>
+    <p class="text-[15.5px] leading-[1.55] text-body mt-[10px] max-w-[480px] mx-auto">
+      Four quick questions, then a suggested first step for your situation.
+    </p>
+    <button type="button" data-quiz-start class="pathway-quiz-primary-button w-full sm:w-auto min-h-11 rounded-[10px] bg-primary hover:bg-primary-dark transition-colors duration-150 px-5 sm:px-9 py-[13px] text-center text-base font-semibold text-white mt-7">
+      Start the quiz
+    </button>
+    <p class="text-[13px] text-meta-sage mt-[14px]">2 minutes &middot; no sign-up &middot; stays in your browser</p>
   </div>
 
   {questions.map(({ question, answers }, index) => (
@@ -103,14 +100,6 @@ const questions: { question: string; answers: { label: string; scores: Record<st
     </div>
   </div>
 
-  <div class="border-t border-ink-green/12 px-8 py-1 flex flex-wrap items-center justify-between gap-x-4">
-    <a href="#all-the-ways" class="pathway-quiz-rail-link min-h-11 inline-flex items-center text-sm font-medium text-body underline underline-offset-[3px] decoration-body/40 hover:text-heading hover:decoration-heading/60 transition-colors duration-150">
-      See all the ways to start
-    </a>
-    <span class="min-h-11 inline-flex items-center text-[13.5px] text-meta-sage">
-      In crisis right now?&nbsp;<a href="#crisis" data-quiz-crisis-link class="pathway-quiz-crisis-link font-semibold text-accent-red-soft border-b-[1.5px] border-accent-red-soft/30">Get crisis support</a>
-    </span>
-  </div>
 </div>
 
 <script>
@@ -118,7 +107,7 @@ const questions: { question: string; answers: { label: string; scores: Record<st
 </script>
 
 <style>
-  /* The intro screen carries flex classes, which would defeat [hidden] without this. */
+  /* Guards [hidden] against any screen that gains a display class (e.g. flex). */
   .pathway-quiz-screen[hidden] {
     display: none;
   }
@@ -131,6 +120,11 @@ const questions: { question: string; answers: { label: string; scores: Record<st
     letter-spacing: -0.012em;
     line-height: 1.375;
     color: var(--color-heading);
+  }
+
+  /* The intro is the card's "cover" — slightly larger than the working screens. */
+  .pathway-quiz-heading--intro {
+    font-size: 26px;
   }
 
   .pathway-quiz-step-label {
@@ -171,9 +165,7 @@ const questions: { question: string; answers: { label: string; scores: Record<st
 
   .pathway-quiz-answer:focus-visible,
   .pathway-quiz-primary-button:focus-visible,
-  .pathway-quiz-secondary-button:focus-visible,
-  .pathway-quiz-rail-link:focus-visible,
-  .pathway-quiz-crisis-link:focus-visible {
+  .pathway-quiz-secondary-button:focus-visible {
     outline: 3px solid var(--color-primary);
     outline-offset: 3px;
   }
