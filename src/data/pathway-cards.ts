@@ -22,7 +22,7 @@ export interface PathwayCard {
   };
   /** Optional event data for PathwayTimeHorizon; omitted cards render its "varies" fallback. */
   timeHorizon?: PathwayCardTimeHorizon;
-  /** When true, steps fan out one-by-one with a progress bar (PathwayCardVisual progressive mode). */
+  /** When true, steps fan out one-by-one with a progress bar (WayRow progressive mode). */
   progressive?: boolean;
   /** Emit data-legacy-step-hash so legacy /pathway/#step-N links open this card's steps. */
   legacyStepHash?: boolean;
@@ -30,26 +30,6 @@ export interface PathwayCard {
   draft?: boolean;
   steps: PathwayStep[];
 }
-
-/* Shared style maps: used by PathwayCardVisual and JourneyStrip */
-export const iconStyleMap: Record<string, { bg: string; stroke: string }> = {
-  phone:       { bg: 'bg-accent-red-light',      stroke: 'text-accent-red' },
-  stethoscope: { bg: 'bg-primary-light',         stroke: 'text-primary' },
-  bolt:        { bg: 'bg-accent-blue-light',     stroke: 'text-accent-blue' },
-  heart:       { bg: 'bg-accent-amber-light',    stroke: 'text-accent-amber' },
-  clipboard:   { bg: 'bg-accent-purple-light',   stroke: 'text-accent-purple' },
-  shield:      { bg: 'bg-accent-olive-light',    stroke: 'text-accent-olive' },
-};
-
-export const accentVarMap: Record<string, string> = {
-  'border-l-accent-amber':  'var(--color-accent-amber)',
-  'border-l-accent-red':    'var(--color-accent-red)',
-  'border-l-primary':       'var(--color-primary)',
-  'border-l-accent-blue':   'var(--color-accent-blue)',
-  'border-l-accent-teal':   'var(--color-accent-teal)',
-  'border-l-accent-purple': 'var(--color-accent-purple)',
-  'border-l-accent-olive':  'var(--color-accent-olive)',
-};
 
 // Costs, session limits, phone numbers and process descriptions on the live
 // cards verified June 2026 against MBS/Services Australia/provider sources —

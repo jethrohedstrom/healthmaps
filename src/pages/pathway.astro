@@ -1,16 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PathwayQuiz from '../components/PathwayQuiz.astro';
-import PathwayCardVisual from '../components/PathwayCardVisual.astro';
 import WayRow, { type Props as WayRowProps } from '../components/WayRow.astro';
 import { pathwayCards } from '../data/pathway-cards';
 
 const liveCards = pathwayCards.filter((c) => !c.draft);
 
 // "All the ways" row copy is final design copy (handoff 6a) and intentionally
-// diverges from the detailed cards' titles in pathway-cards.ts. Each row is
-// keyed by its card's id and anchor-links to that card's detail below.
-const ways: ({ id: string } & Omit<WayRowProps, 'href'>)[] = [
+// diverges from the card titles in pathway-cards.ts. Each row is keyed by its
+// card's id; the card's detail content expands in place inside the row.
+const ways: ({ id: string } & Omit<WayRowProps, 'card'>)[] = [
   {
     id: 'through-gp',
     title: 'Start with a GP',
@@ -39,19 +38,21 @@ const ways: ({ id: string } & Omit<WayRowProps, 'href'>)[] = [
   },
 ];
 
-// Fail the build if a row points at a card that no longer exists.
-for (const way of ways) {
-  if (!liveCards.some((c) => c.id === way.id)) {
-    throw new Error(`pathway.astro: way row "${way.title}" targets unknown pathway card id "${way.id}"`);
+// Join rows to their card data; fail the build if a row points at a card
+// that no longer exists.
+const rows = ways.map(({ id, ...way }) => {
+  const card = liveCards.find((c) => c.id === id);
+  if (!card) {
+    throw new Error(`pathway.astro: way row "${way.title}" targets unknown pathway card id "${id}"`);
   }
-}
+  return { ...way, card };
+});
 ---
 <BaseLayout
   title="How to Access Mental Health Support"
   description="Ways to start with mental health support in Australia: through your GP, a private practitioner, a free or community service, self-guided tools, or crisis support."
 >
-  <!-- Wobble filters for the way icons (referenced by id from both the
-       "All the ways" rows and the detail cards; defined once per page) -->
+  <!-- Wobble filters for the way icons (referenced by id, defined once per page) -->
   <svg width="0" height="0" class="absolute" aria-hidden="true"><defs>
     <filter id="paint-a" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.115" numOctaves="3" seed="4" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
     <filter id="paint-b" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.11" numOctaves="2" seed="11" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
@@ -75,14 +76,14 @@ for (const way of ways) {
       <p class="text-[13px] font-semibold uppercase tracking-[0.13em] text-primary">Or choose for yourself</p>
       <h2 class="font-display font-semibold text-[28px] md:text-[34px] tracking-[-0.02em] text-heading mt-3">All the ways</h2>
       <p class="text-lg leading-[1.55] text-body max-w-[560px] mt-3">
-        Every option leads somewhere good. Most people begin with a GP &mdash; but you don&rsquo;t have to.
+        Every option leads somewhere good. Most people begin with a GP &mdash; but you don&rsquo;t have to. Open any option to see costs, timing, and how it works step by step.
       </p>
 
       <div class="mt-10 flex flex-col gap-2">
-        {ways.map(({ id, ...way }, index) => (
+        {rows.map((row, index) => (
           <>
-            <WayRow href={`#${id}`} {...way} />
-            {index < ways.length - 1 && (
+            <WayRow {...row} />
+            {index < rows.length - 1 && (
               <!-- Route connector (echoes the quiz card motif): dots between stops.
                    md+ only — below md the featured tile centre sits 6px off the rest. -->
               <div class="hidden md:flex flex-col items-center gap-[5px] w-3 ml-[56px]" aria-hidden="true">
@@ -97,33 +98,10 @@ for (const way of ways) {
     </div>
   </section>
 
-  <section id="pathways" class="scroll-mt-24 px-5 md:px-14">
+  <section class="px-5 md:px-14">
     <div class="max-w-[900px] mx-auto py-16 md:py-24">
-      <div class="mb-10">
-        <p class="text-[13px] font-semibold uppercase tracking-[0.13em] text-primary">In detail</p>
-        <h2 class="font-display font-semibold text-[28px] md:text-[34px] tracking-[-0.02em] text-heading mt-3">How each way works</h2>
-      </div>
-
-      <div class="pathway-grid flex flex-col gap-3 lg:gap-4">
-        {liveCards.map((card, index) => (
-          <>
-            <PathwayCardVisual {...card} featured={card.id === 'through-gp'} />
-            {index < liveCards.length - 1 && (
-              <!-- Route connector (echoes the quiz card + "All the ways" motif).
-                   ml-[56px] centres the dots (w-3) on the icon-tile axis: 32px card
-                   padding + half the 60px tile = 62px. -->
-              <div class="hidden md:flex flex-col items-center gap-[5px] w-3 ml-[56px]" aria-hidden="true">
-                <span class="w-1 h-1 rounded-full bg-primary opacity-35"></span>
-                <span class="w-1 h-1 rounded-full bg-primary opacity-35"></span>
-                <span class="w-1 h-1 rounded-full bg-primary opacity-35"></span>
-              </div>
-            )}
-          </>
-        ))}
-      </div>
-
       <!-- REVIEW: Crisis section copy mirrors verified crisis support content from src/content/alternatives/crisis.md. -->
-      <section id="crisis" tabindex="-1" class="scroll-mt-24 mt-6 lg:mt-8 rounded-[18px] bg-accent-red-wash border border-accent-red-soft/25 border-l-4 border-l-accent-red-soft p-6 md:p-8">
+      <section id="crisis" tabindex="-1" class="scroll-mt-24 rounded-[18px] bg-accent-red-wash border border-accent-red-soft/25 border-l-4 border-l-accent-red-soft p-6 md:p-8">
         <p class="text-xs font-semibold uppercase tracking-[0.08em] text-accent-red-soft mb-2">Immediate help</p>
         <h2 class="font-display font-semibold text-xl md:text-2xl tracking-[-0.01em] text-heading leading-snug mb-3">Crisis support</h2>
         <p class="text-base leading-relaxed text-body mb-5">
@@ -155,9 +133,5 @@ for (const way of ways) {
       </aside>
     </div>
   </section>
-
-  <script>
-    import '../scripts/pathway-card-click.ts';
-  </script>
 
 </BaseLayout>

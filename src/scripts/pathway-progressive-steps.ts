@@ -1,6 +1,6 @@
 // Reusable progressive step reveal + progress bar for pathway cards.
 // Applies to any card root marked with [data-progressive-card]
-// (PathwayCardVisual.astro in progressive mode).
+// (WayRow.astro in progressive mode).
 
 function initProgressiveCard(card: HTMLElement) {
   const ol = card.querySelector<HTMLOListElement>('[data-step-reveal]');
@@ -145,6 +145,15 @@ function initProgressiveCard(card: HTMLElement) {
   }
 
   function handleStepHash() {
+    // Card-level hash (quiz result link, inbound /pathway/#through-gp links):
+    // open the card's details so the visitor doesn't land on a collapsed row.
+    // suppressL1Scroll lets the navigation's own scroll win over the toggle's.
+    if (location.hash === `#${cardId}` && l1Details && !l1Details.open) {
+      suppressL1Scroll = true;
+      l1Details.open = true;
+      return;
+    }
+
     const stepNumber = matchStepHash();
     if (stepNumber === null || !Number.isFinite(stepNumber) || stepNumber < 1) return;
     openCardForStep(stepNumber);

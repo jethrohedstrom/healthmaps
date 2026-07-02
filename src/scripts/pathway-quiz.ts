@@ -229,6 +229,9 @@ function jumpToHash(hash: string) {
   }
 
   history.pushState(null, '', hash);
+  // pushState doesn't fire hashchange; dispatch it so the pathway card's
+  // hash handler (pathway-progressive-steps.ts) can auto-open the card.
+  window.dispatchEvent(new HashChangeEvent('hashchange'));
   target.scrollIntoView({ block: 'start', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
   focusHashTarget(target);
 }

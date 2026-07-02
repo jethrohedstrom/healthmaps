@@ -239,56 +239,6 @@ details[open] > summary::after {
   top: 0;
 }
 
-/* Pathway card: summary styling */
-.pathway-card > summary {
-  padding-right: 2.5rem;
-}
-
-/* Journey Strip: timeline connector line (vertically centred on 44px button) */
-.journey-timeline::before {
-  content: '';
-  position: absolute;
-  top: 21px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background-color: var(--color-border);
-  z-index: 0;
-}
-
-/* Journey Strip: active dot fills with accent colour */
-.journey-dot--active > span {
-  background-color: var(--dot-accent);
-  border-color: var(--dot-accent);
-}
-.journey-dot--active {
-  transform: scale(1.25);
-}
-.journey-dot--active:hover {
-  transform: scale(1.35);
-}
-
-/* Journey Strip: mobile horizontal scroll */
-@media (max-width: 767px) {
-  .journey-timeline {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 0.5rem;
-    padding-right: 3rem;
-  }
-  .journey-timeline-wrap::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    width: 3rem;
-    background: linear-gradient(to right, transparent, var(--strip-bg, white));
-    pointer-events: none;
-    z-index: 5;
-  }
-}
 
 /* Pathway hero: two-column layout on desktop. Grid reflow on GP expand was removed —
    the 350ms sideways centering slide read as unpolished, especially on re-expand
@@ -309,6 +259,28 @@ details[open] > summary::after {
   display: inline;
 }
 
+/* Merged pathway row-card: the whole 6a row is the L1 <summary>. The global
+   summary rules above (padding-right + border-drawn ::after) are unlayered so
+   they beat Tailwind utilities — suppress them here and use the inline SVG
+   chevron span in the markup instead (rotates on open). */
+details > summary.pathway-row-summary {
+  padding-right: 1.25rem;
+}
+@media (min-width: 768px) {
+  details > summary.pathway-row-summary {
+    padding-right: 2rem;
+  }
+}
+details > summary.pathway-row-summary::after {
+  display: none;
+}
+.pathway-row-chevron {
+  transition: transform 0.2s ease;
+}
+details[open] > .pathway-row-summary .pathway-row-chevron {
+  transform: rotate(180deg);
+}
+
 /* Nested L2 row (GP card “How does this work?”): full-width, touch-friendly hit target */
 .pathway-details-toggle--nested {
   margin-top: 0.5625rem; /* nudge control down from pills */
@@ -324,40 +296,9 @@ details[open] > summary::after {
   box-sizing: border-box;
 }
 
-/* Make whole pathway card clickable to toggle expansion.
-   Flat 6a language: hover deepens the hairline border, no shadow/lift. */
-.pathway-card-clickable {
-  cursor: pointer;
-  transition: border-color 150ms ease, transform 0.1s ease;
-}
-@media (hover: hover) {
-  .pathway-card-clickable:hover {
-    border-color: color-mix(in srgb, var(--color-ink-green) 30%, transparent);
-  }
-}
-.pathway-card-clickable:active {
-  transform: scale(0.997);
-}
-
-/* The cards stack in a single-column flex layout, so every card is already
-   full-width; the rules below only restyle a card's *content* once its top-level
-   accordion is open. The `> details[open]` direct-child match targets only the
-   card's top-level accordion, not the nested progressive steps inside it. */
+/* Cap the cost/sessions facts list to a readable width above the timeline. */
 @media (min-width: 768px) {
-  /* On a full-width expanded card, cap the content as a readable column
-     (720px = design-system body-text width) rather than letting it stretch to
-     the full card width. Left-aligned to match the 6a design language (quiz
-     card + "All the ways" rows are all left-aligned).
-     Scoped to expanded + desktop, so collapsed/mobile cards are untouched. */
-  /* Cards sit inside a per-card wrapper div (featured frame, or display:contents),
-     hence the `> div >` hop. */
-  .pathway-grid > div > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) > .pathway-card-inner {
-    max-width: 45rem; /* 720px — matches .claude/rules/spacing.md body-text cap */
-    width: 100%;
-    margin-inline: auto;
-  }
-  /* Cap the cost/sessions facts list to a readable width above the timeline. */
-  .pathway-grid > div > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) .pathway-l1-body > .pathway-facts {
+  .pathway-l1-body > .pathway-facts {
     max-width: 28rem;
   }
 }

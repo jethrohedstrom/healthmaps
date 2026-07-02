@@ -1,7 +1,6 @@
 /**
  * Shared wobble icons for the pathway page (design handoff 6a).
- * Used by WayRow ("All the ways" list) and PathwayCardVisual (detail cards)
- * so both sections share one visual vocabulary.
+ * Used by the WayRow pathway cards in "All the ways".
  *
  * Icon geometry copied verbatim from the design reference
  * (design_handoff_pathway_quiz_6a/reference/6a Pathway Page.html).
