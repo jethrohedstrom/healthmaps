@@ -337,8 +337,41 @@ const bmData = {
 
   updateViewBox();
 
+  function clearMobileLock() {
+    backdrop.classList.remove('bm-popover-backdrop-visible');
+    document.body.classList.remove('bm-body-locked');
+    document.documentElement.classList.remove('bm-body-locked');
+  }
+
   function isMobile() {
     return isMobileViewport();
+  }
+
+  function syncPopoverViewportState() {
+    if (!popover) return;
+
+    if (isMobile()) {
+      // Desktop popovers write coordinates inline. Clear them before the same
+      // element becomes a fixed mobile sheet, otherwise it can render offscreen.
+      popover.style.left = '';
+      popover.style.top = '';
+
+      if (activeKey) {
+        backdrop.classList.add('bm-popover-backdrop-visible');
+        document.body.classList.add('bm-body-locked');
+        document.documentElement.classList.add('bm-body-locked');
+      }
+      return;
+    }
+
+    // Mobile-only backdrop/scroll lock must not survive into desktop layout.
+    clearMobileLock();
+    popover.classList.remove('bm-popover-expanded');
+    popover.classList.remove('bm-popover-dragging');
+    popover.style.transform = '';
+    popover.style.height = '';
+    popover.style.maxHeight = '';
+    popover.style.overflowY = '';
   }
 
   function positionPopover(blobEl: SVGElement) {
@@ -413,16 +446,14 @@ const bmData = {
       popover.style.maxHeight = '';
       popover.style.overflowY = '';
       popover.innerHTML = '';
-      document.body.classList.remove('bm-body-locked');
-      document.documentElement.classList.remove('bm-body-locked');
+      clearMobileLock();
     } else {
       hideTimeout = window.setTimeout(function() {
         popover.style.transform = '';
         popover.style.maxHeight = '';
         popover.style.overflowY = '';
         popover.innerHTML = '';
-        document.body.classList.remove('bm-body-locked');
-        document.documentElement.classList.remove('bm-body-locked');
+        clearMobileLock();
       }, 550);
     }
   }
@@ -449,8 +480,9 @@ const bmData = {
     popover.classList.remove('bm-popover-expanded');
     popover.classList.remove('bm-popover-dragging');
     backdrop.classList.remove('bm-popover-backdrop-visible');
-    document.body.classList.remove('bm-body-locked');
-    document.documentElement.classList.remove('bm-body-locked');
+    clearMobileLock();
+    popover.style.left = '';
+    popover.style.top = '';
 
     activeKey = key;
 
@@ -601,6 +633,8 @@ const bmData = {
     wireBmCollapse(popover.querySelector('.bm-more-toggle'), popover.querySelector('.bm-more-detail'), 'bm-more-detail-region');
     wireBmCollapse(popover.querySelector('.bm-rebate-toggle'), popover.querySelector('.bm-rebate-detail'), 'bm-rebate-detail-region');
 
+    syncPopoverViewportState();
+
     // Position near the clicked blob (desktop only)
     const blobEl = wrapper!.querySelector('.bm-blob[data-prof="' + key + '"]') as SVGElement | null;
     if (blobEl) {
@@ -611,11 +645,6 @@ const bmData = {
     void popover.offsetHeight;
 
     requestAnimationFrame(function() {
-      if (isMobile()) {
-        backdrop.classList.add('bm-popover-backdrop-visible');
-        document.body.classList.add('bm-body-locked');
-        document.documentElement.classList.add('bm-body-locked');
-      }
       popover.classList.add('bm-popover-visible');
     });
   }
@@ -778,8 +807,7 @@ const bmData = {
             popover.style.transform = '';
             popover.style.maxHeight = '';
             popover.innerHTML = '';
-            document.body.classList.remove('bm-body-locked');
-            document.documentElement.classList.remove('bm-body-locked');
+            clearMobileLock();
           }, 550);
         } else {
           // Snap back: animate from drag position to translateY(0)
@@ -820,6 +848,7 @@ const bmData = {
     if (resizeTimer) clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(function() {
       updateViewBox();
+      syncPopoverViewportState();
       if (activeKey && popover) {
         const blobEl = wrapper!.querySelector('.bm-blob[data-prof="' + activeKey + '"]') as SVGElement | null;
         if (blobEl) positionPopover(blobEl);
