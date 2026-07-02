@@ -38,8 +38,8 @@
   --color-meta-sage: #6b7d74;     /* muted sage-gray small/meta text */
   --color-primary-dark: #155539;  /* primary button hover */
   --color-row-hover: #f1f5f2;     /* transparent-row hover wash */
-  --color-gp-deep: #16432e;       /* deep green title on primary-light surface */
-  --color-gp-body: #3f5a4d;       /* green-tinted body on primary-light surface */
+  --color-wash-heading: #16432e;  /* deep green heading text on primary-light wash */
+  --color-wash-body: #3f5a4d;     /* green-tinted body text on primary-light wash */
   --color-dark: #0f172a;
 
   /* Pathway card accent colours */

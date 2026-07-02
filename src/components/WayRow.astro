@@ -7,7 +7,7 @@
  */
 export type WayIcon = 'gp' | 'practitioner' | 'community' | 'self-guided';
 
-interface Props {
+export interface Props {
   href: string;
   title: string;
   body: string;
@@ -31,34 +31,21 @@ const iconSvg: Record<WayIcon, string> = {
 
 const rowClass = featured
   ? 'flex items-center gap-4 md:gap-[22px] p-5 md:p-[26px] rounded-[14px]'
-  : 'way-row flex items-center gap-4 md:gap-[22px] px-5 py-5 md:px-8 md:py-[26px] rounded-[14px] hover:bg-row-hover transition-colors duration-150';
+  : 'flex items-center gap-4 md:gap-[22px] px-5 py-5 md:px-8 md:py-[26px] rounded-[14px] hover:bg-row-hover transition-colors duration-150';
 const tileClass = featured ? 'bg-primary text-white' : 'bg-primary-light text-primary';
-const titleClass = featured ? 'text-[21px] md:text-[25px] text-gp-deep' : 'text-[20px] md:text-[24px] text-heading';
-const bodyClass = featured ? 'text-gp-body' : 'text-body';
+const titleClass = featured ? 'text-[21px] md:text-[25px] text-wash-heading' : 'text-[20px] md:text-[24px] text-heading';
+const bodyClass = featured ? 'text-wash-body' : 'text-body';
 ---
 
-{featured ? (
-  <div class="bg-primary-light rounded-[18px] p-1.5">
-    <a href={href} class={rowClass}>
-      <span class={`inline-flex items-center justify-center w-12 h-12 md:w-[60px] md:h-[60px] rounded-[14px] md:rounded-[17px] shrink-0 ${tileClass}`}>
-        <Fragment set:html={iconSvg[icon]} />
-      </span>
-      <span class="flex-1 min-w-0">
-        {kicker && <span class="block text-[11.5px] font-semibold uppercase tracking-[0.08em] text-primary mb-[5px]">{kicker}</span>}
-        <h3 class={`font-display font-semibold tracking-[-0.01em] leading-snug ${titleClass}`}>{title}</h3>
-        <p class={`text-base md:text-[17px] leading-[1.5] mt-1.5 ${bodyClass}`}>{body}</p>
-      </span>
-      <span class="hidden sm:block shrink-0 text-primary" aria-hidden="true">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
-      </span>
-    </a>
-  </div>
-) : (
+<!-- `contents` makes the wrapper layout-inert for plain rows, so featured
+     and plain share one row body and only the wrapper styling differs. -->
+<div class={featured ? 'bg-primary-light rounded-[18px] p-1.5' : 'contents'}>
   <a href={href} class={rowClass}>
     <span class={`inline-flex items-center justify-center w-12 h-12 md:w-[60px] md:h-[60px] rounded-[14px] md:rounded-[17px] shrink-0 ${tileClass}`}>
       <Fragment set:html={iconSvg[icon]} />
     </span>
     <span class="flex-1 min-w-0">
+      {kicker && <span class="block text-[11.5px] font-semibold uppercase tracking-[0.08em] text-primary mb-[5px]">{kicker}</span>}
       <h3 class={`font-display font-semibold tracking-[-0.01em] leading-snug ${titleClass}`}>{title}</h3>
       <p class={`text-base md:text-[17px] leading-[1.5] mt-1.5 ${bodyClass}`}>{body}</p>
     </span>
@@ -66,4 +53,4 @@ const bodyClass = featured ? 'text-gp-body' : 'text-body';
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
     </span>
   </a>
-)}
+</div>

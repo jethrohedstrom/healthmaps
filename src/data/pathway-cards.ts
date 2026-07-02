@@ -13,7 +13,7 @@ export interface PathwayCard {
   bestFor: string;
   accentColor: string;
   badge?: string;
-  oneLiner?: string;
+  oneLiner: string;
   isCrisis: boolean;
   facts: {
     cost: string;
@@ -24,6 +24,8 @@ export interface PathwayCard {
   timeHorizon?: PathwayCardTimeHorizon;
   /** When true, steps fan out one-by-one with a progress bar (PathwayCardVisual progressive mode). */
   progressive?: boolean;
+  /** Emit data-legacy-step-hash so legacy /pathway/#step-N links open this card's steps. */
+  legacyStepHash?: boolean;
   /** Drafts are excluded from rendering until their copy is finalised. */
   draft?: boolean;
   steps: PathwayStep[];
@@ -67,6 +69,7 @@ export const pathwayCards: PathwayCard[] = [
     oneLiner: 'You want professional guidance from the start, and a pathway to Medicare-rebated psychology sessions.',
     isCrisis: false,
     progressive: true,
+    legacyStepHash: true,
     facts: {
       cost: '$50\u2013$200 per session',
       sessions: 'Up to 10 per year',

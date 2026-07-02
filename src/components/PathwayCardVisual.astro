@@ -3,10 +3,7 @@ import StepByStep from './StepByStep.astro';
 import PathwayTimeHorizon from './PathwayTimeHorizon.astro';
 import type { PathwayCard } from '../data/pathway-cards';
 
-interface Props extends PathwayCard {
-  /** Emit data-legacy-step-hash so /pathway/#step-N deep links open this card's steps (through-gp only). */
-  legacyStepHash?: boolean;
-}
+interface Props extends PathwayCard {}
 
 const { id, title, bestFor, badge, oneLiner, isCrisis, facts, steps, timeHorizon, progressive, legacyStepHash } = Astro.props;
 

@@ -2,17 +2,17 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PathwayQuiz from '../components/PathwayQuiz.astro';
 import PathwayCardVisual from '../components/PathwayCardVisual.astro';
-import WayRow from '../components/WayRow.astro';
-import type { WayIcon } from '../components/WayRow.astro';
+import WayRow, { type Props as WayRowProps } from '../components/WayRow.astro';
 import { pathwayCards } from '../data/pathway-cards';
 
 const liveCards = pathwayCards.filter((c) => !c.draft);
 
 // "All the ways" row copy is final design copy (handoff 6a) and intentionally
-// diverges from the detailed cards' titles in pathway-cards.ts.
-const ways: { href: string; title: string; body: string; icon: WayIcon; kicker?: string; featured?: boolean }[] = [
+// diverges from the detailed cards' titles in pathway-cards.ts. Each row is
+// keyed by its card's id and anchor-links to that card's detail below.
+const ways: ({ id: string } & Omit<WayRowProps, 'href'>)[] = [
   {
-    href: '#through-gp',
+    id: 'through-gp',
     title: 'Start with a GP',
     body: 'A GP can listen, help you make sense of things, and refer you on. Medicare rebates apply.',
     icon: 'gp',
@@ -20,24 +20,31 @@ const ways: { href: string; title: string; body: string; icon: WayIcon; kicker?:
     featured: true,
   },
   {
-    href: '#private',
+    id: 'private',
     title: 'Go straight to a practitioner',
     body: 'Ready to see someone? Book a psychologist or counsellor directly.',
     icon: 'practitioner',
   },
   {
-    href: '#low-cost',
+    id: 'low-cost',
     title: 'Community & public services',
     body: 'Free and lower-cost help near you, through local and state-funded services.',
     icon: 'community',
   },
   {
-    href: '#self-guided',
+    id: 'self-guided',
     title: 'Try something self-guided',
     body: 'Free online programs you can start tonight, in your own time.',
     icon: 'self-guided',
   },
 ];
+
+// Fail the build if a row points at a card that no longer exists.
+for (const way of ways) {
+  if (!liveCards.some((c) => c.id === way.id)) {
+    throw new Error(`pathway.astro: way row "${way.title}" targets unknown pathway card id "${way.id}"`);
+  }
+}
 ---
 <BaseLayout
   title="How to Access Mental Health Support"
@@ -71,8 +78,8 @@ const ways: { href: string; title: string; body: string; icon: WayIcon; kicker?:
       </p>
 
       <div class="mt-10 flex flex-col gap-2">
-        {ways.map((way) => (
-          <WayRow {...way} />
+        {ways.map(({ id, ...way }) => (
+          <WayRow href={`#${id}`} {...way} />
         ))}
       </div>
     </div>
@@ -87,7 +94,7 @@ const ways: { href: string; title: string; body: string; icon: WayIcon; kicker?:
 
       <div class="pathway-grid flex flex-col gap-6 lg:gap-8 max-w-card mx-auto">
         {liveCards.map((card) => (
-          <PathwayCardVisual {...card} legacyStepHash={card.id === 'through-gp'} />
+          <PathwayCardVisual {...card} />
         ))}
       </div>
 
