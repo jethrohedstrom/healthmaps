@@ -47,6 +47,13 @@ const rows = ways.map(({ id, ...way }) => {
   }
   return { ...way, card };
 });
+
+const crisisLines = [
+  { label: 'Lifeline: 13 11 14', tel: 'tel:131114' },
+  { label: 'Beyond Blue: 1300 22 4636', tel: 'tel:1300224636' },
+  { label: 'Suicide Call Back Service: 1300 659 467', tel: 'tel:1300659467' },
+  { label: '13YARN: 13 92 76', tel: 'tel:139276' },
+];
 ---
 <BaseLayout
   title="How to Access Mental Health Support"
@@ -108,22 +115,15 @@ const rows = ways.map(({ id, ...way }) => {
           If you or someone else is in immediate danger, call <a href="tel:000" class="text-primary font-semibold underline underline-offset-2">000</a>. If you need to talk to someone now, these services are free and confidential.
         </p>
         <div class="grid gap-3 md:grid-cols-2">
-          <a href="tel:131114" class="rounded-[10px] bg-white px-4 py-3 min-h-11 flex items-center text-heading font-semibold border border-accent-red-soft/20 hover:border-accent-red-soft transition-colors duration-150">
-            Lifeline: 13 11 14
-          </a>
-          <a href="tel:1300224636" class="rounded-[10px] bg-white px-4 py-3 min-h-11 flex items-center text-heading font-semibold border border-accent-red-soft/20 hover:border-accent-red-soft transition-colors duration-150">
-            Beyond Blue: 1300 22 4636
-          </a>
-          <a href="tel:1300659467" class="rounded-[10px] bg-white px-4 py-3 min-h-11 flex items-center text-heading font-semibold border border-accent-red-soft/20 hover:border-accent-red-soft transition-colors duration-150">
-            Suicide Call Back Service: 1300 659 467
-          </a>
-          <a href="tel:139276" class="rounded-[10px] bg-white px-4 py-3 min-h-11 flex items-center text-heading font-semibold border border-accent-red-soft/20 hover:border-accent-red-soft transition-colors duration-150">
-            13YARN: 13 92 76
-          </a>
+          {crisisLines.map(({ label, tel }) => (
+            <a href={tel} class="rounded-[10px] bg-white px-4 py-3 min-h-11 flex items-center text-heading font-semibold border border-accent-red-soft/20 hover:border-accent-red-soft transition-colors duration-150">
+              {label}
+            </a>
+          ))}
         </div>
       </section>
 
-      <aside class="mt-8 rounded-[14px] bg-paper-cream border border-ink-green/10 p-6 md:p-8">
+      <aside class="mt-8 rounded-[14px] bg-paper-cream border border-hairline p-6 md:p-8">
         <p class="text-[11.5px] font-semibold uppercase tracking-[0.08em] text-meta-sage mb-2">Also worth knowing</p>
         <h2 class="font-display font-semibold text-lg text-heading mb-2">NDIS-funded mental health support</h2>
         <p class="text-body leading-relaxed">

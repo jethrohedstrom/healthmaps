@@ -8,22 +8,14 @@ export interface PathwayStep {
 
 export interface PathwayCard {
   id: string;
-  icon: string;
-  title: string;
   bestFor: string;
-  accentColor: string;
-  badge?: string;
   oneLiner: string;
-  isCrisis: boolean;
   facts: {
     cost: string;
     sessions?: string;
-    wait?: string;
   };
   /** Optional event data for PathwayTimeHorizon; omitted cards render its "varies" fallback. */
   timeHorizon?: PathwayCardTimeHorizon;
-  /** When true, steps fan out one-by-one with a progress bar (WayRow progressive mode). */
-  progressive?: boolean;
   /** Emit data-legacy-step-hash so legacy /pathway/#step-N links open this card's steps. */
   legacyStepHash?: boolean;
   /** Drafts are excluded from rendering until their copy is finalised. */
@@ -40,20 +32,13 @@ export const pathwayCards: PathwayCard[] = [
     // TODO(journey-calendar): Product call pending on whether to add a third
     // psychiatrist event here (three-six-months) in addition to GP + Psychologist.
     id: 'through-gp',
-    icon: 'stethoscope',
-    title: 'Start with a GP',
     bestFor: 'Best for: most people starting out.',
-    accentColor: 'border-l-primary',
-    badge: 'Most common starting point',
     // REVIEW: AI-drafted summary — check the Medicare-rebate framing.
     oneLiner: 'You want professional guidance from the start, and a pathway to Medicare-rebated psychology sessions.',
-    isCrisis: false,
-    progressive: true,
     legacyStepHash: true,
     facts: {
       cost: '$50\u2013$200 per session',
       sessions: 'Up to 10 per year',
-      wait: 'A few days for a GP; a few weeks for a psychologist or other practitioner',
     },
     timeHorizon: {
       events: [
@@ -96,23 +81,17 @@ export const pathwayCards: PathwayCard[] = [
   },
   {
     id: 'private',
-    icon: 'bolt',
-    title: 'Go straight to a private practitioner',
     bestFor: 'Best for: getting started quickly without a GP visit.',
-    accentColor: 'border-l-accent-blue',
     oneLiner: 'You want to start quickly and are happy to pay out-of-pocket.',
-    isCrisis: false,
     facts: {
       cost: '$80\u2013$330+ per session (no rebate)',
       sessions: 'No limit',
-      wait: 'Days to 2 weeks',
     },
     timeHorizon: {
       events: [
         event('Practitioner', 'one-two-weeks', 'days to 2 weeks'),
       ],
     },
-    progressive: true,
     steps: [
       {
         number: 1,
@@ -138,18 +117,12 @@ export const pathwayCards: PathwayCard[] = [
   },
   {
     id: 'low-cost',
-    icon: 'heart',
-    title: 'Through a free or community service',
     bestFor: 'Best for: people who want to start with a community or publicly-funded service.',
-    accentColor: 'border-l-accent-amber',
     oneLiner: 'You want to approach a community or publicly-funded service \u2014 such as headspace, a Medicare Mental Health Centre, a PHN-funded service, your workplace EAP, or a university clinic.',
-    isCrisis: false,
     facts: {
       cost: 'Free or very low cost',
       sessions: 'Varies',
-      wait: 'Varies by service',
     },
-    progressive: true,
     steps: [
       {
         number: 1,
@@ -180,23 +153,17 @@ export const pathwayCards: PathwayCard[] = [
   },
   {
     id: 'self-guided',
-    icon: 'clipboard',
-    title: 'Self-guided tools',
     bestFor: 'Best for: people who want to start on their own, right now, at low or no cost.',
-    accentColor: 'border-l-accent-purple',
     oneLiner: 'You\u2019d rather begin on your own with an app or online program \u2014 before, or instead of, seeing someone in person.',
-    isCrisis: false,
     facts: {
       cost: 'Free, or paid (typically $10\u2013$90/mo)',
       sessions: 'Use at your own pace',
-      wait: 'Start today',
     },
     timeHorizon: {
       events: [
         event('Program', 'same-day'),
       ],
     },
-    progressive: true,
     // NOTE: specific program/app names pending deep research \u2014 keep steps
     // generic-but-true until that list is verified; no fabricated product names.
     steps: [

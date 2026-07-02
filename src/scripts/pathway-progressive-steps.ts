@@ -1,6 +1,5 @@
-// Reusable progressive step reveal + progress bar for pathway cards.
-// Applies to any card root marked with [data-progressive-card]
-// (WayRow.astro in progressive mode).
+// Progressive step reveal + progress bar for pathway cards.
+// Applies to any card root marked with [data-pathway-card] (WayRow.astro).
 
 function initProgressiveCard(card: HTMLElement) {
   const ol = card.querySelector<HTMLOListElement>('[data-step-reveal]');
@@ -93,8 +92,7 @@ function initProgressiveCard(card: HTMLElement) {
         suppressL1Scroll = false;
         return;
       }
-      // Anchor to the whole card: brings icon/title + revealed body into view and
-      // also settles the desktop full-width grid reflow that L1-open triggers.
+      // Anchor to the whole card: brings icon/title + revealed body into view.
       scrollAnchorUnderHeader(card);
     });
   }
@@ -165,7 +163,7 @@ function initProgressiveCard(card: HTMLElement) {
   card.querySelectorAll<HTMLDetailsElement>('.pathway-step-item').forEach((detail) => {
     detail.addEventListener('toggle', () => {
       if (!detail.open) return;
-      if (detail.closest('[data-progressive-card]') !== card) return;
+      if (detail.closest('[data-pathway-card]') !== card) return;
 
       // Settle the opened step under the header so its detail (and the next
       // revealed step) are visible. Runs on every open, including re-opens.
@@ -196,7 +194,7 @@ function initProgressiveCard(card: HTMLElement) {
   });
 }
 
-document.querySelectorAll<HTMLElement>('[data-progressive-card]').forEach((card) => {
+document.querySelectorAll<HTMLElement>('[data-pathway-card]').forEach((card) => {
   if (card.dataset.progressiveInit === '1') return;
   card.dataset.progressiveInit = '1';
   initProgressiveCard(card);

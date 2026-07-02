@@ -35,6 +35,7 @@
   --color-paper-cream: #FBFAF6;   /* paper-sheet surface for hero + secondary cards */
   --color-paper-border: rgba(15, 74, 50, 0.06);  /* faint sage-tinted border on paper surfaces */
   --color-ink-green: #0F4A32;     /* hairline base (paper-border's solid form) — use with opacity modifiers */
+  --color-hairline: color-mix(in srgb, #0F4A32 12%, transparent); /* soft ink-green hairline: borders/dividers/rules */
   --color-meta-sage: #6b7d74;     /* muted sage-gray small/meta text */
   --color-primary-dark: #155539;  /* primary button hover */
   --color-row-hover: #f1f5f2;     /* transparent-row hover wash */
@@ -164,12 +165,14 @@ h1, h2, h3, h4, h5, h6 {
   border-color: rgba(27, 107, 74, 0.3);
 }
 
-/* Details/summary: clean chevron rotation, CSS-only */
+/* Details/summary base: pointer + marker suppression only. The CSS-drawn
+   chevron is opt-in via .summary-chevron — a global chevron kept needing
+   per-component opt-outs, and being unlayered it silently beat Tailwind
+   padding utilities. */
 details > summary {
   cursor: pointer;
   list-style: none;
   position: relative;
-  padding-right: 2rem;
 }
 details > summary::-webkit-details-marker {
   display: none;
@@ -178,12 +181,14 @@ details > summary::marker {
   display: none;
   content: '';
 }
-details > summary::after {
+summary.summary-chevron {
+  padding-right: 2rem;
+}
+summary.summary-chevron::after {
   content: '';
   position: absolute;
   right: 0;
   top: 50%;
-  transform: translateY(-50%) rotate(0deg);
   width: 0.5rem;
   height: 0.5rem;
   border-right: 2px solid var(--color-body);
@@ -192,7 +197,7 @@ details > summary::after {
   transform: translateY(-60%) rotate(45deg);
   transition: transform 0.2s ease;
 }
-details[open] > summary::after {
+details[open] > summary.summary-chevron::after {
   transform: translateY(-40%) rotate(-135deg);
 }
 
@@ -217,14 +222,6 @@ details[open] > summary::after {
   margin-bottom: 1rem;
 }
 
-/* Practitioner summary cards: no chevron, no extra padding */
-.practitioner-card > summary::after {
-  display: none;
-}
-.practitioner-card > summary {
-  padding-right: 0;
-}
-
 /* Skip link for accessibility */
 .skip-link {
   position: absolute;
@@ -245,7 +242,7 @@ details[open] > summary::after {
    when scroll was already pinned (run6 logs: cardLeft 664→343 with scrollY fixed). */
 
 /* Pathway card progressive-disclosure toggle: green chevron + Show/Hide label swap */
-.pathway-details-toggle > summary {
+.pathway-details-toggle > summary.summary-chevron {
   padding-right: 1.5rem;
 }
 .pathway-details-toggle > summary::after {
@@ -259,21 +256,8 @@ details[open] > summary::after {
   display: inline;
 }
 
-/* Merged pathway row-card: the whole 6a row is the L1 <summary>. The global
-   summary rules above (padding-right + border-drawn ::after) are unlayered so
-   they beat Tailwind utilities — suppress them here and use the inline SVG
-   chevron span in the markup instead (rotates on open). */
-details > summary.pathway-row-summary {
-  padding-right: 1.25rem;
-}
-@media (min-width: 768px) {
-  details > summary.pathway-row-summary {
-    padding-right: 2rem;
-  }
-}
-details > summary.pathway-row-summary::after {
-  display: none;
-}
+/* Merged pathway row-card: the whole 6a row is the L1 <summary>; it uses its
+   own inline SVG chevron span (rotates on open) instead of .summary-chevron. */
 .pathway-row-chevron {
   transition: transform 0.2s ease;
 }
@@ -298,7 +282,7 @@ details[open] > .pathway-row-summary .pathway-row-chevron {
 
 /* Cap the cost/sessions facts list to a readable width above the timeline. */
 @media (min-width: 768px) {
-  .pathway-l1-body > .pathway-facts {
+  .pathway-l1-body .pathway-facts {
     max-width: 28rem;
   }
 }
@@ -326,10 +310,10 @@ details[open] > .pathway-row-summary .pathway-row-chevron {
   list-style: none;
   padding: 0;
   margin: 0;
-  border-top: 1px solid color-mix(in srgb, var(--color-ink-green) 12%, transparent);
+  border-top: 1px solid var(--color-hairline);
 }
 .pathway-step-accordions > li {
-  border-bottom: 1px solid color-mix(in srgb, var(--color-ink-green) 12%, transparent);
+  border-bottom: 1px solid var(--color-hairline);
 }
 .pathway-step-item > summary {
   display: flex;

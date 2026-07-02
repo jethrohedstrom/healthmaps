@@ -17,11 +17,3 @@ export const wayIconSvg: Record<WayIcon, string> = {
   'self-guided': '<svg width="32" height="32" viewBox="0 0 40 40" fill="none" aria-hidden="true"><g filter="url(#paint-b)"><path d="M11 28.5C16.5 23.5 22.5 26 28 12.5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-dasharray="0.1 5.8"></path><circle cx="11" cy="28.5" r="4.9" fill="currentColor"></circle><circle cx="28.8" cy="12" r="3" stroke="currentColor" stroke-width="2.3"></circle></g></svg>',
 };
 
-/** Maps pathway-cards.ts icon names onto the shared way icons.
- *  Unmapped names (draft/crisis leftovers) get no icon tile. */
-export const cardIconToWayIcon: Record<string, WayIcon> = {
-  stethoscope: 'gp',
-  bolt: 'practitioner',
-  heart: 'community',
-  clipboard: 'self-guided',
-};
