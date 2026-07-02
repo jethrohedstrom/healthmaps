@@ -34,6 +34,12 @@
   --color-page-sage: #EEF4EF;     /* page background (replaces white on pathway page) */
   --color-paper-cream: #FBFAF6;   /* paper-sheet surface for hero + secondary cards */
   --color-paper-border: rgba(15, 74, 50, 0.06);  /* faint sage-tinted border on paper surfaces */
+  --color-ink-green: #0F4A32;     /* hairline base (paper-border's solid form) — use with opacity modifiers */
+  --color-meta-sage: #6b7d74;     /* muted sage-gray small/meta text */
+  --color-primary-dark: #155539;  /* primary button hover */
+  --color-row-hover: #f1f5f2;     /* transparent-row hover wash */
+  --color-gp-deep: #16432e;       /* deep green title on primary-light surface */
+  --color-gp-body: #3f5a4d;       /* green-tinted body on primary-light surface */
   --color-dark: #0f172a;
 
   /* Pathway card accent colours */

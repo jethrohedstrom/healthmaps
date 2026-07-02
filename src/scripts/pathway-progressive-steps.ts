@@ -1,6 +1,6 @@
 // Reusable progressive step reveal + progress bar for pathway cards.
 // Applies to any card root marked with [data-progressive-card]
-// (PathwayCardGPProgressive.astro, PathwayCardVisual.astro in progressive mode).
+// (PathwayCardVisual.astro in progressive mode).
 
 function initProgressiveCard(card: HTMLElement) {
   const ol = card.querySelector<HTMLOListElement>('[data-step-reveal]');

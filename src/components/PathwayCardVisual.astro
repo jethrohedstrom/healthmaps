@@ -3,14 +3,17 @@ import StepByStep from './StepByStep.astro';
 import PathwayTimeHorizon from './PathwayTimeHorizon.astro';
 import type { PathwayCard } from '../data/pathway-cards';
 
-interface Props extends PathwayCard {}
+interface Props extends PathwayCard {
+  /** Emit data-legacy-step-hash so /pathway/#step-N deep links open this card's steps (through-gp only). */
+  legacyStepHash?: boolean;
+}
 
-const { id, title, bestFor, badge, oneLiner, isCrisis, facts, steps, timeHorizon, progressive } = Astro.props;
+const { id, title, bestFor, badge, oneLiner, isCrisis, facts, steps, timeHorizon, progressive, legacyStepHash } = Astro.props;
 
 const bgClass = isCrisis ? 'bg-primary-light' : 'bg-white';
 ---
 
-<div id={id} data-pathway-card data-progressive-card={progressive ? '' : undefined} class={`pathway-card-clickable rounded-xl border border-border shadow-sm ${bgClass} p-6 md:p-8 flex flex-col`}>
+<div id={id} data-pathway-card data-progressive-card={progressive ? '' : undefined} data-legacy-step-hash={legacyStepHash ? '' : undefined} class={`pathway-card-clickable scroll-mt-24 rounded-xl border border-border shadow-sm ${bgClass} p-6 md:p-8 flex flex-col`}>
   <div class="pathway-card-inner flex flex-col">
   {/* Badge + Title */}
   <div class="mb-3">

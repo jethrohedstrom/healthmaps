@@ -1,61 +1,93 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Button from '../components/Button.astro';
 import PathwayQuiz from '../components/PathwayQuiz.astro';
 import PathwayCardVisual from '../components/PathwayCardVisual.astro';
-import PathwayCardGPProgressive from '../components/PathwayCardGPProgressive.astro';
+import WayRow from '../components/WayRow.astro';
+import type { WayIcon } from '../components/WayRow.astro';
 import { pathwayCards } from '../data/pathway-cards';
 
 const liveCards = pathwayCards.filter((c) => !c.draft);
-const gpCard = liveCards.find((c) => c.id === 'through-gp')!;
-const otherCards = liveCards.filter((c) => c.id !== 'through-gp');
-const visiblePathwayCount = liveCards.length + 1; // Crisis support is a hard-route section, not a scored card.
-const otherPathwayCount = otherCards.length + 1;
+
+// "All the ways" row copy is final design copy (handoff 6a) and intentionally
+// diverges from the detailed cards' titles in pathway-cards.ts.
+const ways: { href: string; title: string; body: string; icon: WayIcon; kicker?: string; featured?: boolean }[] = [
+  {
+    href: '#through-gp',
+    title: 'Start with a GP',
+    body: 'A GP can listen, help you make sense of things, and refer you on. Medicare rebates apply.',
+    icon: 'gp',
+    kicker: 'Most people start here',
+    featured: true,
+  },
+  {
+    href: '#private',
+    title: 'Go straight to a practitioner',
+    body: 'Ready to see someone? Book a psychologist or counsellor directly.',
+    icon: 'practitioner',
+  },
+  {
+    href: '#low-cost',
+    title: 'Community & public services',
+    body: 'Free and lower-cost help near you, through local and state-funded services.',
+    icon: 'community',
+  },
+  {
+    href: '#self-guided',
+    title: 'Try something self-guided',
+    body: 'Free online programs you can start tonight, in your own time.',
+    icon: 'self-guided',
+  },
+];
 ---
 <BaseLayout
   title="How to Access Mental Health Support"
   description="Ways to start with mental health support in Australia: through your GP, a private practitioner, a free or community service, self-guided tools, or crisis support."
 >
-  <section>
-    <div class="max-w-[1240px] mx-auto px-5 md:px-10 lg:px-14 pt-16 md:pt-24 pb-16 md:pb-20">
-      <div>
-        <div class="pathway-hero-grid grid grid-cols-1 lg:grid-cols-[1.05fr_1fr] gap-10 lg:gap-14 items-start">
-        <div class="pathway-hero-aside lg:pt-6">
-          <h1 class="text-[1.75rem] md:text-[2.5rem] font-bold text-heading mb-4 tracking-[-0.01em] leading-tight">How to access mental health support in Australia</h1>
-          <p class="text-lg leading-relaxed text-body max-w-[42rem] mb-6">
-            There are several ways to get support. Most people start with their GP, but you don't have to.
-          </p>
-          <div class="flex flex-wrap gap-3">
-            <Button href="#pathways" size="sm">Compare all {visiblePathwayCount} ways to start</Button>
-          </div>
-        </div>
-
-          <div class="relative">
-            <PathwayCardGPProgressive {...gpCard} />
-            <div class="mt-6 flex justify-end">
-              <a
-                href="#pathways"
-                class="inline-flex items-center gap-1.5 text-sm font-medium text-body hover:text-primary transition-colors"
-              >
-                <span>{otherPathwayCount} more ways to start below</span>
-                <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg>
-              </a>
-            </div>
-          </div>
-        </div>
+  <!-- Hero: quiz-forward, on the sage page background -->
+  <section class="px-5 md:px-14 py-16 md:py-20">
+    <div class="max-w-[680px] mx-auto text-center">
+      <h1 class="font-bold text-[1.875rem] md:text-[3.125rem] tracking-[-0.025em] leading-[1.06] text-heading">
+        Mental health support in Australia: where to begin
+      </h1>
+      <div class="mt-8 md:mt-11">
+        <PathwayQuiz />
       </div>
     </div>
   </section>
 
-  <PathwayQuiz />
+  <section id="all-the-ways" class="scroll-mt-24 bg-paper-cream px-5 md:px-14">
+    <div class="max-w-[900px] mx-auto pt-16 md:pt-[76px] pb-16 md:pb-[84px]">
+      <!-- Wobble filters for the WayRow icons (referenced by id, defined once per page) -->
+      <svg width="0" height="0" class="absolute" aria-hidden="true"><defs>
+        <filter id="paint-a" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.115" numOctaves="3" seed="4" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
+        <filter id="paint-b" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.11" numOctaves="2" seed="11" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
+        <filter id="paint-c" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.1" numOctaves="2" seed="19" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="2.1" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
+      </defs></svg>
+
+      <p class="text-[13px] font-semibold uppercase tracking-[0.13em] text-primary">Or choose for yourself</p>
+      <h2 class="font-display font-semibold text-[28px] md:text-[34px] tracking-[-0.02em] text-heading mt-3">All the ways</h2>
+      <p class="text-lg leading-[1.55] text-body max-w-[560px] mt-3">
+        Every option leads somewhere good. Most people begin with a GP &mdash; but you don&rsquo;t have to.
+      </p>
+
+      <div class="mt-10 flex flex-col gap-2">
+        {ways.map((way) => (
+          <WayRow {...way} />
+        ))}
+      </div>
+    </div>
+  </section>
 
   <section id="pathways" class="scroll-mt-24">
     <div class="max-w-[1240px] mx-auto px-5 md:px-10 lg:px-14 py-16 md:py-24">
-      <p class="text-sm uppercase tracking-widest text-body font-semibold mb-8">The other {otherPathwayCount} ways to start</p>
+      <div class="max-w-card mx-auto mb-8">
+        <p class="text-sm uppercase tracking-widest text-body font-semibold mb-3">In detail</p>
+        <h2 class="font-display font-bold text-2xl md:text-3xl text-heading">How each way works</h2>
+      </div>
 
       <div class="pathway-grid flex flex-col gap-6 lg:gap-8 max-w-card mx-auto">
-        {otherCards.map((card) => (
-          <PathwayCardVisual {...card} />
+        {liveCards.map((card) => (
+          <PathwayCardVisual {...card} legacyStepHash={card.id === 'through-gp'} />
         ))}
       </div>
 

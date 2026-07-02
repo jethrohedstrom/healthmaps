@@ -63,7 +63,10 @@ export const pathwayCards: PathwayCard[] = [
     bestFor: 'Best for: most people starting out.',
     accentColor: 'border-l-primary',
     badge: 'Most common starting point',
+    // REVIEW: AI-drafted summary — check the Medicare-rebate framing.
+    oneLiner: 'You want professional guidance from the start, and a pathway to Medicare-rebated psychology sessions.',
     isCrisis: false,
+    progressive: true,
     facts: {
       cost: '$50\u2013$200 per session',
       sessions: 'Up to 10 per year',

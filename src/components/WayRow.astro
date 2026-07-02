@@ -1,0 +1,69 @@
+---
+/**
+ * One row in the pathway page's "All the ways" list (design handoff 6a).
+ * `featured` gets the primary-light wrapper + solid green icon tile (GP row).
+ * Icons are riffs on the logo dot; the paint-* wobble filters they reference
+ * are defined once in pathway.astro. Intentionally no shadow, no border.
+ */
+export type WayIcon = 'gp' | 'practitioner' | 'community' | 'self-guided';
+
+interface Props {
+  href: string;
+  title: string;
+  body: string;
+  icon: WayIcon;
+  kicker?: string;
+  featured?: boolean;
+}
+
+const { href, title, body, icon, kicker, featured = false } = Astro.props;
+
+// Icon geometry copied verbatim from the design reference
+// (design_handoff_pathway_quiz_6a/reference/6a Pathway Page.html).
+// The paint-* filters give a hand-drawn wobble; dropping the filter
+// attribute is a safe fallback — geometry is unchanged.
+const iconSvg: Record<WayIcon, string> = {
+  gp: '<svg width="32" height="32" viewBox="0 0 40 40" fill="none" aria-hidden="true"><g filter="url(#paint-c)"><circle cx="20" cy="20" r="4.9" fill="currentColor"></circle><circle cx="20" cy="20" r="10.2" stroke="currentColor" stroke-width="2.2"></circle><circle cx="20" cy="20" r="15.6" stroke="currentColor" stroke-width="2.2" opacity="0.5"></circle></g></svg>',
+  practitioner: '<svg width="32" height="32" viewBox="0 0 40 40" fill="none" aria-hidden="true"><g filter="url(#paint-b)"><circle cx="10" cy="20" r="4.9" fill="currentColor"></circle><path d="M15 20h7.5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round"></path><circle cx="29.5" cy="20" r="5.1" stroke="currentColor" stroke-width="2.3"></circle></g></svg>',
+  community: '<svg width="32" height="32" viewBox="0 0 40 40" fill="none" aria-hidden="true"><g filter="url(#paint-a)"><circle cx="20" cy="12.6" r="5.1" fill="currentColor"></circle><circle cx="12.5" cy="26.3" r="5" fill="currentColor"></circle><circle cx="27.5" cy="25.7" r="4.8" fill="currentColor"></circle></g></svg>',
+  'self-guided': '<svg width="32" height="32" viewBox="0 0 40 40" fill="none" aria-hidden="true"><g filter="url(#paint-b)"><path d="M11 28.5C16.5 23.5 22.5 26 28 12.5" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-dasharray="0.1 5.8"></path><circle cx="11" cy="28.5" r="4.9" fill="currentColor"></circle><circle cx="28.8" cy="12" r="3" stroke="currentColor" stroke-width="2.3"></circle></g></svg>',
+};
+
+const rowClass = featured
+  ? 'flex items-center gap-4 md:gap-[22px] p-5 md:p-[26px] rounded-[14px]'
+  : 'way-row flex items-center gap-4 md:gap-[22px] px-5 py-5 md:px-8 md:py-[26px] rounded-[14px] hover:bg-row-hover transition-colors duration-150';
+const tileClass = featured ? 'bg-primary text-white' : 'bg-primary-light text-primary';
+const titleClass = featured ? 'text-[21px] md:text-[25px] text-gp-deep' : 'text-[20px] md:text-[24px] text-heading';
+const bodyClass = featured ? 'text-gp-body' : 'text-body';
+---
+
+{featured ? (
+  <div class="bg-primary-light rounded-[18px] p-1.5">
+    <a href={href} class={rowClass}>
+      <span class={`inline-flex items-center justify-center w-12 h-12 md:w-[60px] md:h-[60px] rounded-[14px] md:rounded-[17px] shrink-0 ${tileClass}`}>
+        <Fragment set:html={iconSvg[icon]} />
+      </span>
+      <span class="flex-1 min-w-0">
+        {kicker && <span class="block text-[11.5px] font-semibold uppercase tracking-[0.08em] text-primary mb-[5px]">{kicker}</span>}
+        <h3 class={`font-display font-semibold tracking-[-0.01em] leading-snug ${titleClass}`}>{title}</h3>
+        <p class={`text-base md:text-[17px] leading-[1.5] mt-1.5 ${bodyClass}`}>{body}</p>
+      </span>
+      <span class="hidden sm:block shrink-0 text-primary" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+      </span>
+    </a>
+  </div>
+) : (
+  <a href={href} class={rowClass}>
+    <span class={`inline-flex items-center justify-center w-12 h-12 md:w-[60px] md:h-[60px] rounded-[14px] md:rounded-[17px] shrink-0 ${tileClass}`}>
+      <Fragment set:html={iconSvg[icon]} />
+    </span>
+    <span class="flex-1 min-w-0">
+      <h3 class={`font-display font-semibold tracking-[-0.01em] leading-snug ${titleClass}`}>{title}</h3>
+      <p class={`text-base md:text-[17px] leading-[1.5] mt-1.5 ${bodyClass}`}>{body}</p>
+    </span>
+    <span class="hidden sm:block shrink-0 text-primary" aria-hidden="true">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+    </span>
+  </a>
+)}

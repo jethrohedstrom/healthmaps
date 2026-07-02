@@ -1,4 +1,4 @@
-// Tap-anywhere-to-toggle for pathway cards (PathwayCardVisual + PathwayCardGPProgressive).
+// Tap-anywhere-to-toggle for pathway cards (PathwayCardVisual).
 
 const INIT_KEY = '__pathwayCardClickInit';
 
