@@ -109,7 +109,7 @@ const renderedEvents = labeledEvents.map((ev) => {
             x2={W - PAD_X}
             y1={ZONE_BASELINE_Y}
             y2={ZONE_BASELINE_Y}
-            stroke="var(--color-border-soft, var(--color-border))"
+            stroke="color-mix(in srgb, var(--color-ink-green) 14%, transparent)"
             stroke-width="1"
             aria-hidden="true"
           />
@@ -122,7 +122,7 @@ const renderedEvents = labeledEvents.map((ev) => {
                 x2={x}
                 y1={ZONE_TICK_TOP_Y}
                 y2={ZONE_BASELINE_Y}
-                stroke="var(--color-border-soft, var(--color-border))"
+                stroke="color-mix(in srgb, var(--color-ink-green) 14%, transparent)"
                 stroke-width="1"
                 aria-hidden="true"
               />
@@ -133,7 +133,7 @@ const renderedEvents = labeledEvents.map((ev) => {
         <g data-layer="knockouts" />
 
         <g data-layer="markers">
-          <circle cx={todayX} cy={todayY} r="9" fill="var(--color-bg-light)" />
+          <circle cx={todayX} cy={todayY} r="9" fill="var(--winding-path-surface)" />
           <circle
             cx={todayX}
             cy={todayY}
@@ -144,7 +144,7 @@ const renderedEvents = labeledEvents.map((ev) => {
           />
           {renderedEvents.map((ev) => (
             <>
-              <circle cx={ev.x} cy={ev.y} r="11" fill="var(--color-bg-light)" />
+              <circle cx={ev.x} cy={ev.y} r="11" fill="var(--winding-path-surface)" />
               <circle cx={ev.x} cy={ev.y} r="7" fill="var(--color-primary)" />
             </>
           ))}
@@ -234,7 +234,7 @@ const renderedEvents = labeledEvents.map((ev) => {
       rect.setAttribute('width', String(bb.width + 6));
       rect.setAttribute('height', String(bb.height + 2));
       rect.setAttribute('rx', '2');
-      rect.setAttribute('fill', 'var(--color-bg-light)');
+      rect.setAttribute('fill', 'var(--winding-path-surface)');
       rect.setAttribute('data-knockout-bg', '');
       knockoutLayer.appendChild(rect);
     });
@@ -243,9 +243,12 @@ const renderedEvents = labeledEvents.map((ev) => {
 
 <style>
   .winding-path-wrap {
-    background: var(--color-bg-light);
+    /* Panel surface, referenced by the SVG halo circles and JS-built label
+       knockout rects so they always match the background exactly. */
+    --winding-path-surface: var(--color-page-sage);
+    background: var(--winding-path-surface);
     padding: 22px 22px 14px;
-    border-radius: 8px;
+    border-radius: 14px;
     flex-basis: 100%;
   }
   .winding-path-inner {
@@ -256,7 +259,7 @@ const renderedEvents = labeledEvents.map((ev) => {
     font-size: 11px;
     font-weight: 600;
     letter-spacing: 0.08em;
-    color: var(--color-body);
+    color: var(--color-meta-sage);
     text-transform: uppercase;
     margin-bottom: 6px;
     text-align: center;

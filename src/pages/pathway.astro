@@ -50,6 +50,14 @@ for (const way of ways) {
   title="How to Access Mental Health Support"
   description="Ways to start with mental health support in Australia: through your GP, a private practitioner, a free or community service, self-guided tools, or crisis support."
 >
+  <!-- Wobble filters for the way icons (referenced by id from both the
+       "All the ways" rows and the detail cards; defined once per page) -->
+  <svg width="0" height="0" class="absolute" aria-hidden="true"><defs>
+    <filter id="paint-a" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.115" numOctaves="3" seed="4" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
+    <filter id="paint-b" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.11" numOctaves="2" seed="11" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
+    <filter id="paint-c" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.1" numOctaves="2" seed="19" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="2.1" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
+  </defs></svg>
+
   <!-- Hero: quiz-forward, on the sage page background -->
   <section class="px-5 md:px-14 py-16 md:py-20">
     <div class="max-w-[680px] mx-auto text-center">
@@ -64,13 +72,6 @@ for (const way of ways) {
 
   <section id="all-the-ways" class="scroll-mt-24 bg-paper-cream px-5 md:px-14">
     <div class="max-w-[900px] mx-auto pt-16 md:pt-[76px] pb-16 md:pb-[84px]">
-      <!-- Wobble filters for the WayRow icons (referenced by id, defined once per page) -->
-      <svg width="0" height="0" class="absolute" aria-hidden="true"><defs>
-        <filter id="paint-a" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.115" numOctaves="3" seed="4" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
-        <filter id="paint-b" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.11" numOctaves="2" seed="11" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
-        <filter id="paint-c" x="-60%" y="-60%" width="220%" height="220%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency="0.1" numOctaves="2" seed="19" result="n"></feTurbulence><feDisplacementMap in="SourceGraphic" in2="n" scale="2.1" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap></filter>
-      </defs></svg>
-
       <p class="text-[13px] font-semibold uppercase tracking-[0.13em] text-primary">Or choose for yourself</p>
       <h2 class="font-display font-semibold text-[28px] md:text-[34px] tracking-[-0.02em] text-heading mt-3">All the ways</h2>
       <p class="text-lg leading-[1.55] text-body max-w-[560px] mt-3">
@@ -96,45 +97,57 @@ for (const way of ways) {
     </div>
   </section>
 
-  <section id="pathways" class="scroll-mt-24">
-    <div class="max-w-[1240px] mx-auto px-5 md:px-10 lg:px-14 py-16 md:py-24">
-      <div class="max-w-card mx-auto mb-8">
-        <p class="text-sm uppercase tracking-widest text-body font-semibold mb-3">In detail</p>
-        <h2 class="font-display font-bold text-2xl md:text-3xl text-heading">How each way works</h2>
+  <section id="pathways" class="scroll-mt-24 px-5 md:px-14">
+    <div class="max-w-[900px] mx-auto py-16 md:py-24">
+      <div class="mb-10">
+        <p class="text-[13px] font-semibold uppercase tracking-[0.13em] text-primary">In detail</p>
+        <h2 class="font-display font-semibold text-[28px] md:text-[34px] tracking-[-0.02em] text-heading mt-3">How each way works</h2>
       </div>
 
-      <div class="pathway-grid flex flex-col gap-6 lg:gap-8 max-w-card mx-auto">
-        {liveCards.map((card) => (
-          <PathwayCardVisual {...card} />
+      <div class="pathway-grid flex flex-col gap-3 lg:gap-4">
+        {liveCards.map((card, index) => (
+          <>
+            <PathwayCardVisual {...card} featured={card.id === 'through-gp'} />
+            {index < liveCards.length - 1 && (
+              <!-- Route connector (echoes the quiz card + "All the ways" motif).
+                   ml-[56px] centres the dots (w-3) on the icon-tile axis: 32px card
+                   padding + half the 60px tile = 62px. -->
+              <div class="hidden md:flex flex-col items-center gap-[5px] w-3 ml-[56px]" aria-hidden="true">
+                <span class="w-1 h-1 rounded-full bg-primary opacity-35"></span>
+                <span class="w-1 h-1 rounded-full bg-primary opacity-35"></span>
+                <span class="w-1 h-1 rounded-full bg-primary opacity-35"></span>
+              </div>
+            )}
+          </>
         ))}
       </div>
 
       <!-- REVIEW: Crisis section copy mirrors verified crisis support content from src/content/alternatives/crisis.md. -->
-      <section id="crisis" tabindex="-1" class="scroll-mt-24 mt-6 lg:mt-8 max-w-card mx-auto rounded-xl border border-accent-red/20 border-l-4 border-l-accent-red bg-accent-red-light p-6 md:p-8 shadow-sm">
-        <p class="text-xs font-semibold uppercase tracking-widest text-accent-red mb-2">Immediate help</p>
-        <h2 class="text-xl md:text-2xl font-bold text-heading leading-snug mb-3">Crisis support</h2>
+      <section id="crisis" tabindex="-1" class="scroll-mt-24 mt-6 lg:mt-8 rounded-[18px] bg-accent-red-wash border border-accent-red-soft/25 border-l-4 border-l-accent-red-soft p-6 md:p-8">
+        <p class="text-xs font-semibold uppercase tracking-[0.08em] text-accent-red-soft mb-2">Immediate help</p>
+        <h2 class="font-display font-semibold text-xl md:text-2xl tracking-[-0.01em] text-heading leading-snug mb-3">Crisis support</h2>
         <p class="text-base leading-relaxed text-body mb-5">
           If you or someone else is in immediate danger, call <a href="tel:000" class="text-primary font-semibold underline underline-offset-2">000</a>. If you need to talk to someone now, these services are free and confidential.
         </p>
         <div class="grid gap-3 md:grid-cols-2">
-          <a href="tel:131114" class="rounded-lg bg-white px-4 py-3 text-heading font-semibold border border-border hover:border-primary">
+          <a href="tel:131114" class="rounded-[10px] bg-white px-4 py-3 min-h-11 flex items-center text-heading font-semibold border border-accent-red-soft/20 hover:border-accent-red-soft transition-colors duration-150">
             Lifeline: 13 11 14
           </a>
-          <a href="tel:1300224636" class="rounded-lg bg-white px-4 py-3 text-heading font-semibold border border-border hover:border-primary">
+          <a href="tel:1300224636" class="rounded-[10px] bg-white px-4 py-3 min-h-11 flex items-center text-heading font-semibold border border-accent-red-soft/20 hover:border-accent-red-soft transition-colors duration-150">
             Beyond Blue: 1300 22 4636
           </a>
-          <a href="tel:1300659467" class="rounded-lg bg-white px-4 py-3 text-heading font-semibold border border-border hover:border-primary">
+          <a href="tel:1300659467" class="rounded-[10px] bg-white px-4 py-3 min-h-11 flex items-center text-heading font-semibold border border-accent-red-soft/20 hover:border-accent-red-soft transition-colors duration-150">
             Suicide Call Back Service: 1300 659 467
           </a>
-          <a href="tel:139276" class="rounded-lg bg-white px-4 py-3 text-heading font-semibold border border-border hover:border-primary">
+          <a href="tel:139276" class="rounded-[10px] bg-white px-4 py-3 min-h-11 flex items-center text-heading font-semibold border border-accent-red-soft/20 hover:border-accent-red-soft transition-colors duration-150">
             13YARN: 13 92 76
           </a>
         </div>
       </section>
 
-      <aside class="mt-8 max-w-3xl mx-auto rounded-xl bg-bg-light p-6 md:p-8">
-        <p class="uppercase tracking-widest text-xs text-body mb-2 font-semibold">Also worth knowing</p>
-        <h2 class="text-lg font-bold text-heading mb-2">NDIS-funded mental health support</h2>
+      <aside class="mt-8 rounded-[14px] bg-paper-cream border border-ink-green/10 p-6 md:p-8">
+        <p class="text-[11.5px] font-semibold uppercase tracking-[0.08em] text-meta-sage mb-2">Also worth knowing</p>
+        <h2 class="font-display font-semibold text-lg text-heading mb-2">NDIS-funded mental health support</h2>
         <p class="text-body leading-relaxed">
           If you have a severe, long-term mental health condition (psychosocial disability) that substantially affects your daily life, you may be eligible for NDIS-funded support.
           <a href="https://www.ndis.gov.au/understanding/how-ndis-works/mental-health-and-ndis" target="_blank" rel="noopener noreferrer" class="text-primary font-semibold underline underline-offset-2">Learn about NDIS mental health support</a>.

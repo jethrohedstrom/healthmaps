@@ -1,51 +1,71 @@
 ---
 import StepByStep from './StepByStep.astro';
 import PathwayTimeHorizon from './PathwayTimeHorizon.astro';
+import { wayIconSvg, cardIconToWayIcon } from './way-icons';
 import type { PathwayCard } from '../data/pathway-cards';
 
-interface Props extends PathwayCard {}
+interface Props extends PathwayCard {
+  /** Presentational: primary-light frame + solid green icon tile (GP card),
+   *  mirroring the featured WayRow in "All the ways". */
+  featured?: boolean;
+}
 
-const { id, title, bestFor, badge, oneLiner, isCrisis, facts, steps, timeHorizon, progressive, legacyStepHash } = Astro.props;
+const { id, title, bestFor, badge, oneLiner, facts, steps, timeHorizon, progressive, legacyStepHash, featured = false } = Astro.props;
 
-const bgClass = isCrisis ? 'bg-primary-light' : 'bg-white';
+const wayIcon = cardIconToWayIcon[Astro.props.icon];
+const tileClass = featured ? 'bg-primary text-white' : 'bg-primary-light text-primary';
+// Featured card trims its padding by the wrapper's 6px (p-1.5) so its icon tile
+// sits on the same vertical axis as the plain cards' (mirrors WayRow).
+const padClass = featured ? 'p-[14px] md:p-[26px]' : 'p-5 md:p-8';
 ---
 
-<div id={id} data-pathway-card data-progressive-card={progressive ? '' : undefined} data-legacy-step-hash={legacyStepHash ? '' : undefined} class={`pathway-card-clickable scroll-mt-24 rounded-xl border border-border shadow-sm ${bgClass} p-6 md:p-8 flex flex-col`}>
+{/* Featured wrapper is purely visual — id and data-* hooks must stay on the
+    inner card div (pathway-card-click.ts and pathway-progressive-steps.ts
+    bind to them). `contents` keeps plain cards layout-identical. */}
+<div class={featured ? 'bg-primary-light rounded-[22px] p-1.5' : 'contents'}>
+<div id={id} data-pathway-card data-progressive-card={progressive ? '' : undefined} data-legacy-step-hash={legacyStepHash ? '' : undefined} class={`pathway-card-clickable scroll-mt-24 rounded-[18px] border border-ink-green/16 bg-paper-cream ${padClass} flex flex-col`}>
   <div class="pathway-card-inner flex flex-col">
-  {/* Badge + Title */}
-  <div class="mb-3">
-    {badge && (
-      <p class="text-xs font-semibold uppercase tracking-widest text-body mb-2">{badge}</p>
+  {/* Header row: icon tile + kicker + title (echoes WayRow anatomy) */}
+  <div class="flex items-center gap-4 md:gap-[22px] mb-4">
+    {wayIcon && (
+      <span class={`inline-flex items-center justify-center w-12 h-12 md:w-[60px] md:h-[60px] rounded-[14px] md:rounded-[17px] shrink-0 ${tileClass}`}>
+        <Fragment set:html={wayIconSvg[wayIcon]} />
+      </span>
     )}
-    <h2 class="text-xl md:text-2xl font-bold text-heading leading-snug">{title}</h2>
+    <div class="min-w-0">
+      {badge && (
+        <p class="text-[11.5px] font-semibold uppercase tracking-[0.08em] text-primary mb-[5px]">{badge}</p>
+      )}
+      <h2 class="font-display font-semibold text-[20px] md:text-[24px] tracking-[-0.01em] leading-snug text-heading">{title}</h2>
+    </div>
   </div>
 
   {/* Progressive disclosure: one-liner, metadata, and steps hidden by default */}
   <details class="pathway-details-toggle">
-    <summary class="inline-flex items-center text-sm font-semibold text-primary cursor-pointer select-none hover:text-primary-mid transition-colors">
+    <summary class="inline-flex items-center text-sm font-semibold text-primary cursor-pointer select-none hover:text-primary-dark transition-colors duration-150">
       <span class="sr-only">{title}: </span>
       <span class="pathway-label-show">Show details</span>
       <span class="pathway-label-hide">Hide details</span>
     </summary>
     <div class="pathway-l1-body mt-5">
-      <p class="text-base leading-relaxed text-body mb-5">{oneLiner}</p>
-      <dl class="pathway-facts text-sm border-y border-border divide-y divide-border mb-4">
+      <p class="text-base md:text-[17px] leading-[1.5] text-body mb-5">{oneLiner}</p>
+      <dl class="pathway-facts text-sm border-y border-ink-green/12 divide-y divide-ink-green/12 mb-4">
         <div class="flex justify-between gap-4 py-2.5">
-          <dt class="text-body">Cost</dt>
+          <dt class="text-meta-sage">Cost</dt>
           <dd class="font-semibold text-heading text-right">{facts.cost}</dd>
         </div>
         <div class="flex justify-between gap-4 py-2.5">
-          <dt class="text-body">Sessions</dt>
+          <dt class="text-meta-sage">Sessions</dt>
           <dd class="font-semibold text-heading text-right">{facts.sessions ?? 'Varies'}</dd>
         </div>
       </dl>
       <div class="mb-5">
         <PathwayTimeHorizon events={timeHorizon?.events} />
       </div>
-      <p class="text-sm text-body/80 mb-6">{bestFor}</p>
+      <p class="text-sm text-meta-sage mb-6">{bestFor}</p>
       {progressive ? (
         <details class="pathway-details-toggle pathway-details-toggle--nested">
-          <summary class="inline-flex items-center text-sm font-semibold text-primary cursor-pointer select-none hover:text-primary-mid transition-colors">
+          <summary class="inline-flex items-center text-sm font-semibold text-primary cursor-pointer select-none hover:text-primary-dark transition-colors duration-150">
             <span class="sr-only">{title}: </span>
             <span class="pathway-label-show">How does this work?</span>
             <span class="pathway-label-hide">Hide steps</span>
@@ -63,12 +83,12 @@ const bgClass = isCrisis ? 'bg-primary-light' : 'bg-white';
               </li>
             ))}
           </ol>
-          <div class="pathway-gp-progress mt-5 pt-4 border-t border-border">
-            <p class="text-xs text-body mb-2" id={`${id}-progress-label`} data-progress-label>
+          <div class="pathway-gp-progress mt-5 pt-4 border-t border-ink-green/12">
+            <p class="text-xs text-meta-sage mb-2" id={`${id}-progress-label`} data-progress-label>
               Step 1 of {steps.length}
             </p>
             <div
-              class="pathway-gp-progress-track h-1.5 rounded-full bg-bg-light overflow-hidden"
+              class="pathway-gp-progress-track h-1.5 rounded-full bg-primary-light overflow-hidden"
               role="progressbar"
               aria-valuemin="1"
               aria-valuemax={steps.length}
@@ -91,6 +111,7 @@ const bgClass = isCrisis ? 'bg-primary-light' : 'bg-white';
     </div>
   </details>
   </div>
+</div>
 </div>
 
 <script>

@@ -324,14 +324,15 @@ details[open] > summary::after {
   box-sizing: border-box;
 }
 
-/* Make whole pathway card clickable to toggle expansion */
+/* Make whole pathway card clickable to toggle expansion.
+   Flat 6a language: hover deepens the hairline border, no shadow/lift. */
 .pathway-card-clickable {
   cursor: pointer;
-  transition: box-shadow 0.2s ease, transform 0.1s ease;
+  transition: border-color 150ms ease, transform 0.1s ease;
 }
 @media (hover: hover) {
   .pathway-card-clickable:hover {
-    box-shadow: var(--shadow-hover);
+    border-color: color-mix(in srgb, var(--color-ink-green) 30%, transparent);
   }
 }
 .pathway-card-clickable:active {
@@ -343,35 +344,21 @@ details[open] > summary::after {
    accordion is open. The `> details[open]` direct-child match targets only the
    card's top-level accordion, not the nested progressive steps inside it. */
 @media (min-width: 768px) {
-  /* On a full-width expanded card, centre the content as a readable column
+  /* On a full-width expanded card, cap the content as a readable column
      (720px = design-system body-text width) rather than letting it stretch to
-     the full ~960px card width or cling to the left edge. The timeline infographic is centre-anchored
-     by design, so the rest of the content is centred too — title, intro, facts
-     and "best for" all share the timeline's axis for a cohesive feature card.
+     the full card width. Left-aligned to match the 6a design language (quiz
+     card + "All the ways" rows are all left-aligned).
      Scoped to expanded + desktop, so collapsed/mobile cards are untouched. */
-  .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) > .pathway-card-inner {
+  /* Cards sit inside a per-card wrapper div (featured frame, or display:contents),
+     hence the `> div >` hop. */
+  .pathway-grid > div > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) > .pathway-card-inner {
     max-width: 45rem; /* 720px — matches .claude/rules/spacing.md body-text cap */
     width: 100%;
     margin-inline: auto;
-    text-align: center;
   }
   /* Cap the cost/sessions facts list to a readable width above the timeline. */
-  .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) .pathway-l1-body > .pathway-facts {
+  .pathway-grid > div > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) .pathway-l1-body > .pathway-facts {
     max-width: 28rem;
-    margin-inline: auto;
-  }
-  /* Keep the numbered step list left-aligned for readability. */
-  .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) .pathway-step-accordions,
-  .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) .pathway-step-detail {
-    text-align: left;
-  }
-  /* Centre the nested "How does this work?" / "Hide steps" toggle. It is a
-     full-width flex row by default (touch target) which can't be centred by
-     text-align; make it content-width inline-flex like the top toggle so it
-     centres, chevron tucked in beside the label. Mobile keeps the full-width row. */
-  .pathway-grid > .pathway-card-clickable:has(> .pathway-card-inner > details.pathway-details-toggle[open]) .pathway-details-toggle--nested > summary {
-    display: inline-flex;
-    width: auto;
   }
 }
 
@@ -398,10 +385,10 @@ details[open] > summary::after {
   list-style: none;
   padding: 0;
   margin: 0;
-  border-top: 1px solid var(--color-border);
+  border-top: 1px solid color-mix(in srgb, var(--color-ink-green) 12%, transparent);
 }
 .pathway-step-accordions > li {
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-ink-green) 12%, transparent);
 }
 .pathway-step-item > summary {
   display: flex;
@@ -411,28 +398,30 @@ details[open] > summary::after {
   cursor: pointer;
   user-select: none;
 }
+/* Flat stop-dot (route motif): light green tile when closed, filled
+   terminus green when the step is open. */
 .pathway-step-number {
   flex-shrink: 0;
   width: 2rem;
   height: 2rem;
   border-radius: 9999px;
-  border: 2px solid var(--color-border);
-  background: white;
-  color: var(--color-body);
-  font-weight: 700;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-weight: 600;
   font-size: 0.875rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+  transition: color 0.2s ease, background-color 0.2s ease;
 }
 .pathway-step-item[open] .pathway-step-number {
-  border-color: var(--color-primary);
-  background: var(--color-primary-light);
-  color: var(--color-primary);
+  background: var(--color-primary);
+  color: white;
 }
 .pathway-step-title {
+  font-family: var(--font-display);
   font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--color-heading);
   line-height: 1.4;
 }
