@@ -17,7 +17,7 @@
           class="bm-map-svg"
           viewBox="0 0 700 540"
           data-viewbox-full="0 66 700 474"
-          data-viewbox-mobile="80 40 560 500"
+          data-viewbox-mobile="95 50 515 930"
           xmlns="http://www.w3.org/2000/svg"
           role="img"
           aria-label="Interactive map of mental health professionals in Australia. Tap a bubble to learn more."
@@ -50,27 +50,48 @@
               data-prof="gp" />
           </g>
 
-          {/* Secondary blobs: NO goo filter to avoid ugly long-distance connections */}
+          {/* Secondary blobs: NO goo filter to avoid ugly long-distance connections.
+              Each practitioner is one .bm-extra group (ellipse + its labels) so the
+              mobile layout can reposition/enlarge bubble and text together with a
+              single CSS transform — no JS needed for a correct mobile fit. */}
           <g class="bm-enter bm-enter-extra" id="extra-blobs-bm">
-            <ellipse class="bm-blob" cx="490" cy="410" rx="80" ry="72"
-              fill="#c27a4a" opacity="1.0"
-              data-prof="social-worker" />
+            <g class="bm-extra" data-prof="social-worker">
+              <ellipse class="bm-blob" cx="490" cy="410" rx="80" ry="72"
+                fill="#c27a4a" opacity="1.0"
+                data-prof="social-worker" />
+              <text x="490" y="405" class="bm-blob-label" font-size="12" text-anchor="middle" data-prof="social-worker">Social Worker</text>
+              <text x="490" y="423" class="bm-blob-sub" font-size="9" text-anchor="middle" data-prof="social-worker">systems &amp; support</text>
+            </g>
 
-            <ellipse class="bm-blob" cx="600" cy="300" rx="70" ry="65"
-              fill="#b5894a" opacity="1.0"
-              data-prof="ot" />
+            <g class="bm-extra" data-prof="ot">
+              <ellipse class="bm-blob" cx="600" cy="300" rx="70" ry="65"
+                fill="#b5894a" opacity="1.0"
+                data-prof="ot" />
+              <text x="600" y="288" class="bm-blob-label" font-size="9" text-anchor="middle" data-prof="ot">Mental Health</text>
+              <text x="600" y="304" class="bm-blob-label" font-size="9" text-anchor="middle" data-prof="ot">OT</text>
+              <text x="600" y="320" class="bm-blob-sub" font-size="8" text-anchor="middle" data-prof="ot">rebuild routines</text>
+            </g>
 
-            <ellipse class="bm-blob" cx="100" cy="290" rx="58" ry="54"
-              fill="#c25a6a" opacity="1.0"
-              data-prof="mh-nurse" />
+            <g class="bm-extra" data-prof="mh-nurse">
+              <ellipse class="bm-blob" cx="100" cy="290" rx="58" ry="54"
+                fill="#c25a6a" opacity="1.0"
+                data-prof="mh-nurse" />
+              <text x="100" y="280" class="bm-blob-label" font-size="9" text-anchor="middle" data-prof="mh-nurse">Mental Health</text>
+              <text x="100" y="294" class="bm-blob-label" font-size="9" text-anchor="middle" data-prof="mh-nurse">Nurse</text>
+              <text x="100" y="308" class="bm-blob-sub" font-size="8" text-anchor="middle" data-prof="mh-nurse">clinical care</text>
+            </g>
 
-            <ellipse class="bm-blob" cx="640" cy="480" rx="48" ry="45"
-              fill="#8a8a8a" opacity="1.0"
-              data-prof="peer" />
+            <g class="bm-extra" data-prof="peer">
+              <ellipse class="bm-blob" cx="640" cy="480" rx="48" ry="45"
+                fill="#8a8a8a" opacity="1.0"
+                data-prof="peer" />
+              <text x="640" y="474" class="bm-blob-label" font-size="10" text-anchor="middle" data-prof="peer">Peer</text>
+              <text x="640" y="490" class="bm-blob-label" font-size="10" text-anchor="middle" data-prof="peer">Worker</text>
+            </g>
           </g>
 
           {/* Core labels: positioned to match blob centres */}
-          <g class="bm-enter bm-enter-core">
+          <g class="bm-enter bm-enter-core bm-core-labels">
             <text x="230" y="168" class="bm-blob-label" font-size="15" text-anchor="middle" data-prof="psychologist">Psychologist</text>
             <text x="230" y="186" class="bm-blob-sub" font-size="10" text-anchor="middle" data-prof="psychologist">structured therapy</text>
 
@@ -84,22 +105,6 @@
             <text x="350" y="282" class="bm-blob-sub" font-size="11" text-anchor="middle" data-prof="gp">start here</text>
           </g>
 
-          {/* Secondary labels */}
-          <g class="bm-enter bm-enter-extra" id="extra-labels-bm">
-            <text x="490" y="405" class="bm-blob-label" font-size="12" text-anchor="middle" data-prof="social-worker">Social Worker</text>
-            <text x="490" y="423" class="bm-blob-sub" font-size="9" text-anchor="middle" data-prof="social-worker">systems &amp; support</text>
-
-            <text x="600" y="288" class="bm-blob-label" font-size="9" text-anchor="middle" data-prof="ot">Mental Health</text>
-            <text x="600" y="304" class="bm-blob-label" font-size="9" text-anchor="middle" data-prof="ot">OT</text>
-            <text x="600" y="320" class="bm-blob-sub" font-size="8" text-anchor="middle" data-prof="ot">rebuild routines</text>
-
-            <text x="100" y="280" class="bm-blob-label" font-size="9" text-anchor="middle" data-prof="mh-nurse">Mental Health</text>
-            <text x="100" y="294" class="bm-blob-label" font-size="9" text-anchor="middle" data-prof="mh-nurse">Nurse</text>
-            <text x="100" y="308" class="bm-blob-sub" font-size="8" text-anchor="middle" data-prof="mh-nurse">clinical care</text>
-
-            <text x="640" y="474" class="bm-blob-label" font-size="10" text-anchor="middle" data-prof="peer">Peer</text>
-            <text x="640" y="490" class="bm-blob-label" font-size="10" text-anchor="middle" data-prof="peer">Worker</text>
-          </g>
         </svg>
         <div class="bm-popover" id="bm-popover" role="dialog" aria-label="Practitioner details"></div>
         <div class="bm-popover-backdrop" id="bm-popover-backdrop"></div>
@@ -115,8 +120,12 @@
       if (!(node instanceof SVGSVGElement)) return;
       const fullViewBox = node.getAttribute('data-viewbox-full') || '0 0 700 540';
       const mobileViewBox = node.getAttribute('data-viewbox-mobile') || fullViewBox;
-      const initialViewBox = window.matchMedia(mobileQuery).matches ? mobileViewBox : fullViewBox;
-      node.setAttribute('viewBox', initialViewBox);
+      const isMobile = window.matchMedia(mobileQuery).matches;
+      node.setAttribute('viewBox', isMobile ? mobileViewBox : fullViewBox);
+      // bm-vb-mobile gates the mobile geometry CSS (.bm-extra transforms, fonts,
+      // aspect-ratio) so it switches atomically with the viewBox, pre-paint.
+      // Kept in sync by updateViewBox() in practitioner-bubble-map.ts on resize.
+      node.classList.toggle('bm-vb-mobile', isMobile);
     });
   })();
 </script>
@@ -211,10 +220,32 @@
     display: block;
   }
 
-  @media (max-width: 767px) {
-    .bubble-map .bm-map-svg {
-      aspect-ratio: 560 / 500;
-    }
+  /* Mobile layout is gated on .bm-vb-mobile (set by the inline script with the
+     viewBox, synced on resize by updateViewBox() in practitioner-bubble-map.ts)
+     rather than a media query, so geometry and viewBox can never disagree. */
+  .bubble-map .bm-map-svg.bm-vb-mobile {
+    aspect-ratio: 515 / 930;
+  }
+
+  /* Mobile: portrait arrangement. Core goo cluster stays put at the top; each
+     secondary practitioner group is moved below it and enlarged so its label
+     is legible. translate/scale in SVG user units (px == user unit here;
+     CSS transforms silently drop unitless values). */
+  .bubble-map .bm-map-svg .bm-extra {
+    transform-box: view-box;
+    transform-origin: 0 0;
+  }
+  .bubble-map .bm-map-svg.bm-vb-mobile .bm-extra[data-prof="mh-nurse"] {
+    transform: translate(42px, 132px) scale(1.7);
+  }
+  .bubble-map .bm-map-svg.bm-vb-mobile .bm-extra[data-prof="social-worker"] {
+    transform: translate(-186.5px, 106.5px) scale(1.35);
+  }
+  .bubble-map .bm-map-svg.bm-vb-mobile .bm-extra[data-prof="ot"] {
+    transform: translate(-780px, 340px) scale(1.7);
+  }
+  .bubble-map .bm-map-svg.bm-vb-mobile .bm-extra[data-prof="peer"] {
+    transform: translate(-502px, 131px) scale(1.55);
   }
 
   @keyframes bm-pulse {
@@ -751,16 +782,8 @@
     }
   }
 
-  /* Mobile: bump SVG text sizes for legibility */
-  @media (max-width: 767px) {
-    .bubble-map .bm-blob-label { font-size: 24px; }
-    .bubble-map .bm-blob-sub { font-size: 17px; }
-    #extra-labels-bm .bm-blob-label { font-size: 13px; }
-    #extra-labels-bm .bm-blob-sub { font-size: 11px; }
-    /* MH Nurse needs a tighter fit at this radius */
-    #extra-labels-bm [data-prof="mh-nurse"].bm-blob-label { font-size: 11px; }
-    #extra-labels-bm [data-prof="mh-nurse"].bm-blob-sub { font-size: 10px; }
-    .bubble-map [data-prof="mh-nurse"].bm-blob-label { font-size: 11px; }
-    .bubble-map [data-prof="mh-nurse"].bm-blob-sub { font-size: 10px; }
-  }
+  /* Mobile: bump core-cluster text for legibility. Secondary (.bm-extra) labels
+     keep their attribute sizes — the group scale enlarges them with the bubble. */
+  .bubble-map .bm-map-svg.bm-vb-mobile .bm-core-labels .bm-blob-label { font-size: 24px; }
+  .bubble-map .bm-map-svg.bm-vb-mobile .bm-core-labels .bm-blob-sub { font-size: 17px; }
 </style>

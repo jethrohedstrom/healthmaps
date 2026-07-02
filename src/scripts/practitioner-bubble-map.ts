@@ -316,39 +316,17 @@ const bmData = {
     return window.matchMedia(MOBILE_MEDIA_QUERY).matches;
   }
 
-  // --- Mobile blob repositioning ---
-  // Shift only edge hidden blobs inward when expanded to avoid clipping.
-  const mobileShifts: Record<string, number> = { 'mh-nurse': 50, 'ot': -50, 'peer': -80 };
-  const origX = new Map<Element, number>();
-
-  Object.keys(mobileShifts).forEach(function(prof) {
-    wrapper!.querySelectorAll('[data-prof="' + prof + '"]').forEach(function(el) {
-      const tag = el.tagName.toLowerCase();
-      const attr = tag === 'ellipse' ? 'cx' : 'x';
-      origX.set(el, parseFloat(el.getAttribute(attr) || '0'));
-    });
-  });
-
-  function repositionMobileBlobs() {
-    const mobile = isMobileViewport();
-    origX.forEach(function(origVal, el) {
-      const prof = el.getAttribute('data-prof') || '';
-      const shift = mobileShifts[prof] || 0;
-      const tag = el.tagName.toLowerCase();
-      const attr = tag === 'ellipse' ? 'cx' : 'x';
-      // Keep hidden blob coordinates stable across show/hide toggles on mobile.
-      // This avoids perceived lateral "movement" when only visibility changes.
-      el.setAttribute(attr, String(mobile ? origVal + shift : origVal));
-    });
-  }
-
   function updateViewBox() {
     if (!bmSvg) return;
-    const targetViewBox = isMobileViewport() ? MOBILE_VB : FULL_VB;
+    const mobile = isMobileViewport();
+    const targetViewBox = mobile ? MOBILE_VB : FULL_VB;
     if (bmSvg.getAttribute('viewBox') !== targetViewBox) {
       bmSvg.setAttribute('viewBox', targetViewBox);
     }
-    repositionMobileBlobs();
+    // bm-vb-mobile gates the mobile geometry CSS in PractitionerBubbleMap.astro;
+    // the component's inline script sets it pre-paint, this keeps it in sync
+    // when a resize crosses the mobile breakpoint.
+    bmSvg.classList.toggle('bm-vb-mobile', mobile);
   }
 
   const popover = document.getElementById('bm-popover') as HTMLElement;
