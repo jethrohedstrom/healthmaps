@@ -113,6 +113,11 @@ const questions: { question: string; answers: { label: string; scores: Record<st
 </script>
 
 <style>
+  /* Clears the sticky header (plus breathing room) when the quiz scrolls itself into view. */
+  [data-pathway-quiz] {
+    scroll-margin-top: 5.5rem;
+  }
+
   /* Guards [hidden] against any screen that gains a display class (e.g. flex). */
   .pathway-quiz-screen[hidden] {
     display: none;

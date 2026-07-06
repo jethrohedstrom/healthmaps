@@ -251,6 +251,13 @@ function jumpToHash(hash: string) {
   focusHashTarget(target);
 }
 
+function scrollQuizIntoView(root: HTMLElement) {
+  const rect = root.getBoundingClientRect();
+  const fullyVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
+  if (fullyVisible) return;
+  root.scrollIntoView({ block: 'start', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+}
+
 function goToCrisis(root?: HTMLElement) {
   clearState();
   if (root) showScreen(root, initialState(), false);
@@ -332,6 +339,7 @@ function initPathwayQuiz(root: HTMLElement) {
       writeState(state);
       announce(root, `Question 1 of ${TOTAL_QUESTIONS}.`);
       showScreen(root, state);
+      scrollQuizIntoView(root);
       return;
     }
 
