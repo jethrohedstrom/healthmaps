@@ -251,11 +251,67 @@ function jumpToHash(hash: string) {
   focusHashTarget(target);
 }
 
-function scrollQuizIntoView(root: HTMLElement) {
+function easeInOutCubic(progress: number) {
+  return progress < 0.5 ? 4 * progress ** 3 : 1 - (-2 * progress + 2) ** 3 / 2;
+}
+
+// Replicates scrollIntoView({ block: 'nearest' }) semantics, honouring the
+// root's scroll-margin. Returns null when no scrolling is needed.
+function computeNearestScrollTarget(root: HTMLElement): number | null {
   const rect = root.getBoundingClientRect();
-  const fullyVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
-  if (fullyVisible) return;
-  root.scrollIntoView({ block: 'nearest', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  const styles = getComputedStyle(root);
+  const marginTop = Number.parseFloat(styles.scrollMarginTop) || 0;
+  const marginBottom = Number.parseFloat(styles.scrollMarginBottom) || 0;
+
+  const top = rect.top - marginTop;
+  const bottom = rect.bottom + marginBottom;
+  if (top >= 0 && bottom <= window.innerHeight) return null;
+
+  if (bottom - top > window.innerHeight || top < 0) return window.scrollY + top;
+  return window.scrollY + bottom - window.innerHeight;
+}
+
+// A gentler scroll than the browser's native smooth behaviour. Frames scroll
+// with behavior: 'instant' so the html { scroll-behavior: smooth } rule in
+// global.css doesn't fight each step.
+function animateScrollTo(target: number) {
+  const start = window.scrollY;
+  const distance = target - start;
+  const duration = Math.min(800, Math.max(500, Math.abs(distance)));
+  const startTime = performance.now();
+  let frame = 0;
+
+  const stopListening = () => {
+    window.removeEventListener('wheel', cancel);
+    window.removeEventListener('touchstart', cancel);
+  };
+  const cancel = () => {
+    cancelAnimationFrame(frame);
+    stopListening();
+  };
+  window.addEventListener('wheel', cancel, { passive: true });
+  window.addEventListener('touchstart', cancel, { passive: true });
+
+  const step = (now: number) => {
+    const progress = Math.min(1, (now - startTime) / duration);
+    window.scrollTo({ top: start + distance * easeInOutCubic(progress), behavior: 'instant' });
+    if (progress < 1) {
+      frame = requestAnimationFrame(step);
+    } else {
+      stopListening();
+    }
+  };
+  frame = requestAnimationFrame(step);
+}
+
+function scrollQuizIntoView(root: HTMLElement) {
+  const target = computeNearestScrollTarget(root);
+  if (target === null) return;
+  if (prefersReducedMotion()) {
+    window.scrollTo({ top: target, behavior: 'instant' });
+    return;
+  }
+  animateScrollTo(target);
 }
 
 function goToCrisis(root?: HTMLElement) {
