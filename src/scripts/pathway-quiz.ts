@@ -1,6 +1,6 @@
 const QUIZ_ROOT_SELECTOR = '[data-pathway-quiz]';
-const STORAGE_KEY = 'healthmaps:pathway-quiz:v2';
-const STATE_VERSION = 2;
+const STORAGE_KEY = 'healthmaps:pathway-quiz:v3';
+const STATE_VERSION = 3;
 const TOTAL_QUESTIONS = 4;
 
 const scoredPathwayIds = ['through-gp', 'private', 'low-cost', 'self-guided'] as const;
@@ -13,7 +13,10 @@ interface QuizState {
   version: typeof STATE_VERSION;
   mode: QuizMode;
   questionIndex: number;
-  scores: Scores;
+  // Chosen answer index per answered question; scores are derived from these
+  // so Back can un-ask a question. Length: questionIndex in question mode,
+  // TOTAL_QUESTIONS in result mode.
+  answers: number[];
 }
 
 interface ResultContent {
@@ -71,7 +74,7 @@ function initialState(): QuizState {
     version: STATE_VERSION,
     mode: 'intro',
     questionIndex: 0,
-    scores: initialScores(),
+    answers: [],
   };
 }
 
@@ -79,23 +82,22 @@ function isScoredPathwayId(value: string): value is ScoredPathwayId {
   return scoredPathwayIds.includes(value as ScoredPathwayId);
 }
 
-function isScores(value: unknown): value is Scores {
-  if (!value || typeof value !== 'object') return false;
-  const maybeScores = value as Record<string, unknown>;
-  return scoredPathwayIds.every((id) => typeof maybeScores[id] === 'number');
-}
-
 function isQuizState(value: unknown): value is QuizState {
   if (!value || typeof value !== 'object') return false;
   const maybeState = value as Record<string, unknown>;
-  return (
-    maybeState.version === STATE_VERSION &&
-    (maybeState.mode === 'intro' || maybeState.mode === 'question' || maybeState.mode === 'result') &&
-    typeof maybeState.questionIndex === 'number' &&
-    maybeState.questionIndex >= 0 &&
-    maybeState.questionIndex < TOTAL_QUESTIONS &&
-    isScores(maybeState.scores)
-  );
+  if (
+    maybeState.version !== STATE_VERSION ||
+    (maybeState.mode !== 'intro' && maybeState.mode !== 'question' && maybeState.mode !== 'result') ||
+    typeof maybeState.questionIndex !== 'number' ||
+    maybeState.questionIndex < 0 ||
+    maybeState.questionIndex >= TOTAL_QUESTIONS ||
+    !Array.isArray(maybeState.answers) ||
+    !maybeState.answers.every((answer) => Number.isFinite(answer))
+  ) {
+    return false;
+  }
+  const expectedAnswers = maybeState.mode === 'result' ? TOTAL_QUESTIONS : maybeState.questionIndex;
+  return maybeState.answers.length === expectedAnswers;
 }
 
 function readState(): QuizState {
@@ -186,6 +188,19 @@ function addScores(current: Scores, weights: Scores): Scores {
   }, initialScores());
 }
 
+function getAnswerButtons(root: HTMLElement, questionIndex: number): HTMLButtonElement[] {
+  const screen = getScreen(root, 'question', questionIndex);
+  if (!screen) return [];
+  return Array.from(screen.querySelectorAll<HTMLButtonElement>('[data-quiz-answer]'));
+}
+
+function computeScores(root: HTMLElement, answers: number[]): Scores {
+  return answers.reduce<Scores>((scores, answerIndex, questionIndex) => {
+    const button = getAnswerButtons(root, questionIndex)[answerIndex];
+    return button ? addScores(scores, getWeights(button)) : scores;
+  }, initialScores());
+}
+
 function chooseResults(scores: Scores): [ScoredPathwayId, ScoredPathwayId] {
   const ranked = [...scoredPathwayIds].sort((a, b) => scores[b] - scores[a]);
   const primary = ranked[0] ?? 'through-gp';
@@ -194,7 +209,7 @@ function chooseResults(scores: Scores): [ScoredPathwayId, ScoredPathwayId] {
 }
 
 function renderResult(root: HTMLElement, state: QuizState) {
-  const [primary, runnerUp] = chooseResults(state.scores);
+  const [primary, runnerUp] = chooseResults(computeScores(root, state.answers));
   const primaryContent = resultContent[primary];
   const runnerUpContent = resultContent[runnerUp];
 
@@ -246,17 +261,42 @@ function handleAnswer(root: HTMLElement, button: HTMLButtonElement, state: QuizS
   const currentScreen = button.closest<HTMLElement>('[data-quiz-screen]');
   if (currentScreen) setScreenButtonsDisabled(currentScreen, true);
 
-  const nextScores = addScores(state.scores, getWeights(button));
+  const answerIndex = getAnswerButtons(root, state.questionIndex).indexOf(button);
   const isFinalQuestion = state.questionIndex >= TOTAL_QUESTIONS - 1;
   const nextState: QuizState = {
     version: STATE_VERSION,
     mode: isFinalQuestion ? 'result' : 'question',
     questionIndex: isFinalQuestion ? state.questionIndex : state.questionIndex + 1,
-    scores: nextScores,
+    answers: [...state.answers.slice(0, state.questionIndex), answerIndex],
   };
 
   writeState(nextState);
   announce(root, isFinalQuestion ? 'Showing your suggested starting point.' : `Question ${nextState.questionIndex + 1} of ${TOTAL_QUESTIONS}.`);
+  showScreen(root, nextState);
+  return nextState;
+}
+
+function handleBack(root: HTMLElement, state: QuizState): QuizState {
+  if (state.mode === 'intro') return state;
+
+  if (state.mode === 'question' && state.questionIndex === 0) {
+    clearState();
+    const nextState = initialState();
+    announce(root, 'Back to the start.');
+    showScreen(root, nextState);
+    return nextState;
+  }
+
+  const previousIndex = state.mode === 'result' ? TOTAL_QUESTIONS - 1 : state.questionIndex - 1;
+  const nextState: QuizState = {
+    version: STATE_VERSION,
+    mode: 'question',
+    questionIndex: previousIndex,
+    answers: state.answers.slice(0, previousIndex),
+  };
+
+  writeState(nextState);
+  announce(root, `Question ${previousIndex + 1} of ${TOTAL_QUESTIONS}.`);
   showScreen(root, nextState);
   return nextState;
 }
@@ -287,11 +327,17 @@ function initPathwayQuiz(root: HTMLElement) {
         version: STATE_VERSION,
         mode: 'question',
         questionIndex: 0,
-        scores: initialScores(),
+        answers: [],
       };
       writeState(state);
       announce(root, `Question 1 of ${TOTAL_QUESTIONS}.`);
       showScreen(root, state);
+      return;
+    }
+
+    const backButton = target.closest<HTMLButtonElement>('[data-quiz-back]');
+    if (backButton) {
+      state = handleBack(root, state);
       return;
     }
 

@@ -66,7 +66,10 @@ const questions: { question: string; answers: { label: string; scores: Record<st
 
   {questions.map(({ question, answers }, index) => (
     <div data-quiz-screen="question" data-question-index={index} class="pathway-quiz-screen pt-[30px] px-8 pb-8" hidden>
-      <p class="pathway-quiz-step-label">Question {index + 1} of {questions.length}</p>
+      <div class="pathway-quiz-step-row">
+        <p class="pathway-quiz-step-label">Question {index + 1} of {questions.length}</p>
+        <button type="button" data-quiz-back class="pathway-quiz-back-button">&larr; Back</button>
+      </div>
       <h2 tabindex="-1" data-quiz-heading class="pathway-quiz-heading mb-4">
         {question}
       </h2>
@@ -81,7 +84,10 @@ const questions: { question: string; answers: { label: string; scores: Record<st
   ))}
 
   <div data-quiz-screen="result" class="pathway-quiz-screen pt-[30px] px-8 pb-8" hidden>
-    <p class="pathway-quiz-step-label">Suggested starting point</p>
+    <div class="pathway-quiz-step-row">
+      <p class="pathway-quiz-step-label">Suggested starting point</p>
+      <button type="button" data-quiz-back class="pathway-quiz-back-button">&larr; Back</button>
+    </div>
     <h2 tabindex="-1" data-quiz-heading data-result-title class="pathway-quiz-heading mb-4">
       Your result
     </h2>
@@ -127,11 +133,28 @@ const questions: { question: string; answers: { label: string; scores: Record<st
     font-size: 26px;
   }
 
+  .pathway-quiz-step-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
   .pathway-quiz-step-label {
     font-size: 0.875rem;
     font-weight: 600;
     color: var(--color-primary);
-    margin-bottom: 0.75rem;
+  }
+
+  .pathway-quiz-back-button {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-body);
+  }
+
+  .pathway-quiz-back-button:hover {
+    color: var(--color-heading);
   }
 
   .pathway-quiz-answer-list {
@@ -165,7 +188,8 @@ const questions: { question: string; answers: { label: string; scores: Record<st
 
   .pathway-quiz-answer:focus-visible,
   .pathway-quiz-primary-button:focus-visible,
-  .pathway-quiz-secondary-button:focus-visible {
+  .pathway-quiz-secondary-button:focus-visible,
+  .pathway-quiz-back-button:focus-visible {
     outline: 3px solid var(--color-primary);
     outline-offset: 3px;
   }
