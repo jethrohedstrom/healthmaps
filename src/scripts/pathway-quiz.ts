@@ -1,10 +1,10 @@
+import { resultContent, scoredPathwayIds, type ScoredPathwayId } from '../data/pathway-quiz-results';
+
 const QUIZ_ROOT_SELECTOR = '[data-pathway-quiz]';
 const STORAGE_KEY = 'healthmaps:pathway-quiz:v3';
 const STATE_VERSION = 3;
 const TOTAL_QUESTIONS = 4;
 
-const scoredPathwayIds = ['through-gp', 'private', 'low-cost', 'self-guided'] as const;
-type ScoredPathwayId = (typeof scoredPathwayIds)[number];
 type QuizMode = 'intro' | 'question' | 'result';
 
 type Scores = Record<ScoredPathwayId, number>;
@@ -18,40 +18,6 @@ interface QuizState {
   // TOTAL_QUESTIONS in result mode.
   answers: number[];
 }
-
-interface ResultContent {
-  title: string;
-  summary: string;
-  secondarySummary: string;
-  href: `#${ScoredPathwayId}`;
-}
-
-const resultContent: Record<ScoredPathwayId, ResultContent> = {
-  'through-gp': {
-    title: 'Start with a GP',
-    summary: 'A good first step for you is starting with a GP. This fits when you want professional guidance and a pathway to Medicare-rebated sessions.',
-    secondarySummary: 'Useful if you want professional guidance and a pathway to Medicare-rebated sessions.',
-    href: '#through-gp',
-  },
-  private: {
-    title: 'Go straight to a private practitioner',
-    summary: 'A good first step for you is going straight to a private practitioner. This fits when you want to start quickly and are comfortable paying out of pocket.',
-    secondarySummary: 'Useful if you want to start quickly and are comfortable paying out of pocket.',
-    href: '#private',
-  },
-  'low-cost': {
-    title: 'Try free or community services',
-    summary: 'A good first step for you is free or community support. This fits when cost, local access, or walk-in services matter most.',
-    secondarySummary: 'Useful if cost, local access, or walk-in services matter most.',
-    href: '#low-cost',
-  },
-  'self-guided': {
-    title: 'Start with self-guided online tools',
-    summary: 'A good first step for you is self-guided online support. This fits when you want something private, low-pressure, and available right now.',
-    secondarySummary: 'Useful if you want something private, low-pressure, and available right now.',
-    href: '#self-guided',
-  },
-};
 
 const scoreDatasetKeys: Record<ScoredPathwayId, string> = {
   'through-gp': 'scoreThroughGp',
@@ -155,13 +121,13 @@ function announce(root: HTMLElement, message: string) {
 
 function showScreen(root: HTMLElement, state: QuizState, shouldFocus = true) {
   root.querySelectorAll<HTMLElement>('[data-quiz-screen]').forEach((screen) => {
-    screen.hidden = true;
+    screen.classList.add('pathway-quiz-screen--hidden');
   });
 
   const activeScreen = getScreen(root, state.mode, state.questionIndex);
   if (!activeScreen) return;
 
-  activeScreen.hidden = false;
+  activeScreen.classList.remove('pathway-quiz-screen--hidden');
   setScreenButtonsDisabled(activeScreen, false);
 
   if (state.mode === 'result') renderResult(root, state);
@@ -376,7 +342,10 @@ function initPathwayQuiz(root: HTMLElement) {
   if (new URLSearchParams(window.location.search).get('scroll') === 'quiz') {
     // Strip the param so a reload or shared link doesn't re-trigger the scroll.
     history.replaceState(null, '', window.location.pathname + window.location.hash);
-    requestAnimationFrame(() => scrollQuizIntoView(root));
+    // Wait for the web fonts: the card's measured position decides whether a
+    // scroll is needed, and fallback-font metrics can make it look in view
+    // when the final layout isn't.
+    document.fonts.ready.then(() => requestAnimationFrame(() => scrollQuizIntoView(root)));
   }
 
   root.addEventListener('click', (event) => {

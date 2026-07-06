@@ -1,4 +1,10 @@
 ---
+import { resultContent, scoredPathwayIds } from '../data/pathway-quiz-results';
+
+// Every possible result's copy, for the invisible sizer that keeps the card
+// height stable no matter which result renders.
+const resultVariants = scoredPathwayIds.map((id) => resultContent[id]);
+
 // Scores map to pathway-quiz.ts weights; keys are emitted verbatim as
 // data-score-* attributes on the answer buttons.
 const questions: { question: string; answers: { label: string; scores: Record<string, number> }[] }[] = [
@@ -65,7 +71,7 @@ const questions: { question: string; answers: { label: string; scores: Record<st
   </div>
 
   {questions.map(({ question, answers }, index) => (
-    <div data-quiz-screen="question" data-question-index={index} class="pathway-quiz-screen pt-[30px] px-8 pb-8" hidden>
+    <div data-quiz-screen="question" data-question-index={index} class="pathway-quiz-screen pathway-quiz-screen--hidden pt-[30px] px-8 pb-8">
       <div class="pathway-quiz-step-row">
         <p class="pathway-quiz-step-label">Question {index + 1} of {questions.length}</p>
         <button type="button" data-quiz-back class="pathway-quiz-back-button">&larr; Back</button>
@@ -83,7 +89,7 @@ const questions: { question: string; answers: { label: string; scores: Record<st
     </div>
   ))}
 
-  <div data-quiz-screen="result" class="pathway-quiz-screen pt-[30px] px-8 pb-8" hidden>
+  <div data-quiz-screen="result" class="pathway-quiz-screen pathway-quiz-screen--hidden pt-[30px] px-8 pb-8">
     <div class="pathway-quiz-step-row">
       <p class="pathway-quiz-step-label">Suggested starting point</p>
       <button type="button" data-quiz-back class="pathway-quiz-back-button">&larr; Back</button>
@@ -106,6 +112,40 @@ const questions: { question: string; answers: { label: string; scores: Record<st
     </div>
   </div>
 
+  <!-- Invisible height sizer: the result screen's copy is injected at runtime,
+       so this block stacks ALL possible result copy variants (in nested grid
+       cells) to guarantee the card never resizes when a result renders.
+       Non-interactive elements only; no data-quiz-screen / data-result-*
+       attributes, so the quiz script ignores it entirely. -->
+  <div class="pathway-quiz-sizer pt-[30px] px-8 pb-8" aria-hidden="true">
+    <div class="pathway-quiz-step-row">
+      <p class="pathway-quiz-step-label">Suggested starting point</p>
+      <span class="pathway-quiz-back-button">&larr; Back</span>
+    </div>
+    <div class="pathway-quiz-stack mb-4">
+      {resultVariants.map((variant) => <p class="pathway-quiz-heading">{variant.title}</p>)}
+    </div>
+    <div class="pathway-quiz-stack mb-6">
+      {resultVariants.map((variant) => <p class="text-[15.5px] leading-[1.55] text-body">{variant.summary}</p>)}
+    </div>
+    <div class="rounded-[10px] border border-ink-green/12 p-4 mb-6">
+      <p class="text-sm font-semibold text-heading mb-1">Another good option</p>
+      <div class="pathway-quiz-stack">
+        {resultVariants.map((variant) => (
+          <p class="text-[15.5px] leading-[1.55] text-body">{variant.title}: {variant.secondarySummary}</p>
+        ))}
+      </div>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-3">
+      <span class="pathway-quiz-primary-button inline-flex min-h-11 items-center justify-center rounded-[10px] bg-primary px-6 py-[13px] text-base font-semibold text-white">
+        Go to this pathway
+      </span>
+      <span class="pathway-quiz-secondary-button min-h-11 rounded-[10px] border border-ink-green/16 px-6 py-[13px] text-base font-semibold text-heading">
+        Start over
+      </span>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -120,9 +160,37 @@ const questions: { question: string; answers: { label: string; scores: Record<st
     scroll-margin-bottom: 4rem;
   }
 
-  /* Guards [hidden] against any screen that gains a display class (e.g. flex). */
-  .pathway-quiz-screen[hidden] {
-    display: none;
+  /* All screens (and the result sizer) share one grid cell, so the card takes
+     the height of its tallest screen and never resizes between screens — the
+     section below stays put. Inactive screens must therefore stay display:
+     block and hide via visibility, which also removes them from the a11y tree
+     and tab order. A class (not the hidden attribute) toggles them because
+     Tailwind's preflight forces [hidden] to display: none !important. */
+  [data-pathway-quiz] {
+    display: grid;
+  }
+
+  .pathway-quiz-screen,
+  .pathway-quiz-sizer {
+    grid-area: 1 / 1;
+  }
+
+  .pathway-quiz-screen--hidden {
+    visibility: hidden;
+  }
+
+  .pathway-quiz-sizer {
+    visibility: hidden;
+  }
+
+  /* Stacks all copy variants in one cell so each sizer slot is as tall as its
+     tallest variant at every breakpoint. */
+  .pathway-quiz-stack {
+    display: grid;
+  }
+
+  .pathway-quiz-stack > :global(*) {
+    grid-area: 1 / 1;
   }
 
   /* Shared screen typography (design handoff 6a: Switzer 600 23px / -0.012em). */
@@ -202,7 +270,7 @@ const questions: { question: string; answers: { label: string; scores: Record<st
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .pathway-quiz-screen:not([hidden]) {
+    .pathway-quiz-screen:not(.pathway-quiz-screen--hidden) {
       animation: pathwayQuizEnter 180ms ease-out;
     }
   }
