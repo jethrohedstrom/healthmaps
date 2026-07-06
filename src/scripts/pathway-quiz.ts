@@ -371,6 +371,14 @@ function initPathwayQuiz(root: HTMLElement) {
   let state = readState();
   showScreen(root, state, false);
 
+  // Homepage CTAs link to /pathway/?scroll=quiz so arriving there eases the
+  // quiz into view (no auto-start — the intro screen stays put).
+  if (new URLSearchParams(window.location.search).get('scroll') === 'quiz') {
+    // Strip the param so a reload or shared link doesn't re-trigger the scroll.
+    history.replaceState(null, '', window.location.pathname + window.location.hash);
+    requestAnimationFrame(() => scrollQuizIntoView(root));
+  }
+
   root.addEventListener('click', (event) => {
     const target = event.target as HTMLElement | null;
     if (!target) return;
