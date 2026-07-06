@@ -255,7 +255,7 @@ function scrollQuizIntoView(root: HTMLElement) {
   const rect = root.getBoundingClientRect();
   const fullyVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
   if (fullyVisible) return;
-  root.scrollIntoView({ block: 'start', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+  root.scrollIntoView({ block: 'nearest', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
 }
 
 function goToCrisis(root?: HTMLElement) {
