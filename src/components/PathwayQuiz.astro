@@ -176,7 +176,10 @@ const questions: { question: string; answers: { label: string; scores: Record<st
   }
 
   .pathway-quiz-screen--hidden {
+    opacity: 0;
     visibility: hidden;
+    /* Inert immediately, even while still fading out. */
+    pointer-events: none;
   }
 
   .pathway-quiz-sizer {
@@ -269,20 +272,24 @@ const questions: { question: string; answers: { label: string; scores: Record<st
     outline-offset: 3px;
   }
 
+  /* Sequenced fade between screens: the outgoing screen fades out quickly,
+     then the incoming one fades in with a soft rise. Both occupy the same
+     grid cell, so no layout moves. Reduced motion gets the instant swap from
+     the base rules above. */
   @media (prefers-reduced-motion: no-preference) {
-    .pathway-quiz-screen:not(.pathway-quiz-screen--hidden) {
-      animation: pathwayQuizEnter 180ms ease-out;
+    .pathway-quiz-screen {
+      transition:
+        opacity 240ms ease-out 110ms,
+        transform 240ms ease-out 110ms,
+        visibility 0s 0s;
     }
-  }
 
-  @keyframes pathwayQuizEnter {
-    from {
-      opacity: 0;
+    .pathway-quiz-screen--hidden {
       transform: translateY(6px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
+      transition:
+        opacity 140ms ease-in,
+        transform 140ms ease-in,
+        visibility 0s 140ms;
     }
   }
 </style>
