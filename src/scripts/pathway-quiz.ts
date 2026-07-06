@@ -280,6 +280,10 @@ function scrollQuizIntoView(root: HTMLElement) {
   animateScrollTo(target);
 }
 
+function waitForFontsReady(): Promise<unknown> {
+  return document.fonts?.ready ?? Promise.resolve();
+}
+
 function goToCrisis(root?: HTMLElement) {
   clearState();
   if (root) showScreen(root, initialState(), false);
@@ -345,7 +349,7 @@ function initPathwayQuiz(root: HTMLElement) {
     // Wait for the web fonts: the card's measured position decides whether a
     // scroll is needed, and fallback-font metrics can make it look in view
     // when the final layout isn't.
-    document.fonts.ready.then(() => requestAnimationFrame(() => scrollQuizIntoView(root)));
+    waitForFontsReady().then(() => requestAnimationFrame(() => scrollQuizIntoView(root)));
   }
 
   root.addEventListener('click', (event) => {
