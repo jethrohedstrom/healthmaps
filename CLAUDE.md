@@ -82,8 +82,9 @@ Design system tokens and rules: see `.claude/rules/design.md`
 
 ## Git & Deploy
 
-- Commit after each meaningful change, push to `main`
-- Netlify auto-deploys on push — no manual deploy step needed
+- Commit after each meaningful change, but **don't push automatically**
+- Push to `main` at the end of a session or when a feature is complete — batch related commits into one deploy
+- Netlify auto-deploys on push, so every push goes live on healthmaps.com.au — pushing is a deploy decision, not just a sync
 
 ## Commands
 
