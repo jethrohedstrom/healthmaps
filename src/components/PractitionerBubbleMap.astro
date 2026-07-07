@@ -17,7 +17,7 @@
           class="bm-map-svg"
           viewBox="0 0 700 540"
           data-viewbox-full="0 66 700 474"
-          data-viewbox-mobile="95 50 515 930"
+          data-viewbox-mobile="95 50 515 635"
           xmlns="http://www.w3.org/2000/svg"
           role="img"
           aria-label="Interactive map of mental health professionals in Australia. Tap a bubble to learn more."
@@ -224,28 +224,29 @@
      viewBox, synced on resize by updateViewBox() in practitioner-bubble-map.ts)
      rather than a media query, so geometry and viewBox can never disagree. */
   .bubble-map .bm-map-svg.bm-vb-mobile {
-    aspect-ratio: 515 / 930;
+    aspect-ratio: 515 / 635;
   }
 
   /* Mobile: portrait arrangement. Core goo cluster stays put at the top; each
-     secondary practitioner group is moved below it and enlarged so its label
-     is legible. translate/scale in SVG user units (px == user unit here;
-     CSS transforms silently drop unitless values). */
+     secondary practitioner group is tucked against it (touching, like desktop)
+     so the whole map reads as one connected cluster. translate/scale in SVG
+     user units (px == user unit here; CSS transforms silently drop unitless
+     values). Transformed centre = (tx + s·cx, ty + s·cy). */
   .bubble-map .bm-map-svg .bm-extra {
     transform-box: view-box;
     transform-origin: 0 0;
   }
   .bubble-map .bm-map-svg.bm-vb-mobile .bm-extra[data-prof="mh-nurse"] {
-    transform: translate(42px, 132px) scale(1.7);
+    transform: translate(50px, 169px) scale(1.4);
   }
   .bubble-map .bm-map-svg.bm-vb-mobile .bm-extra[data-prof="social-worker"] {
-    transform: translate(-186.5px, 106.5px) scale(1.35);
+    transform: translate(-191.5px, 6.5px) scale(1.35);
   }
   .bubble-map .bm-map-svg.bm-vb-mobile .bm-extra[data-prof="ot"] {
-    transform: translate(-780px, 340px) scale(1.7);
+    transform: translate(-305px, -40px) scale(1.35);
   }
   .bubble-map .bm-map-svg.bm-vb-mobile .bm-extra[data-prof="peer"] {
-    transform: translate(-502px, 131px) scale(1.55);
+    transform: translate(-635px, -115px) scale(1.5);
   }
 
   @keyframes bm-pulse {
@@ -782,8 +783,10 @@
     }
   }
 
-  /* Mobile: bump core-cluster text for legibility. Secondary (.bm-extra) labels
-     keep their attribute sizes — the group scale enlarges them with the bubble. */
+  /* Mobile: bump text for legibility. Secondary (.bm-extra) sizes are in group-local
+     units, so the group scale (1.35–1.5) multiplies them again. */
   .bubble-map .bm-map-svg.bm-vb-mobile .bm-core-labels .bm-blob-label { font-size: 24px; }
   .bubble-map .bm-map-svg.bm-vb-mobile .bm-core-labels .bm-blob-sub { font-size: 17px; }
+  .bubble-map .bm-map-svg.bm-vb-mobile .bm-extra .bm-blob-label { font-size: 12px; }
+  .bubble-map .bm-map-svg.bm-vb-mobile .bm-extra .bm-blob-sub { font-size: 10px; }
 </style>
