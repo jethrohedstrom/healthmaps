@@ -280,12 +280,6 @@ function scrollQuizIntoView(root: HTMLElement) {
   animateScrollTo(target);
 }
 
-function goToCrisis(root?: HTMLElement) {
-  clearState();
-  if (root) showScreen(root, initialState(), false);
-  jumpToHash('#crisis');
-}
-
 function handleAnswer(root: HTMLElement, button: HTMLButtonElement, state: QuizState): QuizState {
   const currentScreen = button.closest<HTMLElement>('[data-quiz-screen]');
   if (currentScreen) setScreenButtonsDisabled(currentScreen, true);
@@ -351,15 +345,6 @@ function initPathwayQuiz(root: HTMLElement) {
   root.addEventListener('click', (event) => {
     const target = event.target as HTMLElement | null;
     if (!target) return;
-
-    const crisisLink = target.closest<HTMLAnchorElement>('[data-quiz-crisis-link]');
-    if (crisisLink) {
-      event.preventDefault();
-      goToCrisis(root);
-      announce(root, 'Opening crisis support.');
-      state = initialState();
-      return;
-    }
 
     const startButton = target.closest<HTMLButtonElement>('[data-quiz-start]');
     if (startButton) {
