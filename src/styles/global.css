@@ -36,7 +36,7 @@
   --color-paper-border: rgba(15, 74, 50, 0.06);  /* faint sage-tinted border on paper surfaces */
   --color-ink-green: #0F4A32;     /* hairline base (paper-border's solid form) — use with opacity modifiers */
   --color-hairline: color-mix(in srgb, #0F4A32 12%, transparent); /* soft ink-green hairline: borders/dividers/rules */
-  --color-meta-sage: #6b7d74;     /* muted sage-gray small/meta text */
+  --color-meta-sage: #5a6b62;     /* muted sage-gray small/meta text (AA on paper-cream & page-sage) */
   --color-primary-dark: #155539;  /* primary button hover */
   --color-row-hover: #f1f5f2;     /* transparent-row hover wash */
   --color-wash-heading: #16432e;  /* deep green heading text on primary-light wash */
