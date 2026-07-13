@@ -24,7 +24,8 @@ HealthMaps helps Australians figure out where to start with mental health suppor
 ## Next Steps
 
 1. Review all `<!-- REVIEW -->` comments in `src/content/` Markdown files for health accuracy
-2. Lighthouse audit (target 95+ all categories)
+
+**Lighthouse audit done July 2026** — 100 in every category on all 4 key pages, local and live, mobile and desktop. No fixes were needed. Details and regression notes: `docs/plans/lighthouse-audit.md`.
 
 ## Tech Stack
 
