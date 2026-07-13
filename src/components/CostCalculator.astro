@@ -3,27 +3,33 @@ import costsData from '../data/calculator-costs.json';
 import Button from './Button.astro';
 
 const practitionerTypes = costsData.practitionerTypes;
+
+const optionCard = 'flex h-full min-h-14 items-center rounded-[10px] border border-ink-green/16 bg-white px-4 py-3 text-base font-semibold leading-snug text-heading transition-colors duration-150 hover:border-primary hover:bg-primary-light peer-checked:border-primary peer-checked:bg-primary-light peer-checked:ring-1 peer-checked:ring-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary';
+const stepperButton = 'h-11 w-11 shrink-0 rounded-[10px] border border-ink-green/16 bg-white text-xl font-semibold text-heading transition-colors duration-150 hover:border-primary hover:bg-primary-light disabled:pointer-events-none disabled:opacity-40';
 ---
 <div id="cost-calculator" class="bg-white rounded-xl shadow-sm p-8 md:p-10">
   <form id="calc-form" class="space-y-6" aria-label="Mental health cost calculator">
 
     <!-- Practitioner type -->
-    <div>
-      <label for="practitioner-type" class="block text-sm font-semibold text-body mb-1">
+    <fieldset>
+      <legend class="block text-sm font-semibold text-body mb-2">
         Type of practitioner
-      </label>
-      <select
-        id="practitioner-type"
-        name="practitionerType"
-        class="w-full border border-border rounded-lg px-4 py-2.5 text-body bg-white hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary"
-      >
-        {practitionerTypes.map((p) => (
-          <option value={p.id} data-rebate={p.rebatePerSession} data-requires-mhcp={p.requiresMHCP}>
-            {p.label}
-          </option>
+      </legend>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        {practitionerTypes.map((p, i) => (
+          <label class="cursor-pointer">
+            <input
+              type="radio"
+              name="practitionerType"
+              value={p.id}
+              checked={i === 0}
+              class="peer sr-only"
+            />
+            <span class={optionCard}>{p.label}</span>
+          </label>
         ))}
-      </select>
-    </div>
+      </div>
+    </fieldset>
 
     <!-- Session fee -->
     <div>
@@ -38,7 +44,7 @@ const practitionerTypes = costsData.practitionerTypes;
         max="1000"
         step="5"
         placeholder="e.g. 220"
-        class="w-full border border-border rounded-lg px-4 py-2.5 text-body bg-white hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary"
+        class="w-full border border-border rounded-[10px] px-4 py-2.5 text-body bg-white hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary"
       />
       <p id="fee-hint" class="text-xs text-body mt-1">Typical range: loading...</p>
     </div>
@@ -48,31 +54,39 @@ const practitionerTypes = costsData.practitionerTypes;
       <label for="num-sessions" class="block text-sm font-semibold text-body mb-1">
         Number of sessions
       </label>
-      <select
-        id="num-sessions"
-        name="numSessions"
-        class="w-full border border-border rounded-lg px-4 py-2.5 text-body bg-white hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary"
-      >
-        {[1,2,3,4,5,6,7,8,9,10].map(n => (
-          <option value={n} selected={n === 10}>{n} session{n > 1 ? 's' : ''}{n === 10 ? ' (max Medicare)' : ''}</option>
-        ))}
-      </select>
+      <div class="flex items-center gap-3">
+        <button type="button" id="sessions-minus" aria-label="Fewer sessions" class={stepperButton}>&minus;</button>
+        <input
+          type="number"
+          id="num-sessions"
+          name="numSessions"
+          min="1"
+          max="10"
+          value="10"
+          inputmode="numeric"
+          class="h-11 w-20 rounded-[10px] border border-ink-green/16 bg-white text-center text-base font-semibold text-heading transition-colors focus:border-primary focus:ring-2 focus:ring-primary [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        />
+        <button type="button" id="sessions-plus" aria-label="More sessions" class={stepperButton}>+</button>
+      </div>
+      <p class="text-xs text-body mt-1">Medicare rebates cover up to 10 sessions per calendar year.</p>
     </div>
 
     <!-- GP bulk-billed? -->
-    <div>
-      <label for="gp-billing" class="block text-sm font-semibold text-body mb-1">
+    <fieldset>
+      <legend class="block text-sm font-semibold text-body mb-2">
         Is your GP bulk-billed?
-      </label>
-      <select
-        id="gp-billing"
-        name="gpBilling"
-        class="w-full border border-border rounded-lg px-4 py-2.5 text-body bg-white hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary"
-      >
-        <option value="yes">Yes, no out-of-pocket cost for GP visits</option>
-        <option value="no">No, I pay a gap fee (~$40)</option>
-      </select>
-    </div>
+      </legend>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <label class="cursor-pointer">
+          <input type="radio" name="gpBilling" value="yes" checked class="peer sr-only" />
+          <span class={optionCard}>Yes, no out-of-pocket cost for GP visits</span>
+        </label>
+        <label class="cursor-pointer">
+          <input type="radio" name="gpBilling" value="no" class="peer sr-only" />
+          <span class={optionCard}>No, I pay a gap fee (~$40)</span>
+        </label>
+      </div>
+    </fieldset>
 
     <!-- Calculate button -->
     <Button type="submit" size="lg" class="w-full">Calculate My Costs</Button>
@@ -113,15 +127,35 @@ const practitionerTypes = costsData.practitionerTypes;
 
 <script is:inline define:vars={{ practitionerTypes: costsData.practitionerTypes, feeRanges: costsData.sessionFeeRanges, gpCostPrivate: costsData.gpCostPrivate }}>
   const form = document.getElementById('calc-form');
-  const typeSelect = document.getElementById('practitioner-type');
   const feeInput = document.getElementById('session-fee');
   const feeHint = document.getElementById('fee-hint');
-  const sessionsSelect = document.getElementById('num-sessions');
-  const gpSelect = document.getElementById('gp-billing');
+  const sessionsInput = document.getElementById('num-sessions');
+  const minusBtn = document.getElementById('sessions-minus');
+  const plusBtn = document.getElementById('sessions-plus');
   const resultsDiv = document.getElementById('calc-results');
 
+  const MIN_SESSIONS = 1;
+  const MAX_SESSIONS = 10;
+
+  function getSessions() {
+    const v = parseInt(sessionsInput.value);
+    if (isNaN(v)) return MAX_SESSIONS;
+    return Math.min(MAX_SESSIONS, Math.max(MIN_SESSIONS, v));
+  }
+
+  function setSessions(v) {
+    sessionsInput.value = v;
+    minusBtn.disabled = v <= MIN_SESSIONS;
+    plusBtn.disabled = v >= MAX_SESSIONS;
+  }
+
+  minusBtn.addEventListener('click', () => setSessions(Math.max(MIN_SESSIONS, getSessions() - 1)));
+  plusBtn.addEventListener('click', () => setSessions(Math.min(MAX_SESSIONS, getSessions() + 1)));
+  sessionsInput.addEventListener('change', () => setSessions(getSessions()));
+  setSessions(getSessions());
+
   function updateFeeHint() {
-    const type = typeSelect.value;
+    const type = form.elements.practitionerType.value;
     const range = feeRanges[type];
     if (range) {
       feeHint.textContent = `Typical range: $${range.low}–$${range.high}`;
@@ -131,16 +165,18 @@ const practitionerTypes = costsData.practitionerTypes;
     }
   }
 
-  typeSelect.addEventListener('change', updateFeeHint);
+  form.addEventListener('change', (e) => {
+    if (e.target.name === 'practitionerType') updateFeeHint();
+  });
   updateFeeHint();
 
   form.addEventListener('submit', function(e) {
     e.preventDefault();
 
-    const type = typeSelect.value;
+    const type = form.elements.practitionerType.value;
     const sessionFee = parseFloat(feeInput.value);
-    const numSessions = parseInt(sessionsSelect.value);
-    const gpBulkBilled = gpSelect.value === 'yes';
+    const numSessions = getSessions();
+    const gpBulkBilled = form.elements.gpBilling.value === 'yes';
 
     if (isNaN(sessionFee) || sessionFee <= 0) {
       feeInput.focus();
