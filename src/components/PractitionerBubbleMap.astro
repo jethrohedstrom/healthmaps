@@ -5,7 +5,7 @@
   <div class="bm-header">
     <span class="bm-hint">
       <span class="bm-hint-dot" aria-hidden="true"></span>
-      Tap a bubble to see what they do
+      <span><span class="verb-click">Click</span><span class="verb-tap">Tap</span> a bubble to see what they do</span>
     </span>
     <p class="bm-subhint">You don't need all of these — most people start with just one.</p>
   </div>
@@ -180,6 +180,21 @@
     padding: 8px 16px 8px 14px;
     border-radius: 999px;
     box-shadow: 0 6px 22px rgba(27, 74, 50, 0.18), 0 1px 3px rgba(27, 74, 50, 0.10);
+  }
+
+  /* Device-aware verb: "Tap" by default (incl. unknown pointer), "Click" on fine pointers */
+  .bubble-map .bm-hint .verb-click {
+    display: none;
+  }
+
+  @media (pointer: fine) {
+    .bubble-map .bm-hint .verb-click {
+      display: inline;
+    }
+
+    .bubble-map .bm-hint .verb-tap {
+      display: none;
+    }
   }
 
   .bubble-map .bm-hint-dot {
