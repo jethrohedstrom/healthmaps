@@ -32,6 +32,8 @@ const ogImageURL = new URL(ogImage, Astro.site ?? 'https://healthmaps.com.au');
     <title>{title} | HealthMaps</title>
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
+    <!-- Tints mobile browser chrome to match the header; keep in sync with --color-paper-cream in global.css -->
+    <meta name="theme-color" content="#FBFAF6" />
     <link rel="canonical" href={canonicalURL} />
 
     <!-- Open Graph -->
