@@ -1,220 +1,169 @@
 ---
 import costsData from '../data/calculator-costs.json';
-import Button from './Button.astro';
 
 const practitionerTypes = costsData.practitionerTypes;
+const feeRanges = costsData.sessionFeeRanges as Record<string, { low: number; mid: number; high: number }>;
 
 const optionCard = 'flex h-full min-h-14 items-center rounded-[10px] border border-ink-green/16 bg-white px-4 py-3 text-base font-semibold leading-snug text-heading transition-colors duration-150 hover:border-primary hover:bg-primary-light peer-checked:border-primary peer-checked:bg-primary-light peer-checked:ring-1 peer-checked:ring-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary';
 const stepperButton = 'h-11 w-11 shrink-0 rounded-[10px] border border-ink-green/16 bg-white text-xl font-semibold text-heading transition-colors duration-150 hover:border-primary hover:bg-primary-light disabled:pointer-events-none disabled:opacity-40';
+
+// Receipt row: label · dotted leader · amount. The empty leader span is a
+// baseline-aligned flex item, so its bottom border sits on the text baseline.
+const receiptRow = 'flex items-baseline gap-2 text-[15px] leading-snug';
+const receiptLeader = 'min-w-4 flex-1 border-b border-dotted border-ink-green/25';
+
+// SSR the default estimate (first practitioner, typical fee, 10 sessions,
+// bulk-billed GP) so the receipt is meaningful before/without JS. The maths
+// mirrors src/scripts/cost-calculator.ts exactly.
+const defaultPrac = practitionerTypes[0];
+const defaultRange = feeRanges[defaultPrac.id];
+const defaultFee = defaultRange.mid;
+const defaultSessions = costsData.maxMedicareSessions;
+
+const aud = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' });
+const audWhole = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+
+const ssrTotalFees = defaultFee * defaultSessions;
+const ssrTotalRebate = defaultPrac.rebatePerSession * defaultSessions;
+const ssrGpVisits = defaultPrac.requiresMHCP && defaultSessions > 6 ? 2 : 1;
+const ssrGpCost = 0; // bulk-billed default
+const ssrTotal = Math.max(0, ssrTotalFees - ssrTotalRebate + ssrGpCost);
+const ssrGapPerSession = Math.max(0, defaultFee - defaultPrac.rebatePerSession);
 ---
-<div id="cost-calculator" class="bg-white rounded-xl shadow-sm p-8 md:p-10">
-  <form id="calc-form" class="space-y-6" aria-label="Mental health cost calculator">
+<div id="cost-calculator" class="bg-paper-cream border border-ink-green/16 rounded-[14px] p-6 sm:p-8 md:p-10">
+  <div class="grid gap-8 md:grid-cols-[1fr_minmax(280px,0.85fr)] md:gap-10">
+    <form id="calc-form" class="space-y-6" aria-label="Mental health cost calculator" novalidate>
 
-    <!-- Practitioner type -->
-    <fieldset>
-      <legend class="block text-sm font-semibold text-body mb-2">
-        Type of practitioner
-      </legend>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        {practitionerTypes.map((p, i) => (
-          <label class="cursor-pointer">
-            <input
-              type="radio"
-              name="practitionerType"
-              value={p.id}
-              checked={i === 0}
-              class="peer sr-only"
-            />
-            <span class={optionCard}>{p.label}</span>
-          </label>
-        ))}
-      </div>
-    </fieldset>
+      <!-- Practitioner type -->
+      <fieldset>
+        <legend class="block text-sm font-semibold text-body mb-2">
+          Type of practitioner
+        </legend>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {practitionerTypes.map((p, i) => (
+            <label class="cursor-pointer">
+              <input
+                type="radio"
+                name="practitionerType"
+                value={p.id}
+                checked={i === 0}
+                class="peer sr-only"
+              />
+              <span class={optionCard}>
+                <span class="block">
+                  {p.label}
+                  <span class="mt-0.5 block text-[13px] font-normal leading-snug text-meta-sage">
+                    Rebate ${p.rebatePerSession.toFixed(2)} per session
+                  </span>
+                </span>
+              </span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
 
-    <!-- Session fee -->
-    <div>
-      <label for="session-fee" class="block text-sm font-semibold text-body mb-1">
-        Session fee ($)
-      </label>
-      <input
-        type="number"
-        id="session-fee"
-        name="sessionFee"
-        min="0"
-        max="1000"
-        step="5"
-        placeholder="e.g. 220"
-        class="w-full border border-border rounded-[10px] px-4 py-2.5 text-body bg-white hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary"
-      />
-      <p id="fee-hint" class="text-xs text-body mt-1">Typical range: loading...</p>
-    </div>
-
-    <!-- Number of sessions -->
-    <div>
-      <label for="num-sessions" class="block text-sm font-semibold text-body mb-1">
-        Number of sessions
-      </label>
-      <div class="flex items-center gap-3">
-        <button type="button" id="sessions-minus" aria-label="Fewer sessions" class={stepperButton}>&minus;</button>
+      <!-- Session fee -->
+      <div>
+        <label for="session-fee" class="block text-sm font-semibold text-body mb-1">
+          Session fee ($)
+        </label>
         <input
           type="number"
-          id="num-sessions"
-          name="numSessions"
-          min="1"
-          max="10"
-          value="10"
-          inputmode="numeric"
-          class="h-11 w-20 rounded-[10px] border border-ink-green/16 bg-white text-center text-base font-semibold text-heading transition-colors focus:border-primary focus:ring-2 focus:ring-primary [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          id="session-fee"
+          name="sessionFee"
+          min="0"
+          max="1000"
+          step="5"
+          value={defaultFee}
+          placeholder={`e.g. ${defaultFee}`}
+          class="w-full border border-ink-green/16 rounded-[10px] px-4 py-2.5 text-heading font-semibold bg-white hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary"
         />
-        <button type="button" id="sessions-plus" aria-label="More sessions" class={stepperButton}>+</button>
+        <p id="fee-hint" class="text-xs text-body mt-1">Typical range: ${defaultRange.low}–${defaultRange.high}</p>
       </div>
-      <p class="text-xs text-body mt-1">Medicare rebates cover up to 10 sessions per calendar year.</p>
-    </div>
 
-    <!-- GP bulk-billed? -->
-    <fieldset>
-      <legend class="block text-sm font-semibold text-body mb-2">
-        Is your GP bulk-billed?
-      </legend>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-        <label class="cursor-pointer">
-          <input type="radio" name="gpBilling" value="yes" checked class="peer sr-only" />
-          <span class={optionCard}>Yes, no out-of-pocket cost for GP visits</span>
+      <!-- Number of sessions -->
+      <div>
+        <label for="num-sessions" class="block text-sm font-semibold text-body mb-1">
+          Number of sessions
         </label>
-        <label class="cursor-pointer">
-          <input type="radio" name="gpBilling" value="no" class="peer sr-only" />
-          <span class={optionCard}>No, I pay a gap fee (~$40)</span>
-        </label>
+        <div class="flex items-center gap-3">
+          <button type="button" id="sessions-minus" aria-label="Fewer sessions" class={stepperButton}>&minus;</button>
+          <input
+            type="number"
+            id="num-sessions"
+            name="numSessions"
+            min="1"
+            max="10"
+            value={defaultSessions}
+            inputmode="numeric"
+            class="h-11 w-20 rounded-[10px] border border-ink-green/16 bg-white text-center text-base font-semibold text-heading transition-colors focus:border-primary focus:ring-2 focus:ring-primary [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+          />
+          <button type="button" id="sessions-plus" aria-label="More sessions" class={stepperButton}>+</button>
+        </div>
+        <p class="text-xs text-body mt-1">Medicare rebates cover up to 10 sessions per calendar year.</p>
       </div>
-    </fieldset>
 
-    <!-- Calculate button -->
-    <Button type="submit" size="lg" class="w-full">Calculate My Costs</Button>
-  </form>
+      <!-- GP bulk-billed? -->
+      <fieldset>
+        <legend class="block text-sm font-semibold text-body mb-2">
+          Is your GP bulk-billed?
+        </legend>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <label class="cursor-pointer">
+            <input type="radio" name="gpBilling" value="yes" checked class="peer sr-only" />
+            <span class={optionCard}>Yes, no out-of-pocket cost for GP visits</span>
+          </label>
+          <label class="cursor-pointer">
+            <input type="radio" name="gpBilling" value="no" class="peer sr-only" />
+            <span class={optionCard}>No, I pay a gap fee (~$40)</span>
+          </label>
+        </div>
+      </fieldset>
+    </form>
 
-  <!-- Results -->
-  <div id="calc-results" class="hidden mt-8 pt-6 border-t border-border">
-    <h3 class="text-lg font-bold text-heading mb-4">Estimated Costs</h3>
+    <!-- Receipt: updates live as the form changes -->
+    <div class="md:sticky md:top-24 md:self-start">
+      <div id="calc-receipt" class="bg-white border border-ink-green/12 rounded-[10px] p-5 sm:p-6">
+        <p class="text-[11.5px] font-semibold uppercase tracking-[0.08em] text-meta-sage">Your estimate</p>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-      <div class="bg-bg-light rounded-lg p-4">
-        <p class="text-body mb-1">Total session fees</p>
-        <p id="result-total-fees" class="text-2xl font-bold text-body">$0</p>
+        <div class="mt-4 space-y-2.5">
+          <div class={receiptRow}>
+            <span class="text-body" data-receipt-fees-label>{defaultSessions} sessions &times; {audWhole.format(defaultFee)}</span>
+            <span class={receiptLeader} aria-hidden="true"></span>
+            <span class="font-medium text-heading tabular-nums" data-receipt-fees>{aud.format(ssrTotalFees)}</span>
+          </div>
+          <div class={receiptRow}>
+            <span class="text-body">Medicare pays back</span>
+            <span class={receiptLeader} aria-hidden="true"></span>
+            <span class="font-medium text-primary tabular-nums" data-receipt-rebate>&minus;{aud.format(ssrTotalRebate)}</span>
+          </div>
+          <div class={receiptRow}>
+            <span class="text-body" data-receipt-gp-label>GP visits &times; {ssrGpVisits} (care plan + review)</span>
+            <span class={receiptLeader} aria-hidden="true"></span>
+            <span class="font-medium text-heading tabular-nums" data-receipt-gp>{aud.format(ssrGpCost)}</span>
+          </div>
+        </div>
+
+        <div class="mt-4 border-t border-hairline pt-4">
+          <div class="flex items-baseline justify-between gap-3" aria-live="polite" aria-atomic="true">
+            <span class="text-[15px] font-semibold text-heading">You pay</span>
+            <span class="font-display font-semibold text-[30px] sm:text-[34px] leading-none tracking-[-0.02em] text-heading tabular-nums" data-receipt-total>{aud.format(ssrTotal)}</span>
+          </div>
+          <p class="mt-2 text-[13px] leading-snug text-meta-sage" data-receipt-note>
+            That&rsquo;s {aud.format(ssrGapPerSession)} per session after the rebate.
+          </p>
+        </div>
       </div>
-      <div class="bg-bg-light rounded-lg p-4">
-        <p class="text-body mb-1">Total Medicare rebate</p>
-        <p id="result-total-rebate" class="text-2xl font-bold text-primary">−$0</p>
-      </div>
-      <div class="bg-bg-light rounded-lg p-4">
-        <p class="text-body mb-1">GP visit costs</p>
-        <p id="result-gp-cost" class="text-2xl font-bold text-body">$0</p>
-      </div>
-      <div class="bg-bg-light rounded-lg p-4 border-2 border-heading">
-        <p class="text-heading font-medium mb-1">Your out-of-pocket cost</p>
-        <p id="result-oop" class="text-2xl font-bold text-heading">$0</p>
-      </div>
+
+      <p class="mt-3 text-xs text-body">
+        These are estimates only. Medicare rebate amounts may have changed; check
+        <a href="https://www.servicesaustralia.gov.au/medicare" class="underline hover:text-primary transition-colors" target="_blank" rel="noopener">Services Australia</a>
+        for current rates. Last updated: {costsData.lastUpdated}.
+      </p>
     </div>
-
-    <div id="result-breakdown" class="mt-4 text-sm text-body space-y-1"></div>
-
-    <p class="mt-4 text-xs text-body">
-      These are estimates only. Medicare rebate amounts may have changed; check
-      <a href="https://www.servicesaustralia.gov.au/medicare" class="underline hover:text-primary transition-colors" target="_blank" rel="noopener">Services Australia</a>
-      for current rates. Last updated: {costsData.lastUpdated}.
-    </p>
   </div>
 </div>
 
-<script is:inline define:vars={{ practitionerTypes: costsData.practitionerTypes, feeRanges: costsData.sessionFeeRanges, gpCostPrivate: costsData.gpCostPrivate }}>
-  const form = document.getElementById('calc-form');
-  const feeInput = document.getElementById('session-fee');
-  const feeHint = document.getElementById('fee-hint');
-  const sessionsInput = document.getElementById('num-sessions');
-  const minusBtn = document.getElementById('sessions-minus');
-  const plusBtn = document.getElementById('sessions-plus');
-  const resultsDiv = document.getElementById('calc-results');
-
-  const MIN_SESSIONS = 1;
-  const MAX_SESSIONS = 10;
-
-  function getSessions() {
-    const v = parseInt(sessionsInput.value);
-    if (isNaN(v)) return MAX_SESSIONS;
-    return Math.min(MAX_SESSIONS, Math.max(MIN_SESSIONS, v));
-  }
-
-  function setSessions(v) {
-    sessionsInput.value = v;
-    minusBtn.disabled = v <= MIN_SESSIONS;
-    plusBtn.disabled = v >= MAX_SESSIONS;
-  }
-
-  minusBtn.addEventListener('click', () => setSessions(Math.max(MIN_SESSIONS, getSessions() - 1)));
-  plusBtn.addEventListener('click', () => setSessions(Math.min(MAX_SESSIONS, getSessions() + 1)));
-  sessionsInput.addEventListener('change', () => setSessions(getSessions()));
-  setSessions(getSessions());
-
-  function updateFeeHint() {
-    const type = form.elements.practitionerType.value;
-    const range = feeRanges[type];
-    if (range) {
-      feeHint.textContent = `Typical range: $${range.low}–$${range.high}`;
-      if (!feeInput.value) {
-        feeInput.placeholder = `e.g. ${range.mid}`;
-      }
-    }
-  }
-
-  form.addEventListener('change', (e) => {
-    if (e.target.name === 'practitionerType') updateFeeHint();
-  });
-  updateFeeHint();
-
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-
-    const type = form.elements.practitionerType.value;
-    const sessionFee = parseFloat(feeInput.value);
-    const numSessions = getSessions();
-    const gpBulkBilled = form.elements.gpBilling.value === 'yes';
-
-    if (isNaN(sessionFee) || sessionFee <= 0) {
-      feeInput.focus();
-      feeInput.setCustomValidity('Please enter a valid session fee.');
-      feeInput.reportValidity();
-      feeInput.setCustomValidity('');
-      return;
-    }
-
-    const prac = practitionerTypes.find(p => p.id === type);
-    const rebatePerSession = prac ? prac.rebatePerSession : 0;
-
-    const totalFees = sessionFee * numSessions;
-    const totalRebate = rebatePerSession * numSessions;
-
-    // GP costs: initial MHCP/referral appointment, plus the after-6-sessions
-    // review — but only MHCP pathways have that review (psychiatrists don't).
-    const requiresMHCP = prac ? prac.requiresMHCP : true;
-    let gpVisits = 1; // Initial MHCP or referral
-    if (requiresMHCP && numSessions > 6) gpVisits = 2; // + review
-    const gpCostPerVisit = gpBulkBilled ? 0 : gpCostPrivate;
-    const totalGpCost = gpVisits * gpCostPerVisit;
-
-    const outOfPocket = totalFees - totalRebate + totalGpCost;
-
-    document.getElementById('result-total-fees').textContent = `$${totalFees.toFixed(2)}`;
-    document.getElementById('result-total-rebate').textContent = `−$${totalRebate.toFixed(2)}`;
-    document.getElementById('result-gp-cost').textContent = `$${totalGpCost.toFixed(2)}`;
-    document.getElementById('result-oop').textContent = `$${Math.max(0, outOfPocket).toFixed(2)}`;
-
-    const gapPerSession = sessionFee - rebatePerSession;
-    const breakdown = document.getElementById('result-breakdown');
-    breakdown.innerHTML = `
-      <p><strong>Per session:</strong> $${sessionFee.toFixed(2)} fee − $${rebatePerSession.toFixed(2)} rebate = <strong>$${Math.max(0, gapPerSession).toFixed(2)} gap</strong></p>
-      <p><strong>GP visits:</strong> ${gpVisits} (${requiresMHCP ? 'MHCP' : 'referral'}${gpVisits > 1 ? ' + review' : ''})${gpBulkBilled ? ' (bulk-billed)' : ` × $${gpCostPerVisit}`}</p>
-    `;
-
-    resultsDiv.classList.remove('hidden');
-    resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  });
+<script>
+  import '../scripts/cost-calculator.ts';
 </script>
