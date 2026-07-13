@@ -15,16 +15,16 @@ HealthMaps helps Australians figure out where to start with mental health suppor
 
 ## Current Status
 
-- **All 6 build phases complete** — foundation, pathway, practitioners, calculator, stories/tips, homepage/404
+- **All 6 build phases complete** — foundation, pathway, practitioners, calculator, tips, homepage/404
 - **12 pages built**, 0 errors, 0 warnings from `astro check`
+- **Stories removed July 2026** — good idea, parked for later. `/stories/*` 301s to home via netlify.toml. To bring back: restore from git history (`src/pages/stories/`, `src/content/stories/`, the `stories` collection, nav link, homepage section, disclaimer paragraph).
 - **Live at healthmaps.com.au** — deployed via Netlify
 - **Health content needs review** — all AI-drafted health claims are marked with `<!-- REVIEW -->` comments
 
 ## Next Steps
 
 1. Review all `<!-- REVIEW -->` comments in `src/content/` Markdown files for health accuracy
-2. Replace fictional user stories with real ones (or verify they're clearly marked as illustrative)
-3. Lighthouse audit (target 95+ all categories)
+2. Lighthouse audit (target 95+ all categories)
 
 ## Tech Stack
 
@@ -41,7 +41,6 @@ src/
 │   ├── pathway/               4 step-by-step walkthrough files
 │   ├── alternatives/          EAP, private counsellor, crisis
 │   ├── practitioners/         Psychologist, psychiatrist, counsellor, psychotherapist
-│   ├── stories/               User stories (2 sample)
 │   └── tips/                  Practical tips (3 articles)
 ├── data/
 │   └── calculator-costs.json  ← Calculator costs to edit
@@ -58,7 +57,6 @@ src/
 │   ├── pathway.astro          Getting Started guide
 │   ├── practitioners.astro    Compare practitioners
 │   ├── calculator.astro       Cost calculator
-│   ├── stories/               Story index + dynamic pages
 │   ├── tips/                  Tips index + dynamic pages
 │   └── 404.astro
 └── styles/
@@ -96,19 +94,6 @@ Design system tokens and rules: see `.claude/rules/design.md`
 
 ## Content Editing
 
-To add a new story: create `src/content/stories/my-story.md` with YAML frontmatter:
-
-```yaml
----
-title: "Story title"
-name: "First name"
-age: "28"
-location: "City"
-summary: "One-line summary"
-publishedDate: "2025-01-15"
----
-```
-
 To add a new tip: create `src/content/tips/my-tip.md` with YAML frontmatter:
 
 ```yaml
@@ -127,7 +112,6 @@ To update calculator costs: edit `src/data/calculator-costs.json`.
 - `pathway` — step, title, summary
 - `alternatives` — title, summary, order
 - `practitioners` — title, cost, rebate, referralRequired, waitTime, order
-- `stories` — title, name, age, location, summary, publishedDate
 - `tips` — title, summary, category, publishedDate
 
 ## Obsidian Vault

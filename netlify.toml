@@ -2,6 +2,12 @@
   command = "npm run build"
   publish = "dist"
 
+# Stories section removed July 2026 — redirect any indexed/bookmarked URLs home
+[[redirects]]
+  from = "/stories/*"
+  to = "/"
+  status = 301
+
 [[headers]]
   for = "/*"
   [headers.values]

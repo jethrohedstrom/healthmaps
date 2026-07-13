@@ -35,18 +35,6 @@ const practitioners = defineCollection({
   }),
 });
 
-const stories = defineCollection({
-  loader: glob({ pattern: '*.md', base: './src/content/stories' }),
-  schema: z.object({
-    title: z.string(),
-    name: z.string(),
-    age: z.string().optional(),
-    location: z.string().optional(),
-    summary: z.string(),
-    publishedDate: z.string().optional(),
-  }),
-});
-
 const tips = defineCollection({
   loader: glob({ pattern: '*.md', base: './src/content/tips' }),
   schema: z.object({
@@ -57,4 +45,4 @@ const tips = defineCollection({
   }),
 });
 
-export const collections = { pathway, alternatives, practitioners, stories, tips };
+export const collections = { pathway, alternatives, practitioners, tips };
