@@ -49,8 +49,9 @@ export const pathwayCards: PathwayCard[] = [
     steps: [
       {
         number: 1,
-        title: 'Book a long appointment with your GP',
-        detail: 'Ask for a longer appointment (at least 30 minutes) so there\u2019s enough time to talk properly. This needs to be at your usual GP or a MyMedicare-registered practice.',
+        title: 'Book a long appointment with a GP',
+        // REVIEW: rephrased July 2026 \u2014 confirm the MyMedicare eligibility claim still reads correctly.
+        detail: 'Ask for a longer appointment (at least 30 minutes) so there\u2019s enough time to talk properly. It needs to be with your usual GP if you have one, or any MyMedicare-registered practice. If you don\u2019t have a GP yet, a practice taking new patients is fine.',
       },
       {
         number: 2,
