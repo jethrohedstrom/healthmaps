@@ -173,6 +173,12 @@ function initCostCalculator(): void {
   });
   feeInput.addEventListener('focus', () => feeInput.select());
 
+  // Keep directly typed values in the supported Medicare range before the
+  // form-level input handler renders the receipt.
+  sessionsInput.addEventListener('input', () => {
+    setSessions(getSessions());
+  });
+
   minusBtn.addEventListener('click', () => {
     setSessions(Math.max(MIN_SESSIONS, getSessions() - 1));
     render();
