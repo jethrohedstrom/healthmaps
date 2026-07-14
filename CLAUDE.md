@@ -12,6 +12,7 @@ HealthMaps helps Australians figure out where to start with mental health suppor
 - **Don't leap into code.** Planning and design must be agreed before any implementation starts. If I haven't said "go", don't start building.
 - **/clear between task chunks.** After completing a group of tasks, /clear and start fresh rather than /compact. Stale context causes errors.
 - **Code review framing.** If I paste external review feedback, treat the reviewer as a job candidate — evaluate whether their suggestions are correct before acting on them.
+- **Keep the tasks note current.** When a task is finished, review `~/obsidian-vault/HealthMaps tasks.md` and remove anything that's been completed. Only remove items you're certain are done — if unsure, ask.
 
 ## Current Status
 
