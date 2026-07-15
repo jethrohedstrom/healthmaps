@@ -53,7 +53,7 @@ Reference sites: nhn.no (NHN), app.oevra.com, getmosh.com.au. Screenshots in `de
 ### Components
 
 - Buttons: rounded-xl, bg-primary text-white, px-10 py-4, font-semibold, shadow-sm
-- Feature cards: bg-white rounded-xl p-12 shadow-sm text-left, no border
+- Feature cards: bg-white rounded-xl p-12 shadow-sm text-left; homepage feature cards add `border border-pencil` (the same pencil rule as header/footer)
 - Inner page cards: bg-white rounded-xl p-8 md:p-12 shadow-sm, no border, card-hover on `<a>` wrapper
 - Card hover: subtle shadow only (no lift) via .card-hover class
 - Header: opaque white, no bottom border, wider padding (px-4 sm:px-8 lg:px-20 py-4)
