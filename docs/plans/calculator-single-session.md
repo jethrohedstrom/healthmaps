@@ -52,3 +52,7 @@ Also: save this plan into `docs/plans/calculator-single-session.md` at implement
    - No JS: view-source/SSR output already shows the correct default receipt.
 3. Mobile 390px: receipt stacks under the form, one-off block reads clearly.
 4. Grep `src/` for `num-sessions|sessions-minus|sessions-plus|MAX_SESSIONS` → no live references remain.
+
+## Addendum (July 2026): card note
+
+Follow-up shipped after the reframe: a small-print note under the "You pay per session" total — "Have $220 on your card on the day — you can pay with any card, but the rebate can only go back onto a debit card" (amount tracks the fee input; hidden in the empty-fee state, hook `data-receipt-card-note`). A matching "on the day" paragraph was added to the How Medicare Rebates Work explainer covering both rebate paths (on-the-spot Easyclaim → eftpos debit card only; Medicare app/myGov → registered bank account, ~1–2 days). Both claims carry `<!-- REVIEW -->` flags. Verified against Services Australia Easyclaim pages and Tyro Health's eligible-cards article, July 2026.

@@ -27,8 +27,21 @@ const MINUS = '−';
 const YEAR_NOTE = 'Medicare covers up to 10 sessions like this each calendar year.';
 
 const aud = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' });
+// Fees people type are usually whole dollars; keep the card note clean
+// while receipt amounts stay at two decimals.
+const audWhole = new Intl.NumberFormat('en-AU', {
+  style: 'currency',
+  currency: 'AUD',
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 0,
+});
 
 const money = (n: number) => aud.format(n);
+const moneyLabel = (n: number) => (Number.isInteger(n) ? audWhole.format(n) : aud.format(n));
+
+// Must match the SSR card note in CostCalculator.astro.
+const cardNote = (fee: number) =>
+  `Have ${moneyLabel(fee)} on your card on the day — you can pay with any card, but the rebate can only go back onto a debit card.`;
 
 function initCostCalculator(): void {
   const root = document.getElementById('cost-calculator');
@@ -43,11 +56,12 @@ function initCostCalculator(): void {
   const gpLabelEl = root.querySelector<HTMLElement>('[data-receipt-gp-label]');
   const gpEl = root.querySelector<HTMLElement>('[data-receipt-gp]');
   const totalEl = root.querySelector<HTMLElement>('[data-receipt-total]');
+  const cardNoteEl = root.querySelector<HTMLElement>('[data-receipt-card-note]');
   const noteEl = root.querySelector<HTMLElement>('[data-receipt-note]');
 
   if (
     !form || !feeInput || !feeHint ||
-    !feesEl || !rebateEl || !gpLabelEl || !gpEl || !totalEl || !noteEl
+    !feesEl || !rebateEl || !gpLabelEl || !gpEl || !totalEl || !cardNoteEl || !noteEl
   ) return;
 
   // Once the user has typed a fee, switching practitioner stops overwriting it.
@@ -101,6 +115,7 @@ function initCostCalculator(): void {
       feesEl!.textContent = EM_DASH;
       rebateEl!.textContent = EM_DASH;
       totalEl!.textContent = EM_DASH;
+      cardNoteEl!.hidden = true;
       noteEl!.textContent = 'Enter a session fee to see your estimate.';
       return;
     }
@@ -111,6 +126,8 @@ function initCostCalculator(): void {
     feesEl!.textContent = money(fee);
     rebateEl!.textContent = `${MINUS}${money(rebate)}`;
     totalEl!.textContent = money(perSession);
+    cardNoteEl!.textContent = cardNote(fee);
+    cardNoteEl!.hidden = false;
     noteEl!.textContent = YEAR_NOTE;
   }
 

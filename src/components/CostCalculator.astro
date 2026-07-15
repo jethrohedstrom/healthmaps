@@ -19,6 +19,8 @@ const defaultRange = feeRanges[defaultPrac.id];
 const defaultFee = defaultRange.mid;
 
 const aud = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' });
+const audWhole = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+const ssrFeeLabel = Number.isInteger(defaultFee) ? audWhole.format(defaultFee) : aud.format(defaultFee);
 
 const ssrRebate = defaultPrac.rebatePerSession;
 const ssrGpCost = 0; // bulk-billed default
@@ -116,6 +118,10 @@ const ssrPerSession = Math.max(0, defaultFee - ssrRebate);
             <span class="text-[15px] font-semibold text-heading">You pay per session</span>
             <span class="font-display font-semibold text-[30px] sm:text-[34px] leading-none tracking-[-0.02em] text-heading tabular-nums" data-receipt-total>{aud.format(ssrPerSession)}</span>
           </div>
+          <!-- REVIEW: AI-drafted claim — Easyclaim rebates can only be paid onto an eftpos debit card, not credit. -->
+          <p class="mt-2 text-[13px] leading-snug text-meta-sage" data-receipt-card-note>
+            Have {ssrFeeLabel} on your card on the day &mdash; you can pay with any card, but the rebate can only go back onto a debit card.
+          </p>
         </div>
 
         <div class="mt-4 border-t border-hairline pt-4">
