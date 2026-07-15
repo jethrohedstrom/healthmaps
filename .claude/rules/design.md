@@ -53,8 +53,9 @@ Reference sites: nhn.no (NHN), app.oevra.com, getmosh.com.au. Screenshots in `de
 ### Components
 
 - Buttons: rounded-xl, bg-primary text-white, px-10 py-4, font-semibold, shadow-sm
-- Feature cards: bg-white rounded-xl p-12 shadow-sm text-left; homepage feature cards add `border border-pencil` (the same pencil rule as header/footer)
-- Inner page cards: bg-white rounded-xl p-8 md:p-12 shadow-sm, no border, card-hover on `<a>` wrapper
+- Feature cards: bg-white rounded-xl p-12 shadow-sm text-left, plus `border border-pencil`
+- Inner page cards: bg-white rounded-xl p-8 md:p-12 shadow-sm, card-hover on `<a>` wrapper
+- Pencil border rule (`border-pencil`, #3C5A4B): the "drawn on the page" frame for major surfaces — header/footer rules, homepage feature cards, tip cards, tool shells (pathway quiz, calculator), disclaimer crisis callout. Internal furniture inside those surfaces (inputs, option cards, receipts, dividers) uses the softer `ink-green/16`, `ink-green/12`, or `hairline` tokens — the dark frame vs light inner rules contrast is the hierarchy. Floating elements (modals, popovers, pills) are shadow-only, never pencil-bordered; tinted wash panels (`bg-primary-light`, `bg-bg-light`) stay frameless.
 - Card hover: subtle shadow only (no lift) via .card-hover class
 - Header: opaque white, no bottom border, wider padding (px-4 sm:px-8 lg:px-20 py-4)
 - Accordions: native `<details>`/`<summary>`, CSS chevron rotation, .accordion-item class
