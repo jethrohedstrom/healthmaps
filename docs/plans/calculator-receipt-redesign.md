@@ -1,5 +1,7 @@
 # Cost calculator redesign — the answer is a receipt
 
+> **Partly superseded (July 2026):** the 10-session defaults and session stepper described below were replaced by a single-session framing — see `calculator-single-session.md`.
+
 ## Context
 
 Third autonomous pick; user suggested improving the frontend design of the cost calculator ("be creative"). Current state (verified in browser + code): the calculator still wears the site's *old* design idiom — white card + shadow, cool-grey borders, `font-bold` headings — while the pathway page moved to the newer flat paper-cream/sage/ink-green language. Worse, the answer to the user's actual question ("what will I pay?") is one of four identical grey stat tiles, bottom-right, below the fold, and only appears after clicking "Calculate My Costs".

@@ -5,32 +5,26 @@ const practitionerTypes = costsData.practitionerTypes;
 const feeRanges = costsData.sessionFeeRanges as Record<string, { low: number; mid: number; high: number }>;
 
 const optionCard = 'flex h-full min-h-14 items-center rounded-[10px] border border-ink-green/16 bg-white px-4 py-3 text-base font-semibold leading-snug text-heading transition-colors duration-150 hover:border-primary hover:bg-primary-light peer-checked:border-primary peer-checked:bg-primary-light peer-checked:ring-1 peer-checked:ring-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary';
-const stepperButton = 'h-11 w-11 shrink-0 rounded-[10px] border border-ink-green/16 bg-white text-xl font-semibold text-heading transition-colors duration-150 hover:border-primary hover:bg-primary-light disabled:pointer-events-none disabled:opacity-40';
 
 // Receipt row: label · dotted leader · amount. The empty leader span is a
 // baseline-aligned flex item, so its bottom border sits on the text baseline.
 const receiptRow = 'flex items-baseline gap-2 text-[15px] leading-snug';
 const receiptLeader = 'min-w-4 flex-1 border-b border-dotted border-ink-green/25';
 
-// SSR the default estimate (first practitioner, typical fee, 10 sessions,
-// bulk-billed GP) so the receipt is meaningful before/without JS. The maths
-// mirrors src/scripts/cost-calculator.ts exactly.
+// SSR the default estimate (first practitioner, typical fee, bulk-billed GP)
+// so the receipt is meaningful before/without JS. The maths mirrors
+// src/scripts/cost-calculator.ts exactly.
 const defaultPrac = practitionerTypes[0];
 const defaultRange = feeRanges[defaultPrac.id];
 const defaultFee = defaultRange.mid;
-const defaultSessions = costsData.maxMedicareSessions;
 
 const aud = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' });
-const audWhole = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 0 });
 
-const ssrTotalFees = defaultFee * defaultSessions;
-const ssrTotalRebate = defaultPrac.rebatePerSession * defaultSessions;
-const ssrGpVisits = defaultPrac.requiresMHCP && defaultSessions > 6 ? 2 : 1;
+const ssrRebate = defaultPrac.rebatePerSession;
 const ssrGpCost = 0; // bulk-billed default
-const ssrTotal = Math.max(0, ssrTotalFees - ssrTotalRebate + ssrGpCost);
-const ssrGapPerSession = Math.max(0, defaultFee - defaultPrac.rebatePerSession);
+const ssrPerSession = Math.max(0, defaultFee - ssrRebate);
 ---
-<div id="cost-calculator" class="bg-paper-cream border border-ink-green/16 rounded-[14px] p-6 sm:p-8 md:p-10">
+<div id="cost-calculator" class="bg-paper-cream border border-pencil rounded-[14px] p-6 sm:p-8 md:p-10">
   <div class="grid gap-8 md:grid-cols-[1fr_minmax(280px,0.85fr)] md:gap-10">
     <form id="calc-form" class="space-y-6" aria-label="Mental health cost calculator" novalidate>
 
@@ -81,28 +75,6 @@ const ssrGapPerSession = Math.max(0, defaultFee - defaultPrac.rebatePerSession);
         <p id="fee-hint" class="text-xs text-body mt-1">Typical range: ${defaultRange.low}–${defaultRange.high}</p>
       </div>
 
-      <!-- Number of sessions -->
-      <div>
-        <label for="num-sessions" class="block text-sm font-semibold text-body mb-1">
-          Number of sessions
-        </label>
-        <div class="flex items-center gap-3">
-          <button type="button" id="sessions-minus" aria-label="Fewer sessions" class={stepperButton}>&minus;</button>
-          <input
-            type="number"
-            id="num-sessions"
-            name="numSessions"
-            min="1"
-            max="10"
-            value={defaultSessions}
-            inputmode="numeric"
-            class="h-11 w-20 rounded-[10px] border border-ink-green/16 bg-white text-center text-base font-semibold text-heading transition-colors focus:border-primary focus:ring-2 focus:ring-primary [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-          />
-          <button type="button" id="sessions-plus" aria-label="More sessions" class={stepperButton}>+</button>
-        </div>
-        <p class="text-xs text-body mt-1">Medicare rebates cover up to 10 sessions per calendar year.</p>
-      </div>
-
       <!-- GP bulk-billed? -->
       <fieldset>
         <legend class="block text-sm font-semibold text-body mb-2">
@@ -128,31 +100,36 @@ const ssrGapPerSession = Math.max(0, defaultFee - defaultPrac.rebatePerSession);
 
         <div class="mt-4 space-y-2.5">
           <div class={receiptRow}>
-            <span class="text-body" data-receipt-fees-label>{defaultSessions} sessions &times; {audWhole.format(defaultFee)}</span>
+            <span class="text-body">Session fee</span>
             <span class={receiptLeader} aria-hidden="true"></span>
-            <span class="font-medium text-heading tabular-nums" data-receipt-fees>{aud.format(ssrTotalFees)}</span>
+            <span class="font-medium text-heading tabular-nums" data-receipt-fees>{aud.format(defaultFee)}</span>
           </div>
           <div class={receiptRow}>
             <span class="text-body">Medicare pays back</span>
             <span class={receiptLeader} aria-hidden="true"></span>
-            <span class="font-medium text-primary tabular-nums" data-receipt-rebate>&minus;{aud.format(ssrTotalRebate)}</span>
-          </div>
-          <div class={receiptRow}>
-            <span class="text-body" data-receipt-gp-label>GP visits &times; {ssrGpVisits} (care plan + review)</span>
-            <span class={receiptLeader} aria-hidden="true"></span>
-            <span class="font-medium text-heading tabular-nums" data-receipt-gp>{aud.format(ssrGpCost)}</span>
+            <span class="font-medium text-primary tabular-nums" data-receipt-rebate>&minus;{aud.format(ssrRebate)}</span>
           </div>
         </div>
 
         <div class="mt-4 border-t border-hairline pt-4">
           <div class="flex items-baseline justify-between gap-3" aria-live="polite" aria-atomic="true">
-            <span class="text-[15px] font-semibold text-heading">You pay</span>
-            <span class="font-display font-semibold text-[30px] sm:text-[34px] leading-none tracking-[-0.02em] text-heading tabular-nums" data-receipt-total>{aud.format(ssrTotal)}</span>
+            <span class="text-[15px] font-semibold text-heading">You pay per session</span>
+            <span class="font-display font-semibold text-[30px] sm:text-[34px] leading-none tracking-[-0.02em] text-heading tabular-nums" data-receipt-total>{aud.format(ssrPerSession)}</span>
           </div>
-          <p class="mt-2 text-[13px] leading-snug text-meta-sage" data-receipt-note>
-            That&rsquo;s {aud.format(ssrGapPerSession)} per session after the rebate.
-          </p>
         </div>
+
+        <div class="mt-4 border-t border-hairline pt-4">
+          <p class="text-[11.5px] font-semibold uppercase tracking-[0.08em] text-meta-sage">One-off to get started</p>
+          <div class={`mt-2.5 ${receiptRow}`}>
+            <span class="text-body" data-receipt-gp-label>GP visit (care plan)</span>
+            <span class={receiptLeader} aria-hidden="true"></span>
+            <span class="font-medium text-heading tabular-nums" data-receipt-gp>{aud.format(ssrGpCost)}</span>
+          </div>
+        </div>
+
+        <p class="mt-3 text-[13px] leading-snug text-meta-sage" data-receipt-note>
+          Medicare covers up to 10 sessions like this each calendar year.
+        </p>
       </div>
 
       <p class="mt-3 text-xs text-body">
