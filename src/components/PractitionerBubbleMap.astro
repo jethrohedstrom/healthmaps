@@ -783,7 +783,8 @@
     }
   }
 
-  /* Body scroll lock when mobile sheet is open */
+  /* Scroll lock when mobile sheet is open. Apply to <body> only (overflow
+     propagates to the viewport) — on <html> it breaks the sticky header. */
   .bm-body-locked {
     overflow: hidden !important;
   }
@@ -795,6 +796,7 @@
       max-height: 90vh;
       overflow-y: auto;
       touch-action: pan-y;
+      overscroll-behavior: contain;
     }
   }
 

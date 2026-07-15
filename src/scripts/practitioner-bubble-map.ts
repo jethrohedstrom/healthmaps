@@ -414,7 +414,6 @@ const bmData = {
       popover.style.overflowY = '';
       popover.innerHTML = '';
       document.body.classList.remove('bm-body-locked');
-      document.documentElement.classList.remove('bm-body-locked');
     } else {
       hideTimeout = window.setTimeout(function() {
         popover.style.transform = '';
@@ -422,7 +421,6 @@ const bmData = {
         popover.style.overflowY = '';
         popover.innerHTML = '';
         document.body.classList.remove('bm-body-locked');
-        document.documentElement.classList.remove('bm-body-locked');
       }, 550);
     }
   }
@@ -450,7 +448,6 @@ const bmData = {
     popover.classList.remove('bm-popover-dragging');
     backdrop.classList.remove('bm-popover-backdrop-visible');
     document.body.classList.remove('bm-body-locked');
-    document.documentElement.classList.remove('bm-body-locked');
 
     activeKey = key;
 
@@ -613,8 +610,9 @@ const bmData = {
     requestAnimationFrame(function() {
       if (isMobile()) {
         backdrop.classList.add('bm-popover-backdrop-visible');
+        // Lock scroll via <body> only — overflow propagates to the viewport,
+        // but overflow:hidden on <html> itself breaks the sticky header's anchor.
         document.body.classList.add('bm-body-locked');
-        document.documentElement.classList.add('bm-body-locked');
       }
       popover.classList.add('bm-popover-visible');
     });
@@ -779,7 +777,6 @@ const bmData = {
             popover.style.maxHeight = '';
             popover.innerHTML = '';
             document.body.classList.remove('bm-body-locked');
-            document.documentElement.classList.remove('bm-body-locked');
           }, 550);
         } else {
           // Snap back: animate from drag position to translateY(0)
