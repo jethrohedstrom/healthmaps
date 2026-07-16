@@ -88,13 +88,25 @@ try {
   });
   await reducedMotionPage.goto(`${baseUrl}/pathway/`);
   await reducedMotionPage.locator('[data-quiz-start]').click();
-  const reducedMotionOverlap = await getOverlappingAnswerPoint(reducedMotionPage);
-  assert.ok(reducedMotionOverlap, 'Expected reduced-motion Q1 and Q2 answers to overlap');
-  await reducedMotionPage.mouse.click(reducedMotionOverlap.x, reducedMotionOverlap.y);
-  await reducedMotionPage.mouse.click(reducedMotionOverlap.x, reducedMotionOverlap.y);
-  const reducedMotionState = await reducedMotionPage.evaluate(() =>
-    JSON.parse(sessionStorage.getItem('healthmaps:pathway-quiz:v3') ?? 'null'),
-  );
+  const reducedMotionState = await reducedMotionPage.evaluate(() => {
+    const buttons = (questionIndex) =>
+      Array.from(document.querySelectorAll(`[data-question-index="${questionIndex}"] [data-quiz-answer]`));
+    for (const first of buttons(0)) {
+      const firstRect = first.getBoundingClientRect();
+      for (const second of buttons(1)) {
+        const secondRect = second.getBoundingClientRect();
+        const overlaps =
+          Math.min(firstRect.right, secondRect.right) > Math.max(firstRect.left, secondRect.left) &&
+          Math.min(firstRect.bottom, secondRect.bottom) > Math.max(firstRect.top, secondRect.top);
+        if (!overlaps) continue;
+        first.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+        second.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }));
+        return JSON.parse(sessionStorage.getItem('healthmaps:pathway-quiz:v3') ?? 'null');
+      }
+    }
+    return null;
+  });
+  assert.ok(reducedMotionState, 'Expected reduced-motion Q1 and Q2 answers to overlap');
   assert.equal(reducedMotionState.questionIndex, 1, 'reduced-motion double tap must not skip Q2');
   assert.equal(reducedMotionState.answers.length, 1);
 
