@@ -17,7 +17,7 @@
           class="bm-map-svg"
           viewBox="0 0 700 540"
           data-viewbox-full="0 66 700 474"
-          data-viewbox-mobile="95 50 515 635"
+          data-viewbox-mobile="95 52 515 578"
           xmlns="http://www.w3.org/2000/svg"
           role="img"
           aria-label="Interactive map of mental health professionals in Australia. Tap a bubble to learn more."
@@ -239,7 +239,7 @@
      viewBox, synced on resize by updateViewBox() in practitioner-bubble-map.ts)
      rather than a media query, so geometry and viewBox can never disagree. */
   .bubble-map .bm-map-svg.bm-vb-mobile {
-    aspect-ratio: 515 / 635;
+    aspect-ratio: 515 / 578;
   }
 
   /* Mobile: portrait arrangement. Core goo cluster stays put at the top; each
@@ -252,16 +252,20 @@
     transform-origin: 0 0;
   }
   .bubble-map .bm-map-svg.bm-vb-mobile .bm-extra[data-prof="mh-nurse"] {
-    transform: translate(50px, 169px) scale(1.4);
+    /* centre (168, 324): left flank, tucked between Psychologist and Counsellor */
+    transform: translate(48px, -24px) scale(1.2);
   }
   .bubble-map .bm-map-svg.bm-vb-mobile .bm-extra[data-prof="social-worker"] {
-    transform: translate(-191.5px, 6.5px) scale(1.35);
+    /* centre (443, 500): bottom-right, tucked against Counsellor */
+    transform: translate(-96px, 49px) scale(1.1);
   }
   .bubble-map .bm-map-svg.bm-vb-mobile .bm-extra[data-prof="ot"] {
-    transform: translate(-305px, -40px) scale(1.35);
+    /* centre (527, 345): right flank, tucked under Psychiatrist */
+    transform: translate(-163px, 0px) scale(1.15);
   }
   .bubble-map .bm-map-svg.bm-vb-mobile .bm-extra[data-prof="peer"] {
-    transform: translate(-635px, -115px) scale(1.5);
+    /* centre (325, 562): tucked between Counsellor and Social Worker */
+    transform: translate(-443px, -14px) scale(1.2);
   }
 
   @keyframes bm-pulse {
@@ -804,6 +808,6 @@
      units, so the group scale (1.35–1.5) multiplies them again. */
   .bubble-map .bm-map-svg.bm-vb-mobile .bm-core-labels .bm-blob-label { font-size: 24px; }
   .bubble-map .bm-map-svg.bm-vb-mobile .bm-core-labels .bm-blob-sub { font-size: 17px; }
-  .bubble-map .bm-map-svg.bm-vb-mobile .bm-extra .bm-blob-label { font-size: 12px; }
+  .bubble-map .bm-map-svg.bm-vb-mobile .bm-extra .bm-blob-label { font-size: 13px; }
   .bubble-map .bm-map-svg.bm-vb-mobile .bm-extra .bm-blob-sub { font-size: 10px; }
 </style>
