@@ -35,6 +35,10 @@ const ssrPerSession = Math.max(0, defaultFee - ssrRebate);
         <legend class="block text-sm font-semibold text-body mb-2">
           Type of practitioner
         </legend>
+        <!-- REVIEW: AI-drafted — check the clinical vs general psychologist framing against src/content/practitioners/psychologist.md. -->
+        <p class="text-xs text-body mb-3">
+          Clinical psychologists have extra postgraduate training, which is why their rebate is higher — general psychologists are equally registered and well suited to common concerns like anxiety or depression.
+        </p>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {practitionerTypes.map((p, i) => (
             <label class="cursor-pointer">
