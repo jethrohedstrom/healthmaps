@@ -87,6 +87,7 @@
   --shadow-sm: 0px 1px 2px rgba(0,0,0,0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); /* = Tailwind default md */
   --shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.08); /* card lift on hover */
+  --shadow-pill: 0 2px 4px rgba(15, 23, 42, 0.14), 0 8px 24px rgba(15, 23, 42, 0.18); /* floating crisis pill */
 
   /* Typography */
   --font-sans: 'General Sans', ui-sans-serif, system-ui, sans-serif;
