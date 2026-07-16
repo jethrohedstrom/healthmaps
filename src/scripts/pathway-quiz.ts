@@ -4,6 +4,10 @@ const QUIZ_ROOT_SELECTOR = '[data-pathway-quiz]';
 const STORAGE_KEY = 'healthmaps:pathway-quiz:v3';
 const STATE_VERSION = 3;
 const TOTAL_QUESTIONS = 4;
+// The incoming screen stays transparent for 110ms, then fades in over 240ms.
+// Ignore answer clicks until that transition has finished so a second tap
+// cannot select an answer on the next question before it is readable.
+const SCREEN_TRANSITION_MS = 350;
 
 type QuizMode = 'intro' | 'question' | 'result';
 
@@ -329,6 +333,7 @@ function initPathwayQuiz(root: HTMLElement) {
   root.dataset.quizInit = '1';
 
   let state = readState();
+  let answerLockedUntil = 0;
   showScreen(root, state, false);
 
   // Homepage CTAs link to /pathway/?scroll=quiz so arriving there eases the
@@ -378,6 +383,16 @@ function initPathwayQuiz(root: HTMLElement) {
 
     const answerButton = target.closest<HTMLButtonElement>('[data-quiz-answer]');
     if (answerButton) {
+      const answerScreen = answerButton.closest<HTMLElement>('[data-quiz-screen="question"]');
+      const answerQuestionIndex = Number(answerScreen?.dataset.questionIndex);
+      if (
+        state.mode !== 'question' ||
+        answerQuestionIndex !== state.questionIndex ||
+        performance.now() < answerLockedUntil
+      ) {
+        return;
+      }
+      answerLockedUntil = prefersReducedMotion() ? 0 : performance.now() + SCREEN_TRANSITION_MS;
       state = handleAnswer(root, answerButton, state);
       return;
     }

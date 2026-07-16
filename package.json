@@ -6,6 +6,7 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "test:quiz-transition": "npm run build && node scripts/test-pathway-quiz-transition.mjs",
     "astro": "astro"
   },
   "dependencies": {
