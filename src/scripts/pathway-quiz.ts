@@ -4,9 +4,9 @@ const QUIZ_ROOT_SELECTOR = '[data-pathway-quiz]';
 const STORAGE_KEY = 'healthmaps:pathway-quiz:v3';
 const STATE_VERSION = 3;
 const TOTAL_QUESTIONS = 4;
-// The incoming screen stays transparent for 110ms, then fades in over 240ms.
-// Ignore answer clicks until that transition has finished so a second tap
-// cannot select an answer on the next question before it is readable.
+// Screens share one grid cell, so consecutive answer buttons can overlap.
+// Ignore rapid repeat activation until the animated transition has finished;
+// this also protects reduced-motion users from same-coordinate double taps.
 const SCREEN_TRANSITION_MS = 350;
 
 type QuizMode = 'intro' | 'question' | 'result';
@@ -353,6 +353,7 @@ function initPathwayQuiz(root: HTMLElement) {
 
     const startButton = target.closest<HTMLButtonElement>('[data-quiz-start]');
     if (startButton) {
+      answerLockedUntil = 0;
       state = {
         version: STATE_VERSION,
         mode: 'question',
@@ -368,12 +369,14 @@ function initPathwayQuiz(root: HTMLElement) {
 
     const backButton = target.closest<HTMLButtonElement>('[data-quiz-back]');
     if (backButton) {
+      answerLockedUntil = 0;
       state = handleBack(root, state);
       return;
     }
 
     const resetButton = target.closest<HTMLButtonElement>('[data-quiz-reset]');
     if (resetButton) {
+      answerLockedUntil = 0;
       clearState();
       state = initialState();
       announce(root, 'Quiz reset.');
@@ -392,7 +395,7 @@ function initPathwayQuiz(root: HTMLElement) {
       ) {
         return;
       }
-      answerLockedUntil = prefersReducedMotion() ? 0 : performance.now() + SCREEN_TRANSITION_MS;
+      answerLockedUntil = performance.now() + SCREEN_TRANSITION_MS;
       state = handleAnswer(root, answerButton, state);
       return;
     }
