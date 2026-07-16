@@ -35,6 +35,7 @@
   --color-paper-cream: #FBFAF6;   /* paper-sheet surface for hero + secondary cards */
   --color-paper-border: rgba(15, 74, 50, 0.06);  /* faint sage-tinted border on paper surfaces */
   --color-ink-green: #0F4A32;     /* hairline base (paper-border's solid form) — use with opacity modifiers */
+  --color-ink-green-hover: #1a5c40; /* ink-green lightened — crisis pill hover fill */
   --color-hairline: color-mix(in srgb, #0F4A32 12%, transparent); /* soft ink-green hairline: borders/dividers/rules */
   --color-pencil: #3C5A4B;        /* solid pencil rule: header/footer borders, home feature card borders */
   --color-meta-sage: #5a6b62;     /* muted sage-gray small/meta text (AA on paper-cream & page-sage) */
