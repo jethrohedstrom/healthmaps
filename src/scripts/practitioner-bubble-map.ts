@@ -337,8 +337,39 @@ const bmData = {
 
   updateViewBox();
 
+  function clearMobileState() {
+    backdrop.classList.remove('bm-popover-backdrop-visible');
+    document.body.classList.remove('bm-body-locked');
+  }
+
   function isMobile() {
     return isMobileViewport();
+  }
+
+  function syncPopoverViewportState() {
+    if (!popover) return;
+
+    if (isMobile()) {
+      // Desktop positioning is written inline. Clear it before this element
+      // becomes a fixed bottom sheet or it can render off-screen.
+      popover.style.left = '';
+      popover.style.top = '';
+
+      if (activeKey) {
+        backdrop.classList.add('bm-popover-backdrop-visible');
+        document.body.classList.add('bm-body-locked');
+      }
+      return;
+    }
+
+    // Mobile-only state must not survive after crossing to desktop.
+    clearMobileState();
+    popover.classList.remove('bm-popover-expanded');
+    popover.classList.remove('bm-popover-dragging');
+    popover.style.transform = '';
+    popover.style.height = '';
+    popover.style.maxHeight = '';
+    popover.style.overflowY = '';
   }
 
   function positionPopover(blobEl: SVGElement) {
@@ -413,14 +444,14 @@ const bmData = {
       popover.style.maxHeight = '';
       popover.style.overflowY = '';
       popover.innerHTML = '';
-      document.body.classList.remove('bm-body-locked');
+      clearMobileState();
     } else {
       hideTimeout = window.setTimeout(function() {
         popover.style.transform = '';
         popover.style.maxHeight = '';
         popover.style.overflowY = '';
         popover.innerHTML = '';
-        document.body.classList.remove('bm-body-locked');
+        clearMobileState();
       }, 550);
     }
   }
@@ -446,8 +477,9 @@ const bmData = {
     popover.classList.remove('bm-popover-visible');
     popover.classList.remove('bm-popover-expanded');
     popover.classList.remove('bm-popover-dragging');
-    backdrop.classList.remove('bm-popover-backdrop-visible');
-    document.body.classList.remove('bm-body-locked');
+    clearMobileState();
+    popover.style.left = '';
+    popover.style.top = '';
 
     activeKey = key;
 
@@ -598,6 +630,8 @@ const bmData = {
     wireBmCollapse(popover.querySelector('.bm-more-toggle'), popover.querySelector('.bm-more-detail'), 'bm-more-detail-region');
     wireBmCollapse(popover.querySelector('.bm-rebate-toggle'), popover.querySelector('.bm-rebate-detail'), 'bm-rebate-detail-region');
 
+    syncPopoverViewportState();
+
     // Position near the clicked blob (desktop only)
     const blobEl = wrapper!.querySelector('.bm-blob[data-prof="' + key + '"]') as SVGElement | null;
     if (blobEl) {
@@ -608,12 +642,6 @@ const bmData = {
     void popover.offsetHeight;
 
     requestAnimationFrame(function() {
-      if (isMobile()) {
-        backdrop.classList.add('bm-popover-backdrop-visible');
-        // Lock scroll via <body> only — overflow propagates to the viewport,
-        // but overflow:hidden on <html> itself breaks the sticky header's anchor.
-        document.body.classList.add('bm-body-locked');
-      }
       popover.classList.add('bm-popover-visible');
     });
   }
@@ -776,7 +804,7 @@ const bmData = {
             popover.style.transform = '';
             popover.style.maxHeight = '';
             popover.innerHTML = '';
-            document.body.classList.remove('bm-body-locked');
+            clearMobileState();
           }, 550);
         } else {
           // Snap back: animate from drag position to translateY(0)
@@ -817,6 +845,7 @@ const bmData = {
     if (resizeTimer) clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(function() {
       updateViewBox();
+      syncPopoverViewportState();
       if (activeKey && popover) {
         const blobEl = wrapper!.querySelector('.bm-blob[data-prof="' + activeKey + '"]') as SVGElement | null;
         if (blobEl) positionPopover(blobEl);
