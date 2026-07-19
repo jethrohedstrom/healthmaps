@@ -294,7 +294,7 @@ function handleAnswer(root: HTMLElement, button: HTMLButtonElement, state: QuizS
   };
 
   writeState(nextState);
-  announce(root, isFinalQuestion ? 'Showing your suggested starting point.' : `Question ${nextState.questionIndex + 1} of ${TOTAL_QUESTIONS}.`);
+  announce(root, isFinalQuestion ? 'Showing a good first step.' : `Question ${nextState.questionIndex + 1} of ${TOTAL_QUESTIONS}.`);
   showScreen(root, nextState);
   return nextState;
 }
