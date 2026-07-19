@@ -331,17 +331,6 @@ function initPathwayQuiz(root: HTMLElement) {
   let state = readState();
   showScreen(root, state, false);
 
-  // Homepage CTAs link to /pathway/?scroll=quiz so arriving there eases the
-  // quiz into view (no auto-start — the intro screen stays put).
-  if (new URLSearchParams(window.location.search).get('scroll') === 'quiz') {
-    // Strip the param so a reload or shared link doesn't re-trigger the scroll.
-    history.replaceState(null, '', window.location.pathname + window.location.hash);
-    // Wait for the web fonts: the card's measured position decides whether a
-    // scroll is needed, and fallback-font metrics can make it look in view
-    // when the final layout isn't.
-    document.fonts.ready.then(() => requestAnimationFrame(() => scrollQuizIntoView(root)));
-  }
-
   root.addEventListener('click', (event) => {
     const target = event.target as HTMLElement | null;
     if (!target) return;

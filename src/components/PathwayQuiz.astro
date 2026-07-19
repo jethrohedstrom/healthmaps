@@ -49,7 +49,7 @@ const questions: { question: string; answers: { label: string; scores: Record<st
 <div data-pathway-quiz class="max-w-[640px] mx-auto text-left bg-paper-cream border border-pencil rounded-[14px] overflow-hidden">
   <p class="sr-only" aria-live="polite" aria-atomic="true" data-quiz-live></p>
 
-  <div data-quiz-screen="intro" class="pathway-quiz-screen px-8 pt-10 pb-11 sm:px-12 sm:pt-12 sm:pb-[52px] text-center">
+  <div data-quiz-screen="intro" class="pathway-quiz-screen pathway-quiz-screen--intro px-8 py-10 sm:px-12 sm:py-12 text-center">
     <!-- Route motif: four stops (the four questions), filled terminus (your suggested step). -->
     <svg class="mx-auto mb-6 text-primary" width="88" height="10" viewBox="0 0 88 10" fill="none" aria-hidden="true">
       <line x1="5" y1="5" x2="83" y2="5" stroke="currentColor" stroke-opacity="0.25" stroke-width="1.5" />
@@ -211,6 +211,16 @@ const questions: { question: string; answers: { label: string; scores: Record<st
     font-size: 26px;
   }
 
+  /* Fixed card height leaves spare room on the short intro; centre it so the
+     empty space sits evenly above and below instead of as a blank slab under
+     the CTA. Question/result screens stay top-aligned. */
+  .pathway-quiz-screen--intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
   .pathway-quiz-step-row {
     display: flex;
     align-items: center;
@@ -221,13 +231,13 @@ const questions: { question: string; answers: { label: string; scores: Record<st
 
   .pathway-quiz-step-label {
     font-size: 0.875rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--color-primary);
   }
 
   .pathway-quiz-back-button {
     font-size: 0.875rem;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--color-body);
   }
 
@@ -246,17 +256,18 @@ const questions: { question: string; answers: { label: string; scores: Record<st
     border: 1px solid color-mix(in srgb, var(--color-ink-green) 16%, transparent);
     border-radius: 0.625rem;
     background: white;
-    color: var(--color-heading);
+    color: var(--color-body);
     padding: 0.875rem 1rem;
     text-align: left;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 400;
     line-height: 1.4;
   }
 
   .pathway-quiz-answer:hover {
     border-color: var(--color-primary);
     background: var(--color-primary-light);
+    color: var(--color-heading);
   }
 
   .pathway-quiz-answer:disabled {
