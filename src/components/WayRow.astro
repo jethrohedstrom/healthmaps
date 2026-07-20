@@ -41,7 +41,9 @@ const bodyClass = featured ? 'text-wash-body' : 'text-body';
 // Summary carries the row padding so it covers the whole card; the featured
 // row keeps its slightly tighter horizontal padding from the 6a design.
 const padX = featured ? 'px-5 md:px-[26px]' : 'px-5 md:px-8';
-const summaryPad = `${padX} py-5 md:py-[26px]`;
+// Vertical padding stays at py-5 on desktop rather than growing: the open card
+// has to fit a laptop viewport alongside the expanded steps list.
+const summaryPad = `${padX} py-5`;
 ---
 
 <!-- `contents` makes the wrapper layout-inert for plain rows, so featured
@@ -69,13 +71,13 @@ const summaryPad = `${padX} py-5 md:py-[26px]`;
         </span>
       </summary>
 
-      <div class={`pathway-l1-body flex ${rowGap} ${padX} pb-6 md:pb-8`}>
+      <div class={`pathway-l1-body flex ${rowGap} ${padX} pb-6 md:pb-5`}>
         <!-- Invisible spacer mirrors the icon tile column (shared width/gap
              consts) so the body aligns under the title column on md+. -->
         <span class={`hidden md:block ${tileSize} shrink-0`} aria-hidden="true"></span>
         <div class="flex-1 min-w-0">
-        <p class="text-base md:text-[17px] leading-[1.5] text-body mb-5">{oneLiner}</p>
-        <dl class="pathway-facts text-sm border-y border-hairline divide-y divide-hairline mb-4">
+        <p class="text-base md:text-[17px] leading-[1.5] text-body mb-5 md:mb-3">{oneLiner}</p>
+        <dl class="pathway-facts text-sm border-y border-hairline divide-y divide-hairline mb-4 md:mb-3">
           <div class="flex justify-between gap-4 py-2.5">
             <dt class="text-meta-sage">Cost</dt>
             <dd class="font-semibold text-heading text-right">{facts.cost}</dd>
@@ -85,10 +87,10 @@ const summaryPad = `${padX} py-5 md:py-[26px]`;
             <dd class="font-semibold text-heading text-right">{facts.sessions ?? 'Varies'}</dd>
           </div>
         </dl>
-        <div class="mb-5">
+        <div class="mb-5 md:mb-3">
           <PathwayTimeHorizon events={timeHorizon?.events} />
         </div>
-        <p class="text-sm text-meta-sage mb-6">{bestFor}</p>
+        <p class="text-sm text-meta-sage mb-6 md:mb-4">{bestFor}</p>
         <details class="pathway-details-toggle pathway-details-toggle--nested">
           <summary class="summary-chevron inline-flex items-center text-sm font-semibold text-primary cursor-pointer select-none hover:text-primary-dark transition-colors duration-150">
             <span class="sr-only">{title}: </span>
@@ -108,7 +110,7 @@ const summaryPad = `${padX} py-5 md:py-[26px]`;
               </li>
             ))}
           </ol>
-          <div class="pathway-gp-progress mt-5 pt-4 border-t border-hairline">
+          <div class="pathway-gp-progress mt-5 pt-4 md:mt-3 md:pt-3 border-t border-hairline">
             <p class="text-xs text-meta-sage mb-2" id={`${id}-progress-label`} data-progress-label>
               Step 1 of {steps.length}
             </p>

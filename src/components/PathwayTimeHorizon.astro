@@ -6,7 +6,12 @@ interface Props {
 }
 
 const W = 432;
-const H = 220;
+// The drawing is laid out in a 432x220 space, but nothing is drawn above y=36
+// or below y=207.5 (checked with getBBox on every card). The viewBox crops to
+// the ink so the panel isn't padded out by ~30px of blank canvas; all the
+// coordinate constants below stay in the original 220-tall space.
+const VIEW_Y = 30;
+const VIEW_H = 184;
 const PAD_X = 24;
 const CY = 92;
 const AMP = 22;
@@ -91,7 +96,7 @@ const renderedEvents = labeledEvents.map((ev) => {
   <div class="winding-path-inner">
     <div class="winding-path-label">Typical timeline</div>
     {hasEvents ? (
-      <svg class="winding-path" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid meet">
+      <svg class="winding-path" viewBox={`0 ${VIEW_Y} ${W} ${VIEW_H}`} preserveAspectRatio="xMidYMid meet">
         <g data-layer="track">
           <path
             d={pathD}
@@ -252,7 +257,11 @@ const renderedEvents = labeledEvents.map((ev) => {
     flex-basis: 100%;
   }
   .winding-path-inner {
-    width: min(100%, 28rem);
+    /* Caps the graphic's width; the SVG is width:100%/height:auto over a fixed
+       viewBox, so height follows in proportion. min(100%, …) means narrow
+       screens resolve to 100% and never reach the cap — lowering it scales the
+       graphic down on desktop only, no media query needed. */
+    width: min(100%, 22rem);
     margin-inline: auto;
   }
   .winding-path-label {
@@ -277,6 +286,14 @@ const renderedEvents = labeledEvents.map((ev) => {
     color: var(--color-body);
     margin: 8px 0 0;
     text-align: center;
+  }
+
+  /* Desktop opens the steps list below this panel, so the open card is fighting
+     for vertical room; trim the panel's own padding there. */
+  @media (min-width: 768px) {
+    .winding-path-wrap {
+      padding: 16px 22px 12px;
+    }
   }
 
   @media (max-width: 359px) {
