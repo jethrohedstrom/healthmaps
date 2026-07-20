@@ -62,11 +62,14 @@ const ogImageURL = new URL(ogImage, Astro.site ?? 'https://healthmaps.com.au');
 
     <meta name="generator" content={Astro.generator} />
   </head>
-  <body class="min-h-screen flex flex-col bg-page-sage">
+    <!-- body stays paper-cream: iOS Safari can paint the overscroll/rubber-band area from
+         either <html> or <body>, so both must match the cream header/footer. The sage page
+         background lives on <main> instead. -->
+  <body class="min-h-screen flex flex-col bg-paper-cream">
     <ScrollProgress />
     <a href="#main-content" class="skip-link">Skip to main content</a>
     <Header />
-    <main id="main-content" class="flex-1">
+    <main id="main-content" class="flex-1 bg-page-sage">
       <slot />
     </main>
     <Footer />
