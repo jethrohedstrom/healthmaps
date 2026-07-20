@@ -52,14 +52,35 @@ function initProgressiveCard(card: HTMLElement) {
   // Down-only: never yanks the page up when the anchor already sits at/above the
   // target. Uses ease-in-out so the scroll ramps gently up and down (no jolt at
   // click time), with a distance-scaled duration; honours reduced-motion.
-  function scrollAnchorUnderHeader(anchor: HTMLElement) {
+  //
+  // `reveal` is the content that just opened. Row summaries run 173–237px tall, so
+  // on a short viewport anchoring the summary top under the header spends most of
+  // the screen re-showing what the visitor just tapped. When that happens we scroll
+  // further — up to the point where the row title would slip under the header — to
+  // buy the new content room. On tall viewports it never binds and the landing
+  // position is unchanged.
+  function scrollAnchorUnderHeader(anchor: HTMLElement, reveal?: HTMLElement | null) {
     const header = document.querySelector<HTMLElement>('header');
     const offset = (header?.offsetHeight ?? 0) + 16;
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     requestAnimationFrame(() => {
       const startY = window.scrollY;
-      const targetY = Math.max(0, anchor.getBoundingClientRect().top + startY - offset);
+      let targetY = Math.max(0, anchor.getBoundingClientRect().top + startY - offset);
+
+      if (reveal) {
+        // Only the reveal's top is read — stable while ::details-content animates.
+        const revealTop = reveal.getBoundingClientRect().top + startY;
+        // Where we'd like to stop: new content starting ~45% down the screen.
+        const wanted = revealTop - window.innerHeight * 0.45;
+        // But never scroll so far that the row's title slips under the header —
+        // losing the title leaves the visitor reading a paragraph with no anchor.
+        // Nested/step call sites pass their summary as the anchor, which has no
+        // h3, so the whole summary is what gets kept.
+        const keep = anchor.querySelector<HTMLElement>('h3') ?? anchor;
+        const keepLimit = keep.getBoundingClientRect().top + startY - offset;
+        targetY = Math.max(targetY, Math.min(wanted, keepLimit));
+      }
 
       if (reduceMotion) {
         if (targetY > startY + 8) window.scrollTo({ top: targetY, behavior: 'auto' });
@@ -93,7 +114,7 @@ function initProgressiveCard(card: HTMLElement) {
         return;
       }
       // Anchor to the whole card: brings icon/title + revealed body into view.
-      scrollAnchorUnderHeader(card);
+      scrollAnchorUnderHeader(card, card.querySelector<HTMLElement>('.pathway-l1-body'));
     });
   }
 
@@ -105,7 +126,10 @@ function initProgressiveCard(card: HTMLElement) {
         return;
       }
       const nestedSummary = nestedDetails.querySelector<HTMLElement>(':scope > summary');
-      scrollAnchorUnderHeader(nestedSummary ?? nestedDetails);
+      scrollAnchorUnderHeader(
+        nestedSummary ?? nestedDetails,
+        nestedDetails.querySelector<HTMLElement>(':scope > .pathway-step-accordions')
+      );
     });
   }
 
@@ -168,7 +192,10 @@ function initProgressiveCard(card: HTMLElement) {
       // Settle the opened step under the header so its detail (and the next
       // revealed step) are visible. Runs on every open, including re-opens.
       const stepSummary = detail.querySelector<HTMLElement>(':scope > summary');
-      scrollAnchorUnderHeader(stepSummary ?? detail);
+      scrollAnchorUnderHeader(
+        stepSummary ?? detail,
+        detail.querySelector<HTMLElement>(':scope > .pathway-step-detail')
+      );
 
       const li = detail.closest('li');
       if (!li || !stepListRoot.contains(li)) return;
