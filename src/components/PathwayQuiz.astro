@@ -45,8 +45,11 @@ const questions: { question: string; answers: { label: string; scores: Record<st
 ];
 ---
 
-<!-- Flat quiz card (design handoff 6a, simplified). Deliberately no box-shadow. -->
-<div data-pathway-quiz class="max-w-[640px] mx-auto text-left bg-paper-cream border border-pencil rounded-[14px] overflow-hidden">
+<!-- Flat quiz card (design handoff 6a, simplified). Deliberately no box-shadow.
+     The wrapper exists so the station-label badge can overhang the top border
+     without being clipped by the shell's overflow-hidden. -->
+<div class="relative max-w-[640px] mx-auto">
+<div data-pathway-quiz class="text-left bg-paper-cream border border-pencil rounded-[14px] overflow-hidden">
   <p class="sr-only" aria-live="polite" aria-atomic="true" data-quiz-live></p>
 
   <div data-quiz-screen="intro" class="pathway-quiz-screen pathway-quiz-screen--intro px-8 py-10 sm:px-12 sm:py-12 text-center">
@@ -148,6 +151,14 @@ const questions: { question: string; answers: { label: string; scores: Record<st
     </div>
   </div>
 
+</div>
+
+<!-- Station label: overhangs the card border like a stop on the map. Shown by
+     pathway-quiz.ts only when the result is the GP route. -->
+<div data-result-badge class="hidden absolute -top-[14px] right-7 items-center gap-[7px] rounded-full border border-pencil bg-paper-cream py-1 pl-[9px] pr-3">
+  <span class="h-[9px] w-[9px] rounded-full border-[2.5px] border-primary bg-white" aria-hidden="true"></span>
+  <span class="text-[12.5px] font-semibold text-primary">Most people start here</span>
+</div>
 </div>
 
 <script>

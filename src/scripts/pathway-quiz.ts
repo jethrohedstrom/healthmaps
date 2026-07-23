@@ -131,7 +131,17 @@ function showScreen(root: HTMLElement, state: QuizState, shouldFocus = true) {
   setScreenButtonsDisabled(activeScreen, false);
 
   if (state.mode === 'result') renderResult(root, state);
+  else setBadgeVisible(root, false);
   if (shouldFocus) focusScreenHeading(activeScreen);
+}
+
+// The station-label badge sits outside the quiz shell (a sibling in the
+// wrapper) so it can overhang the card's overflow-hidden border.
+function setBadgeVisible(root: HTMLElement, visible: boolean) {
+  const badge = root.parentElement?.querySelector<HTMLElement>('[data-result-badge]');
+  if (!badge) return;
+  badge.classList.toggle('hidden', !visible);
+  badge.classList.toggle('flex', visible);
 }
 
 function getWeights(button: HTMLButtonElement): Scores {
@@ -203,6 +213,7 @@ function renderResult(root: HTMLElement, state: QuizState) {
   }
   if (runnerUpEl) runnerUpEl.textContent = `${runnerUpContent.title}: ${runnerUpContent.secondarySummary}`;
   if (link) link.href = primaryContent.href;
+  setBadgeVisible(root, primary === 'through-gp');
 }
 
 function prefersReducedMotion() {
