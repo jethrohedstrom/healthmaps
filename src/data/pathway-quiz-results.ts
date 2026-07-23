@@ -15,10 +15,11 @@ export interface ResultContent {
 export const resultContent: Record<ScoredPathwayId, ResultContent> = {
   'through-gp': {
     title: 'Start with a GP',
-    // REVIEW: AI-drafted — check the Medicare-rebate framing.
+    // REVIEW: AI-drafted — check the Medicare-rebate framing and the claim
+    // that GPs often recommend a specific practitioner.
     summaryPoints: [
-      'Medicare rebates on therapy sessions',
-      "Guidance on what's best for you, and who to see",
+      'This is the route that gets you Medicare rebates on therapy',
+      'Advice on what kind of help fits, and often a recommendation for who to see',
       "You don't need a regular GP — any GP can do it",
     ],
     secondarySummary: "Worth it if you'd like a doctor's guidance and Medicare rebates on sessions.",
