@@ -1,4 +1,4 @@
-import { resultContent, scoredPathwayIds, type ScoredPathwayId } from '../data/pathway-quiz-results';
+import { emphasisSegments, resultContent, scoredPathwayIds, type ScoredPathwayId } from '../data/pathway-quiz-results';
 
 const QUIZ_ROOT_SELECTOR = '[data-pathway-quiz]';
 const STORAGE_KEY = 'healthmaps:pathway-quiz:v3';
@@ -189,7 +189,14 @@ function renderResult(root: HTMLElement, state: QuizState) {
     summary.replaceChildren(
       ...primaryContent.summaryPoints.map((point) => {
         const li = document.createElement('li');
-        li.textContent = point;
+        li.replaceChildren(
+          ...emphasisSegments(point).map((segment) => {
+            if (!segment.em) return document.createTextNode(segment.text);
+            const em = document.createElement('em');
+            em.textContent = segment.text;
+            return em;
+          }),
+        );
         return li;
       }),
     );

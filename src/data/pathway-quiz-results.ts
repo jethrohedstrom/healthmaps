@@ -3,6 +3,20 @@
 // this one source means copy edits automatically keep the card height honest.
 
 export const scoredPathwayIds = ['through-gp', 'private', 'low-cost', 'self-guided'] as const;
+
+// Summary points may mark emphasis with *asterisks*; both renderers turn the
+// marked runs into <em> via this splitter.
+export interface PointSegment {
+  text: string;
+  em: boolean;
+}
+
+export function emphasisSegments(point: string): PointSegment[] {
+  return point
+    .split(/\*([^*]+)\*/g)
+    .map((text, i) => ({ text, em: i % 2 === 1 }))
+    .filter((segment) => segment.text.length > 0);
+}
 export type ScoredPathwayId = (typeof scoredPathwayIds)[number];
 
 export interface ResultContent {
@@ -20,7 +34,7 @@ export const resultContent: Record<ScoredPathwayId, ResultContent> = {
     summaryPoints: [
       'This is the route that gets you Medicare rebates on therapy',
       'Advice on what kind of help fits, and often a recommendation for who to see',
-      'Any GP can do this, not just one you already know',
+      "Any doctor can do this, it doesn't have to be *your* regular GP",
     ],
     secondarySummary: "Worth it if you'd like a doctor's guidance and Medicare rebates on sessions.",
     href: '#through-gp',

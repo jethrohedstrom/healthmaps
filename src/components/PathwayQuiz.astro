@@ -1,5 +1,5 @@
 ---
-import { resultContent, scoredPathwayIds } from '../data/pathway-quiz-results';
+import { emphasisSegments, resultContent, scoredPathwayIds } from '../data/pathway-quiz-results';
 
 // Every possible result's copy, for the invisible sizer that keeps the card
 // height stable no matter which result renders.
@@ -127,7 +127,9 @@ const questions: { question: string; answers: { label: string; scores: Record<st
     <div class="pathway-quiz-stack mb-6">
       {resultVariants.map((variant) => (
         <ul class="pathway-quiz-result-points text-[15.5px] leading-[1.55] text-body">
-          {variant.summaryPoints.map((point) => <li>{point}</li>)}
+          {variant.summaryPoints.map((point) => (
+            <li>{emphasisSegments(point).map((segment) => (segment.em ? <em>{segment.text}</em> : segment.text))}</li>
+          ))}
         </ul>
       ))}
     </div>
