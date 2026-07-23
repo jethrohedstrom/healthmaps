@@ -91,25 +91,24 @@ const questions: { question: string; answers: { label: string; scores: Record<st
 
   <div data-quiz-screen="result" class="pathway-quiz-screen pathway-quiz-screen--hidden pt-[30px] px-8 pb-8">
     <div class="pathway-quiz-step-row">
-      <p class="pathway-quiz-step-label">A good first step</p>
+      <p class="pathway-quiz-step-label">Our suggestion</p>
       <button type="button" data-quiz-back class="pathway-quiz-back-button">&larr; Back</button>
     </div>
     <h2 tabindex="-1" data-quiz-heading data-result-title class="pathway-quiz-heading mb-4">
       Your result
     </h2>
-    <p data-result-summary class="text-[15.5px] leading-[1.55] text-body mb-6"></p>
-    <div class="rounded-[10px] border border-ink-green/12 p-4 mb-6">
-      <p class="text-sm font-semibold text-heading mb-1">Another good option</p>
-      <p data-runner-up class="text-[15.5px] leading-[1.55] text-body"></p>
-    </div>
+    <ul data-result-summary class="pathway-quiz-result-points text-[15.5px] leading-[1.55] text-body mb-6"></ul>
     <div class="flex flex-col sm:flex-row gap-3">
       <a href="#through-gp" data-result-link class="pathway-quiz-primary-button inline-flex min-h-11 items-center justify-center rounded-[10px] bg-primary hover:bg-primary-dark transition-colors duration-150 px-6 py-[13px] text-base font-semibold text-white">
-        Go to this pathway
+        Show me the steps
       </a>
       <button type="button" data-quiz-reset class="pathway-quiz-secondary-button min-h-11 rounded-[10px] border border-ink-green/16 bg-transparent hover:bg-row-hover transition-colors duration-150 px-6 py-[13px] text-base font-semibold text-heading">
         Start over
       </button>
     </div>
+    <p class="text-[13.5px] leading-[1.55] text-meta-sage mt-5">
+      Another good option &mdash; <span data-runner-up></span>
+    </p>
   </div>
 
   <!-- Invisible height sizer: the result screen's copy is injected at runtime,
@@ -119,30 +118,31 @@ const questions: { question: string; answers: { label: string; scores: Record<st
        attributes, so the quiz script ignores it entirely. -->
   <div class="pathway-quiz-sizer pt-[30px] px-8 pb-8" aria-hidden="true">
     <div class="pathway-quiz-step-row">
-      <p class="pathway-quiz-step-label">A good first step</p>
+      <p class="pathway-quiz-step-label">Our suggestion</p>
       <span class="pathway-quiz-back-button">&larr; Back</span>
     </div>
     <div class="pathway-quiz-stack mb-4">
       {resultVariants.map((variant) => <p class="pathway-quiz-heading">{variant.title}</p>)}
     </div>
     <div class="pathway-quiz-stack mb-6">
-      {resultVariants.map((variant) => <p class="text-[15.5px] leading-[1.55] text-body">{variant.summary}</p>)}
-    </div>
-    <div class="rounded-[10px] border border-ink-green/12 p-4 mb-6">
-      <p class="text-sm font-semibold text-heading mb-1">Another good option</p>
-      <div class="pathway-quiz-stack">
-        {resultVariants.map((variant) => (
-          <p class="text-[15.5px] leading-[1.55] text-body">{variant.title}: {variant.secondarySummary}</p>
-        ))}
-      </div>
+      {resultVariants.map((variant) => (
+        <ul class="pathway-quiz-result-points text-[15.5px] leading-[1.55] text-body">
+          {variant.summaryPoints.map((point) => <li>{point}</li>)}
+        </ul>
+      ))}
     </div>
     <div class="flex flex-col sm:flex-row gap-3">
       <span class="pathway-quiz-primary-button inline-flex min-h-11 items-center justify-center rounded-[10px] bg-primary px-6 py-[13px] text-base font-semibold text-white">
-        Go to this pathway
+        Show me the steps
       </span>
       <span class="pathway-quiz-secondary-button min-h-11 rounded-[10px] border border-ink-green/16 px-6 py-[13px] text-base font-semibold text-heading">
         Start over
       </span>
+    </div>
+    <div class="pathway-quiz-stack text-[13.5px] leading-[1.55] text-meta-sage mt-5">
+      {resultVariants.map((variant) => (
+        <p>Another good option &mdash; {variant.title}: {variant.secondarySummary}</p>
+      ))}
     </div>
   </div>
 
@@ -219,6 +219,29 @@ const questions: { question: string; answers: { label: string; scores: Record<st
     flex-direction: column;
     align-items: center;
     justify-content: center;
+  }
+
+  /* Result summary points: small primary-green route dots, echoing the
+     four-stop motif on the intro screen. Preflight already strips list style. */
+  .pathway-quiz-result-points {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .pathway-quiz-result-points :global(li) {
+    position: relative;
+    padding-left: 1.125rem;
+  }
+
+  .pathway-quiz-result-points :global(li)::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--color-primary);
   }
 
   .pathway-quiz-step-row {

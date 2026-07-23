@@ -185,7 +185,15 @@ function renderResult(root: HTMLElement, state: QuizState) {
   const link = root.querySelector<HTMLAnchorElement>('[data-result-link]');
 
   if (title) title.textContent = primaryContent.title;
-  if (summary) summary.textContent = primaryContent.summary;
+  if (summary) {
+    summary.replaceChildren(
+      ...primaryContent.summaryPoints.map((point) => {
+        const li = document.createElement('li');
+        li.textContent = point;
+        return li;
+      }),
+    );
+  }
   if (runnerUpEl) runnerUpEl.textContent = `${runnerUpContent.title}: ${runnerUpContent.secondarySummary}`;
   if (link) link.href = primaryContent.href;
 }
@@ -294,7 +302,7 @@ function handleAnswer(root: HTMLElement, button: HTMLButtonElement, state: QuizS
   };
 
   writeState(nextState);
-  announce(root, isFinalQuestion ? 'Showing a good first step.' : `Question ${nextState.questionIndex + 1} of ${TOTAL_QUESTIONS}.`);
+  announce(root, isFinalQuestion ? 'Showing our suggestion.' : `Question ${nextState.questionIndex + 1} of ${TOTAL_QUESTIONS}.`);
   showScreen(root, nextState);
   return nextState;
 }
@@ -358,10 +366,16 @@ function initPathwayQuiz(root: HTMLElement) {
 
     const resetButton = target.closest<HTMLButtonElement>('[data-quiz-reset]');
     if (resetButton) {
-      clearState();
-      state = initialState();
-      announce(root, 'Quiz reset.');
+      state = {
+        version: STATE_VERSION,
+        mode: 'question',
+        questionIndex: 0,
+        answers: [],
+      };
+      writeState(state);
+      announce(root, `Question 1 of ${TOTAL_QUESTIONS}.`);
       showScreen(root, state);
+      scrollQuizIntoView(root);
       return;
     }
 

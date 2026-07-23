@@ -7,7 +7,7 @@ export type ScoredPathwayId = (typeof scoredPathwayIds)[number];
 
 export interface ResultContent {
   title: string;
-  summary: string;
+  summaryPoints: string[];
   secondarySummary: string;
   href: `#${ScoredPathwayId}`;
 }
@@ -16,26 +16,42 @@ export const resultContent: Record<ScoredPathwayId, ResultContent> = {
   'through-gp': {
     title: 'Start with a GP',
     // REVIEW: AI-drafted — check the Medicare-rebate framing.
-    summary: "A GP visit unlocks Medicare rebates for therapy sessions, and gives you professional guidance on what suits you. You don't need a regular GP to start.",
+    summaryPoints: [
+      'Medicare rebates on therapy sessions',
+      "Guidance on what's best for you, and who to see",
+      "You don't need a regular GP — any GP can do it",
+    ],
     secondarySummary: "Worth it if you'd like a doctor's guidance and Medicare rebates on sessions.",
     href: '#through-gp',
   },
   private: {
     title: 'Go straight to a practitioner',
-    summary: 'Booking directly with a psychologist or counsellor is usually the fastest way in. No referral, no paperwork; you pay the full fee yourself.',
+    summaryPoints: [
+      'Usually the fastest way in',
+      'No referral, no paperwork',
+      'You pay the full fee yourself',
+    ],
     secondarySummary: 'The quickest route in, if paying the full fee yourself is manageable.',
     href: '#private',
   },
   'low-cost': {
     title: 'Try a community or public service',
     // REVIEW: AI-drafted — check the walk-in / no-referral claim.
-    summary: 'Community and public services cost little or nothing, and many take walk-ins with no referral.',
+    summaryPoints: [
+      'Costs little or nothing',
+      'Many take walk-ins',
+      'No referral needed',
+    ],
     secondarySummary: 'Free or close to it, often walk-in, no referral needed.',
     href: '#low-cost',
   },
   'self-guided': {
     title: 'Start with self-guided online tools',
-    summary: 'Online programs and apps let you start today, privately and at your own pace. Many of the good ones are free.',
+    summaryPoints: [
+      'Start today, at your own pace',
+      'Private and low-pressure',
+      'Many of the good ones are free',
+    ],
     secondarySummary: 'Private and low-pressure, and you can start today.',
     href: '#self-guided',
   },
