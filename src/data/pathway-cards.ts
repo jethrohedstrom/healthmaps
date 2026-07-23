@@ -56,7 +56,7 @@ export const pathwayCards: PathwayCard[] = [
       {
         number: 2,
         title: 'Your GP creates a Mental Health Care Plan',
-        detail: 'Your GP will ask about how you\u2019ve been feeling, may use a short questionnaire, and write up a plan. This is what unlocks Medicare rebates for psychology sessions.',
+        detail: 'Your GP will ask about how you\u2019ve been feeling, may use a short questionnaire, and write up a plan. This is what sets you up with Medicare rebates for psychology sessions.',
       },
       {
         number: 3,
@@ -71,7 +71,7 @@ export const pathwayCards: PathwayCard[] = [
       {
         number: 5,
         title: 'Attend sessions, then return to your GP for a review',
-        detail: 'For MHCP-funded sessions (psychologist, social worker, or OT), return to your GP after 6 sessions for a review. This unlocks 4 more, up to 10 per calendar year. Psychiatrist care isn\u2019t capped the same way; follow-up is arranged with the psychiatrist directly.',
+        detail: 'For MHCP-funded sessions (psychologist, social worker, or OT), return to your GP after 6 sessions for a review. This adds 4 more, up to 10 per calendar year. Psychiatrist care isn\u2019t capped the same way; follow-up is arranged with the psychiatrist directly.',
       },
       {
         number: 6,
@@ -97,7 +97,7 @@ export const pathwayCards: PathwayCard[] = [
       {
         number: 1,
         title: 'Decide what kind of practitioner you want',
-        detail: 'Psychologist, counsellor, accredited mental health social worker, or psychiatrist. Each has different training and approach — see our <a href="/practitioners/">practitioners page</a> to compare. Psychiatrists work a little differently: you can book one privately without a referral, but a GP referral is what unlocks the Medicare rebate — so many people get one first. Others skip it on purpose, paying the full fee for privacy and to keep the visit off their Medicare record.',
+        detail: 'Psychologist, counsellor, accredited mental health social worker, or psychiatrist. Each has different training and approach — see our <a href="/practitioners/">practitioners page</a> to compare. Psychiatrists work a little differently: you can book one privately without a referral, but a GP referral is what gets you the Medicare rebate — so many people get one first. Others skip it on purpose, paying the full fee for privacy and to keep the visit off their Medicare record.',
       },
       {
         number: 2,

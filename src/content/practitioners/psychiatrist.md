@@ -23,7 +23,7 @@ Psychiatrists are **medical doctors** who specialise in mental health. They can 
 ## Medicare access
 
 <!-- REVIEW -->
-You can see a psychiatrist **privately without any referral** — you'll just pay the full fee. A **GP referral** is what unlocks the Medicare rebate (the same kind of referral you'd get for any other specialist; you don't need a Mental Health Care Plan). Some people choose to go without a referral on purpose, since paying privately means there's no Medicare claims record of the visit. Medicare rebates are generally higher than for psychologists, but so are the fees. **No cap on number of sessions** under Medicare.
+You can see a psychiatrist **privately without any referral** — you'll just pay the full fee. A **GP referral** is what gets you the Medicare rebate (the same kind of referral you'd get for any other specialist; you don't need a Mental Health Care Plan). Some people choose to go without a referral on purpose, since paying privately means there's no Medicare claims record of the visit. Medicare rebates are generally higher than for psychologists, but so are the fees. **No cap on number of sessions** under Medicare.
 
 ## Key differences from psychologists
 

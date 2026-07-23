@@ -11,7 +11,7 @@ order: 0
 
 ## What they do
 
-A GP is where most mental health journeys start. GPs can assess your mental health, prescribe basic medication, and create a **Mental Health Care Plan (MHCP)**. That plan unlocks Medicare-funded sessions with a psychologist, social worker, or OT.
+A GP is where most mental health journeys start. GPs can assess your mental health, prescribe basic medication, and create a **Mental Health Care Plan (MHCP)**. That plan sets you up with Medicare-funded sessions with a psychologist, social worker, or OT.
 
 ## When to see a GP
 
