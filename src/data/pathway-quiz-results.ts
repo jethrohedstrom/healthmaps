@@ -20,7 +20,7 @@ export const resultContent: Record<ScoredPathwayId, ResultContent> = {
     summaryPoints: [
       'This is the route that gets you Medicare rebates on therapy',
       'Advice on what kind of help fits, and often a recommendation for who to see',
-      "You don't need a regular GP — any GP can do it",
+      'Any GP can do this, not just one you already know',
     ],
     secondarySummary: "Worth it if you'd like a doctor's guidance and Medicare rebates on sessions.",
     href: '#through-gp',
