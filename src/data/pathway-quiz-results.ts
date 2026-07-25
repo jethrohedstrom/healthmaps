@@ -32,7 +32,7 @@ export const resultContent: Record<ScoredPathwayId, ResultContent> = {
     // REVIEW: AI-drafted — check the Medicare-rebate framing and the claim
     // that GPs often recommend a specific practitioner.
     summaryPoints: [
-      'This is the route that gets you Medicare rebates on therapy',
+      'This is how you get Medicare rebates on therapy',
       'Advice on what kind of help fits, and often a recommendation for who to see',
       "Any doctor can do this, it doesn't have to be *your* regular GP",
     ],
