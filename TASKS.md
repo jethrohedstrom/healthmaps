@@ -39,7 +39,7 @@ Screenshot for all calculator tasks: ![cost calculator](docs/tasks/calculator-wo
 
 - [ ] `[cloud-ok]` **Too wordy / AI-like** — "Cost calculator too wordy and AI like, and too many stats etc." Trim the copy and stat clutter.
 
-- [ ] `[cloud-ok]` **Clinical vs general psychologist** — "People won't know the difference between clinical/general psychologist. Need to solve that somehow."
+- [x] `[cloud-ok]` **Clinical vs general psychologist** — "People won't know the difference between clinical/general psychologist. Need to solve that somehow."
 
 - [ ] `[visual-check]` **First green line** — "Don't like the first green line." (Likely the green "COSTS & REBATES" section label at the top of the page, or the first green rule/accent in the calculator — confirm visually before changing.)
 
