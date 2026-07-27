@@ -9,6 +9,9 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://healthmaps.com.au',
 
+  // Honour PORT so a second dev server (e.g. another Claude session) can run alongside the default 4321.
+  server: process.env.PORT ? { port: Number(process.env.PORT) } : {},
+
   vite: {
     plugins: [tailwindcss()]
   },
