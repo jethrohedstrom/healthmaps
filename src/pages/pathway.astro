@@ -78,13 +78,19 @@ const rows = ways.map(({ id, ...way }) => {
     <div class="max-w-[800px] mx-auto pt-16 md:pt-[76px] pb-16 md:pb-[84px]">
       <h2 class="font-display font-semibold text-[28px] md:text-[38px] tracking-[-0.02em] leading-[1.15] text-heading">Where would you like to start?</h2>
       <p class="text-lg leading-[1.6] text-body max-w-[640px] mt-4 md:mt-5 text-pretty">
-        There&rsquo;s more than one way to get mental health care. Some paths start with a GP, others you can book directly. Open any option to see how it works, what it costs, and how long it normally takes.
+        There&rsquo;s more than one way to get mental health care. Some paths start with a GP, others you can book directly.
+      </p>
+
+      <!-- The instruction sits with the rows it describes, as a quiet meta line
+           rather than part of the intro paragraph. -->
+      <p class="text-[15px] leading-relaxed text-meta-sage mt-10">
+        Open any option to see how it works, what it costs, and how long it normally takes.
       </p>
 
       <!-- No connectors between rows: these are four parallel alternatives, and
            linking them (the old route-dot motif) implied a sequence. The metro
            motif lives on the quiz card, where a real sequence exists. -->
-      <div class="mt-10 flex flex-col gap-3">
+      <div class="mt-3 flex flex-col gap-3">
         {rows.map((row) => <WayRow {...row} />)}
       </div>
 
