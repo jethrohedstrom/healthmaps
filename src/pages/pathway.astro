@@ -62,7 +62,9 @@ const rows = ways.map(({ id, ...way }) => {
 
   <!-- Hero: quiz-forward, on the sage page background -->
   <section class="px-5 md:px-14 py-16 md:py-20">
-    <div class="max-w-[680px] mx-auto text-center">
+    <!-- 640px matches the quiz card's own max width (handoff 6a) so the h1
+         and the card below it share the same edges. -->
+    <div class="max-w-[640px] mx-auto text-center">
       <h1 class="font-bold text-[1.875rem] md:text-[3.125rem] tracking-[-0.025em] leading-[1.06] text-heading">
         Mental health support in Australia: where to begin
       </h1>
@@ -73,27 +75,17 @@ const rows = ways.map(({ id, ...way }) => {
   </section>
 
   <section id="all-the-ways" class="scroll-mt-24 bg-paper-cream px-5 md:px-14">
-    <div class="max-w-[900px] mx-auto pt-16 md:pt-[76px] pb-16 md:pb-[84px]">
+    <div class="max-w-[800px] mx-auto pt-16 md:pt-[76px] pb-16 md:pb-[84px]">
       <h2 class="font-display font-semibold text-[28px] md:text-[38px] tracking-[-0.02em] leading-[1.15] text-heading">Where would you like to start?</h2>
       <p class="text-lg leading-[1.6] text-body max-w-[640px] mt-4 md:mt-5 text-pretty">
         Some paths start with a doctor. Some don&rsquo;t need a referral at all. Open any option to see how it works, what it costs, and how long it normally takes.
       </p>
 
-      <div class="mt-10 flex flex-col gap-2">
-        {rows.map((row, index) => (
-          <>
-            <WayRow {...row} />
-            {index < rows.length - 1 && (
-              <!-- Route connector (echoes the quiz card motif): dots between stops.
-                   md+ only — below md the featured tile centre sits 6px off the rest. -->
-              <div class="hidden md:flex flex-col items-center gap-[5px] w-3 ml-[56px]" aria-hidden="true">
-                <span class="w-1 h-1 rounded-full bg-primary opacity-35"></span>
-                <span class="w-1 h-1 rounded-full bg-primary opacity-35"></span>
-                <span class="w-1 h-1 rounded-full bg-primary opacity-35"></span>
-              </div>
-            )}
-          </>
-        ))}
+      <!-- No connectors between rows: these are four parallel alternatives, and
+           linking them (the old route-dot motif) implied a sequence. The metro
+           motif lives on the quiz card, where a real sequence exists. -->
+      <div class="mt-10 flex flex-col gap-3">
+        {rows.map((row) => <WayRow {...row} />)}
       </div>
 
       <aside aria-label="Also worth knowing" class="mt-12 md:mt-14 pt-6 md:pt-7 border-t border-hairline">

@@ -7,7 +7,9 @@
  * <details>, which expands in place to the full pathway detail (facts,
  * timeline, best-for, step-by-step accordions with progress bar).
  *
- * `featured` gets the primary-light wrapper + solid green icon tile (GP row).
+ * `featured` gets a primary-light card background + solid green icon tile (GP
+ * row). The highlight lives on the card itself (not a wrapper) so all rows
+ * share identical outer edges and icon-tile centres at every breakpoint.
  * Icons reference the paint-* wobble filters defined once in pathway.astro.
  *
  * Behaviour hooks (pathway-progressive-steps.ts binds to these — keep them):
@@ -38,23 +40,21 @@ const rowGap = 'gap-4 md:gap-[22px]';
 const tileClass = featured ? 'bg-primary text-white' : 'bg-primary-light text-primary';
 const titleClass = featured ? 'text-[21px] md:text-[25px] text-wash-heading' : 'text-[20px] md:text-[24px] text-heading';
 const bodyClass = featured ? 'text-wash-body' : 'text-body';
-// Summary carries the row padding so it covers the whole card; the featured
-// row keeps its slightly tighter horizontal padding from the 6a design.
-const padX = featured ? 'px-5 md:px-[26px]' : 'px-5 md:px-8';
+// Summary carries the row padding so it covers the whole card. Shared by all
+// rows (featured included) so the icon-tile centres line up — the connector
+// dots in pathway.astro are positioned against this value.
+const padX = 'px-5 md:px-8';
 // Vertical padding stays at py-5 on desktop rather than growing: the open card
 // has to fit a laptop viewport alongside the expanded steps list.
 const summaryPad = `${padX} py-5`;
 ---
 
-<!-- `contents` makes the wrapper layout-inert for plain rows, so featured
-     and plain share one card body and only the wrapper styling differs. -->
-<div class={featured ? 'bg-primary-light rounded-[18px] p-1.5' : 'contents'}>
-  <div
-    id={id}
-    data-pathway-card
-    data-legacy-step-hash={legacyStepHash ? '' : undefined}
-    class="pathway-row-card scroll-mt-24 rounded-[14px] border border-transparent transition-colors duration-150 has-[>details[open]]:bg-white has-[>details[open]]:border-hairline"
-  >
+<div
+  id={id}
+  data-pathway-card
+  data-legacy-step-hash={legacyStepHash ? '' : undefined}
+  class={`pathway-row-card scroll-mt-24 rounded-[14px] border border-transparent transition-colors duration-150 has-[>details[open]]:bg-white has-[>details[open]]:border-hairline ${featured ? 'bg-primary-light' : ''}`}
+>
     <details class="pathway-details-toggle">
       <summary class={`pathway-row-summary flex items-center ${rowGap} rounded-[14px] cursor-pointer select-none ${summaryPad} ${featured ? '' : 'hover:bg-row-hover transition-colors duration-150'}`}>
         <span class={`inline-flex items-center justify-center ${tileSize} h-12 md:h-[60px] rounded-[14px] md:rounded-[17px] shrink-0 ${tileClass}`} aria-hidden="true">
@@ -135,7 +135,6 @@ const summaryPad = `${padX} py-5`;
         </div>
       </div>
     </details>
-  </div>
 </div>
 
 <script>

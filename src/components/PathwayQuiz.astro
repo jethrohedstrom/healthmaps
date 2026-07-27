@@ -53,7 +53,8 @@ const questions: { question: string; answers: { label: string; scores: Record<st
 <div data-pathway-quiz class="text-left bg-paper-cream border border-pencil rounded-[14px] overflow-hidden">
   <p class="sr-only" aria-live="polite" aria-atomic="true" data-quiz-live></p>
 
-  <div data-quiz-screen="intro" class="pathway-quiz-screen pathway-quiz-screen--intro px-8 py-10 sm:px-12 sm:py-12 text-center">
+  <!-- px-8 matches the question/result screens so copy doesn't shift when the quiz starts. -->
+  <div data-quiz-screen="intro" class="pathway-quiz-screen pathway-quiz-screen--intro px-8 py-10 sm:py-12 text-center">
     <!-- Route motif: four stops (the four questions), filled terminus (your suggested step). -->
     <svg class="mx-auto mb-6 text-primary" width="88" height="10" viewBox="0 0 88 10" fill="none" aria-hidden="true">
       <line x1="5" y1="5" x2="83" y2="5" stroke="currentColor" stroke-opacity="0.25" stroke-width="1.5" />
