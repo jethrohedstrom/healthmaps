@@ -111,9 +111,34 @@ const questions: { question: string; answers: { label: string; scores: Record<st
         Start over
       </button>
     </div>
-    <p class="text-[13.5px] leading-[1.55] text-meta-sage mt-5">
-      Another good option &mdash; <span data-runner-up></span>
-    </p>
+    <!-- Runner-up accordion (design handoff: Claude Design "Runner-up Section" 4b).
+         Collapsed by default so the suggestion above is the only pathway on
+         screen; pathway-quiz.ts fills the title/summary/href per result and
+         re-collapses it on each fresh render. -->
+    <details class="pathway-quiz-runner mt-5" data-runner-details>
+      <summary class="pathway-quiz-runner-summary">
+        <svg class="pathway-quiz-runner-miniglyph" width="30" height="18" viewBox="0 0 30 18" fill="none" aria-hidden="true">
+          <line x1="1" y1="5" x2="18" y2="5" stroke="currentColor" stroke-opacity="0.3" stroke-width="1.5" />
+          <circle cx="18" cy="5" r="3" fill="currentColor" />
+          <path d="M 8 5 C 12 5 14 8 15 10 C 16 12 18 14 20 14" stroke="currentColor" stroke-opacity="0.45" stroke-width="1.5" />
+          <circle cx="24" cy="14" r="3.5" fill="#fff" stroke="currentColor" stroke-width="2" />
+        </svg>
+        See your second-closest match
+      </summary>
+      <a data-runner-link href="#private" class="pathway-quiz-runner-row">
+        <svg class="pathway-quiz-runner-glyph" width="64" height="40" viewBox="0 0 64 40" fill="none" aria-hidden="true">
+          <line x1="2" y1="9" x2="54" y2="9" stroke="currentColor" stroke-opacity="0.25" stroke-width="1.5" />
+          <circle cx="18" cy="9" r="3" fill="currentColor" fill-opacity="0.35" />
+          <circle cx="54" cy="9" r="4" fill="currentColor" />
+          <path d="M 30 9 C 38 9 43 13 45 19 C 47 25 49 29 51 31" stroke="currentColor" stroke-opacity="0.45" stroke-width="1.5" />
+          <circle cx="56" cy="31" r="4.5" fill="#fff" stroke="currentColor" stroke-width="2.5" />
+        </svg>
+        <span>
+          <span data-runner-title class="pathway-quiz-runner-title"></span>
+          <span data-runner-summary class="pathway-quiz-runner-sub"></span>
+        </span>
+      </a>
+    </details>
   </div>
 
   <!-- Invisible height sizer: the result screen's copy is injected at runtime,
@@ -146,10 +171,36 @@ const questions: { question: string; answers: { label: string; scores: Record<st
         Start over
       </span>
     </div>
-    <div class="pathway-quiz-stack text-[13.5px] leading-[1.55] text-meta-sage mt-5">
-      {resultVariants.map((variant) => (
-        <p>Another good option &mdash; {variant.title}: {variant.secondarySummary}</p>
-      ))}
+    <!-- Replica of the runner-up accordion in its OPEN state (plain spans, not
+         a real <details>) so the card reserves the expanded height and never
+         resizes when the accordion toggles. -->
+    <div class="mt-5">
+      <span class="pathway-quiz-runner-summary">
+        <svg class="pathway-quiz-runner-miniglyph" width="30" height="18" viewBox="0 0 30 18" fill="none" aria-hidden="true">
+          <line x1="1" y1="5" x2="18" y2="5" stroke="currentColor" stroke-opacity="0.3" stroke-width="1.5" />
+          <circle cx="18" cy="5" r="3" fill="currentColor" />
+          <path d="M 8 5 C 12 5 14 8 15 10 C 16 12 18 14 20 14" stroke="currentColor" stroke-opacity="0.45" stroke-width="1.5" />
+          <circle cx="24" cy="14" r="3.5" fill="#fff" stroke="currentColor" stroke-width="2" />
+        </svg>
+        See your second-closest match
+      </span>
+      <div class="pathway-quiz-stack">
+        {resultVariants.map((variant) => (
+          <span class="pathway-quiz-runner-row">
+            <svg class="pathway-quiz-runner-glyph" width="64" height="40" viewBox="0 0 64 40" fill="none" aria-hidden="true">
+              <line x1="2" y1="9" x2="54" y2="9" stroke="currentColor" stroke-opacity="0.25" stroke-width="1.5" />
+              <circle cx="18" cy="9" r="3" fill="currentColor" fill-opacity="0.35" />
+              <circle cx="54" cy="9" r="4" fill="currentColor" />
+              <path d="M 30 9 C 38 9 43 13 45 19 C 47 25 49 29 51 31" stroke="currentColor" stroke-opacity="0.45" stroke-width="1.5" />
+              <circle cx="56" cy="31" r="4.5" fill="#fff" stroke="currentColor" stroke-width="2.5" />
+            </svg>
+            <span>
+              <span class="pathway-quiz-runner-title">{variant.title}</span>
+              <span class="pathway-quiz-runner-sub">{variant.secondarySummary}</span>
+            </span>
+          </span>
+        ))}
+      </div>
     </div>
   </div>
 
@@ -316,9 +367,76 @@ const questions: { question: string; answers: { label: string; scores: Record<st
   .pathway-quiz-answer:focus-visible,
   .pathway-quiz-primary-button:focus-visible,
   .pathway-quiz-secondary-button:focus-visible,
-  .pathway-quiz-back-button:focus-visible {
+  .pathway-quiz-back-button:focus-visible,
+  .pathway-quiz-runner-summary:focus-visible {
     outline: 3px solid var(--color-primary);
     outline-offset: 3px;
+  }
+
+  /* Runner-up accordion (Claude Design "Runner-up Section" 4b): a quiet
+     underlined link with a miniature branch glyph; opening reveals the
+     runner-up as the next stop on a branch line. */
+  .pathway-quiz-runner-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-meta-sage);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: color-mix(in srgb, var(--color-meta-sage) 40%, transparent);
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .pathway-quiz-runner-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .pathway-quiz-runner-summary:hover,
+  .pathway-quiz-runner[open] .pathway-quiz-runner-summary {
+    color: var(--color-heading);
+    text-decoration-color: currentColor;
+  }
+
+  .pathway-quiz-runner-miniglyph,
+  .pathway-quiz-runner-glyph {
+    flex: none;
+    color: var(--color-primary);
+  }
+
+  .pathway-quiz-runner-miniglyph {
+    opacity: 0.85;
+  }
+
+  .pathway-quiz-runner-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    text-decoration: none;
+  }
+
+  .pathway-quiz-runner-title {
+    display: block;
+    font-size: 15.5px;
+    font-weight: 600;
+    line-height: 1.35;
+    color: var(--color-primary);
+  }
+
+  .pathway-quiz-runner-row:hover .pathway-quiz-runner-title {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .pathway-quiz-runner-sub {
+    display: block;
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--color-meta-sage);
+    margin-top: 3px;
   }
 
   /* Sequenced fade between screens: the outgoing screen fades out quickly,

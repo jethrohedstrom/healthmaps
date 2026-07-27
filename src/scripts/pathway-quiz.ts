@@ -191,7 +191,10 @@ function renderResult(root: HTMLElement, state: QuizState) {
 
   const title = root.querySelector<HTMLElement>('[data-result-title]');
   const summary = root.querySelector<HTMLElement>('[data-result-summary]');
-  const runnerUpEl = root.querySelector<HTMLElement>('[data-runner-up]');
+  const runnerDetails = root.querySelector<HTMLDetailsElement>('[data-runner-details]');
+  const runnerTitle = root.querySelector<HTMLElement>('[data-runner-title]');
+  const runnerSummary = root.querySelector<HTMLElement>('[data-runner-summary]');
+  const runnerLink = root.querySelector<HTMLAnchorElement>('[data-runner-link]');
   const link = root.querySelector<HTMLAnchorElement>('[data-result-link]');
 
   if (title) title.textContent = primaryContent.title;
@@ -211,7 +214,12 @@ function renderResult(root: HTMLElement, state: QuizState) {
       }),
     );
   }
-  if (runnerUpEl) runnerUpEl.textContent = `${runnerUpContent.title}: ${runnerUpContent.secondarySummary}`;
+  if (runnerTitle) runnerTitle.textContent = runnerUpContent.title;
+  if (runnerSummary) runnerSummary.textContent = runnerUpContent.secondarySummary;
+  if (runnerLink) runnerLink.href = runnerUpContent.href;
+  // Collapse on every fresh render so each result starts with only the
+  // suggestion visible (Back-and-forward, Start over, restored state).
+  if (runnerDetails) runnerDetails.open = false;
   if (link) link.href = primaryContent.href;
   setBadgeVisible(root, primary === 'through-gp');
 }
