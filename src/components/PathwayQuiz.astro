@@ -13,15 +13,15 @@ const questions: { question: string; answers: { label: string; scores: Record<st
     answers: [
       { label: 'Getting seen as fast as possible', scores: { 'data-score-private': 3, 'data-score-self-guided': 1 } },
       { label: 'Keeping the cost down', scores: { 'data-score-low-cost': 3, 'data-score-through-gp': 1, 'data-score-self-guided': 1 } },
-      { label: "Finding someone who's the right fit", scores: { 'data-score-private': 3, 'data-score-through-gp': 1 } },
+      { label: "Finding a practitioner who's the right fit", scores: { 'data-score-private': 3, 'data-score-through-gp': 1 } },
       { label: "I'm not sure yet", scores: { 'data-score-through-gp': 1 } },
     ],
   },
   {
-    question: 'When it comes to cost, what fits you best right now?',
+    question: "What's your situation with cost?",
     answers: [
       { label: "I'd like Medicare rebates to help with the cost", scores: { 'data-score-through-gp': 3 } },
-      { label: "I'm not really concerned about cost", scores: { 'data-score-private': 3 } },
+      { label: "Cost isn't a big concern for me", scores: { 'data-score-private': 3 } },
       { label: 'I need free or very low-cost options', scores: { 'data-score-low-cost': 3, 'data-score-self-guided': 1 } },
       { label: "I'm not sure yet", scores: { 'data-score-through-gp': 1 } },
     ],
@@ -29,17 +29,17 @@ const questions: { question: string; answers: { label: string; scores: Record<st
   {
     question: 'How would you prefer to start?',
     answers: [
-      { label: 'By seeing a GP first, to work out what kind of help fits', scores: { 'data-score-through-gp': 2, 'data-score-low-cost': 1 } },
-      { label: 'Straight to a therapist (in person or online)', scores: { 'data-score-private': 2, 'data-score-through-gp': 1 } },
-      { label: 'On my own with a self-guided program, at my own pace', scores: { 'data-score-self-guided': 3 } },
-      { label: 'Through free or community services', scores: { 'data-score-low-cost': 3 } },
+      { label: 'Seeing a GP first, to work out what kind of help I need', scores: { 'data-score-through-gp': 2, 'data-score-low-cost': 1 } },
+      { label: 'Going straight to a therapist (in person or online)', scores: { 'data-score-private': 2, 'data-score-through-gp': 1 } },
+      { label: 'Trying a self-guided program at my own pace', scores: { 'data-score-self-guided': 3 } },
+      { label: 'Using free or community services', scores: { 'data-score-low-cost': 3 } },
     ],
   },
   {
     question: 'Do you have a regular GP you can see?',
     answers: [
       { label: 'Yes', scores: { 'data-score-through-gp': 3 } },
-      { label: 'I can get to one, but it may take a little time', scores: { 'data-score-through-gp': 2 } },
+      { label: "I could get one, but it'd take some time", scores: { 'data-score-through-gp': 2 } },
       { label: 'No / not sure', scores: { 'data-score-low-cost': 1, 'data-score-private': 1, 'data-score-self-guided': 1 } },
     ],
   },
