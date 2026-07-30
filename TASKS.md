@@ -25,7 +25,7 @@ Last synced from the note: 2026-07-16.
 
 - [ ] `[visual-check]` **Pathways page overall** — "Improve look of the pathways page so it looks less AI vibe. Maybe more simple." ![pathway page](docs/tasks/pathway-page-look.png)
 
-- [ ] `[cloud-ok]` **Quiz question copy** — "Check over the copy of the questions. Optimise them." (The pathway quiz questions.)
+- [x] `[cloud-ok]` **Quiz question copy** — "Check over the copy of the questions. Optimise them." (The pathway quiz questions.)
 
 - [ ] `[visual-check]` **Green logo-style dots** — "Make green logo style dots, arty, homemade, for the website emojis." (Replace emoji usage across the site with hand-made green dot marks in the logo's style.)
 
