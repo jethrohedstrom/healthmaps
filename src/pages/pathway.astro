@@ -83,10 +83,8 @@ const rows = ways.map(({ id, ...way }) => {
 
       <!-- Contents caption (design: Instruction Line Explorations 1b): states what
            each row opens to reveal, sitting on a hairline above the rows. -->
-      <div class="flex items-center gap-2 mt-10 pb-2.5 border-b border-hairline">
-        <svg class="text-primary flex-none" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-          <path d="M5 8l5 5 5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
+      <div class="flex items-start gap-2 mt-10 pb-2.5 border-b border-hairline">
+        <span class="w-1.5 h-1.5 mt-[7px] rounded-full bg-primary flex-none" aria-hidden="true"></span>
         <p class="text-[14px] text-meta-sage">
           Each option opens to show <b class="font-semibold text-ink-green">how it works</b>, <b class="font-semibold text-ink-green">what it costs</b>, and <b class="font-semibold text-ink-green">the typical wait</b>.
         </p>
