@@ -53,15 +53,22 @@ const summaryPad = `${padX} py-5`;
   id={id}
   data-pathway-card
   data-legacy-step-hash={legacyStepHash ? '' : undefined}
-  class={`pathway-row-card scroll-mt-24 rounded-[14px] border border-transparent transition-colors duration-150 has-[>details[open]]:bg-white has-[>details[open]]:border-hairline ${featured ? 'bg-primary-light' : ''}`}
+  class={`pathway-row-card relative scroll-mt-24 rounded-[14px] border border-transparent transition-colors duration-150 has-[>details[open]]:bg-white has-[>details[open]]:border-hairline ${featured ? 'bg-primary-light' : ''}`}
 >
+    <!-- Station label: overhangs the card border like a stop on the map, matching
+         the quiz result badge. Click-transparent so the summary toggles beneath it. -->
+    {kicker && (
+      <div class="pointer-events-none absolute -top-[14px] right-7 flex items-center gap-[7px] rounded-full border border-pencil bg-paper-cream py-1 pl-[9px] pr-3">
+        <span class="h-[9px] w-[9px] rounded-full border-[2.5px] border-primary bg-white" aria-hidden="true"></span>
+        <span class="text-[12.5px] font-semibold text-primary">{kicker}</span>
+      </div>
+    )}
     <details class="pathway-details-toggle">
-      <summary class={`pathway-row-summary flex items-center ${rowGap} rounded-[14px] cursor-pointer select-none ${summaryPad} ${featured ? '' : 'hover:bg-row-hover transition-colors duration-150'}`}>
+      <summary class={`pathway-row-summary flex items-center ${rowGap} rounded-[14px] cursor-pointer ${summaryPad} ${featured ? '' : 'hover:bg-row-hover transition-colors duration-150'}`}>
         <span class={`inline-flex items-center justify-center ${tileSize} h-12 md:h-[60px] rounded-[14px] md:rounded-[17px] shrink-0 ${tileClass}`} aria-hidden="true">
           <Fragment set:html={wayIconSvg[icon]} />
         </span>
         <span class="flex-1 min-w-0">
-          {kicker && <span class="block text-[11.5px] font-semibold uppercase tracking-[0.08em] text-primary mb-[5px]">{kicker}</span>}
           <h3 class={`font-display font-semibold tracking-[-0.01em] leading-snug ${titleClass}`}>{title}</h3>
           <span class={`block text-base md:text-[17px] leading-[1.5] mt-1.5 ${bodyClass}`}>{body}</span>
           <span class="sr-only">, show details</span>
@@ -92,7 +99,7 @@ const summaryPad = `${padX} py-5`;
         </div>
         <p class="text-sm text-meta-sage mb-6 md:mb-4">{bestFor}</p>
         <details class="pathway-details-toggle pathway-details-toggle--nested">
-          <summary class="summary-chevron inline-flex items-center text-sm font-semibold text-primary cursor-pointer select-none hover:text-primary-dark transition-colors duration-150">
+          <summary class="summary-chevron inline-flex items-center text-sm font-semibold text-primary cursor-pointer hover:text-primary-dark transition-colors duration-150">
             <span class="sr-only">{title}: </span>
             <span class="pathway-label-show">How does this work?</span>
             <span class="pathway-label-hide">Hide steps</span>

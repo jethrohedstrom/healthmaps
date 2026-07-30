@@ -93,12 +93,12 @@ const rows = ways.map(({ id, ...way }) => {
       <!-- No connectors between rows: these are four parallel alternatives, and
            linking them (the old route-dot motif) implied a sequence. The metro
            motif lives on the quiz card, where a real sequence exists. -->
-      <div class="mt-3.5 flex flex-col gap-3">
+      <div class="mt-6 flex flex-col gap-3">
         {rows.map((row) => <WayRow {...row} />)}
       </div>
 
       <aside aria-label="Also worth knowing" class="mt-12 md:mt-14 pt-6 md:pt-7 border-t border-hairline">
-        <p class="text-[11.5px] font-semibold uppercase tracking-[0.08em] text-meta-sage mb-2">Also worth knowing</p>
+        <p class="text-[12.5px] font-semibold text-meta-sage mb-2">Also worth knowing</p>
         <p class="text-[15px] leading-relaxed text-body max-w-[640px]">
           If you have a severe, long-term mental health condition (psychosocial disability) that substantially affects your daily life, you may be eligible for NDIS-funded support.
           <a href="https://www.ndis.gov.au/understanding/how-ndis-works/mental-health-and-ndis" target="_blank" rel="noopener noreferrer" class="text-primary font-semibold underline underline-offset-2">Learn about NDIS mental health support</a>.

@@ -325,7 +325,6 @@ details[open] > .pathway-row-summary .pathway-row-chevron {
   gap: 0.875rem;
   padding: 0.875rem 2rem 0.875rem 0;
   cursor: pointer;
-  user-select: none;
 }
 /* Flat stop-dot (route motif): light green tile when closed, filled
    terminus green when the step is open. */
