@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PathwayQuiz from '../components/PathwayQuiz.astro';
 import WayRow, { type Props as WayRowProps } from '../components/WayRow.astro';
+import TermPopover from '../components/TermPopover.astro';
 import { pathwayCards } from '../data/pathway-cards';
 
 const liveCards = pathwayCards.filter((c) => !c.draft);
@@ -94,7 +95,29 @@ const rows = ways.map(({ id, ...way }) => {
            linking them (the old route-dot motif) implied a sequence. The metro
            motif lives on the quiz card, where a real sequence exists. -->
       <div class="mt-6 flex flex-col gap-3">
-        {rows.map((row) => <WayRow {...row} />)}
+        {rows.map((row) =>
+          row.card.id === 'through-gp' ? (
+            <WayRow {...row}>
+              <Fragment slot="body">
+                A GP can listen, help you make sense of things, and write a{' '}
+                <TermPopover
+                  term="mental health treatment plan"
+                  heading="Mental health treatment plan"
+                  body="A short document your GP writes with you in one appointment. It's what makes you eligible for Medicare rebates on psychology sessions — up to 10 per year. Any GP can write one."
+                />{' '}
+                — the document that gets you{' '}
+                <TermPopover
+                  term="Medicare rebates"
+                  heading="Medicare rebates"
+                  body="Medicare pays back part of the session fee — you pay the full price, then get a set amount refunded. Some practitioners bulk bill, meaning no out-of-pocket cost at all."
+                />{' '}
+                on psychology sessions.
+              </Fragment>
+            </WayRow>
+          ) : (
+            <WayRow {...row} />
+          )
+        )}
       </div>
 
       <aside aria-label="Also worth knowing" class="mt-12 md:mt-14 pt-6 md:pt-7 border-t border-hairline">

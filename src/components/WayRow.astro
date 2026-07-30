@@ -70,7 +70,9 @@ const summaryPad = `${padX} py-5`;
         </span>
         <span class="flex-1 min-w-0">
           <h3 class={`font-display font-semibold tracking-[-0.01em] leading-snug ${titleClass}`}>{title}</h3>
-          <span class={`block text-base md:text-[17px] leading-[1.5] mt-1.5 ${bodyClass}`}>{body}</span>
+          <span class={`block text-base md:text-[17px] leading-[1.5] mt-1.5 ${bodyClass}`}>
+            {Astro.slots.has('body') ? <slot name="body" /> : body}
+          </span>
           <span class="sr-only">, show details</span>
         </span>
         <span class="pathway-row-chevron shrink-0 text-primary" aria-hidden="true">

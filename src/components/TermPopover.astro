@@ -1,0 +1,93 @@
+---
+/**
+ * Inline glossary term with a tap-to-open popover definition.
+ *
+ * Renders as phrasing content only (spans + button) so it can sit inside a
+ * <summary> — where it does, the click handler stops the event before the
+ * details toggle sees it. One popover open at a time; dismiss on tap-away or
+ * Escape. Popover is shadow-only per the design rules (floating elements are
+ * never pencil-bordered).
+ */
+interface Props {
+  /** Visible inline text, as it appears mid-sentence */
+  term: string;
+  heading: string;
+  body: string;
+}
+
+const { term, heading, body } = Astro.props;
+const panelId = 'term-pop-' + term.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+---
+<span class="term-popover relative inline">
+  <!-- role=button span, not <button>: Chrome lays buttons out as atomic inline
+       boxes, so a real <button> can't wrap mid-phrase with the sentence. -->
+  <span
+    role="button"
+    tabindex="0"
+    class="term-popover-toggle underline decoration-dotted decoration-current underline-offset-[3px] cursor-help"
+    aria-expanded="false"
+    aria-controls={panelId}
+  >{term}</span>
+  <span
+    id={panelId}
+    class="term-popover-panel absolute top-[calc(100%+8px)] left-0 z-20 block w-[280px] max-w-[calc(100vw-2.5rem)] rounded-xl bg-white shadow-[var(--shadow-pill)] p-4 text-left font-normal normal-case tracking-normal"
+    hidden
+  >
+    <span class="block text-sm font-semibold text-heading mb-1">{heading}</span>
+    <span class="block text-sm leading-relaxed text-body">{body}</span>
+  </span>
+</span>
+
+<script>
+  const closeAll = (except?: Element | null) => {
+    document.querySelectorAll<HTMLElement>('.term-popover-panel:not([hidden])').forEach((panel) => {
+      if (panel.parentElement === except) return;
+      panel.hidden = true;
+      panel.style.marginLeft = '';
+      panel.parentElement
+        ?.querySelector('.term-popover-toggle')
+        ?.setAttribute('aria-expanded', 'false');
+    });
+  };
+
+  document.querySelectorAll<HTMLElement>('.term-popover-toggle').forEach((btn) => {
+    const wrap = btn.parentElement;
+    const panel = wrap?.querySelector<HTMLElement>('.term-popover-panel');
+    if (!wrap || !panel) return;
+    const toggle = (e: Event) => {
+      // Inside a <details> row: stop the event before the summary toggles.
+      e.preventDefault();
+      e.stopPropagation();
+      const wasOpen = !panel.hidden;
+      closeAll();
+      if (wasOpen) return;
+      panel.hidden = false;
+      btn.setAttribute('aria-expanded', 'true');
+      // Nudge left if the panel would overflow the viewport's right edge.
+      panel.style.marginLeft = '';
+      const rect = panel.getBoundingClientRect();
+      const overflowRight = rect.right - (window.innerWidth - 12);
+      if (overflowRight > 0) {
+        panel.style.marginLeft = `-${Math.min(overflowRight, Math.max(rect.left - 12, 0))}px`;
+      }
+    };
+    btn.addEventListener('click', toggle);
+    // role=button span: Enter/Space don't synthesize clicks like a <button> does.
+    btn.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') toggle(e);
+    });
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!(e.target as Element).closest?.('.term-popover')) closeAll();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    const openPanel = document.querySelector<HTMLElement>('.term-popover-panel:not([hidden])');
+    if (!openPanel) return;
+    const btn = openPanel.parentElement?.querySelector<HTMLElement>('.term-popover-toggle');
+    closeAll();
+    btn?.focus();
+  });
+</script>
