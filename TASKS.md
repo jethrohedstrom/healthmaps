@@ -31,8 +31,6 @@ Last synced from the note: 2026-07-16.
 
 - [ ] `[visual-check]` **GP card auto-scroll bug** — the GP card on the pathway page has an unwanted auto-scroll behaviour. (Not in the note — added from Jethro's description; only this one line of detail exists. Interaction bug, hard to reproduce headlessly — attempt at your own risk and describe in the PR exactly what you could and couldn't reproduce.)
 
-- [ ] `[visual-check]` **Void below timeline illustration** — there's an empty void below the timeline illustration. (Not in the note — added from Jethro's description; only this one line of detail exists.)
-
 ### Cost calculator (`/calculator`)
 
 Screenshot for all calculator tasks: ![cost calculator](docs/tasks/calculator-wordy.png)
