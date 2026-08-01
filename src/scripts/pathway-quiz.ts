@@ -4,6 +4,10 @@ const QUIZ_ROOT_SELECTOR = '[data-pathway-quiz]';
 const STORAGE_KEY = 'healthmaps:pathway-quiz:v3';
 const STATE_VERSION = 3;
 const TOTAL_QUESTIONS = 4;
+const COMPACT_CLASS = 'pathway-quiz--compact';
+const HEIGHT_ANIM_CLASS = 'pathway-quiz--height-anim';
+// Must match the .pathway-quiz--height-anim transition duration in PathwayQuiz.astro.
+const HEIGHT_ANIM_MS = 300;
 
 type QuizMode = 'intro' | 'question' | 'result';
 
@@ -119,6 +123,56 @@ function announce(root: HTMLElement, message: string) {
   if (live) live.textContent = message;
 }
 
+// One cleanup per root: clears the inline height, transition class, listeners
+// and timeout so a mid-tween retarget (or reduced-motion snap) starts clean.
+const heightAnimCleanups = new WeakMap<HTMLElement, () => void>();
+
+function cancelHeightAnimation(root: HTMLElement) {
+  heightAnimCleanups.get(root)?.();
+}
+
+// Toggles the slim-intro state on the shell. In compact state the non-intro
+// screens and the sizer sit out of the grid's height calculation (see
+// PathwayQuiz.astro styles), so the card is a bar sized by the intro alone.
+// The FLIP tween pins the rendered height, toggles the class, then transitions
+// to the new natural height — no inline styles survive, so the expanded card's
+// fixed-height grid behaviour is untouched between questions and results.
+function setCompactMode(root: HTMLElement, compact: boolean, animate: boolean) {
+  if (root.classList.contains(COMPACT_CLASS) === compact) return;
+
+  if (!animate || prefersReducedMotion()) {
+    cancelHeightAnimation(root);
+    root.classList.toggle(COMPACT_CLASS, compact);
+    return;
+  }
+
+  const startHeight = root.offsetHeight;
+  cancelHeightAnimation(root);
+  root.classList.toggle(COMPACT_CLASS, compact);
+  const endHeight = root.offsetHeight;
+  if (startHeight === endHeight) return;
+
+  const finish = () => {
+    root.removeEventListener('transitionend', onTransitionEnd);
+    window.clearTimeout(timeoutId);
+    heightAnimCleanups.delete(root);
+    root.classList.remove(HEIGHT_ANIM_CLASS);
+    root.style.height = '';
+  };
+  const onTransitionEnd = (event: TransitionEvent) => {
+    if (event.target === root && event.propertyName === 'height') finish();
+  };
+
+  root.style.height = `${startHeight}px`;
+  // Force a reflow so the transition has a committed start value.
+  void root.offsetHeight;
+  root.classList.add(HEIGHT_ANIM_CLASS);
+  root.style.height = `${endHeight}px`;
+  root.addEventListener('transitionend', onTransitionEnd);
+  const timeoutId = window.setTimeout(finish, HEIGHT_ANIM_MS + 100);
+  heightAnimCleanups.set(root, finish);
+}
+
 function showScreen(root: HTMLElement, state: QuizState, shouldFocus = true) {
   root.querySelectorAll<HTMLElement>('[data-quiz-screen]').forEach((screen) => {
     screen.classList.add('pathway-quiz-screen--hidden');
@@ -129,6 +183,10 @@ function showScreen(root: HTMLElement, state: QuizState, shouldFocus = true) {
 
   activeScreen.classList.remove('pathway-quiz-screen--hidden');
   setScreenButtonsDisabled(activeScreen, false);
+
+  // shouldFocus is false only on the initial render — exactly the case that
+  // must snap (a restored mid-quiz session expands instantly, no tween).
+  setCompactMode(root, state.mode === 'intro', shouldFocus);
 
   if (state.mode === 'result') renderResult(root, state);
   else setBadgeVisible(root, false);
@@ -380,7 +438,9 @@ function initPathwayQuiz(root: HTMLElement) {
       writeState(state);
       announce(root, `Question 1 of ${TOTAL_QUESTIONS}.`);
       showScreen(root, state);
-      scrollQuizIntoView(root);
+      // Defer until the card has expanded so the nearest-scroll math measures
+      // the final rect; grow-then-settle is calmer than concurrent tweens.
+      window.setTimeout(() => scrollQuizIntoView(root), prefersReducedMotion() ? 0 : HEIGHT_ANIM_MS + 20);
       return;
     }
 
@@ -392,16 +452,12 @@ function initPathwayQuiz(root: HTMLElement) {
 
     const resetButton = target.closest<HTMLButtonElement>('[data-quiz-reset]');
     if (resetButton) {
-      state = {
-        version: STATE_VERSION,
-        mode: 'question',
-        questionIndex: 0,
-        answers: [],
-      };
-      writeState(state);
-      announce(root, `Question 1 of ${TOTAL_QUESTIONS}.`);
+      // Return to the slim intro bar (same collapse path as Back from Q1).
+      // The card shrinks in place — its top edge doesn't move — so no scroll.
+      clearState();
+      state = initialState();
+      announce(root, 'Back to the start.');
       showScreen(root, state);
-      scrollQuizIntoView(root);
       return;
     }
 

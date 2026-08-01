@@ -1,5 +1,6 @@
 ---
 import { emphasisSegments, resultContent, scoredPathwayIds } from '../data/pathway-quiz-results';
+import { wayIconSvg } from './way-icons';
 
 // Every possible result's copy, for the invisible sizer that keeps the card
 // height stable no matter which result renders.
@@ -50,29 +51,40 @@ const questions: { question: string; answers: { label: string; scores: Record<st
      The wrapper exists so the station-label badge can overhang the top border
      without being clipped by the shell's overflow-hidden. -->
 <div class="relative max-w-[640px] mx-auto">
-<div data-pathway-quiz class="text-left bg-paper-cream border border-pencil rounded-[14px] overflow-hidden">
+<div data-pathway-quiz class="pathway-quiz--compact text-left bg-paper-cream border border-pencil rounded-[14px] overflow-hidden">
   <p class="sr-only" aria-live="polite" aria-atomic="true" data-quiz-live></p>
 
-  <!-- px-8 matches the question/result screens so copy doesn't shift when the quiz starts. -->
-  <div data-quiz-screen="intro" class="pathway-quiz-screen pathway-quiz-screen--intro px-8 py-10 sm:py-12 text-center">
-    <!-- Route motif: four stops (the four questions), filled terminus (your suggested step). -->
-    <svg class="mx-auto mb-6 text-primary" width="88" height="10" viewBox="0 0 88 10" fill="none" aria-hidden="true">
-      <line x1="5" y1="5" x2="83" y2="5" stroke="currentColor" stroke-opacity="0.25" stroke-width="1.5" />
-      <circle cx="5" cy="5" r="3" fill="currentColor" fill-opacity="0.35" />
-      <circle cx="31" cy="5" r="3" fill="currentColor" fill-opacity="0.35" />
-      <circle cx="57" cy="5" r="3" fill="currentColor" fill-opacity="0.35" />
-      <circle cx="83" cy="5" r="4" fill="currentColor" />
-    </svg>
-    <h2 tabindex="-1" data-quiz-heading class="pathway-quiz-heading pathway-quiz-heading--intro">
-      Not sure where to start?
-    </h2>
-    <p class="text-[15.5px] leading-[1.55] text-body mt-[10px] max-w-[480px] mx-auto">
-      Four quick questions, then a suggested first step for your situation.
-    </p>
-    <button type="button" data-quiz-start class="pathway-quiz-primary-button w-full sm:w-auto min-h-11 rounded-[10px] bg-primary hover:bg-primary-dark transition-colors duration-150 px-5 sm:px-9 py-[13px] text-center text-base font-semibold text-white mt-7">
-      Start the quiz
-    </button>
-    <p class="text-[13px] text-meta-sage mt-[14px]">2 minutes &middot; no sign-up &middot; stays in your browser</p>
+  <!-- Intro "airy bar" (Claude Design 2a): slim horizontal card that expands
+       into the full quiz when started. The illustration circle reuses the
+       self-guided way icon as a stand-in for a painted illustration. -->
+  <div data-quiz-screen="intro" class="pathway-quiz-screen pathway-quiz-screen--intro px-6 sm:px-7 py-8 sm:py-7">
+    <div class="flex flex-col sm:flex-row items-center gap-5 sm:gap-6 text-center sm:text-left">
+      <span class="pathway-quiz-intro-illo shrink-0 inline-flex items-center justify-center rounded-full bg-primary-light text-primary w-[72px] h-[72px] sm:w-24 sm:h-24" aria-hidden="true">
+        <Fragment set:html={wayIconSvg['self-guided']} />
+      </span>
+      <div class="flex-1 min-w-0">
+        <!-- Route motif: four stops (the four questions), filled terminus (your suggested step). -->
+        <svg class="mx-auto sm:mx-0 mb-3 text-primary" width="88" height="10" viewBox="0 0 88 10" fill="none" aria-hidden="true">
+          <line x1="5" y1="5" x2="83" y2="5" stroke="currentColor" stroke-opacity="0.25" stroke-width="1.5" />
+          <circle cx="5" cy="5" r="3" fill="currentColor" fill-opacity="0.35" />
+          <circle cx="31" cy="5" r="3" fill="currentColor" fill-opacity="0.35" />
+          <circle cx="57" cy="5" r="3" fill="currentColor" fill-opacity="0.35" />
+          <circle cx="83" cy="5" r="4" fill="currentColor" />
+        </svg>
+        <h2 tabindex="-1" data-quiz-heading class="pathway-quiz-heading pathway-quiz-heading--intro">
+          Not sure where to start?
+        </h2>
+        <p class="text-base leading-[1.5] text-body mt-1.5">
+          Four quick questions, then a suggested first step for your situation.
+        </p>
+      </div>
+      <div class="shrink-0 flex flex-col items-center w-full sm:w-auto">
+        <button type="button" data-quiz-start class="pathway-quiz-primary-button w-full sm:w-auto min-h-11 rounded-[10px] bg-primary hover:bg-primary-dark transition-colors duration-150 px-6 py-[13px] text-center text-base font-semibold text-white">
+          Start the quiz
+        </button>
+        <p class="text-[13px] leading-[1.45] text-meta-sage mt-2.5 text-center sm:max-w-[170px]">2 minutes &middot; no sign-up &middot; stays in your browser</p>
+      </div>
+    </div>
   </div>
 
   {questions.map(({ question, answers }, index) => (
@@ -234,6 +246,20 @@ const questions: { question: string; answers: { label: string; scores: Record<st
      Tailwind's preflight forces [hidden] to display: none !important. */
   [data-pathway-quiz] {
     display: grid;
+    position: relative;
+  }
+
+  /* Compact (intro) state: every non-intro screen and the sizer are pulled out
+     of the grid's height calculation (absolutely-positioned grid items don't
+     size tracks), so the card is a slim bar sized by the intro alone. They're
+     already visibility: hidden via --hidden, so the a11y tree is unchanged.
+     Rendered on the shell server-side so first paint is the slim bar. */
+  .pathway-quiz--compact .pathway-quiz-screen:not(.pathway-quiz-screen--intro),
+  .pathway-quiz--compact .pathway-quiz-sizer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
   }
 
   .pathway-quiz-screen,
@@ -277,14 +303,24 @@ const questions: { question: string; answers: { label: string; scores: Record<st
     font-size: 26px;
   }
 
-  /* Fixed card height leaves spare room on the short intro; centre it so the
-     empty space sits evenly above and below instead of as a blank slab under
-     the CTA. Question/result screens stay top-aligned. */
-  .pathway-quiz-screen--intro {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  @media (max-width: 639px) {
+    .pathway-quiz-heading--intro {
+      font-size: 24px;
+    }
+  }
+
+  /* The way-icon geometry is a 40-unit viewBox; CSS sizing overrides the
+     baked-in 32px width/height attributes. */
+  .pathway-quiz-intro-illo :global(svg) {
+    width: 36px;
+    height: 36px;
+  }
+
+  @media (min-width: 640px) {
+    .pathway-quiz-intro-illo :global(svg) {
+      width: 46px;
+      height: 46px;
+    }
   }
 
   /* Result summary points: small primary-green route dots, echoing the
@@ -457,6 +493,13 @@ const questions: { question: string; answers: { label: string; scores: Record<st
         opacity 140ms ease-in,
         transform 140ms ease-in,
         visibility 0s 140ms;
+    }
+
+    /* Applied by pathway-quiz.ts around the compact↔expanded FLIP tween; the
+       shell's overflow-hidden clips the taller content mid-animation. */
+    .pathway-quiz--height-anim {
+      transition: height 300ms cubic-bezier(0.35, 0, 0.25, 1);
+      will-change: height;
     }
   }
 </style>
