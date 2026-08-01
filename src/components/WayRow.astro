@@ -5,7 +5,7 @@
  * Collapsed it reads as the original 6a row (icon tile + kicker + title +
  * one-line body); the whole row is the <summary> of a progressive-disclosure
  * <details>, which expands in place to the full pathway detail (facts,
- * timeline, best-for, step-by-step accordions with progress bar).
+ * best-for, step-by-step accordions with progress bar).
  *
  * `featured` gets a primary-light card background + solid green icon tile (GP
  * row). The highlight lives on the card itself (not a wrapper) so all rows
@@ -17,7 +17,6 @@
  * .pathway-details-toggle(--nested), .pathway-l1-body, [data-step-reveal],
  * li[data-step-index] with id `${id}-step-N`, and the data-progress* hooks.
  */
-import PathwayTimeHorizon from './PathwayTimeHorizon.astro';
 import { wayIconSvg, type WayIcon } from './way-icons';
 import type { PathwayCard } from '../data/pathway-cards';
 
@@ -31,7 +30,7 @@ export interface Props {
 }
 
 const { title, body, icon, kicker, featured = false, card } = Astro.props;
-const { id, bestFor, oneLiner, facts, steps, timeHorizon, legacyStepHash } = card;
+const { id, bestFor, oneLiner, facts, steps, waitNote, legacyStepHash } = card;
 
 // Tile size and row gap are shared by the summary and the expanded body's
 // spacer column, so the body text stays aligned under the title column.
@@ -96,9 +95,7 @@ const summaryPad = `${padX} py-5`;
             <dd class="font-semibold text-heading text-right">{facts.sessions ?? 'Varies'}</dd>
           </div>
         </dl>
-        <div class="mb-5 md:mb-3">
-          <PathwayTimeHorizon events={timeHorizon?.events} />
-        </div>
+        {waitNote && <p class="text-sm text-body mb-4 md:mb-3">{waitNote}</p>}
         <p class="text-sm text-meta-sage mb-6 md:mb-4">{bestFor}</p>
         <details class="pathway-details-toggle pathway-details-toggle--nested">
           <summary class="summary-chevron inline-flex items-center text-sm font-semibold text-primary cursor-pointer hover:text-primary-dark transition-colors duration-150">
@@ -112,7 +109,10 @@ const summaryPad = `${padX} py-5`;
                 <details class="pathway-step-item">
                   <summary class="pathway-step-summary summary-chevron">
                     <span class="pathway-step-number" aria-hidden="true">{step.number}</span>
-                    <span class="pathway-step-title">{step.title}</span>
+                    <span class="pathway-step-text">
+                      <span class="pathway-step-title">{step.title}</span>
+                      {step.time && <span class="pathway-step-time">{step.time}</span>}
+                    </span>
                   </summary>
                   <div class="pathway-step-detail prose" set:html={step.detail} />
                 </details>
