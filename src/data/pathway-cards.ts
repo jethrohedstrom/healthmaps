@@ -1,9 +1,9 @@
-import { event, type PathwayCardTimeHorizon } from './pathway-time-horizon';
-
 export interface PathwayStep {
   number: number;
   title: string;
   detail: string;
+  /** Muted time line under the step title, e.g. "usually a few days". Honest ranges only. */
+  time?: string;
 }
 
 export interface PathwayCard {
@@ -14,8 +14,8 @@ export interface PathwayCard {
     cost: string;
     sessions?: string;
   };
-  /** Optional event data for PathwayTimeHorizon; omitted cards render its "varies" fallback. */
-  timeHorizon?: PathwayCardTimeHorizon;
+  /** Short wait-time note shown in the card body when no per-step times apply. */
+  waitNote?: string;
   /** Emit data-legacy-step-hash so legacy /pathway/#step-N links open this card's steps. */
   legacyStepHash?: boolean;
   /** Drafts are excluded from rendering until their copy is finalised. */
@@ -29,8 +29,6 @@ export interface PathwayCard {
 
 export const pathwayCards: PathwayCard[] = [
   {
-    // TODO(journey-calendar): Product call pending on whether to add a third
-    // psychiatrist event here (three-six-months) in addition to GP + Psychologist.
     id: 'through-gp',
     bestFor: 'Best for: most people starting out.',
     // REVIEW: AI-drafted summary — check the Medicare-rebate framing.
@@ -40,16 +38,11 @@ export const pathwayCards: PathwayCard[] = [
       cost: '$50\u2013$200 per session',
       sessions: 'Up to 10 per year',
     },
-    timeHorizon: {
-      events: [
-        event('GP', 'few-days'),
-        event('Psychologist', 'few-weeks'),
-      ],
-    },
     steps: [
       {
         number: 1,
         title: 'Book a long appointment with a GP',
+        time: 'usually a few days',
         // REVIEW: rephrased July 2026 \u2014 confirm the MyMedicare eligibility claim still reads correctly.
         detail: 'Ask for a longer appointment (at least 30 minutes) so there\u2019s enough time to talk properly. It needs to be with your usual GP if you have one, or any MyMedicare-registered practice. If you don\u2019t have a GP yet, a practice taking new patients is fine.',
       },
@@ -66,6 +59,7 @@ export const pathwayCards: PathwayCard[] = [
       {
         number: 4,
         title: 'Find and book your practitioner',
+        time: 'usually a few weeks · sometimes longer',
         detail: 'Search directories like <a href="https://www.psychologytoday.com/au" target="_blank" rel="noopener noreferrer">Psychology Today Australia</a>, the <a href="https://www.psychology.org.au/Find-a-Psychologist" target="_blank" rel="noopener noreferrer">APS directory</a>, or ask your GP for a recommendation. Psychiatrist wait times of 2\u20136 months are common, so ask about cancellation lists.',
       },
       {
@@ -88,11 +82,6 @@ export const pathwayCards: PathwayCard[] = [
       cost: '$80\u2013$330+ per session (no rebate)',
       sessions: 'No limit',
     },
-    timeHorizon: {
-      events: [
-        event('Practitioner', 'one-two-weeks', 'days to 2 weeks'),
-      ],
-    },
     steps: [
       {
         number: 1,
@@ -107,6 +96,7 @@ export const pathwayCards: PathwayCard[] = [
       {
         number: 3,
         title: 'Contact them directly and book',
+        time: 'usually days to 2 weeks',
         detail: 'Call, email, or book online. Many practices have online booking.',
       },
       {
@@ -124,6 +114,7 @@ export const pathwayCards: PathwayCard[] = [
       cost: 'Free or very low cost',
       sessions: 'Varies',
     },
+    waitNote: 'Wait time varies by service.',
     steps: [
       {
         number: 1,
@@ -160,17 +151,13 @@ export const pathwayCards: PathwayCard[] = [
       cost: 'Free, or paid (typically $10\u2013$90/mo)',
       sessions: 'Use at your own pace',
     },
-    timeHorizon: {
-      events: [
-        event('Program', 'same-day'),
-      ],
-    },
     // NOTE: specific program/app names pending deep research \u2014 keep steps
     // generic-but-true until that list is verified; no fabricated product names.
     steps: [
       {
         number: 1,
         title: 'Start with free, government-funded online programs',
+        time: 'usually same day',
         detail: 'Australia has free, evidence-based online mental health programs (many run by universities and funded by the government). They cost nothing and don\u2019t need a referral \u2014 a good first step if you want to try things yourself.',
       },
       {

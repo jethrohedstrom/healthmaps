@@ -36,7 +36,6 @@
   --color-heading: #1e293b;
   --color-body: #475569;
   --color-border: #e5e7eb;
-  --color-path: #c8d8d0;
   --color-bg-light: #f8fafc;
   /* Softer surfaces — pathway page treatment */
   --color-page-sage: #EEF4EF;     /* page background (replaces white on pathway page) */
@@ -346,12 +345,24 @@ details[open] > .pathway-row-summary .pathway-row-chevron {
   background: var(--color-primary);
   color: white;
 }
+.pathway-step-text {
+  display: flex;
+  flex-direction: column;
+}
 .pathway-step-title {
   font-family: var(--font-display);
   font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--color-heading);
   line-height: 1.4;
+}
+.pathway-step-time {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 0.8125rem;
+  color: var(--color-body);
+  line-height: 1.4;
+  margin-top: 0.125rem;
 }
 .pathway-step-detail {
   padding: 0 0 1.25rem 2.875rem;
