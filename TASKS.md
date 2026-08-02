@@ -37,7 +37,7 @@ Last synced from the note: 2026-07-16.
 
 Screenshot for all calculator tasks: ![cost calculator](docs/tasks/calculator-wordy.png)
 
-- [ ] `[cloud-ok]` **Too wordy / AI-like** — "Cost calculator too wordy and AI like, and too many stats etc." Trim the copy and stat clutter.
+- [x] `[cloud-ok]` **Too wordy / AI-like** — "Cost calculator too wordy and AI like, and too many stats etc." Trim the copy and stat clutter. Trimmed in PR (cloud/calculator-trim-copy): condensed the "How Medicare Rebates Work" section from 4 paragraphs to 3 and removed the debit-card paragraph, which duplicated the calculator's own receipt note.
 
 - [ ] `[cloud-ok]` **Clinical vs general psychologist** — "People won't know the difference between clinical/general psychologist. Need to solve that somehow."
 
