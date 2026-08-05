@@ -64,9 +64,6 @@ function initCostCalculator(): void {
     !feesEl || !rebateEl || !gpLabelEl || !gpEl || !totalEl || !cardNoteEl || !noteEl
   ) return;
 
-  // Once the user has typed a fee, switching practitioner stops overwriting it.
-  let feeDirty = false;
-
   function getSelected(): PractitionerType {
     const value = (form!.elements.namedItem('practitionerType') as RadioNodeList).value;
     return practitionerTypes.find((p) => p.id === value) ?? practitionerTypes[0];
@@ -83,14 +80,6 @@ function initCostCalculator(): void {
     if (!range) return;
     feeHint!.textContent = `Typical range: $${range.low}–$${range.high}`;
     feeInput!.placeholder = `e.g. ${range.mid}`;
-  }
-
-  function prefillFee(prac: PractitionerType): void {
-    if (feeDirty && feeInput!.value.trim() !== '') return;
-    const range = feeRanges[prac.id];
-    if (!range) return;
-    feeInput!.value = String(range.mid);
-    feeDirty = false;
   }
 
   function gpVisitLabel(requiresMHCP: boolean): string {
@@ -135,15 +124,8 @@ function initCostCalculator(): void {
   form.addEventListener('submit', (e) => e.preventDefault());
 
   form.addEventListener('input', render);
-  form.addEventListener('change', (e) => {
-    const target = e.target as HTMLInputElement;
-    if (target.name === 'practitionerType') prefillFee(getSelected());
-    render();
-  });
+  form.addEventListener('change', render);
 
-  feeInput.addEventListener('input', () => {
-    feeDirty = true;
-  });
   feeInput.addEventListener('focus', () => feeInput.select());
 
   render();
