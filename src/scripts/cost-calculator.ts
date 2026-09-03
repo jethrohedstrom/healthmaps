@@ -12,6 +12,8 @@ const EM_DASH = '—';
 const MINUS = '−';
 
 const YEAR_NOTE = `Medicare covers up to ${SESSIONS} sessions like this each calendar year.`;
+// Must match the SSR empty-state note in CostCalculator.astro.
+const EMPTY_NOTE = "Enter a session fee to see what you'll pay.";
 
 const aud = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' });
 // Fees people type are usually whole dollars; keep the card note clean
@@ -85,7 +87,7 @@ function initCostCalculator(): void {
       tenEl!.textContent = EM_DASH;
       tenRowEl!.hidden = true;
       cardNoteEl!.hidden = true;
-      noteEl!.textContent = 'Enter a session fee to see what you\'ll pay.';
+      noteEl!.textContent = EMPTY_NOTE;
       return;
     }
 

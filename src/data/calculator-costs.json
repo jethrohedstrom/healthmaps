@@ -8,7 +8,6 @@
     "sessionFeeRange 200/250/330 = the quick-pick chips (Lower/Typical/Higher). Source: Help Link 2026 network data across 371 psychologists — median $245, average $237, range $0–$360; APS recommended 2026–27 rate $330. Verified 2026-09-03."
   ],
   "rebatePerSession": 101.55,
-  "mbsItem": "80110",
   "sessionFeeRange": { "low": 200, "mid": 250, "high": 330 },
   "maxMedicareSessions": 10,
   "gpCostBulkBilled": 0,
