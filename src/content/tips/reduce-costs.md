@@ -25,7 +25,7 @@ Some psychologists offer reduced rates based on financial hardship. It's worth a
 
 ## 5. Consider a general psychologist vs. clinical
 
-General psychologists often charge lower fees. The Medicare rebate is lower too ($98.95 vs $145.25), but the gap may still be smaller. For many common issues like anxiety and depression, a general psychologist is perfectly appropriate.
+General psychologists often charge lower fees. The Medicare rebate is lower too ($101.55 vs $149.05), but the gap may still be smaller. For many common issues like anxiety and depression, a general psychologist is perfectly appropriate.
 
 ## 6. Try telehealth
 

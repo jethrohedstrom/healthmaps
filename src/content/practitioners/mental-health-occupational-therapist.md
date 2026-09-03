@@ -1,7 +1,7 @@
 ---
 title: "Mental Health Occupational Therapist"
 cost: "$170–$260 per session"
-rebate: "~$87.25 (with MHCP referral)"
+rebate: "~$89.50 (with MHCP referral)"
 referralRequired: false
 bestFor: "Daily functioning, return to work/study"
 registrationStatus: "AHPRA registered"
@@ -31,4 +31,4 @@ Requires a **Mental Health Care Plan (MHCP)** and **GP referral**. Up to 10 Medi
 - Focuses on practical, day-to-day functioning rather than exploring emotions or past experiences
 - Helps you build routines, structure, and coping skills for real-life situations
 - Particularly useful when mental health is affecting your ability to work or study
-- Lower Medicare rebate than general psychologists ($87.25 vs $98.95)
+- Lower Medicare rebate than general psychologists ($89.50 vs $101.55)

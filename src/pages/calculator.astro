@@ -11,14 +11,14 @@ const lastVerified = new Date(costs.lastUpdated).toLocaleDateString('en-AU', {
 ---
 <BaseLayout
   title="Cost Calculator"
-  description="See what you'll pay out-of-pocket for a psychology session in Australia after the Medicare rebate."
+  description="See what you'll pay out-of-pocket per session after the Medicare rebate, whether you're seeing a psychologist, psychiatrist, counsellor or another mental health practitioner in Australia."
 >
   <!-- Hero -->
   <section>
     <div class="max-w-body mx-auto px-4 py-16 md:py-20">
       <h1 class="font-display font-semibold text-[32px] md:text-[40px] tracking-[-0.02em] text-heading mt-3 mb-4">Cost Calculator</h1>
       <p class="text-lg text-body">
-        See what you'll pay out-of-pocket for a psychology session after the Medicare rebate.
+        See what you'll pay out-of-pocket per session after the Medicare rebate, for a psychologist, psychiatrist, counsellor and more.
       </p>
     </div>
   </section>
@@ -37,13 +37,25 @@ const lastVerified = new Date(costs.lastUpdated).toLocaleDateString('en-AU', {
       <h2 class="font-display font-semibold text-[24px] md:text-[28px] tracking-[-0.02em] text-heading mb-6">How Medicare Rebates Work</h2>
       <div class="space-y-5 text-body">
         <p>
-          When you see a psychologist with a valid <a href="/pathway/#through-gp" class="font-semibold text-primary underline underline-offset-2">Mental Health Care Plan (MHCP)</a> and GP referral,
+          When you see a psychologist, mental health social worker or occupational therapist with a valid <a href="/pathway/#through-gp" class="font-semibold text-primary underline underline-offset-2">Mental Health Care Plan (MHCP)</a> and GP referral,
           Medicare pays back a fixed amount per session, called the <strong>rebate</strong>. The difference between
           the session fee and the rebate is your <strong>out-of-pocket cost</strong> (also called the "gap").
         </p>
         <p>
           You can receive up to <strong>10 Medicare-rebated sessions per calendar year</strong> (January–December).
           After your first 6 sessions, your GP needs to do a brief review before you can access sessions 7–10.
+        </p>
+        <!-- REVIEW: AI-drafted claim — psychiatrists need a standard GP referral not an MHCP; no yearly cap; follow-up rebates by length (MBS items 302 $89.30 / 306 $189.70, 1 Jul 2026). -->
+        <p>
+          <strong>Psychiatrists</strong> work differently. You need a standard GP referral, not a Mental Health Care Plan,
+          and there's no yearly cap on rebated sessions. The first appointment has a higher rebate than follow-ups, and
+          follow-up rebates depend on how long the appointment is, from about $89 for 15–30 minutes up to about $190 for
+          45 minutes or more. The calculator uses the shorter follow-up rebate so it doesn't understate what you'll pay.
+        </p>
+        <!-- REVIEW: AI-drafted claim — counsellors and psychotherapists are outside Better Access; some private health extras cover part of the fee. -->
+        <p>
+          <strong>Counsellors and psychotherapists</strong> aren't covered by Medicare, so you pay the full fee and don't
+          need a GP visit first. Fees are often lower, and some private health extras policies cover part of the cost.
         </p>
         <!-- REVIEW: AI-drafted claim — Easyclaim rebates go only to eftpos debit cards; app/myGov claims go to the Medicare-registered bank account. -->
         <p>

@@ -2,13 +2,66 @@
   "lastUpdated": "2026-09-03",
   "note": "Medicare rebate amounts are approximate and may change. Check Services Australia for current rates.",
   "reviewNotes": [
-    "General psychologist rebate = MBS item 80110, $101.55 from 1 Jul 2026 (2.6% indexation; was $98.95 from 1 Jul 2025). Verified 2026-09-03.",
-    "Calculator simplified to one scenario (GP mental health treatment plan → general psychologist) Sep 2026. Clinical psychologist / psychiatrist figures removed — see git history before this change if they're needed again.",
-    "Next indexation expected 1 Jul 2027 — re-check figures after that date.",
-    "sessionFeeRange 200/250/330 = the quick-pick chips (Lower/Typical/Higher). Source: Help Link 2026 network data across 371 psychologists — median $245, average $237, range $0–$360; APS recommended 2026–27 rate $330. Verified 2026-09-03."
+    "Rebates verified on MBS Online 2026-09-03, all 'Schedule Fee Updated 01-Jul-2026' (85% benefit): general psychologist item 80110 $101.55; clinical psychologist item 80010 $149.05; mental health social worker item 80135 $89.50; mental health occupational therapist item 80160 $89.50; psychiatrist first appointment item 296 (45+ min, new or returning patient) $268.90; psychiatrist follow-up item 302 (15-30 min) $89.30. Longer follow-ups (items 304/306) rebate more; the calculator uses 302 so it doesn't understate costs.",
+    "Earlier versions labelled the psychiatrist initial rebate as item 291. That item is the one-off assessment-and-management-plan attendance ($467.45 from 1 Jul 2026), not a normal first appointment. Item 296 is the right one.",
+    "Counsellors and psychotherapists have no Medicare rebate (not in the Better Access scheme); rebate 0 and setup null so the GP question and 'one-off to get started' block are hidden.",
+    "chips = the quick-pick fee buttons (Lower / Typical / Higher). General psychologist 200/250/330 is sourced: Help Link 2026 network data across 371 psychologists (median $245, average $237, range $0-$360) and the APS recommended 2026-27 rate $330, verified 2026-09-03. REVIEW: every other chip range is a placeholder taken from the practitioners page ranges and needs a source.",
+    "Next indexation expected 1 Jul 2027 — re-check figures after that date."
   ],
-  "rebatePerSession": 101.55,
-  "sessionFeeRange": { "low": 200, "mid": 250, "high": 330 },
+  "practitionerTypes": [
+    {
+      "id": "general-psychologist",
+      "label": "Psychologist (general)",
+      "rebate": 101.55,
+      "chips": [200, 250, 330],
+      "setup": "plan",
+      "psychologist": true
+    },
+    {
+      "id": "clinical-psychologist",
+      "label": "Clinical psychologist",
+      "rebate": 149.05,
+      "chips": [230, 280, 350],
+      "setup": "plan",
+      "psychologist": true
+    },
+    {
+      "id": "psychiatrist",
+      "label": "Psychiatrist",
+      "rebate": 89.30,
+      "chips": [250, 300, 400],
+      "setup": "referral",
+      "firstVisit": { "rebate": 268.90, "chips": [450, 600, 800] }
+    },
+    {
+      "id": "social-worker",
+      "label": "Mental health social worker",
+      "rebate": 89.50,
+      "chips": [150, 200, 250],
+      "setup": "plan"
+    },
+    {
+      "id": "occupational-therapist",
+      "label": "Mental health occupational therapist",
+      "rebate": 89.50,
+      "chips": [170, 220, 260],
+      "setup": "plan"
+    },
+    {
+      "id": "counsellor",
+      "label": "Counsellor",
+      "rebate": 0,
+      "chips": [100, 140, 200],
+      "setup": null
+    },
+    {
+      "id": "psychotherapist",
+      "label": "Psychotherapist",
+      "rebate": 0,
+      "chips": [120, 180, 250],
+      "setup": null
+    }
+  ],
   "maxMedicareSessions": 10,
   "gpCostBulkBilled": 0,
   "gpCostPrivate": 40

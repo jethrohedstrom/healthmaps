@@ -44,7 +44,7 @@ const bmData = {
     desc: "<p>The most common professional people see through Medicare for mental health.</p><ul><li>Works with you on specific problems using research-backed techniques</li><li>GP referral needed to access Medicare rebates</li><li>Two types — general and clinical. Clinical psychologists have extra specialist training and a higher Medicare rebate</li></ul>",
     details: [
       { label: "Cost", value: "$150–$300" },
-      { label: "Medicare rebate", value: "$98.95 (general) / $145.25 (clinical)" },
+      { label: "Medicare rebate", value: "$101.55 (general) / $149.05 (clinical)" },
       { label: "Sessions", value: "10 per year (Better Access)" },
       { label: "Referral", value: "Not required. GP referral needed for Medicare rebate." },
       { label: "Can prescribe", value: "No" }
@@ -56,8 +56,8 @@ const bmData = {
       qa: [
         {
           // REVIEW: out-of-pocket range. Full fee $150–$300 (general) / $180–$350 (clinical),
-          // rebate fixed at $98.95 / $145.25 (verified 10 Jun 2026). Re-check after MBS
-          // indexation (next expected 1 Jul 2026). Source: src/data/calculator-costs.json.
+          // rebate fixed at $101.55 / $149.05 (1 Jul 2026 rates, verified 3 Sep 2026). Re-check
+          // after MBS indexation (next expected 1 Jul 2027). Source: src/data/calculator-costs.json.
           q: "What will it cost me?",
           a: 'Usually <span class="bm-qa-fig">$100–$200</span> a session, after the Medicare rebate.',
           cost: true
@@ -72,7 +72,7 @@ const bmData = {
           a: "Usually 2–12 weeks."
         }
       ],
-      moreDetail: '<dl><dt>Full fee</dt><dd>$150–$300 per session</dd><dt>Medicare rebate</dt><dd>$98.95 general, $145.25 clinical</dd><dt>General vs clinical</dt><dd>Clinical psychologists have extra specialist training and a higher rebate.</dd><dt>Can prescribe</dt><dd>No</dd><dt>Registration</dt><dd>AHPRA registered</dd></dl>'
+      moreDetail: '<dl><dt>Full fee</dt><dd>$150–$300 per session</dd><dt>Medicare rebate</dt><dd>$101.55 general, $149.05 clinical</dd><dt>General vs clinical</dt><dd>Clinical psychologists have extra specialist training and a higher rebate.</dd><dt>Can prescribe</dt><dd>No</dd><dt>Registration</dt><dd>AHPRA registered</dd></dl>'
     }
   },
   psychiatrist: {
@@ -84,8 +84,8 @@ const bmData = {
     ],
     desc: "<p>A medical doctor who specialises in mental health.</p><ul><li>Can diagnose conditions, prescribe and manage medication, and provide therapy</li><li>Most often seen for ADHD, bipolar disorder, treatment-resistant depression, or when specialist medications are needed that a GP can't prescribe</li><li>GP referral needed to access a Medicare rebate</li></ul>",
     costRows: [
-      { label: "First session", fee: "$400 – $800", rebate: "$262.10", outOfPocket: "$138 – $538" },
-      { label: "Follow-up sessions", fee: "$200 – $400", rebate: "$87.05 – $134.00", outOfPocket: "$66 – $313" }
+      { label: "First session", fee: "$400 – $800", rebate: "$268.90", outOfPocket: "$131 – $531" },
+      { label: "Follow-up sessions", fee: "$200 – $400", rebate: "$89.30 – $189.70", outOfPocket: "$10 – $311" }
     ],
     details: [
       { label: "Wait", value: "1 – 6 months" },
@@ -96,10 +96,10 @@ const bmData = {
       lead: "A medical specialist for complex or hard-to-treat conditions, like ADHD, bipolar, or depression that hasn't responded to other treatment.",
       qa: [
         {
-          // REVIEW: derived out-of-pocket. First session $400–$800 fee − $262.10 rebate;
-          // follow-ups $200–$400 − $87.05–$134.00. Source: src/data/calculator-costs.json.
+          // REVIEW: derived out-of-pocket. First session $400–$800 fee − $268.90 rebate (item 296);
+          // follow-ups $200–$400 − $89.30–$189.70 (items 302–306). 1 Jul 2026 rates. Source: src/data/calculator-costs.json.
           q: "What will it cost me?",
-          a: 'The priciest option. Around <span class="bm-qa-fig">$140–$540</span> out of pocket for the first session, and less for follow-ups, after the Medicare rebate.',
+          a: 'The priciest option. Around <span class="bm-qa-fig">$130–$530</span> out of pocket for the first session, and less for follow-ups, after the Medicare rebate.',
           cost: true
         },
         {
@@ -111,7 +111,7 @@ const bmData = {
           a: "Often 1 to 6 months."
         }
       ],
-      moreDetail: '<dl><dt>First session</dt><dd>$400–$800 fee, $262.10 rebate, ~$140–$540 out of pocket</dd><dt>Follow-ups</dt><dd>$200–$400 fee, $87–$134 rebate, ~$65–$315 out of pocket</dd><dt>Sessions</dt><dd>No yearly cap</dd><dt>Can prescribe</dt><dd>Yes</dd></dl>'
+      moreDetail: '<dl><dt>First session</dt><dd>$400–$800 fee, $268.90 rebate, ~$130–$530 out of pocket</dd><dt>Follow-ups</dt><dd>$200–$400 fee, $89–$190 rebate depending on length, ~$10–$310 out of pocket</dd><dt>Sessions</dt><dd>No yearly cap</dd><dt>Can prescribe</dt><dd>Yes</dd></dl>'
     }
   },
   counsellor: {
@@ -160,7 +160,7 @@ const bmData = {
     desc: "<p>Most people associate social workers with welfare, but Accredited Mental Health Social Workers are specialist therapists with extra training in mental health.</p><ul><li>Strength is the bigger picture \u2014 how housing, finances, relationships, and family situations affect your mental health</li><li>Helps you navigate those systems alongside therapy</li></ul>",
     details: [
       { label: "Cost", value: "$150–$250" },
-      { label: "Medicare rebate", value: "$87.25" },
+      { label: "Medicare rebate", value: "$89.50" },
       { label: "Sessions", value: "10 per year (Better Access)" },
       { label: "Referral", value: "Not required. GP referral needed for Medicare rebate." },
       { label: "Can prescribe", value: "No" }
@@ -169,9 +169,9 @@ const bmData = {
       lead: "A therapist who looks at the bigger picture, how housing, money, family and relationships affect your mental health, and helps you navigate them.",
       qa: [
         {
-          // REVIEW: derived out-of-pocket. Fee $150–$250 − $87.25 rebate. Source: bmData + content/*.md.
+          // REVIEW: derived out-of-pocket. Fee $150–$250 − $89.50 rebate (1 Jul 2026). Source: bmData + content/*.md.
           q: "What will it cost me?",
-          a: 'Usually <span class="bm-qa-fig">$65–$165</span> out of pocket after the Medicare rebate.',
+          a: 'Usually <span class="bm-qa-fig">$60–$160</span> out of pocket after the Medicare rebate.',
           cost: true
         },
         {
@@ -184,7 +184,7 @@ const bmData = {
           a: "Their strength is the practical side: sorting out housing, money and family pressures alongside therapy."
         }
       ],
-      moreDetail: '<dl><dt>Full fee</dt><dd>$150–$250 per session</dd><dt>Medicare rebate</dt><dd>$87.25 (with a GP plan)</dd><dt>Sessions</dt><dd>10 per year (Better Access)</dd><dt>Can prescribe</dt><dd>No</dd></dl>'
+      moreDetail: '<dl><dt>Full fee</dt><dd>$150–$250 per session</dd><dt>Medicare rebate</dt><dd>$89.50 (with a GP plan)</dd><dt>Sessions</dt><dd>10 per year (Better Access)</dd><dt>Can prescribe</dt><dd>No</dd></dl>'
     }
   },
   ot: {
@@ -197,7 +197,7 @@ const bmData = {
     desc: "<p>Most people don\u2019t think of OTs for mental health, but mental health OTs have specialist endorsement and extra training beyond standard OT registration.</p><ul><li>Focuses on the practical side of recovery \u2014 rebuilding daily routines, getting back to work, managing tasks that feel overwhelming</li><li>Hands-on approach, working with you on real-life skills and strategies</li></ul>",
     details: [
       { label: "Cost", value: "$170–$260" },
-      { label: "Medicare rebate", value: "$87.25" },
+      { label: "Medicare rebate", value: "$89.50" },
       { label: "Sessions", value: "10 per year (Better Access)" },
       { label: "Referral", value: "Not required. GP referral needed for Medicare rebate." },
       { label: "Can prescribe", value: "No" }
@@ -206,9 +206,9 @@ const bmData = {
       lead: "Focuses on the practical side of recovery, rebuilding routines, getting back to work or study, and managing daily tasks that feel overwhelming.",
       qa: [
         {
-          // REVIEW: derived out-of-pocket. Fee $170–$260 − $87.25 rebate. Source: bmData + content/*.md.
+          // REVIEW: derived out-of-pocket. Fee $170–$260 − $89.50 rebate (1 Jul 2026). Source: bmData + content/*.md.
           q: "What will it cost me?",
-          a: 'Usually <span class="bm-qa-fig">$85–$175</span> out of pocket after the Medicare rebate.',
+          a: 'Usually <span class="bm-qa-fig">$80–$170</span> out of pocket after the Medicare rebate.',
           cost: true
         },
         {
@@ -221,7 +221,7 @@ const bmData = {
           a: "Hands-on and practical, working with you on real-life skills rather than exploring the past."
         }
       ],
-      moreDetail: '<dl><dt>Full fee</dt><dd>$170–$260 per session</dd><dt>Medicare rebate</dt><dd>$87.25 (with a GP plan)</dd><dt>Sessions</dt><dd>10 per year (Better Access)</dd><dt>Can prescribe</dt><dd>No</dd></dl>'
+      moreDetail: '<dl><dt>Full fee</dt><dd>$170–$260 per session</dd><dt>Medicare rebate</dt><dd>$89.50 (with a GP plan)</dd><dt>Sessions</dt><dd>10 per year (Better Access)</dd><dt>Can prescribe</dt><dd>No</dd></dl>'
     }
   },
   "mh-nurse": {

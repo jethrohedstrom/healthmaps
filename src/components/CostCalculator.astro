@@ -1,20 +1,46 @@
 ---
 import costsData from '../data/calculator-costs.json';
+import type { PractitionerType } from '../scripts/cost-calculator';
 
-// One scenario only: GP mental health treatment plan → general psychologist
-// (MBS item 80110). Rebate and fee range come from the JSON.
-const range = costsData.sessionFeeRange;
+// Seven practitioner types from the JSON; the first (general psychologist)
+// is the SSR default. Rebates, fee chips and what you need before the first
+// session all come from the data file. src/scripts/cost-calculator.ts swaps
+// the form furniture and updates the receipt when the selection changes.
+const types = costsData.practitionerTypes as PractitionerType[];
+const defaultType = types[0];
+const psychiatrist = types.find((t) => t.firstVisit);
 
 const optionCard = 'flex h-full min-h-14 items-center rounded-[10px] border border-ink-green/16 bg-white px-4 py-3 text-base font-semibold leading-snug text-heading transition-colors duration-150 hover:border-primary hover:bg-primary-light peer-checked:border-primary peer-checked:bg-primary-light peer-checked:ring-1 peer-checked:ring-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary';
+
+const fieldInput = 'w-full border border-ink-green/16 rounded-[10px] px-4 py-2.5 text-heading font-semibold bg-white hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary';
 
 // Quick-pick fee chips: compact sibling of optionCard. `aria-pressed` is the
 // selected state, kept in sync by src/scripts/cost-calculator.ts.
 const feeChip = 'inline-flex min-h-9 items-center rounded-[10px] border border-ink-green/16 bg-white px-3 py-1.5 text-sm font-semibold text-heading transition-colors duration-150 hover:border-primary hover:bg-primary-light aria-pressed:border-primary aria-pressed:bg-primary-light aria-pressed:ring-1 aria-pressed:ring-primary cursor-pointer';
+const chipNames = ['Lower', 'Typical', 'Higher'] as const;
+
+// Most practitioners have one fee; psychiatrists have a first appointment
+// and follow-ups. Both groups are rendered and the script shows one.
+const feeGroups = [
+  {
+    name: 'single',
+    fields: [{ id: 'session-fee', label: 'Session fee ($)', chips: defaultType.chips, max: 1000 }],
+  },
+  {
+    name: 'psychiatrist',
+    fields: [
+      { id: 'first-fee', label: 'First appointment fee ($)', chips: psychiatrist?.firstVisit?.chips ?? defaultType.chips, max: 1500 },
+      { id: 'follow-up-fee', label: 'Follow-up fee ($)', chips: psychiatrist?.chips ?? defaultType.chips, max: 1000 },
+    ],
+  },
+];
 
 // Receipt row: label · dotted leader · amount. The empty leader span is a
 // baseline-aligned flex item, so its bottom border sits on the text baseline.
 const receiptRow = 'flex items-baseline gap-2 text-[15px] leading-snug';
 const receiptLeader = 'min-w-4 flex-1 border-b border-dotted border-ink-green/25';
+const receiptAmount = 'font-medium text-heading tabular-nums';
+const receiptTotal = 'font-display font-semibold text-[30px] sm:text-[34px] leading-none tracking-[-0.02em] text-heading tabular-nums';
 
 // The fee field starts empty, so SSR the receipt in its empty state —
 // em-dash rows and an "enter a fee" note that must match what
@@ -26,31 +52,53 @@ const ssrGpCost = 0; // bulk-billed default
   <div class="grid gap-8 md:grid-cols-[1fr_minmax(280px,0.85fr)] md:gap-10">
     <form id="calc-form" class="space-y-6" aria-label="Mental health cost calculator" novalidate>
 
-      <!-- Session fee -->
-      <div>
-        <label for="session-fee" class="block text-sm font-semibold text-body mb-1">
-          Session fee ($)
-        </label>
-        <input
-          type="number"
-          id="session-fee"
-          name="sessionFee"
-          min="0"
-          max="1000"
-          step="5"
-          placeholder={`e.g. ${range.mid}`}
-          class="w-full border border-ink-green/16 rounded-[10px] px-4 py-2.5 text-heading font-semibold bg-white hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary"
-        />
-        <p id="fee-hint" class="text-xs text-body mt-2">Not sure? Try a typical fee:</p>
-        <div class="mt-1.5 flex flex-wrap gap-2" role="group" aria-label="Typical session fees">
-          <button type="button" class={feeChip} data-fee-chip={range.low} aria-pressed="false">Lower ${range.low}</button>
-          <button type="button" class={feeChip} data-fee-chip={range.mid} aria-pressed="false">Typical ${range.mid}</button>
-          <button type="button" class={feeChip} data-fee-chip={range.high} aria-pressed="false">Higher ${range.high}</button>
-        </div>
-      </div>
-
-      <!-- GP bulk-billed? -->
+      <!-- Who are you seeing? -->
       <fieldset>
+        <legend class="block text-sm font-semibold text-body mb-2">
+          Who are you seeing?
+        </legend>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {types.map((t, i) => (
+            <label class="cursor-pointer">
+              <input type="radio" name="practitionerType" value={t.id} checked={i === 0} class="peer sr-only" />
+              <span class={optionCard}>{t.label}</span>
+            </label>
+          ))}
+        </div>
+        <p class="mt-2.5 text-[13px] leading-snug text-meta-sage" data-psych-hint hidden={!defaultType.psychologist}>
+          Not sure which psychologist? Most are general. Their website or booking page will say &ldquo;clinical&rdquo; if they are.
+        </p>
+      </fieldset>
+
+      <!-- Session fee(s) -->
+      {feeGroups.map((g) => (
+        <div class="space-y-6" data-fee-group={g.name} hidden={g.name !== 'single'}>
+          {g.fields.map((f) => (
+            <div data-fee-field={f.id}>
+              <label for={f.id} class="block text-sm font-semibold text-body mb-1">{f.label}</label>
+              <input
+                type="number"
+                id={f.id}
+                name={f.id}
+                min="0"
+                max={f.max}
+                step="5"
+                placeholder={`e.g. ${f.chips[1]}`}
+                class={fieldInput}
+              />
+              <p class="text-xs text-body mt-2">Not sure? Try a typical fee:</p>
+              <div class="mt-1.5 flex flex-wrap gap-2" role="group" aria-label="Typical fees">
+                {chipNames.map((name, i) => (
+                  <button type="button" class={feeChip} data-fee-chip={f.chips[i]} data-chip-label={name} aria-pressed="false">{name} ${f.chips[i]}</button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      ))}
+
+      <!-- GP bulk-billed? Hidden for practitioners you book directly. -->
+      <fieldset data-gp-question hidden={defaultType.setup === null}>
         <legend class="block text-sm font-semibold text-body mb-2">
           Is your GP bulk-billed?
         </legend>
@@ -72,41 +120,82 @@ const ssrGpCost = 0; // bulk-billed default
       <div id="calc-receipt" class="bg-white border border-ink-green/12 rounded-[10px] p-5 sm:p-6">
         <p class="text-[12.5px] font-semibold text-meta-sage">What you'll pay</p>
 
-        <div class="mt-4 space-y-2.5">
-          <div class={receiptRow}>
-            <span class="text-body">Session fee</span>
-            <span class={receiptLeader} aria-hidden="true"></span>
-            <span class="font-medium text-heading tabular-nums" data-receipt-fees>&mdash;</span>
+        <!-- Most practitioners: one fee, one rebate -->
+        <div data-receipt-body="single">
+          <div class="mt-4 space-y-2.5">
+            <div class={receiptRow}>
+              <span class="text-body">Session fee</span>
+              <span class={receiptLeader} aria-hidden="true"></span>
+              <span class={receiptAmount} data-receipt-fees>&mdash;</span>
+            </div>
+            <div class={receiptRow}>
+              <span class="text-body">Medicare pays back</span>
+              <span class={receiptLeader} aria-hidden="true"></span>
+              <span class="font-medium text-primary tabular-nums" data-receipt-rebate>&mdash;</span>
+            </div>
           </div>
-          <div class={receiptRow}>
-            <span class="text-body">Medicare pays back</span>
-            <span class={receiptLeader} aria-hidden="true"></span>
-            <span class="font-medium text-primary tabular-nums" data-receipt-rebate>&mdash;</span>
+          <div class="mt-4 border-t border-hairline pt-4">
+            <div class="flex items-baseline justify-between gap-3" aria-live="polite" aria-atomic="true">
+              <span class="text-[15px] font-semibold text-heading">You pay per session</span>
+              <span class={receiptTotal} data-receipt-total>&mdash;</span>
+            </div>
           </div>
         </div>
 
-        <div class="mt-4 border-t border-hairline pt-4">
-          <div class="flex items-baseline justify-between gap-3" aria-live="polite" aria-atomic="true">
-            <span class="text-[15px] font-semibold text-heading">You pay per session</span>
-            <span class="font-display font-semibold text-[30px] sm:text-[34px] leading-none tracking-[-0.02em] text-heading tabular-nums" data-receipt-total>&mdash;</span>
+        <!-- Psychiatrists: first appointment, then follow-ups -->
+        <div data-receipt-body="psychiatrist" hidden>
+          <div class="mt-4 space-y-2.5">
+            <div class={receiptRow}>
+              <span class="text-body">First appointment</span>
+              <span class={receiptLeader} aria-hidden="true"></span>
+              <span class={receiptAmount} data-receipt-first-fee>&mdash;</span>
+            </div>
+            <div class={receiptRow}>
+              <span class="text-body">Medicare pays back</span>
+              <span class={receiptLeader} aria-hidden="true"></span>
+              <span class="font-medium text-primary tabular-nums" data-receipt-first-rebate>&mdash;</span>
+            </div>
           </div>
-          <!-- REVIEW: AI-drafted claim — Easyclaim rebates can only be paid onto an eftpos debit card, not credit. -->
-          <p class="mt-2 text-[13px] leading-snug text-meta-sage" data-receipt-card-note hidden>
-            Have your session fee on your card on the day &mdash; you can pay with any card, but the rebate can only go back onto a debit card.
-          </p>
+          <div class="mt-3 flex items-baseline justify-between gap-3">
+            <span class="text-[14px] font-semibold text-heading">You pay, first appointment</span>
+            <span class="font-display font-semibold text-[22px] leading-none tracking-[-0.02em] text-heading tabular-nums" data-receipt-first-total>&mdash;</span>
+          </div>
+          <div class="mt-4 border-t border-hairline pt-4 space-y-2.5">
+            <div class={receiptRow}>
+              <span class="text-body">Follow-up</span>
+              <span class={receiptLeader} aria-hidden="true"></span>
+              <span class={receiptAmount} data-receipt-follow-fee>&mdash;</span>
+            </div>
+            <div class={receiptRow}>
+              <span class="text-body">Medicare pays back</span>
+              <span class={receiptLeader} aria-hidden="true"></span>
+              <span class="font-medium text-primary tabular-nums" data-receipt-follow-rebate>&mdash;</span>
+            </div>
+          </div>
+          <div class="mt-3 flex items-baseline justify-between gap-3" aria-live="polite" aria-atomic="true">
+            <span class="text-[15px] font-semibold text-heading">You pay per follow-up</span>
+            <span class={receiptTotal} data-receipt-follow-total>&mdash;</span>
+          </div>
         </div>
 
-        <div class="mt-4 border-t border-hairline pt-4">
-          <p class="text-[12.5px] font-semibold text-meta-sage">One-off to get started</p>
-          <div class={`mt-2.5 ${receiptRow}`}>
-            <span class="text-body">GP visit (care plan)</span>
-            <span class={receiptLeader} aria-hidden="true"></span>
-            <span class="font-medium text-heading tabular-nums" data-receipt-gp>{aud.format(ssrGpCost)}</span>
+        <!-- REVIEW: AI-drafted claim — Easyclaim rebates can only be paid onto an eftpos debit card, not credit. -->
+        <p class="mt-2 text-[13px] leading-snug text-meta-sage" data-receipt-card-note hidden>
+          Have your session fee on your card on the day &mdash; you can pay with any card, but the rebate can only go back onto a debit card.
+        </p>
+
+        <div class="mt-4 border-t border-hairline pt-4" data-receipt-setup hidden={defaultType.setup === null}>
+          <div data-receipt-gp-part hidden={defaultType.setup === null}>
+            <p class="text-[12.5px] font-semibold text-meta-sage">One-off to get started</p>
+            <div class={`mt-2.5 ${receiptRow}`}>
+              <span class="text-body" data-receipt-gp-label>{defaultType.setup === 'referral' ? 'GP visit (referral)' : 'GP visit (care plan)'}</span>
+              <span class={receiptLeader} aria-hidden="true"></span>
+              <span class={receiptAmount} data-receipt-gp>{aud.format(ssrGpCost)}</span>
+            </div>
           </div>
           <div class={`mt-2.5 ${receiptRow}`} data-receipt-ten-row hidden>
-            <span class="text-body">Over 10 sessions</span>
+            <span class="text-body" data-receipt-ten-label>Over {costsData.maxMedicareSessions} sessions</span>
             <span class={receiptLeader} aria-hidden="true"></span>
-            <span class="font-medium text-heading tabular-nums" data-receipt-ten>&mdash;</span>
+            <span class={receiptAmount} data-receipt-ten>&mdash;</span>
           </div>
         </div>
 

@@ -1,7 +1,7 @@
 ---
 title: "Psychiatrist"
 cost: "$400–$800 first session; $200–$400 follow-up"
-rebate: "$262.10 initial / $87.05–$134 follow-up"
+rebate: "$268.90 initial / $89.30–$189.70 follow-up"
 referralRequired: false
 waitTime: "4–26 weeks"
 bestFor: "Complex conditions, medication management"

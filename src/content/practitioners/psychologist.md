@@ -1,7 +1,7 @@
 ---
 title: "Psychologist"
 cost: "$150–$300 per session"
-rebate: "$98.95 (general) / $145.25 (clinical)"
+rebate: "$101.55 (general) / $149.05 (clinical)"
 referralRequired: false
 waitTime: "2–12 weeks"
 bestFor: "Structured therapy: anxiety, depression, trauma"
@@ -15,8 +15,8 @@ Psychologists are university-trained professionals who use evidence-based therap
 
 ## Types of psychologists
 
-- **General psychologist:** 6 years of training. Medicare rebate: ~$98.95 per session.
-- **Clinical psychologist:** 8+ years of training (additional master's or doctorate). Medicare rebate: ~$145.25 per session. Often specialise in more complex conditions.
+- **General psychologist:** 6 years of training. Medicare rebate: ~$101.55 per session.
+- **Clinical psychologist:** 8+ years of training (additional master's or doctorate). Medicare rebate: ~$149.05 per session. Often specialise in more complex conditions.
 
 ## When to see a psychologist
 
