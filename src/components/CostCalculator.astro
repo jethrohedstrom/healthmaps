@@ -7,6 +7,10 @@ const range = costsData.sessionFeeRange;
 
 const optionCard = 'flex h-full min-h-14 items-center rounded-[10px] border border-ink-green/16 bg-white px-4 py-3 text-base font-semibold leading-snug text-heading transition-colors duration-150 hover:border-primary hover:bg-primary-light peer-checked:border-primary peer-checked:bg-primary-light peer-checked:ring-1 peer-checked:ring-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary';
 
+// Quick-pick fee chips: compact sibling of optionCard. `aria-pressed` is the
+// selected state, kept in sync by src/scripts/cost-calculator.ts.
+const feeChip = 'inline-flex min-h-9 items-center rounded-[10px] border border-ink-green/16 bg-white px-3 py-1.5 text-sm font-semibold text-heading transition-colors duration-150 hover:border-primary hover:bg-primary-light aria-pressed:border-primary aria-pressed:bg-primary-light aria-pressed:ring-1 aria-pressed:ring-primary cursor-pointer';
+
 // Receipt row: label · dotted leader · amount. The empty leader span is a
 // baseline-aligned flex item, so its bottom border sits on the text baseline.
 const receiptRow = 'flex items-baseline gap-2 text-[15px] leading-snug';
@@ -37,7 +41,12 @@ const ssrGpCost = 0; // bulk-billed default
           placeholder={`e.g. ${range.mid}`}
           class="w-full border border-ink-green/16 rounded-[10px] px-4 py-2.5 text-heading font-semibold bg-white hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary"
         />
-        <p id="fee-hint" class="text-xs text-body mt-1">Typical range: ${range.low}–${range.high}</p>
+        <p id="fee-hint" class="text-xs text-body mt-2">Not sure? Try a typical fee:</p>
+        <div class="mt-1.5 flex flex-wrap gap-2" role="group" aria-label="Typical session fees">
+          <button type="button" class={feeChip} data-fee-chip={range.low} aria-pressed="false">Lower ${range.low}</button>
+          <button type="button" class={feeChip} data-fee-chip={range.mid} aria-pressed="false">Typical ${range.mid}</button>
+          <button type="button" class={feeChip} data-fee-chip={range.high} aria-pressed="false">Higher ${range.high}</button>
+        </div>
       </div>
 
       <!-- GP bulk-billed? -->

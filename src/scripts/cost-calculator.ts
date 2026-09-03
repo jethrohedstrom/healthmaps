@@ -36,6 +36,7 @@ function initCostCalculator(): void {
 
   const form = root.querySelector<HTMLFormElement>('#calc-form');
   const feeInput = root.querySelector<HTMLInputElement>('#session-fee');
+  const feeChips = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-fee-chip]'));
 
   const feesEl = root.querySelector<HTMLElement>('[data-receipt-fees]');
   const rebateEl = root.querySelector<HTMLElement>('[data-receipt-rebate]');
@@ -57,10 +58,20 @@ function initCostCalculator(): void {
     return v;
   }
 
+  // Highlight the chip whose value matches the fee exactly; a typed custom
+  // fee (or an empty field) clears every highlight.
+  function syncChips(fee: number | null): void {
+    for (const chip of feeChips) {
+      const pressed = fee !== null && Number(chip.dataset.feeChip) === fee;
+      chip.setAttribute('aria-pressed', String(pressed));
+    }
+  }
+
   function render(): void {
     const gpBulkBilled =
       (form!.elements.namedItem('gpBilling') as RadioNodeList).value === 'yes';
     const fee = getFee();
+    syncChips(fee);
 
     // The GP care-plan appointment is a one-off setup cost, shown separately —
     // it isn't part of the per-session total, but it is part of the 10-session total.
@@ -98,6 +109,15 @@ function initCostCalculator(): void {
   form.addEventListener('change', render);
 
   feeInput.addEventListener('focus', () => feeInput.select());
+
+  // Chips fill the field without moving focus into it (that would pop the
+  // keyboard on mobile). render() isn't triggered by a programmatic value set.
+  for (const chip of feeChips) {
+    chip.addEventListener('click', () => {
+      feeInput.value = chip.dataset.feeChip ?? '';
+      render();
+    });
+  }
 
   render();
 }
