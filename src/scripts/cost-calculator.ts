@@ -74,7 +74,7 @@ function initCostCalculator(): void {
       tenEl!.textContent = EM_DASH;
       tenRowEl!.hidden = true;
       cardNoteEl!.hidden = true;
-      noteEl!.textContent = 'Enter a session fee to see your estimate.';
+      noteEl!.textContent = 'Enter a session fee to see what you\'ll pay.';
       return;
     }
 
