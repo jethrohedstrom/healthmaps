@@ -1,8 +1,9 @@
 ---
 import costsData from '../data/calculator-costs.json';
 
-const practitionerTypes = costsData.practitionerTypes;
-const feeRanges = costsData.sessionFeeRanges as Record<string, { low: number; mid: number; high: number }>;
+// One scenario only: GP mental health treatment plan → general psychologist
+// (MBS item 80110). Rebate and fee range come from the JSON.
+const range = costsData.sessionFeeRange;
 
 const optionCard = 'flex h-full min-h-14 items-center rounded-[10px] border border-ink-green/16 bg-white px-4 py-3 text-base font-semibold leading-snug text-heading transition-colors duration-150 hover:border-primary hover:bg-primary-light peer-checked:border-primary peer-checked:bg-primary-light peer-checked:ring-1 peer-checked:ring-primary peer-focus-visible:ring-2 peer-focus-visible:ring-primary';
 
@@ -14,43 +15,12 @@ const receiptLeader = 'min-w-4 flex-1 border-b border-dotted border-ink-green/25
 // The fee field starts empty, so SSR the receipt in its empty state —
 // em-dash rows and an "enter a fee" note that must match what
 // src/scripts/cost-calculator.ts renders when no fee is set.
-const defaultPrac = practitionerTypes[0];
-const defaultRange = feeRanges[defaultPrac.id];
-
 const aud = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' });
 const ssrGpCost = 0; // bulk-billed default
 ---
 <div id="cost-calculator" class="bg-paper-cream border border-pencil rounded-[14px] p-6 sm:p-8 md:p-10">
   <div class="grid gap-8 md:grid-cols-[1fr_minmax(280px,0.85fr)] md:gap-10">
     <form id="calc-form" class="space-y-6" aria-label="Mental health cost calculator" novalidate>
-
-      <!-- Practitioner type -->
-      <fieldset>
-        <legend class="block text-sm font-semibold text-body mb-2">
-          Type of practitioner
-        </legend>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-          {practitionerTypes.map((p, i) => (
-            <label class="cursor-pointer">
-              <input
-                type="radio"
-                name="practitionerType"
-                value={p.id}
-                checked={i === 0}
-                class="peer sr-only"
-              />
-              <span class={optionCard}>
-                <span class="block">
-                  {p.label}
-                  <span class="mt-0.5 block text-[13px] font-normal leading-snug text-meta-sage">
-                    Rebate ${p.rebatePerSession.toFixed(2)} per session
-                  </span>
-                </span>
-              </span>
-            </label>
-          ))}
-        </div>
-      </fieldset>
 
       <!-- Session fee -->
       <div>
@@ -64,10 +34,10 @@ const ssrGpCost = 0; // bulk-billed default
           min="0"
           max="1000"
           step="5"
-          placeholder={`e.g. ${defaultRange.mid}`}
+          placeholder={`e.g. ${range.mid}`}
           class="w-full border border-ink-green/16 rounded-[10px] px-4 py-2.5 text-heading font-semibold bg-white hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary"
         />
-        <p id="fee-hint" class="text-xs text-body mt-1">Typical range: ${defaultRange.low}–${defaultRange.high}</p>
+        <p id="fee-hint" class="text-xs text-body mt-1">Typical range: ${range.low}–${range.high}</p>
       </div>
 
       <!-- GP bulk-billed? -->
@@ -123,6 +93,11 @@ const ssrGpCost = 0; // bulk-billed default
             <span class="text-body" data-receipt-gp-label>GP visit (care plan)</span>
             <span class={receiptLeader} aria-hidden="true"></span>
             <span class="font-medium text-heading tabular-nums" data-receipt-gp>{aud.format(ssrGpCost)}</span>
+          </div>
+          <div class={`mt-2.5 ${receiptRow}`} data-receipt-ten-row hidden>
+            <span class="text-body">Over 10 sessions</span>
+            <span class={receiptLeader} aria-hidden="true"></span>
+            <span class="font-medium text-heading tabular-nums" data-receipt-ten>&mdash;</span>
           </div>
         </div>
 

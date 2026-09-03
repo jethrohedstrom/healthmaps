@@ -1,30 +1,17 @@
 // Live cost-calculator receipt. Reads the same JSON the component renders
 // its SSR defaults from, so the first client render matches the server HTML.
+// One scenario only: GP mental health treatment plan → general psychologist
+// (MBS item 80110).
 import costsData from '../data/calculator-costs.json';
 
-interface PractitionerType {
-  id: string;
-  label: string;
-  rebatePerSession: number;
-  requiresMHCP: boolean;
-}
-
-interface FeeRange {
-  low: number;
-  mid: number;
-  high: number;
-}
-
-const practitionerTypes = costsData.practitionerTypes as PractitionerType[];
-const feeRanges = costsData.sessionFeeRanges as Record<string, FeeRange>;
-
+const REBATE = costsData.rebatePerSession;
+const SESSIONS = costsData.maxMedicareSessions;
 const GP_COST_PRIVATE = costsData.gpCostPrivate;
 
 const EM_DASH = '—';
 const MINUS = '−';
 
-// Must match the SSR note text in CostCalculator.astro.
-const YEAR_NOTE = 'Medicare covers up to 10 sessions like this each calendar year.';
+const YEAR_NOTE = `Medicare covers up to ${SESSIONS} sessions like this each calendar year.`;
 
 const aud = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' });
 // Fees people type are usually whole dollars; keep the card note clean
@@ -49,25 +36,20 @@ function initCostCalculator(): void {
 
   const form = root.querySelector<HTMLFormElement>('#calc-form');
   const feeInput = root.querySelector<HTMLInputElement>('#session-fee');
-  const feeHint = root.querySelector<HTMLParagraphElement>('#fee-hint');
 
   const feesEl = root.querySelector<HTMLElement>('[data-receipt-fees]');
   const rebateEl = root.querySelector<HTMLElement>('[data-receipt-rebate]');
-  const gpLabelEl = root.querySelector<HTMLElement>('[data-receipt-gp-label]');
   const gpEl = root.querySelector<HTMLElement>('[data-receipt-gp]');
+  const tenRowEl = root.querySelector<HTMLElement>('[data-receipt-ten-row]');
+  const tenEl = root.querySelector<HTMLElement>('[data-receipt-ten]');
   const totalEl = root.querySelector<HTMLElement>('[data-receipt-total]');
   const cardNoteEl = root.querySelector<HTMLElement>('[data-receipt-card-note]');
   const noteEl = root.querySelector<HTMLElement>('[data-receipt-note]');
 
   if (
-    !form || !feeInput || !feeHint ||
-    !feesEl || !rebateEl || !gpLabelEl || !gpEl || !totalEl || !cardNoteEl || !noteEl
+    !form || !feeInput ||
+    !feesEl || !rebateEl || !gpEl || !tenRowEl || !tenEl || !totalEl || !cardNoteEl || !noteEl
   ) return;
-
-  function getSelected(): PractitionerType {
-    const value = (form!.elements.namedItem('practitionerType') as RadioNodeList).value;
-    return practitionerTypes.find((p) => p.id === value) ?? practitionerTypes[0];
-  }
 
   function getFee(): number | null {
     const v = parseFloat(feeInput!.value);
@@ -75,46 +57,35 @@ function initCostCalculator(): void {
     return v;
   }
 
-  function updateFeeHint(prac: PractitionerType): void {
-    const range = feeRanges[prac.id];
-    if (!range) return;
-    feeHint!.textContent = `Typical range: $${range.low}–$${range.high}`;
-    feeInput!.placeholder = `e.g. ${range.mid}`;
-  }
-
-  function gpVisitLabel(requiresMHCP: boolean): string {
-    return requiresMHCP ? 'GP visit (care plan)' : 'GP visit (referral)';
-  }
-
   function render(): void {
-    const prac = getSelected();
     const gpBulkBilled =
       (form!.elements.namedItem('gpBilling') as RadioNodeList).value === 'yes';
     const fee = getFee();
 
-    updateFeeHint(prac);
-
-    // The GP appointment (care plan or referral) is a one-off setup cost,
-    // shown separately — it isn't part of the per-session total.
+    // The GP care-plan appointment is a one-off setup cost, shown separately —
+    // it isn't part of the per-session total, but it is part of the 10-session total.
     const gpCost = gpBulkBilled ? 0 : GP_COST_PRIVATE;
-    gpLabelEl!.textContent = gpVisitLabel(prac.requiresMHCP);
     gpEl!.textContent = money(gpCost);
 
     if (fee === null) {
       feesEl!.textContent = EM_DASH;
       rebateEl!.textContent = EM_DASH;
       totalEl!.textContent = EM_DASH;
+      tenEl!.textContent = EM_DASH;
+      tenRowEl!.hidden = true;
       cardNoteEl!.hidden = true;
       noteEl!.textContent = 'Enter a session fee to see your estimate.';
       return;
     }
 
-    const rebate = prac.rebatePerSession;
-    const perSession = Math.max(0, fee - rebate);
+    const perSession = Math.max(0, fee - REBATE);
+    const tenSessions = perSession * SESSIONS + gpCost;
 
     feesEl!.textContent = money(fee);
-    rebateEl!.textContent = `${MINUS}${money(rebate)}`;
+    rebateEl!.textContent = `${MINUS}${money(REBATE)}`;
     totalEl!.textContent = money(perSession);
+    tenEl!.textContent = money(tenSessions);
+    tenRowEl!.hidden = false;
     cardNoteEl!.textContent = cardNote(fee);
     cardNoteEl!.hidden = false;
     noteEl!.textContent = YEAR_NOTE;

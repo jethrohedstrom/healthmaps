@@ -1,43 +1,14 @@
 {
-  "lastUpdated": "2026-06-13",
+  "lastUpdated": "2026-09-03",
   "note": "Medicare rebate amounts are approximate and may change. Check Services Australia for current rates.",
   "reviewNotes": [
-    "Psychologist rebates verified 2026-06-10 against MBS items 80110 ($98.95) and 80010 ($145.25); fee $116.40 / $204.85, benefit 85%, current from 1 Jul 2025.",
-    "Psychiatrist rebates verified 2026-06-13: initial = MBS item 291 (referred assessment, 45+ min) $262.10 from 1 Jul 2025 (was $254.95 pre-indexation). Follow-up = item 302 (15-30 min) $87.05 (fee $102.40, benefit 85%, 1 Jul 2025); longer follow-ups (items 304/306) rebate up to ~$134. Calculator uses the conservative 15-30 min follow-up rebate so estimates don't understate costs.",
-    "Next indexation expected 1 Jul 2026 — re-check figures after that date."
+    "General psychologist rebate = MBS item 80110, $101.55 from 1 Jul 2026 (2.6% indexation; was $98.95 from 1 Jul 2025). Verified 2026-09-03.",
+    "Calculator simplified to one scenario (GP mental health treatment plan → general psychologist) Sep 2026. Clinical psychologist / psychiatrist figures removed — see git history before this change if they're needed again.",
+    "Next indexation expected 1 Jul 2027 — re-check figures after that date."
   ],
-  "practitionerTypes": [
-    {
-      "id": "general-psychologist",
-      "label": "General Psychologist",
-      "rebatePerSession": 98.95,
-      "requiresMHCP": true
-    },
-    {
-      "id": "clinical-psychologist",
-      "label": "Clinical Psychologist",
-      "rebatePerSession": 145.25,
-      "requiresMHCP": true
-    },
-    {
-      "id": "psychiatrist",
-      "label": "Psychiatrist (initial consult)",
-      "rebatePerSession": 262.10,
-      "requiresMHCP": false
-    },
-    {
-      "id": "psychiatrist-subsequent",
-      "label": "Psychiatrist (follow-up)",
-      "rebatePerSession": 87.05,
-      "requiresMHCP": false
-    }
-  ],
-  "sessionFeeRanges": {
-    "general-psychologist": { "low": 150, "mid": 220, "high": 300 },
-    "clinical-psychologist": { "low": 180, "mid": 260, "high": 350 },
-    "psychiatrist": { "low": 400, "mid": 600, "high": 800 },
-    "psychiatrist-subsequent": { "low": 200, "mid": 300, "high": 400 }
-  },
+  "rebatePerSession": 101.55,
+  "mbsItem": "80110",
+  "sessionFeeRange": { "low": 150, "mid": 220, "high": 300 },
   "maxMedicareSessions": 10,
   "gpCostBulkBilled": 0,
   "gpCostPrivate": 40
