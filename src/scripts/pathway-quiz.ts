@@ -330,8 +330,8 @@ function computeNearestScrollTarget(root: HTMLElement): number | null {
 }
 
 // A gentler scroll than the browser's native smooth behaviour. Frames scroll
-// with behavior: 'instant' so the html { scroll-behavior: smooth } rule in
-// global.css doesn't fight each step.
+// with behavior: 'instant' so the html:focus-within { scroll-behavior: smooth }
+// rule in global.css doesn't fight each step.
 function animateScrollTo(target: number) {
   const start = window.scrollY;
   const distance = target - start;

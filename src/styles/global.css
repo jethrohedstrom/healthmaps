@@ -104,9 +104,16 @@
 
 /* Base styles */
 html {
-  scroll-behavior: smooth;
   /* Paints the overscroll/rubber-band area (above the sticky header) to match it */
   background-color: var(--color-paper-cream);
+}
+
+/* Smooth scroll only while the user is interacting (something has focus),
+   never during load or scroll restoration. A root-level rule makes mobile
+   browsers animate the restored position on refresh, so the page looks like
+   it scrolls down by itself. */
+html:focus-within {
+  scroll-behavior: smooth;
 }
 
 body {
