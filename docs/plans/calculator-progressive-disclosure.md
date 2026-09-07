@@ -37,3 +37,5 @@ Shared in all three: the "Change" list shows names only (no rebate figures; reba
 - **2c. Mini quiz.** Change swaps the form for a two-question card in the pathway-quiz style ("Question 1 of 2", "← Back", answers advance on click). Q1 has "I don't know yet", which lands on general psychologist with a one-line explanation.
 
 Next: Jethro picks 2a / 2b / 2c (or a mix), then a build plan for `CostCalculator.astro` + `cost-calculator.ts`.
+
+**Built (7 Sep 2026):** 2c shipped as the live calculator, opening straight on question 1 with fee and GP as quiz steps. Build plan and verification: `docs/plans/calculator-quiz-flow.md`.
