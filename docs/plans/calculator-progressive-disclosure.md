@@ -25,3 +25,15 @@ Shared across all four: one-line hero, no eyebrow, no "Not sure? Try a typical f
 1. Jethro reviews in the design window, picks a variant (or a mix), edits copy in place if wanted.
 2. New plan for the build: changes to `CostCalculator.astro` + `src/scripts/cost-calculator.ts` for the chosen disclosure pattern.
 3. Parked: gamified / slider price input (separate mockup round).
+
+## Turn 2 (7 Sep 2026): refining A
+
+Jethro picked **A** for its simplicity. Worries: "Change" dropped people straight into general vs clinical; "bulk-billed" is jargon. Turn 2 sits at the **top** of the same canvas file, ids `2a`, `2b`, `2c`.
+
+Shared in all three: the "Change" list shows names only (no rebate figures; rebates stay on the receipt), and the GP question is rephrased to **"Do you pay anything to see your GP?"** with pills "No, it's free" / "Yes, about $40".
+
+- **2a. Plain list + "What's the difference?"** A dotted-underline link under the two psychologist rows opens the site's term popover (same shadow-only style as `TermPopover.astro`) explaining general vs clinical.
+- **2b. Two-step.** Change opens Psychologist / Psychiatrist / Someone else. Psychologist reveals a "General or clinical?" pill row with **Not sure** as a valid answer (defaults to general, one-line reason).
+- **2c. Mini quiz.** Change swaps the form for a two-question card in the pathway-quiz style ("Question 1 of 2", "← Back", answers advance on click). Q1 has "I don't know yet", which lands on general psychologist with a one-line explanation.
+
+Next: Jethro picks 2a / 2b / 2c (or a mix), then a build plan for `CostCalculator.astro` + `cost-calculator.ts`.
