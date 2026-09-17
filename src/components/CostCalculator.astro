@@ -11,6 +11,16 @@ const types = costsData.practitionerTypes as PractitionerType[];
 const defaultType = types[0];
 const psychiatrist = types.find((t) => t.firstVisit);
 
+// The pre-answered scenario the page opens on: a general psychologist at the
+// typical fee. The numbers below are SSR'd into the done screen and receipt,
+// and must match defaultState() in src/scripts/cost-calculator.ts.
+const defType = types.find((t) => t.id === 'general-psychologist') ?? defaultType;
+const defFee = defType.chips[1];
+const aud = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' });
+const audWhole = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 0 });
+const gpRange = `Free to ${audWhole.format(costsData.gpCostPrivate)}`;
+const answerSentence = `Seeing a general psychologist with a care plan usually costs about ${audWhole.format(defFee)} a session. Medicare gives back ${aud.format(defType.rebate)}. You pay about ${audWhole.format(Math.round(defFee - defType.rebate))}.`;
+
 // Quiz answer: a full-width card, body-weight text, sub-label optional.
 const answerCard = 'flex w-full min-h-14 flex-col items-start justify-center gap-0.5 rounded-[10px] border border-ink-green/16 bg-white px-4 py-3 text-left text-base leading-snug text-body transition-colors duration-150 hover:border-primary hover:bg-primary-light hover:text-heading focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 disabled:cursor-wait disabled:opacity-70 cursor-pointer';
 const answerSub = 'text-[13.5px] leading-snug text-meta-sage';
@@ -64,8 +74,8 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
       <p class="sr-only" aria-live="polite" aria-atomic="true" data-calc-live></p>
       <noscript><p class="text-sm text-body mb-4">This calculator needs JavaScript to work.</p></noscript>
 
-      <!-- 1. Who -->
-      <section class="calc-screen" data-calc-screen="who">
+      <!-- 1. Who (reached via Change or Start again; the page opens on "done") -->
+      <section class="calc-screen calc-screen--hidden" data-calc-screen="who">
         <div class="flex items-center justify-between gap-4 mb-3">
           <p class={stepLabel} data-calc-progress>Question 1 of 4</p>
         </div>
@@ -121,7 +131,7 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
           <p class={stepLabel} data-calc-progress>Question 3 of 4</p>
           <button type="button" class={backButton} data-calc-back>&larr; Back</button>
         </div>
-        <h2 class="calc-heading mb-1" tabindex="-1" data-calc-heading data-calc-fee-heading>What do they charge per session?</h2>
+        <h2 class="calc-heading mb-1" tabindex="-1" data-calc-heading data-calc-fee-heading>Do you know what they charge per session?</h2>
         <p class="text-[13.5px] leading-snug text-meta-sage mb-4" data-calc-assume-note hidden></p>
         <p class="text-[13.5px] leading-snug text-meta-sage mb-4" data-calc-fee-hint>Their website or booking page will say. If not, ask when you call.</p>
 
@@ -151,6 +161,8 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
           </div>
         ))}
 
+        <button type="button" class={`mt-4 ${answerCard}`} data-calc-typical>I'm just looking &mdash; use a typical fee (${defFee})</button>
+
         <p class="mt-3 text-sm font-medium text-accent-red-soft" role="alert" data-fee-error hidden>Enter a fee to continue.</p>
         <div class="mt-6">
           <button type="submit" class={primaryButton} data-calc-next>Next</button>
@@ -170,32 +182,35 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
         </div>
       </section>
 
-      <!-- 5. Done: answers, each changeable -->
-      <section class="calc-screen calc-screen--hidden" data-calc-screen="done">
+      <!-- 5. Done: the screen the page opens on, pre-filled with the default
+           scenario. Every answer is changeable. -->
+      <section class="calc-screen" data-calc-screen="done">
         <div class="flex items-center justify-between gap-4 mb-3">
           <p class={stepLabel} data-calc-progress>Your costs</p>
-          <button type="button" class={backButton} data-calc-back>&larr; Back</button>
+          <!-- No Back here: this is the landing screen, and the Change links
+               cover revisiting any answer. -->
         </div>
-        <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>That's everything</h2>
+        <h2 class="calc-heading mb-3" tabindex="-1" data-calc-heading>What a session costs</h2>
+        <p class="text-body leading-relaxed mb-5" data-calc-answer-line>{answerSentence}</p>
         <dl class="rounded-[10px] border border-ink-green/16 bg-white px-4">
           <div class={summaryRow}>
             <div class="min-w-0">
               <dt class="text-[12.5px] font-semibold text-meta-sage">Seeing</dt>
-              <dd class="text-base font-semibold text-heading" data-summary-type>&mdash;</dd>
+              <dd class="text-base font-semibold text-heading" data-summary-type>{defType.label}</dd>
             </div>
             <button type="button" class={changeLink} data-calc-goto="who">Change</button>
           </div>
           <div class={summaryRow}>
             <div class="min-w-0">
               <dt class="text-[12.5px] font-semibold text-meta-sage" data-summary-fee-label>Session fee</dt>
-              <dd class="text-base font-semibold text-heading tabular-nums" data-summary-fee>&mdash;</dd>
+              <dd class="text-base font-semibold text-heading tabular-nums" data-summary-fee>{audWhole.format(defFee)}</dd>
             </div>
             <button type="button" class={changeLink} data-calc-goto="fee">Change</button>
           </div>
-          <div class={summaryRow} data-summary-gp-row hidden>
+          <div class={summaryRow} data-summary-gp-row>
             <div class="min-w-0">
               <dt class="text-[12.5px] font-semibold text-meta-sage">GP visit</dt>
-              <dd class="text-base font-semibold text-heading" data-summary-gp>&mdash;</dd>
+              <dd class="text-base font-semibold text-heading" data-summary-gp>{gpRange}</dd>
             </div>
             <button type="button" class={changeLink} data-calc-goto="gp">Change</button>
           </div>
@@ -211,24 +226,25 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
       <div id="calc-receipt" class="bg-white border border-ink-green/12 rounded-[10px] p-5 sm:p-6">
         <p class="text-[12.5px] font-semibold text-meta-sage">What you'll pay</p>
 
-        <!-- Most practitioners: one fee, one rebate -->
+        <!-- Most practitioners: one fee, one rebate. SSR'd with the default
+             scenario so the answer is the first paint. -->
         <div data-receipt-body="single">
           <div class="mt-4 space-y-2.5">
             <div class={receiptRow}>
               <span class="text-body">Session fee</span>
               <span class={receiptLeader} aria-hidden="true"></span>
-              <span class={receiptAmount} data-receipt-fees>&mdash;</span>
+              <span class={receiptAmount} data-receipt-fees>{aud.format(defFee)}</span>
             </div>
             <div class={receiptRow}>
               <span class="text-body">Medicare pays back</span>
               <span class={receiptLeader} aria-hidden="true"></span>
-              <span class="font-medium text-primary tabular-nums" data-receipt-rebate>&mdash;</span>
+              <span class="font-medium text-primary tabular-nums" data-receipt-rebate>&minus;{aud.format(defType.rebate)}</span>
             </div>
           </div>
           <div class="mt-4 border-t border-hairline pt-4">
             <div class="flex items-baseline justify-between gap-3" aria-live="polite" aria-atomic="true">
               <span class="text-[15px] font-semibold text-heading">You pay per session</span>
-              <span class={receiptTotal} data-receipt-total>&mdash;</span>
+              <span class={receiptTotal} data-receipt-total>{aud.format(defFee - defType.rebate)}</span>
             </div>
           </div>
         </div>
@@ -269,20 +285,20 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
           </div>
         </div>
 
-        <!-- One-off GP visit (care plan or referral). Hidden until a type is
-             chosen, and for practitioners you book directly. -->
-        <div class="mt-4 border-t border-hairline pt-4" data-receipt-gp-part hidden>
+        <!-- One-off GP visit (care plan or referral). Shown for the default
+             scenario; hidden for practitioners you book directly. -->
+        <div class="mt-4 border-t border-hairline pt-4" data-receipt-gp-part>
           <p class="text-[12.5px] font-semibold text-meta-sage">One-off to get started</p>
           <div class={`mt-2.5 ${receiptRow}`}>
             <span class="text-body" data-receipt-gp-label>GP visit (care plan)</span>
             <span class={receiptLeader} aria-hidden="true"></span>
-            <span class={receiptAmount} data-receipt-gp>&mdash;</span>
+            <span class={receiptAmount} data-receipt-gp>{gpRange}</span>
           </div>
         </div>
 
-        <!-- Must match START_NOTE in src/scripts/cost-calculator.ts. -->
+        <!-- Must match CAP_NOTE in src/scripts/cost-calculator.ts. -->
         <p class="mt-3 text-[13px] leading-snug text-meta-sage" data-receipt-note>
-          Answer a few questions to see what you'll pay.
+          Medicare covers up to {costsData.maxMedicareSessions} sessions like this each calendar year.
         </p>
       </div>
     </div>

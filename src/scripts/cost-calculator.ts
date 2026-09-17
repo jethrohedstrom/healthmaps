@@ -34,11 +34,17 @@ const types = costsData.practitionerTypes as PractitionerType[];
 const SESSIONS = costsData.maxMedicareSessions;
 const GP_COST_PRIVATE = costsData.gpCostPrivate;
 
+// The scenario the page opens on: a general psychologist at the typical fee.
+// The SSR markup in CostCalculator.astro renders these same numbers.
+const DEFAULT_TYPE_ID = 'general-psychologist';
+const DEFAULT_FEE = (types.find((t) => t.id === DEFAULT_TYPE_ID) ?? types[0]).chips[1];
+
 const EM_DASH = '—';
 const MINUS = '−';
 const NO_REBATE = 'No rebate';
 
-// Copy that also appears in the SSR markup of CostCalculator.astro must match.
+// Copy that also appears in the SSR markup of CostCalculator.astro must match
+// (the SSR receipt note is CAP_NOTE — the default scenario is pre-filled).
 const START_NOTE = "Answer a few questions to see what you'll pay.";
 const EMPTY_NOTE = "Enter a session fee to see what you'll pay.";
 const EMPTY_NOTE_TWO_FEES = "Enter both fees to see what you'll pay.";
@@ -47,6 +53,13 @@ const PSYCHIATRIST_NOTE =
   'Follow-up rebate shown is for a 15–30 minute appointment. Longer follow-ups get more back. No Medicare cap on psychiatrist sessions.';
 const noRebateNote = (label: string) =>
   `${label}s aren't covered by Medicare, so there's no plan or referral to organise. Some private health extras cover part of the fee.`;
+
+// How a practitioner reads mid-sentence ("Seeing a …"). Labels that don't
+// need reshaping just lowercase.
+const SENTENCE_LABELS: Record<string, string> = {
+  'general-psychologist': 'general psychologist',
+};
+const sentenceLabel = (t: PractitionerType): string => SENTENCE_LABELS[t.id] ?? t.label.toLowerCase();
 
 // One-line notes on the fee screen when the practitioner was assumed.
 const ASSUME_NOTES: Record<Assume & string, string> = {
@@ -64,6 +77,12 @@ const audWhole = new Intl.NumberFormat('en-AU', {
 const money = (n: number) => aud.format(n);
 // Fees people type are usually whole dollars; keep the summary clean.
 const moneyShort = (n: number) => (Number.isInteger(n) ? audWhole.format(n) : aud.format(n));
+// "About" figures in the answer sentence round to whole dollars.
+const moneyAbout = (n: number) => audWhole.format(Math.round(n));
+
+// What the GP visit shows before that question is answered. Must match the
+// SSR markup in CostCalculator.astro.
+const GP_RANGE = `Free to ${audWhole.format(GP_COST_PRIVATE)}`;
 
 // ── Flow ──────────────────────────────────────────────────────────────────
 
@@ -91,7 +110,8 @@ interface CalcState {
 const STORAGE_KEY = 'healthmaps:cost-calculator:v1';
 const MAX_HISTORY = 12;
 
-const freshState = (): CalcState => ({
+/** An unanswered quiz, starting at the first question. Used by Start again. */
+const blankState = (): CalcState => ({
   version: 1,
   screen: 'who',
   history: [],
@@ -103,6 +123,21 @@ const freshState = (): CalcState => ({
   followFee: null,
   gpFree: null,
 });
+
+/** First visit: land on the answered default scenario, not the first question. */
+const defaultState = (): CalcState => {
+  const s: CalcState = {
+    ...blankState(),
+    screen: 'done',
+    branch: 'unknown',
+    typeId: DEFAULT_TYPE_ID,
+    assume: 'unknown',
+    fee: DEFAULT_FEE,
+  };
+  // Pre-filled history so Back walks the questions in reverse.
+  s.history = pathFor(s);
+  return s;
+};
 
 const typeById = (id: string | null): PractitionerType | null =>
   id === null ? null : (types.find((t) => t.id === id) ?? null);
@@ -195,7 +230,8 @@ function clampScreen(s: CalcState): CalcState {
   if (!t && ((screen === 'psych' && s.branch !== 'psychologist') || (screen === 'other' && s.branch !== 'other'))) screen = 'who';
   if (t && (screen === 'gp' || screen === 'done') && !feesComplete(t, s)) screen = 'fee';
   if (t && screen === 'gp' && t.setup === null) screen = 'fee';
-  if (t && screen === 'done' && t.setup !== null && s.gpFree === null) screen = 'gp';
+  // 'done' with the GP question unanswered is fine: the default scenario
+  // starts there, and the GP row shows a range until it's answered.
   if (screen === s.screen) return s;
   const path = pathFor(s);
   return { ...s, screen, history: path.slice(0, Math.max(0, path.indexOf(screen))) };
@@ -228,6 +264,8 @@ function initCostCalculator(): void {
   const feeError = q('[data-fee-error]');
   const singleGroup = q('[data-fee-group="single"]');
   const psychGroup = q('[data-fee-group="psychiatrist"]');
+  const typicalBtn = q('[data-calc-typical]');
+  const answerLine = q('[data-calc-answer-line]');
 
   const summaryType = q('[data-summary-type]');
   const summaryFeeLabel = q('[data-summary-fee-label]');
@@ -253,7 +291,7 @@ function initCostCalculator(): void {
 
   if (
     !screensEl || !liveEl || !feeForm || !feeHeading || !assumeNote || !feeError ||
-    !singleGroup || !psychGroup ||
+    !singleGroup || !psychGroup || !typicalBtn || !answerLine ||
     !summaryType || !summaryFeeLabel || !summaryFee || !summaryGpRow || !summaryGp ||
     !bodySingle || !bodyPsych || !feesEl || !rebateEl || !totalEl ||
     !firstFeeEl || !firstRebateEl || !firstTotalEl ||
@@ -277,7 +315,7 @@ function initCostCalculator(): void {
   const screens = Array.from(root.querySelectorAll<HTMLElement>('[data-calc-screen]'));
   const screenEl = (id: ScreenId) => screens.find((el) => el.dataset.calcScreen === id) ?? null;
 
-  let state: CalcState = clampScreen(readState() ?? freshState());
+  let state: CalcState = clampScreen(readState() ?? defaultState());
 
   const currentType = (): PractitionerType | null => typeById(state.typeId);
 
@@ -317,7 +355,10 @@ function initCostCalculator(): void {
     } else if (t) {
       setChips(single!, t.chips);
     }
-    feeHeading!.textContent = twoFees ? 'What do they charge?' : 'What do they charge per session?';
+    feeHeading!.textContent = twoFees ? 'Do you know what they charge?' : 'Do you know what they charge per session?';
+    typicalBtn!.textContent = t?.firstVisit
+      ? "I'm just looking — use typical fees"
+      : `I'm just looking — use a typical fee ($${t?.chips[1] ?? DEFAULT_FEE})`;
     const note = state.assume ? ASSUME_NOTES[state.assume] : '';
     assumeNote!.textContent = note;
     assumeNote!.hidden = !note;
@@ -390,6 +431,23 @@ function initCostCalculator(): void {
     noteEl!.textContent = START_NOTE;
   }
 
+  // The one-sentence answer on the final screen. Psychiatrists have two fees
+  // and are left to the receipt. SSR default text must match what this writes
+  // for the default state.
+  function renderAnswerLine(t: PractitionerType | null): void {
+    if (!t || t.firstVisit || state.fee === null) {
+      answerLine!.hidden = true;
+      return;
+    }
+    const usual = state.fee === t.chips[1] ? 'usually costs about' : 'costs';
+    const opening = `Seeing a ${sentenceLabel(t)}${t.setup === 'plan' ? ' with a care plan' : ''} ${usual} ${moneyShort(state.fee)} a session.`;
+    answerLine!.textContent =
+      t.rebate > 0
+        ? `${opening} Medicare gives back ${money(t.rebate)}. You pay about ${moneyAbout(state.fee - t.rebate)}.`
+        : `${opening} There's no Medicare rebate — you pay the full fee.`;
+    answerLine!.hidden = false;
+  }
+
   function renderSummary(t: PractitionerType | null): void {
     summaryType!.textContent = t ? t.label : EM_DASH;
     if (t?.firstVisit) {
@@ -405,13 +463,14 @@ function initCostCalculator(): void {
     const askedGp = Boolean(t && t.setup !== null);
     summaryGpRow!.hidden = !askedGp;
     summaryGp!.textContent =
-      state.gpFree === null ? EM_DASH : state.gpFree ? 'Free' : `About ${moneyShort(GP_COST_PRIVATE)}`;
+      state.gpFree === null ? GP_RANGE : state.gpFree ? 'Free' : `About ${moneyShort(GP_COST_PRIVATE)}`;
   }
 
   function render(): void {
     const t = currentType();
     if (!t) {
       renderEmpty();
+      renderAnswerLine(null);
       renderSummary(null);
       return;
     }
@@ -422,13 +481,14 @@ function initCostCalculator(): void {
     const gpCost = t.setup === null ? 0 : state.gpFree ? 0 : GP_COST_PRIVATE;
     gpPart!.hidden = t.setup === null;
     gpLabelEl!.textContent = t.setup === 'referral' ? 'GP visit (referral)' : 'GP visit (care plan)';
-    gpEl!.textContent = state.gpFree === null ? EM_DASH : money(gpCost);
+    gpEl!.textContent = state.gpFree === null ? GP_RANGE : money(gpCost);
 
     bodySingle!.hidden = Boolean(t.firstVisit);
     bodyPsych!.hidden = !t.firstVisit;
     if (t.firstVisit) renderPsychiatrist(t, t.firstVisit);
     else renderSingle(t);
 
+    renderAnswerLine(t);
     renderSummary(t);
   }
 
@@ -456,7 +516,7 @@ function initCostCalculator(): void {
     }
     feeError!.hidden = true;
     if (!focus) return;
-    announce(id === 'done' ? "That's everything." : `${progressLabel(state)}.`);
+    announce(id === 'done' ? 'Your costs.' : `${progressLabel(state)}.`);
     const heading = active.querySelector<HTMLElement>('[data-calc-heading]');
     requestAnimationFrame(() => heading?.focus({ preventScroll: true }));
   }
@@ -487,7 +547,7 @@ function initCostCalculator(): void {
 
   function reset(): void {
     clearState();
-    state = freshState();
+    state = blankState();
     syncInputsFromState();
     applyType(null);
     render();
@@ -517,6 +577,22 @@ function initCostCalculator(): void {
     go(nextAfter(state.screen, state));
   }
 
+  // "I'm just looking": fill the typical fee(s) and move on.
+  function handleTypical(): void {
+    const t = currentType();
+    if (!t) return;
+    if (t.firstVisit) {
+      first!.input.value = String(t.firstVisit.chips[1]);
+      follow!.input.value = String(t.chips[1]);
+    } else {
+      single!.input.value = String(t.chips[1]);
+    }
+    syncStateFromInputs();
+    render();
+    feeError!.hidden = true;
+    go(nextAfter('fee', state));
+  }
+
   function handleFeeNext(): void {
     const t = currentType();
     if (!t) return;
@@ -538,6 +614,8 @@ function initCostCalculator(): void {
     if (!target) return;
     const answer = target.closest<HTMLElement>('[data-calc-answer]');
     if (answer && !(answer as HTMLButtonElement).disabled) return handleAnswer(answer);
+    const typical = target.closest<HTMLButtonElement>('[data-calc-typical]');
+    if (typical && !typical.disabled) return handleTypical();
     if (target.closest('[data-calc-back]')) return back();
     const gotoEl = target.closest<HTMLElement>('[data-calc-goto]');
     if (gotoEl && isScreen(gotoEl.dataset.calcGoto)) return goto(gotoEl.dataset.calcGoto);
