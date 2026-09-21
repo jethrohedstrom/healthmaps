@@ -1,5 +1,10 @@
 ---
+import Button from './Button.astro';
+
 const year = new Date().getFullYear();
+
+const textareaInput =
+  'w-full border border-ink-green/16 rounded-[10px] px-4 py-2.5 text-base text-heading bg-white resize-y hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary';
 ---
 <footer class="bg-paper-cream border-t border-pencil">
   <div class="max-w-6xl mx-auto px-4 py-16">
@@ -36,8 +41,69 @@ const year = new Date().getFullYear();
         </ul>
       </div>
     </div>
+    <div class="mt-12 pt-8 border-t border-border max-w-body">
+      <h3 class="font-semibold text-heading mb-1">Tell us anything</h3>
+      <p class="text-[13.5px] leading-snug text-meta-sage mb-4">
+        What was confusing, what was missing, what helped — no name or email needed.
+      </p>
+      <form
+        name="feedback"
+        method="POST"
+        action="/thanks/"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        data-feedback-form
+        class="flex flex-col items-start gap-3"
+      >
+        <input type="hidden" name="form-name" value="feedback" />
+        <input type="hidden" name="page" value={Astro.url.pathname} />
+        <p class="hidden" aria-hidden="true">
+          <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+        </p>
+        <label for="feedback-message" class="sr-only">Your feedback</label>
+        <textarea id="feedback-message" name="message" rows="3" required class={textareaInput}
+        ></textarea>
+        <Button type="submit" size="sm">Send feedback</Button>
+      </form>
+      <p class="text-sm font-semibold text-primary" aria-live="polite" data-feedback-thanks></p>
+    </div>
     <div class="mt-12 pt-8 border-t border-border text-xs text-body text-center">
       <p>&copy; {year} HealthMaps. This site provides general information only and is not a substitute for professional medical advice.</p>
     </div>
   </div>
 </footer>
+
+<script>
+  // Progressive enhancement: post to Netlify Forms in place instead of
+  // navigating to /thanks/. Class toggle, not the hidden attribute — the
+  // form carries a display utility class (see quiz precedent).
+  const form = document.querySelector<HTMLFormElement>('[data-feedback-form]');
+  const thanks = document.querySelector<HTMLElement>('[data-feedback-thanks]');
+
+  if (form && thanks) {
+    let submitting = false;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (submitting) return;
+      submitting = true;
+
+      const body = new URLSearchParams();
+      new FormData(form).forEach((value, key) => body.append(key, String(value)));
+
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString(),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error(`Feedback POST failed: ${res.status}`);
+          form.classList.add('hidden');
+          thanks.textContent = 'Thanks — we read every one.';
+        })
+        .catch(() => {
+          // Fall back to the native POST → /thanks/ (bypasses this listener).
+          form.submit();
+        });
+    });
+  }
+</script>

@@ -41,6 +41,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <dd class="font-semibold text-heading text-right">Aggregate server logs (Netlify)</dd>
           </div>
           <div class="py-3 flex justify-between gap-6">
+            <dt class="text-body">Feedback box</dt>
+            <dd class="font-semibold text-heading text-right">Anonymous — your message and the page it came from</dd>
+          </div>
+          <div class="py-3 flex justify-between gap-6">
             <dt class="text-body">Your email, if you write to us</dt>
             <dd class="font-semibold text-heading text-right">Used only to reply</dd>
           </div>
@@ -50,9 +54,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div>
         <h2 class="text-2xl font-bold text-heading mb-4">What we collect</h2>
         <p class="text-body leading-relaxed mb-4">
-          HealthMaps is a simple information website. There are no accounts, no sign-up forms, and
-          nothing you type into the site (like the cost calculator) is sent or stored anywhere — it
-          runs entirely in your browser.
+          HealthMaps is a simple information website. There are no accounts and no sign-up forms.
+          Tools like the cost calculator run entirely in your browser — nothing you type into them
+          is sent or stored anywhere. The one exception is the feedback box at the bottom of each
+          page, described below, which only sends what you choose to write.
         </p>
         <p class="text-body leading-relaxed">
           We use server-side analytics provided by our hosting service (Netlify) to see aggregate
@@ -68,6 +73,18 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <h2 class="text-xl font-bold text-heading mb-3">Cookies</h2>
           <p class="text-body leading-relaxed">
             This site doesn't set cookies. That's also why you don't see a cookie banner.
+          </p>
+        </div>
+        <div class="py-8">
+          <h2 class="text-xl font-bold text-heading mb-3">The feedback box</h2>
+          <!-- REVIEW: AI-drafted — confirm this matches how Netlify Forms is configured before launch -->
+          <p class="text-body leading-relaxed">
+            Every page has a small feedback box in the footer. It's anonymous: we receive only the
+            message you write and which page you sent it from. There's no name or email field, we
+            can't identify who sent a message, and we don't try to. Submissions are stored by our
+            hosting provider, Netlify, and used only to improve the site. Please don't include
+            personal or health details you wouldn't want stored — and if you'd like a reply, email
+            us instead.
           </p>
         </div>
         <div class="py-8">
@@ -99,8 +116,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div class="pt-10 border-t border-border">
         <h2 class="text-2xl font-bold text-heading mb-4">Questions</h2>
         <p class="text-body leading-relaxed">
-          This policy reflects how the site works as of June 2026. If the site changes in a way that
-          affects privacy — for example, adding a feedback form — this page will be updated first.
+          This policy reflects how the site works as of September 2026. If the site changes in a way
+          that affects privacy, this page will be updated first.
           Questions about privacy: email
           <a href="mailto:jethrohedstrom@gmail.com" class="text-primary font-semibold underline underline-offset-2">jethrohedstrom@gmail.com</a>.
         </p>
