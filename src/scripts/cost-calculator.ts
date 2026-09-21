@@ -34,8 +34,8 @@ const types = costsData.practitionerTypes as PractitionerType[];
 const SESSIONS = costsData.maxMedicareSessions;
 const GP_COST_PRIVATE = costsData.gpCostPrivate;
 
-// The scenario the page opens on: a general psychologist at the typical fee.
-// The SSR markup in CostCalculator.astro renders these same numbers.
+// Fallback for the "most common fee" button before a practitioner is chosen:
+// a general psychologist at the typical fee. Matches the SSR button text.
 const DEFAULT_TYPE_ID = 'general-psychologist';
 const DEFAULT_FEE = (types.find((t) => t.id === DEFAULT_TYPE_ID) ?? types[0]).chips[1];
 
@@ -44,7 +44,7 @@ const MINUS = '−';
 const NO_REBATE = 'No rebate';
 
 // Copy that also appears in the SSR markup of CostCalculator.astro must match
-// (the SSR receipt note is CAP_NOTE — the default scenario is pre-filled).
+// (the SSR receipt note is START_NOTE — the page opens on the first question).
 const START_NOTE = "Answer a few questions to see what you'll pay.";
 const EMPTY_NOTE = "Enter a session fee to see what you'll pay.";
 const EMPTY_NOTE_TWO_FEES = "Enter both fees to see what you'll pay.";
@@ -107,10 +107,10 @@ interface CalcState {
   gpFree: boolean | null;
 }
 
-const STORAGE_KEY = 'healthmaps:cost-calculator:v1';
+const STORAGE_KEY = 'healthmaps:cost-calculator:v2';
 const MAX_HISTORY = 12;
 
-/** An unanswered quiz, starting at the first question. Used by Start again. */
+/** An unanswered quiz at the first question: the landing state, and Start again. */
 const blankState = (): CalcState => ({
   version: 1,
   screen: 'who',
@@ -123,21 +123,6 @@ const blankState = (): CalcState => ({
   followFee: null,
   gpFree: null,
 });
-
-/** First visit: land on the answered default scenario, not the first question. */
-const defaultState = (): CalcState => {
-  const s: CalcState = {
-    ...blankState(),
-    screen: 'done',
-    branch: 'unknown',
-    typeId: DEFAULT_TYPE_ID,
-    assume: 'unknown',
-    fee: DEFAULT_FEE,
-  };
-  // Pre-filled history so Back walks the questions in reverse.
-  s.history = pathFor(s);
-  return s;
-};
 
 const typeById = (id: string | null): PractitionerType | null =>
   id === null ? null : (types.find((t) => t.id === id) ?? null);
@@ -315,7 +300,7 @@ function initCostCalculator(): void {
   const screens = Array.from(root.querySelectorAll<HTMLElement>('[data-calc-screen]'));
   const screenEl = (id: ScreenId) => screens.find((el) => el.dataset.calcScreen === id) ?? null;
 
-  let state: CalcState = clampScreen(readState() ?? defaultState());
+  let state: CalcState = clampScreen(readState() ?? blankState());
 
   const currentType = (): PractitionerType | null => typeById(state.typeId);
 
@@ -357,8 +342,8 @@ function initCostCalculator(): void {
     }
     feeHeading!.textContent = twoFees ? 'Do you know what they charge?' : 'Do you know what they charge per session?';
     typicalBtn!.textContent = t?.firstVisit
-      ? "I'm just looking — use typical fees"
-      : `I'm just looking — use a typical fee ($${t?.chips[1] ?? DEFAULT_FEE})`;
+      ? 'No — use the most common fees'
+      : `No — use the most common fee ($${t?.chips[1] ?? DEFAULT_FEE})`;
     const note = state.assume ? ASSUME_NOTES[state.assume] : '';
     assumeNote!.textContent = note;
     assumeNote!.hidden = !note;

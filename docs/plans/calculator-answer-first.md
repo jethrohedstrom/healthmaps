@@ -1,5 +1,7 @@
 # Calculator: answer first, questions second
 
+**Superseded September 2026 by `calculator-question-first.md` — the page opens on Question 1 again, with copy fixes instead.**
+
 ## The idea in one line
 
 The calculator currently opens with a question ("Who will you be seeing?"). Harry's user test showed that reads like a booking form asking for your budget. Flip it: **open with the answer already filled in** — the most common scenario — and let people change the bits that don't fit them.
