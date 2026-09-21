@@ -91,7 +91,7 @@ async function runPath(page, p, viewport) {
 
   if (p.gp) {
     check((await activeScreen(page)) === 'gp', `${p.name}: reached gp screen`);
-    check((await text(page, '[data-receipt-gp]')) === '—', `${p.name}: GP amount unknown before answering`);
+    check((await text(page, '[data-receipt-gp]')) === 'Free to $40', `${p.name}: GP amount shows a range before answering`);
     await clickAnswer(page, p.gp);
   }
   check((await activeScreen(page)) === 'done', `${p.name}: reached done`);
@@ -109,8 +109,12 @@ async function runPath(page, p, viewport) {
   check(summaryGpHidden === Boolean(p.noGp), `${p.name}: summary GP row`);
   if (p.name === 'general') await page.screenshot({ path: `${OUT_DIR}/calculator-quiz-done-${viewport.name}.png` });
 
-  // Reload restores the same screen without scrolling.
-  await page.evaluate(() => window.scrollTo(0, 0));
+  // Reload restores the same screen without scrolling. Scroll instantly —
+  // html:focus-within { scroll-behavior: smooth } animates a plain scrollTo
+  // while the done heading holds focus, and Chrome would record a
+  // mid-animation position to restore.
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  await page.waitForFunction(() => window.scrollY === 0);
   await page.waitForTimeout(200); // let the browser record the scroll position it will restore
   await page.reload({ waitUntil: 'load' });
   await page.waitForTimeout(300);
@@ -118,16 +122,25 @@ async function runPath(page, p, viewport) {
   check((await page.evaluate(() => window.scrollY)) === 0, `${p.name}: no scroll on reload`);
   if (p.total) check((await text(page, '[data-receipt-total]')) === p.total, `${p.name}: total restored after reload`);
 
-  // Back from done returns along the path; Change → Back returns to done.
-  await page.locator('[data-calc-screen="done"] [data-calc-back]').click();
+  // No Back on done — the Change links (covered in runChangeType) revisit answers.
+  check((await page.locator('[data-calc-screen="done"] [data-calc-back]').count()) === 0, `${p.name}: no Back on done`);
+}
+
+async function runMostCommon(page) {
+  // The no-number path: "I don't know yet", then the most common fee.
+  await page.goto(URL, { waitUntil: 'load' });
+  await page.evaluate(() => sessionStorage.clear());
+  await page.reload({ waitUntil: 'load' });
+  await clickAnswer(page, "I don't know yet");
+  check((await activeScreen(page)) === 'fee', 'common: reached fee screen');
+  const label = await text(page, '[data-calc-typical]');
+  check(label === 'No — use the most common fee ($250)', `common: typical button says "${label}"`);
+  await page.locator('[data-calc-typical]').click();
   await page.waitForTimeout(450);
-  check((await activeScreen(page)) === (p.gp ? 'gp' : 'fee'), `${p.name}: Back from done`);
-  await page.locator('[data-calc-screen="' + (p.gp ? 'gp' : 'fee') + '"] [data-calc-back]').click();
-  await page.waitForTimeout(450);
-  if (p.gp) {
-    check((await activeScreen(page)) === 'fee', `${p.name}: Back to fee keeps values`);
-    check((await page.inputValue(`#${Object.keys(p.fees)[0]}`)) === String(Object.values(p.fees)[0]), `${p.name}: fee kept after Back`);
-  }
+  check((await activeScreen(page)) === 'gp', 'common: advances to gp');
+  await clickAnswer(page, "No, it's free");
+  check((await activeScreen(page)) === 'done', 'common: reaches done');
+  check((await text(page, '[data-receipt-total]')) === '$148.45', 'common: total uses the most common fee');
 }
 
 async function runChangeType(page) {
@@ -145,6 +158,7 @@ async function runChangeType(page) {
   await page.locator('[data-calc-goto="fee"]').click();
   await page.waitForTimeout(450);
   check((await activeScreen(page)) === 'fee', 'change: goto fee');
+  check((await page.inputValue('#session-fee')) === '250', 'change: fee kept when revisited');
   await page.locator('[data-calc-screen="fee"] [data-calc-back]').click();
   await page.waitForTimeout(450);
   check((await activeScreen(page)) === 'done', 'change: Back returns to done');
@@ -189,6 +203,8 @@ for (const viewport of VIEWPORTS) {
   }
   console.log('path: change-type / chips / reset');
   await runChangeType(page);
+  console.log('path: most common fee');
+  await runMostCommon(page);
   if (viewport.name !== 'desktop') {
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
     check(!overflow, 'mobile: no horizontal overflow');
