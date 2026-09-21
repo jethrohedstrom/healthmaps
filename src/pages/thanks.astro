@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Button from '../components/Button.astro';
+---
+<BaseLayout title="Thanks" noindex>
+  <section class="max-w-body mx-auto px-4 py-24 md:py-40 text-center">
+    <h1 class="text-4xl md:text-5xl font-bold text-heading mb-4">Thanks for the feedback</h1>
+    <p class="text-xl text-body mb-8">We read every one. It's anonymous, so we can't reply — but it genuinely shapes the site.</p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <Button href="/" size="lg">Back to the homepage</Button>
+    </div>
+  </section>
+</BaseLayout>

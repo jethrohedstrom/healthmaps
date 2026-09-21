@@ -16,5 +16,10 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
 
-  integrations: [sitemap()]
+  integrations: [
+    sitemap({
+      // /thanks/ is the feedback form's no-JS landing page — noindexed, keep it out of the sitemap
+      filter: (page) => !page.includes('/thanks/')
+    })
+  ]
 });
