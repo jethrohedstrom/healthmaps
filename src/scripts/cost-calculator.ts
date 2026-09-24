@@ -16,6 +16,14 @@ export interface FirstVisit {
   chips: [number, number, number];
 }
 
+/** A psychiatrist follow-up length and its MBS item. */
+export interface FollowUpLength {
+  id: string;
+  label: string;
+  item: number;
+  rebate: number;
+}
+
 export interface PractitionerType {
   id: string;
   label: string;
@@ -28,6 +36,8 @@ export interface PractitionerType {
   psychologist?: boolean;
   /** Psychiatrists: the first appointment has its own rebate and fee range. */
   firstVisit?: FirstVisit;
+  /** Psychiatrists: follow-up lengths, each with its own rebate. The first is the default. */
+  followUpLengths?: FollowUpLength[];
 }
 
 const types = costsData.practitionerTypes as PractitionerType[];
@@ -49,8 +59,9 @@ const START_NOTE = "Answer a few questions to see what you'll pay.";
 const EMPTY_NOTE = "Enter a session fee to see what you'll pay.";
 const EMPTY_NOTE_TWO_FEES = "Enter both fees to see what you'll pay.";
 const CAP_NOTE = `Medicare covers up to ${SESSIONS} sessions like this each calendar year.`;
+// REVIEW: the 50-session claim is AI-drafted health content; check against MBS.
 const PSYCHIATRIST_NOTE =
-  'Follow-up rebate shown is for a 15–30 minute appointment. Longer follow-ups get more back. No Medicare cap on psychiatrist sessions.';
+  'Medicare pays back more for longer sessions. After 50 psychiatrist sessions in a calendar year, rebates roughly halve.';
 const noRebateNote = (label: string) =>
   `${label}s aren't covered by Medicare, so there's no plan or referral to organise. Some private health extras cover part of the fee.`;
 
@@ -107,6 +118,8 @@ interface CalcState {
   gpFree: boolean | null;
   /** A typed GP amount when they pay something other than the usual. null = the usual. */
   gpCustom: number | null;
+  /** Psychiatrist follow-up length id. null = the default (shortest). */
+  followLength: string | null;
 }
 
 const STORAGE_KEY = 'healthmaps:cost-calculator:v2';
@@ -125,6 +138,7 @@ const blankState = (): CalcState => ({
   followFee: null,
   gpFree: null,
   gpCustom: null,
+  followLength: null,
 });
 
 const typeById = (id: string | null): PractitionerType | null =>
@@ -146,7 +160,8 @@ function isCalcState(v: unknown): v is CalcState {
     isFee(s.fee) && isFee(s.firstFee) && isFee(s.followFee) &&
     (s.gpFree === null || typeof s.gpFree === 'boolean') &&
     // Sessions saved before the custom GP amount existed have no gpCustom.
-    (s.gpCustom === undefined || isFee(s.gpCustom))
+    (s.gpCustom === undefined || isFee(s.gpCustom)) &&
+    (s.followLength === undefined || s.followLength === null || typeof s.followLength === 'string')
   );
 }
 
@@ -155,7 +170,9 @@ function readState(): CalcState | null {
     const raw = window.sessionStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed: unknown = JSON.parse(raw);
-    return isCalcState(parsed) ? { ...parsed, gpCustom: parsed.gpCustom ?? null } : null;
+    return isCalcState(parsed)
+      ? { ...parsed, gpCustom: parsed.gpCustom ?? null, followLength: parsed.followLength ?? null }
+      : null;
   } catch {
     return null;
   }
@@ -283,6 +300,8 @@ function initCostCalculator(): void {
   const gpLabelEl = q('[data-receipt-gp-label]');
   const gpEl = q('[data-receipt-gp]');
   const noteEl = q('[data-receipt-note]');
+  const followLabelEl = q('[data-receipt-follow-label]');
+  const lengthChips = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-follow-length]'));
 
   if (
     !screensEl || !liveEl || !feeForm || !feeHeading ||
@@ -292,7 +311,7 @@ function initCostCalculator(): void {
     !bodySingle || !bodyPsych || !feesEl || !rebateEl || !totalEl ||
     !firstFeeEl || !firstRebateEl || !firstTotalEl ||
     !followFeeEl || !followRebateEl || !followTotalEl ||
-    !gpPart || !gpLabelEl || !gpEl || !noteEl
+    !gpPart || !gpLabelEl || !gpEl || !noteEl || !followLabelEl
   ) return;
 
   function field(id: string): FeeField | null {
@@ -399,19 +418,31 @@ function initCostCalculator(): void {
     noteEl!.textContent = t.rebate > 0 ? CAP_NOTE : noRebateNote(t.label);
   }
 
+  // The chosen follow-up length, falling back to the first (shortest). An id
+  // from an old session that no longer exists also falls back.
+  function followLength(t: PractitionerType): FollowUpLength | null {
+    const lengths = t.followUpLengths ?? [];
+    return lengths.find((l) => l.id === state.followLength) ?? lengths[0] ?? null;
+  }
+
   function renderPsychiatrist(t: PractitionerType, fv: FirstVisit): void {
     const f1 = fieldValue(first!);
     const f2 = fieldValue(follow!);
     syncChips(first!, f1);
     syncChips(follow!, f2);
 
+    const length = followLength(t);
+    const followRebate = length?.rebate ?? t.rebate;
+    for (const chip of lengthChips) chip.setAttribute('aria-pressed', String(chip.dataset.followLength === length?.id));
+    followLabelEl!.textContent = length ? `Follow-up, ${length.label}` : 'Follow-up';
+
     firstFeeEl!.textContent = f1 === null ? EM_DASH : money(f1);
     setRebateText(firstRebateEl!, fv.rebate, f1);
     firstTotalEl!.textContent = f1 === null ? EM_DASH : money(Math.max(0, f1 - fv.rebate));
 
     followFeeEl!.textContent = f2 === null ? EM_DASH : money(f2);
-    setRebateText(followRebateEl!, t.rebate, f2);
-    followTotalEl!.textContent = f2 === null ? EM_DASH : money(Math.max(0, f2 - t.rebate));
+    setRebateText(followRebateEl!, followRebate, f2);
+    followTotalEl!.textContent = f2 === null ? EM_DASH : money(Math.max(0, f2 - followRebate));
 
     noteEl!.textContent = f1 === null || f2 === null ? EMPTY_NOTE_TWO_FEES : PSYCHIATRIST_NOTE;
   }
@@ -563,6 +594,7 @@ function initCostCalculator(): void {
     if (id !== state.typeId) {
       // A fee typed for one practitioner is misleading for another.
       state.fee = state.firstFee = state.followFee = null;
+      state.followLength = null;
       syncInputsFromState();
     }
     state.typeId = id;
@@ -679,6 +711,14 @@ function initCostCalculator(): void {
     const t = currentType();
     if (t && feesComplete(t, state)) feeError!.hidden = true;
   });
+
+  for (const chip of lengthChips) {
+    chip.addEventListener('click', () => {
+      state.followLength = chip.dataset.followLength ?? null;
+      writeState(state);
+      render();
+    });
+  }
 
   for (const f of allFields) {
     f.input.addEventListener('focus', () => f.input.select());

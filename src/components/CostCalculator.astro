@@ -50,6 +50,9 @@ const feeGroups = [
   },
 ];
 
+// Psychiatrist follow-up lengths: each has its own rebate. The first is the default.
+const followLengths = psychiatrist?.followUpLengths ?? [];
+
 // The four "someone else" practitioners, in JSON order.
 const otherTypes = types.filter((t) => !t.psychologist && !t.firstVisit);
 
@@ -158,6 +161,17 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
                 </div>
               </div>
             ))}
+            <!-- Psychiatrist follow-ups: the length sets the rebate. -->
+            {g.name === 'psychiatrist' && followLengths.length > 0 && (
+              <div>
+                <p class="block text-sm font-semibold text-body mb-2" id="follow-length-label">Follow-up length</p>
+                <div class="flex flex-wrap gap-2" role="group" aria-labelledby="follow-length-label">
+                  {followLengths.map((l, i) => (
+                    <button type="button" class={feeChip} data-follow-length={l.id} aria-pressed={i === 0 ? 'true' : 'false'}>{l.label}</button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         ))}
         <p class="mt-3 text-[13.5px] leading-snug text-meta-sage" data-calc-fee-hint>Their website or booking page will say. If not, ask when you call.</p>
@@ -287,7 +301,7 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
           </div>
           <div class="mt-4 border-t border-hairline pt-4 space-y-2.5">
             <div class={receiptRow}>
-              <span class="text-body">Follow-up</span>
+              <span class="text-body" data-receipt-follow-label>Follow-up</span>
               <span class={receiptLeader} aria-hidden="true"></span>
               <span class={receiptAmount} data-receipt-follow-fee>&mdash;</span>
             </div>

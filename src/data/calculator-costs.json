@@ -2,7 +2,9 @@
   "lastUpdated": "2026-09-03",
   "note": "Medicare rebate amounts are approximate and may change. Check Services Australia for current rates.",
   "reviewNotes": [
-    "Rebates verified on MBS Online 2026-09-03, all 'Schedule Fee Updated 01-Jul-2026' (85% benefit): general psychologist item 80110 $101.55; clinical psychologist item 80010 $149.05; mental health social worker item 80135 $89.50; mental health occupational therapist item 80160 $89.50; psychiatrist first appointment item 296 (45+ min, new or returning patient) $268.90; psychiatrist follow-up item 302 (15-30 min) $89.30. Longer follow-ups (items 304/306) rebate more; the calculator uses 302 so it doesn't understate costs.",
+    "Rebates verified on MBS Online 2026-09-03, all 'Schedule Fee Updated 01-Jul-2026' (85% benefit): general psychologist item 80110 $101.55; clinical psychologist item 80010 $149.05; mental health social worker item 80135 $89.50; mental health occupational therapist item 80160 $89.50; psychiatrist first appointment item 296 (45+ min, new or returning patient) $268.90; psychiatrist follow-up item 302 (15-30 min) $89.30.",
+    "Psychiatrist follow-up lengths (followUpLengths), MBS Online at 1 Jul 2026 rates: item 302 (15-30 min) $89.30, item 304 (30-45 min) $137.45, item 306 (45-75 min) $189.70. 302 is the default and matches the psychiatrist 'rebate' field. The fee chips don't change with length. REVIEW: source typical fees for longer follow-ups.",
+    "REVIEW: psychiatrist receipt note says rebates roughly halve after 50 psychiatrist sessions in a calendar year — needs checking against the MBS items for attendances after the 50th.",
     "Earlier versions labelled the psychiatrist initial rebate as item 291. That item is the one-off assessment-and-management-plan attendance ($467.45 from 1 Jul 2026), not a normal first appointment. Item 296 is the right one.",
     "Counsellors and psychotherapists have no Medicare rebate (not in the Better Access scheme); rebate 0 and setup null so the GP question and 'one-off to get started' block are hidden.",
     "chips = the quick-pick fee buttons (Lower / Typical / Higher). General psychologist 200/250/330 is sourced: Help Link 2026 network data across 371 psychologists (median $245, average $237, range $0-$360) and the APS recommended 2026-27 rate $330, verified 2026-09-03. REVIEW: every other chip range is a placeholder taken from the practitioners page ranges and needs a source.",
@@ -31,7 +33,12 @@
       "rebate": 89.30,
       "chips": [250, 300, 400],
       "setup": "referral",
-      "firstVisit": { "rebate": 268.90, "chips": [450, 600, 800] }
+      "firstVisit": { "rebate": 268.90, "chips": [450, 600, 800] },
+      "followUpLengths": [
+        { "id": "15-30", "label": "15–30 min", "item": 302, "rebate": 89.30 },
+        { "id": "30-45", "label": "30–45 min", "item": 304, "rebate": 137.45 },
+        { "id": "45-75", "label": "45–75 min", "item": 306, "rebate": 189.70 }
+      ]
     },
     {
       "id": "social-worker",
