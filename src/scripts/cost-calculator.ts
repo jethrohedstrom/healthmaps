@@ -105,6 +105,8 @@ interface CalcState {
   followFee: number | null;
   /** null = not asked yet. */
   gpFree: boolean | null;
+  /** A typed GP amount when they pay something other than the usual. null = the usual. */
+  gpCustom: number | null;
 }
 
 const STORAGE_KEY = 'healthmaps:cost-calculator:v2';
@@ -122,6 +124,7 @@ const blankState = (): CalcState => ({
   firstFee: null,
   followFee: null,
   gpFree: null,
+  gpCustom: null,
 });
 
 const typeById = (id: string | null): PractitionerType | null =>
@@ -141,7 +144,9 @@ function isCalcState(v: unknown): v is CalcState {
     (s.typeId === null || typeById(s.typeId as string) !== null) &&
     (s.assume === null || s.assume === 'unknown' || s.assume === 'not-sure') &&
     isFee(s.fee) && isFee(s.firstFee) && isFee(s.followFee) &&
-    (s.gpFree === null || typeof s.gpFree === 'boolean')
+    (s.gpFree === null || typeof s.gpFree === 'boolean') &&
+    // Sessions saved before the custom GP amount existed have no gpCustom.
+    (s.gpCustom === undefined || isFee(s.gpCustom))
   );
 }
 
@@ -150,7 +155,7 @@ function readState(): CalcState | null {
     const raw = window.sessionStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed: unknown = JSON.parse(raw);
-    return isCalcState(parsed) ? parsed : null;
+    return isCalcState(parsed) ? { ...parsed, gpCustom: parsed.gpCustom ?? null } : null;
   } catch {
     return null;
   }
@@ -244,6 +249,11 @@ function initCostCalculator(): void {
   const screensEl = q('[data-calc-screens]');
   const liveEl = q('[data-calc-live]');
   const feeForm = q<HTMLFormElement>('form[data-calc-screen="fee"]');
+  const gpForm = q<HTMLFormElement>('form[data-calc-screen="gp"]');
+  const gpOtherBtn = q<HTMLButtonElement>('[data-calc-gp-other]');
+  const gpCustomWrap = q('[data-gp-custom]');
+  const gpInput = q<HTMLInputElement>('#gp-fee');
+  const gpError = q('[data-gp-error]');
   const feeHeading = q('[data-calc-fee-heading]');
   const assumeNote = q('[data-calc-assume-note]');
   const feeError = q('[data-fee-error]');
@@ -275,7 +285,8 @@ function initCostCalculator(): void {
   const noteEl = q('[data-receipt-note]');
 
   if (
-    !screensEl || !liveEl || !feeForm || !feeHeading || !assumeNote || !feeError ||
+    !screensEl || !liveEl || !feeForm || !feeHeading ||
+    !gpForm || !gpOtherBtn || !gpCustomWrap || !gpInput || !gpError || !assumeNote || !feeError ||
     !singleGroup || !psychGroup || !typicalBtn || !answerLine ||
     !summaryType || !summaryFeeLabel || !summaryFee || !summaryGpRow || !summaryGp ||
     !bodySingle || !bodyPsych || !feesEl || !rebateEl || !totalEl ||
@@ -448,7 +459,13 @@ function initCostCalculator(): void {
     const askedGp = Boolean(t && t.setup !== null);
     summaryGpRow!.hidden = !askedGp;
     summaryGp!.textContent =
-      state.gpFree === null ? GP_RANGE : state.gpFree ? 'Free' : `About ${moneyShort(GP_COST_PRIVATE)}`;
+      state.gpFree === null
+        ? GP_RANGE
+        : state.gpFree
+          ? 'Free'
+          : state.gpCustom !== null
+            ? moneyShort(state.gpCustom)
+            : `About ${moneyShort(GP_COST_PRIVATE)}`;
   }
 
   function render(): void {
@@ -463,7 +480,7 @@ function initCostCalculator(): void {
     // The GP appointment (care plan or referral) is a one-off setup cost,
     // shown separately from the per-session figure. Not needed at all for
     // no-rebate types, and unknown until the GP question is answered.
-    const gpCost = t.setup === null ? 0 : state.gpFree ? 0 : GP_COST_PRIVATE;
+    const gpCost = t.setup === null || state.gpFree ? 0 : (state.gpCustom ?? GP_COST_PRIVATE);
     gpPart!.hidden = t.setup === null;
     gpLabelEl!.textContent = t.setup === 'referral' ? 'GP visit (referral)' : 'GP visit (care plan)';
     gpEl!.textContent = state.gpFree === null ? GP_RANGE : money(gpCost);
@@ -500,6 +517,9 @@ function initCostCalculator(): void {
       if (isActive && progress) progress.textContent = progressLabel(state);
     }
     feeError!.hidden = true;
+    gpError!.hidden = true;
+    // The GP amount box stays open when a typed amount is the current answer.
+    if (id === 'gp') setGpCustomOpen(state.gpFree === false && state.gpCustom !== null);
     if (!focus) return;
     announce(id === 'done' ? 'Your costs.' : `${progressLabel(state)}.`);
     const heading = active.querySelector<HTMLElement>('[data-calc-heading]');
@@ -556,7 +576,10 @@ function initCostCalculator(): void {
       if (!type) state.typeId = null;
     }
     if (type) setType(type, assume === 'unknown' || assume === 'not-sure' ? assume : null);
-    if (gp === 'free' || gp === 'paid') state.gpFree = gp === 'free';
+    if (gp === 'free' || gp === 'paid') {
+      state.gpFree = gp === 'free';
+      state.gpCustom = null;
+    }
     applyType(currentType());
     render();
     go(nextAfter(state.screen, state));
@@ -592,6 +615,26 @@ function initCostCalculator(): void {
     go(nextAfter('fee', state));
   }
 
+  function setGpCustomOpen(open: boolean): void {
+    gpCustomWrap!.hidden = !open;
+    gpOtherBtn!.setAttribute('aria-expanded', String(open));
+    gpInput!.value = open && state.gpCustom !== null ? String(state.gpCustom) : '';
+  }
+
+  function handleGpNext(): void {
+    const v = parseFloat(gpInput!.value);
+    if (isNaN(v) || v <= 0) {
+      gpError!.hidden = false;
+      gpInput!.focus();
+      return;
+    }
+    gpError!.hidden = true;
+    state.gpFree = false;
+    state.gpCustom = v;
+    render();
+    go(nextAfter('gp', state));
+  }
+
   // ── Events ──────────────────────────────────────────────────────────────
 
   root.addEventListener('click', (e) => {
@@ -601,6 +644,12 @@ function initCostCalculator(): void {
     if (answer && !(answer as HTMLButtonElement).disabled) return handleAnswer(answer);
     const typical = target.closest<HTMLButtonElement>('[data-calc-typical]');
     if (typical && !typical.disabled) return handleTypical();
+    const gpOther = target.closest<HTMLButtonElement>('[data-calc-gp-other]');
+    if (gpOther && !gpOther.disabled) {
+      setGpCustomOpen(true);
+      gpInput.focus();
+      return;
+    }
     if (target.closest('[data-calc-back]')) return back();
     const gotoEl = target.closest<HTMLElement>('[data-calc-goto]');
     if (gotoEl && isScreen(gotoEl.dataset.calcGoto)) return goto(gotoEl.dataset.calcGoto);
@@ -611,6 +660,16 @@ function initCostCalculator(): void {
   feeForm.addEventListener('submit', (e) => {
     e.preventDefault();
     handleFeeNext();
+  });
+
+  // Enter in the GP amount field, or its Next button.
+  gpForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    handleGpNext();
+  });
+
+  gpInput.addEventListener('input', () => {
+    if (gpInput.value !== '') gpError.hidden = true;
   });
 
   feeForm.addEventListener('input', () => {
