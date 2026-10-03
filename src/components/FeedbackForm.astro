@@ -1,0 +1,77 @@
+---
+/**
+ * FeedbackForm — the anonymous Netlify Forms feedback box.
+ * Rendered twice per page (footer + floating FeedbackWidget), so every
+ * instance needs its own `id` for the textarea/label pair.
+ */
+import Button from './Button.astro';
+
+interface Props {
+  id: string;
+  rows?: number;
+}
+
+const { id, rows = 3 } = Astro.props;
+
+const textareaInput =
+  'w-full border border-ink-green/16 rounded-[10px] px-4 py-2.5 text-base text-heading bg-white resize-y hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary';
+---
+<div data-feedback-root>
+  <form
+    name="feedback"
+    method="POST"
+    action="/thanks/"
+    data-netlify="true"
+    netlify-honeypot="bot-field"
+    data-feedback-form
+    class="flex flex-col items-start gap-3"
+  >
+    <input type="hidden" name="form-name" value="feedback" />
+    <input type="hidden" name="page" value={Astro.url.pathname} />
+    <p class="hidden" aria-hidden="true">
+      <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+    </p>
+    <label for={id} class="sr-only">Your feedback</label>
+    <textarea id={id} name="message" rows={rows} required class={textareaInput}></textarea>
+    <Button type="submit" size="sm">Send feedback</Button>
+  </form>
+  <p class="text-sm font-semibold text-primary" aria-live="polite" data-feedback-thanks></p>
+</div>
+
+<script>
+  // Progressive enhancement: post to Netlify Forms in place instead of
+  // navigating to /thanks/. Class toggle, not the hidden attribute — the
+  // form carries a display utility class (see quiz precedent).
+  // Astro bundles this script once even though the component renders twice,
+  // so wire up every form on the page.
+  document.querySelectorAll<HTMLElement>('[data-feedback-root]').forEach((root) => {
+    const form = root.querySelector<HTMLFormElement>('[data-feedback-form]');
+    const thanks = root.querySelector<HTMLElement>('[data-feedback-thanks]');
+    if (!form || !thanks) return;
+
+    let submitting = false;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (submitting) return;
+      submitting = true;
+
+      const body = new URLSearchParams();
+      new FormData(form).forEach((value, key) => body.append(key, String(value)));
+
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString(),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error(`Feedback POST failed: ${res.status}`);
+          form.classList.add('hidden');
+          thanks.textContent = 'Thanks — we read every one.';
+        })
+        .catch(() => {
+          // Fall back to the native POST → /thanks/ (bypasses this listener).
+          form.submit();
+        });
+    });
+  });
+</script>

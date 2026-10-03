@@ -1,0 +1,89 @@
+---
+// Floating "Feedback" pill + non-modal panel, displayed on every page.
+// Click-only: never opens on its own, no backdrop, never locks scroll.
+import FeedbackForm from './FeedbackForm.astro';
+---
+<div class="fixed bottom-6 left-6 z-50" data-feedback-widget>
+  <div
+    id="feedback-panel"
+    role="dialog"
+    aria-labelledby="feedback-panel-title"
+    class="absolute bottom-full left-0 mb-3 w-[min(22rem,calc(100vw-3rem))] bg-white rounded-2xl shadow-xl p-5 md:p-6"
+    style="display: none;"
+  >
+    <button
+      data-feedback-close
+      type="button"
+      class="absolute top-3 right-3 w-9 h-9 flex items-center justify-center rounded-full text-body hover:bg-bg-light transition-colors cursor-pointer"
+      aria-label="Close feedback"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <h2 id="feedback-panel-title" class="font-display text-lg font-bold text-heading mb-1 pr-8">
+      What's annoying you?
+    </h2>
+    <p class="text-[13.5px] leading-snug text-meta-sage mb-4">
+      Confusing, missing, broken, or helpful — tell us. No name or email needed.
+    </p>
+
+    <FeedbackForm id="feedback-message-widget" rows={4} />
+  </div>
+
+  <button
+    id="feedback-pill"
+    type="button"
+    aria-expanded="false"
+    aria-controls="feedback-panel"
+    class="flex items-center gap-2 rounded-full bg-primary text-white h-12 px-4 md:px-5 text-sm font-semibold shadow-pill hover:bg-primary/90 transition-colors cursor-pointer"
+  >
+    <svg class="w-5 h-5 md:w-4 md:h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a5.969 5.969 0 0 1-.474-.065 4.48 4.48 0 0 0 .978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z" />
+    </svg>
+    Feedback
+  </button>
+</div>
+
+<script>
+  const widget = document.querySelector<HTMLElement>('[data-feedback-widget]');
+  const pill = document.getElementById('feedback-pill');
+  const panel = document.getElementById('feedback-panel');
+
+  if (widget && pill && panel) {
+    const isOpen = () => pill.getAttribute('aria-expanded') === 'true';
+
+    function openPanel() {
+      if (!pill || !panel) return;
+      panel.style.display = 'block';
+      pill.setAttribute('aria-expanded', 'true');
+      panel.querySelector<HTMLTextAreaElement>('textarea')?.focus();
+    }
+
+    function closePanel(returnFocus = true) {
+      if (!pill || !panel) return;
+      panel.style.display = 'none';
+      pill.setAttribute('aria-expanded', 'false');
+      if (returnFocus) pill.focus();
+    }
+
+    pill.addEventListener('click', () => {
+      isOpen() ? closePanel() : openPanel();
+    });
+
+    panel.querySelector('[data-feedback-close]')?.addEventListener('click', () => closePanel());
+
+    // Click outside closes the panel but never swallows the click —
+    // whatever was clicked still does its normal thing.
+    document.addEventListener('click', (e) => {
+      if (!isOpen()) return;
+      const target = e.target as HTMLElement | null;
+      if (target && !target.closest('[data-feedback-widget]')) closePanel(false);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen()) closePanel();
+    });
+  }
+</script>

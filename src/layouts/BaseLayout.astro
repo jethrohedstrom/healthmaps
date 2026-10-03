@@ -3,6 +3,7 @@ import '../styles/global.css';
 import CrisisBanner from '../components/CrisisBanner.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import FeedbackWidget from '../components/FeedbackWidget.astro';
 import ScrollProgress from '../components/ScrollProgress.astro';
 
 interface Props {
@@ -84,6 +85,7 @@ const ogImageURL = new URL(ogImage, Astro.site ?? 'https://healthmaps.com.au');
     </main>
     <Footer />
 
+    <FeedbackWidget />
     {!hideCrisisPill && <CrisisBanner />}
   </body>
 </html>
