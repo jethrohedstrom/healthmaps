@@ -91,6 +91,10 @@ const moneyShort = (n: number) => (Number.isInteger(n) ? audWhole.format(n) : au
 // "About" figures in the answer sentence round to whole dollars.
 const moneyAbout = (n: number) => audWhole.format(Math.round(n));
 
+// REVIEW: AI-drafted claim — Easyclaim at the clinic pays the rebate same day or overnight; app/myGov claims usually land in 1–3 business days (Services Australia says "usually within 7 days").
+const dayNote = (fee: number, rebate: number) =>
+  `On the day, have ${moneyShort(fee)} on your card. Medicare pays ${money(rebate)} back, usually within a few days. If the clinic claims it for you, it's often the same day or overnight. If you claim it yourself in the Medicare app, allow 1 to 3 business days.`;
+
 // What the GP visit shows before that question is answered. Must match the
 // SSR markup in CostCalculator.astro.
 const GP_RANGE = `Free to ${audWhole.format(GP_COST_PRIVATE)}`;
@@ -300,6 +304,7 @@ function initCostCalculator(): void {
   const gpLabelEl = q('[data-receipt-gp-label]');
   const gpEl = q('[data-receipt-gp]');
   const noteEl = q('[data-receipt-note]');
+  const dayEl = q('[data-receipt-day]');
   const followLabelEl = q('[data-receipt-follow-label]');
   const lengthChips = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-follow-length]'));
 
@@ -311,7 +316,7 @@ function initCostCalculator(): void {
     !bodySingle || !bodyPsych || !feesEl || !rebateEl || !totalEl ||
     !firstFeeEl || !firstRebateEl || !firstTotalEl ||
     !followFeeEl || !followRebateEl || !followTotalEl ||
-    !gpPart || !gpLabelEl || !gpEl || !noteEl || !followLabelEl
+    !gpPart || !gpLabelEl || !gpEl || !noteEl || !dayEl || !followLabelEl
   ) return;
 
   function field(id: string): FeeField | null {
@@ -411,10 +416,14 @@ function initCostCalculator(): void {
     setRebateText(rebateEl!, t.rebate, fee);
     if (fee === null) {
       totalEl!.textContent = EM_DASH;
+      dayEl!.hidden = true;
       noteEl!.textContent = EMPTY_NOTE;
       return;
     }
     totalEl!.textContent = money(Math.max(0, fee - t.rebate));
+    const showDay = t.rebate > 0 && fee > t.rebate;
+    dayEl!.textContent = showDay ? dayNote(fee, t.rebate) : '';
+    dayEl!.hidden = !showDay;
     noteEl!.textContent = t.rebate > 0 ? CAP_NOTE : noRebateNote(t.label);
   }
 
@@ -454,6 +463,7 @@ function initCostCalculator(): void {
     feesEl!.textContent = EM_DASH;
     rebateEl!.textContent = EM_DASH;
     totalEl!.textContent = EM_DASH;
+    dayEl!.hidden = true;
     gpPart!.hidden = true;
     noteEl!.textContent = START_NOTE;
   }
@@ -467,11 +477,11 @@ function initCostCalculator(): void {
       return;
     }
     const usual = state.fee === t.chips[1] ? 'usually costs about' : 'costs';
-    const opening = `Seeing a ${sentenceLabel(t)}${t.setup === 'plan' ? ' with a care plan' : ''} ${usual} ${moneyShort(state.fee)} a session.`;
+    const opening = `Seeing a ${sentenceLabel(t)}${t.setup === 'plan' ? ' with a care plan' : ''} ${usual} ${moneyShort(state.fee)} per session.`;
     answerLine!.textContent =
       t.rebate > 0
-        ? `${opening} Medicare gives back ${money(t.rebate)}. You pay about ${moneyAbout(state.fee - t.rebate)}.`
-        : `${opening} There's no Medicare rebate — you pay the full fee.`;
+        ? `${opening} You pay the full ${moneyShort(state.fee)} on the day, then Medicare pays ${money(t.rebate)} back to you, usually within a few days. So each session ends up costing you about ${moneyAbout(state.fee - t.rebate)}.`
+        : `${opening} There's no Medicare rebate, so you pay the full fee.`;
     answerLine!.hidden = false;
   }
 
