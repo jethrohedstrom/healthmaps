@@ -13,10 +13,12 @@ interface Props {
   term: string;
   heading: string;
   body: string;
+  /** Override the panel id when the same term appears more than once on a page */
+  id?: string;
 }
 
-const { term, heading, body } = Astro.props;
-const panelId = 'term-pop-' + term.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+const { term, heading, body, id } = Astro.props;
+const panelId = id ?? 'term-pop-' + term.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 ---
 <span class="term-popover relative inline">
   <!-- role=button span, not <button>: Chrome lays buttons out as atomic inline

@@ -1,5 +1,6 @@
 ---
 import costsData from '../data/calculator-costs.json';
+import TermPopover from './TermPopover.astro';
 import type { PractitionerType } from '../scripts/cost-calculator';
 
 // One question per screen. The practitioner is decided by a short branching
@@ -268,7 +269,7 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
               <span class={receiptAmount} data-receipt-fees>&mdash;</span>
             </div>
             <div class={receiptRow}>
-              <span class="text-body">Medicare pays back</span>
+              <span class="text-body"><TermPopover term="Medicare" heading="Medicare" body="Australia's public health system. For many appointments it pays part of the fee back to you after you've paid the therapist." id="term-pop-medicare-rebate" /> pays back</span>
               <span class={receiptLeader} aria-hidden="true"></span>
               <span class="font-medium text-primary tabular-nums" data-receipt-rebate>&mdash;</span>
             </div>
@@ -290,7 +291,7 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
               <span class={receiptAmount} data-receipt-first-fee>&mdash;</span>
             </div>
             <div class={receiptRow}>
-              <span class="text-body">Medicare pays back</span>
+              <span class="text-body"><TermPopover term="Medicare" heading="Medicare" body="Australia's public health system. For many appointments it pays part of the fee back to you after you've paid the therapist." id="term-pop-medicare-first-rebate" /> pays back</span>
               <span class={receiptLeader} aria-hidden="true"></span>
               <span class="font-medium text-primary tabular-nums" data-receipt-first-rebate>&mdash;</span>
             </div>
@@ -306,7 +307,7 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
               <span class={receiptAmount} data-receipt-follow-fee>&mdash;</span>
             </div>
             <div class={receiptRow}>
-              <span class="text-body">Medicare pays back</span>
+              <span class="text-body"><TermPopover term="Medicare" heading="Medicare" body="Australia's public health system. For many appointments it pays part of the fee back to you after you've paid the therapist." id="term-pop-medicare-follow-rebate" /> pays back</span>
               <span class={receiptLeader} aria-hidden="true"></span>
               <span class="font-medium text-primary tabular-nums" data-receipt-follow-rebate>&mdash;</span>
             </div>
