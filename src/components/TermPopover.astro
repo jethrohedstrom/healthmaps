@@ -27,18 +27,14 @@ const panelId = 'term-pop-' + term.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     class="term-popover-toggle underline decoration-dotted decoration-current underline-offset-[3px] cursor-help"
     aria-expanded="false"
     aria-controls={panelId}
-  >{term}</span>
-  <span
+  >{term}</span><span
     id={panelId}
     class="term-popover-panel absolute top-[calc(100%+8px)] left-0 z-20 block w-[280px] max-w-[calc(100vw-2.5rem)] rounded-xl bg-white shadow-[var(--shadow-pill)] p-4 text-left font-normal normal-case tracking-normal"
     hidden
   >
     <span class="block text-sm font-semibold text-heading mb-1">{heading}</span>
     <span class="block text-sm leading-relaxed text-body">{body}</span>
-  </span>
-</span>
-
-<script>
+  </span></span><script>
   const closeAll = (except?: Element | null) => {
     document.querySelectorAll<HTMLElement>('.term-popover-panel:not([hidden])').forEach((panel) => {
       if (panel.parentElement === except) return;
