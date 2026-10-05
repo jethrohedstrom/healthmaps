@@ -9,10 +9,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section>
     <div class="max-w-body mx-auto px-4 pt-16 md:pt-24 pb-12 md:pb-16">
       <p class="text-sm uppercase tracking-widest text-body font-semibold mb-3">The project</p>
-      <h1 class="text-3xl md:text-[2.5rem] font-bold text-heading mb-5 tracking-[-0.01em] leading-tight">About HealthMaps</h1>
-      <p class="text-lg text-body leading-relaxed max-w-[36rem]">
-        HealthMaps exists because working out where to start with mental health support shouldn't be this hard.
-      </p>
+      <h1 class="text-3xl md:text-[2.5rem] font-bold text-heading tracking-[-0.01em] leading-tight">About HealthMaps</h1>
     </div>
   </section>
 
@@ -21,80 +18,55 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <div>
         <h2 class="text-2xl font-bold text-heading mb-4">Why this site exists</h2>
         <p class="text-body leading-relaxed mb-4">
-          Most people who decide to get mental health support hit the same two walls. They don't know
-          what to do first — see a GP? Call a psychologist directly? What's a Mental Health Care Plan? —
-          and once they're moving, they struggle to find the right practitioner without weeks of phone
-          calls and guesswork.
+          I think the healthcare system in general has become difficult to navigate and understand,
+          and that puts people off getting help.
+        </p>
+        <p class="text-body leading-relaxed mb-4">
+          I find I commonly see a professional, without really knowing how much it will cost me, why,
+          and how to pay and if I need a referral.
         </p>
         <p class="text-body leading-relaxed">
-          HealthMaps explains the pathway step by step, in plain language: what each option costs, what
-          Medicare covers, and what to actually say when you book. The kind of practical knowledge that
-          people who've been through the system wish they'd had at the start.
+          I have started with mental health but aim to eventually map out the whole health system.
         </p>
       </div>
 
       <div>
-        <h2 class="text-2xl font-bold text-heading mb-2">What we stand for</h2>
-        <dl class="border-y border-border divide-y divide-border">
-          <div class="py-5 md:py-6 md:grid md:grid-cols-[11rem_1fr] md:gap-8">
-            <dt class="font-semibold text-heading mb-1 md:mb-0">Free, for everyone</dt>
-            <dd class="text-body leading-relaxed">
-              All information on this site is free to access. There are no paywalls and no premium tiers.
-            </dd>
-          </div>
-          <div class="py-5 md:py-6 md:grid md:grid-cols-[11rem_1fr] md:gap-8">
-            <dt class="font-semibold text-heading mb-1 md:mb-0">Independent and neutral</dt>
-            <dd class="text-body leading-relaxed">
-              No practitioner, clinic or service pays to appear here or to be presented favourably. We
-              have no commercial relationships that influence what we say.
-            </dd>
-          </div>
-          <div class="py-5 md:py-6 md:grid md:grid-cols-[11rem_1fr] md:gap-8">
-            <dt class="font-semibold text-heading mb-1 md:mb-0">Accurate and current</dt>
-            <dd class="text-body leading-relaxed">
-              We aim for the accuracy you'd expect from a government health service, in language you'd
-              hear from a friend. Costs and Medicare details are reviewed periodically, and we say so
-              when figures are estimates.
-              <!-- REVIEW: confirm a review cadence you can actually commit to (e.g. "every 6 months") and state it here -->
-            </dd>
-          </div>
-          <div class="py-5 md:py-6 md:grid md:grid-cols-[11rem_1fr] md:gap-8">
-            <dt class="font-semibold text-heading mb-1 md:mb-0">Consumer-first</dt>
-            <dd class="text-body leading-relaxed">
-              This site is built around what people navigating the system told us they needed — not
-              around what's easiest to publish.
-            </dd>
-          </div>
-        </dl>
+        <h2 class="text-2xl font-bold text-heading mb-4">What this site is</h2>
+        <p class="text-body leading-relaxed">
+          HealthMaps aims to provide the map. For example: how to get a referral to a psychologist,
+          how much it will cost out of pocket, and what the difference is between a clinical and a
+          general psychologist.
+        </p>
       </div>
 
       <div>
         <h2 class="text-2xl font-bold text-heading mb-4">Who's behind it</h2>
-        <p class="text-body leading-relaxed">
+        <p class="text-body leading-relaxed mb-4">
           HealthMaps is an independent project built by Jethro Hedstrom, a physiotherapist based in
-          Byron Bay, NSW. The site is self-funded and carries no advertising.
+          northern NSW.
+        </p>
+        <p class="text-body leading-relaxed">
+          It's self-funded, carries no advertising, and has no political or commercial ties.
         </p>
       </div>
 
       <aside class="rounded-xl bg-page-sage border border-pencil p-6 md:p-8">
         <h2 class="text-lg font-bold text-heading mb-2">What this site is not</h2>
-        <p class="text-body leading-relaxed">
+        <p class="text-body leading-relaxed mb-4">
           HealthMaps provides general information about how the Australian mental health system works.
-          It isn't medical advice, it can't diagnose anything, and it's not a crisis service. If you're
-          in crisis, please use the urgent help numbers available on every page of this site. For
-          decisions about your own care, talk to a GP or qualified mental health professional.
-          You can read more in our <a href="/disclaimer/" class="text-primary font-semibold underline underline-offset-2">full disclaimer</a>.
+          It is not medical advice, it can't diagnose anything, and it's not a crisis service.
+        </p>
+        <p class="text-body leading-relaxed">
+          If you're in crisis, please use the urgent help numbers available on every page of this site.
         </p>
       </aside>
 
       <div class="pt-10 border-t border-border">
         <h2 class="text-2xl font-bold text-heading mb-4">Get in touch</h2>
         <p class="text-body leading-relaxed">
-          Spotted something out of date? Have feedback, or a story about navigating the system that
-          could help others? Email
+          Spotted something out of date? Have feedback, or a story? Want to roast the site? Email
           <!-- REVIEW: consider a dedicated address (e.g. hello@healthmaps.com.au) instead of a personal one -->
           <a href="mailto:jethrohedstrom@gmail.com" class="text-primary font-semibold underline underline-offset-2">jethrohedstrom@gmail.com</a>.
-          Corrections are especially welcome — accuracy is the whole point.
         </p>
       </div>
     </div>
