@@ -354,6 +354,10 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
      Tailwind's preflight forces [hidden] to display: none !important. */
   .calc-screens {
     display: grid;
+    /* While answering, the quiz has the card to itself. Cap it so the answer
+       buttons don't stretch edge to edge on wide screens. On the results
+       screen the grid column is narrower than this anyway. */
+    max-width: 36rem;
   }
 
   .calc-screen {
