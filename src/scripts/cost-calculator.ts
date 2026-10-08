@@ -589,9 +589,17 @@ function initCostCalculator(): void {
     // The GP amount box stays open when a typed amount is the current answer.
     if (id === 'gp') setGpCustomOpen(state.gpFree === false && state.gpCustom !== null);
     if (!focus) return;
-    announce(id === 'done' ? 'Your costs.' : `${progressLabel(state)}.`);
     const heading = active.querySelector<HTMLElement>('[data-calc-heading]');
-    requestAnimationFrame(() => heading?.focus({ preventScroll: true }));
+    // Focus lands on the first answer (or the fee box) so Enter works at
+    // once. The live region carries the question, since the heading itself
+    // isn't focused. The results screen focuses its heading as before.
+    const question = heading?.textContent?.trim() ?? '';
+    announce(id === 'done' ? 'Your costs.' : `${progressLabel(state)}. ${question}`);
+    const target =
+      id === 'done'
+        ? heading
+        : active.querySelector<HTMLElement>('input[type="number"], [data-calc-answer], [data-calc-typical]');
+    requestAnimationFrame(() => (target ?? heading)?.focus({ preventScroll: true }));
   }
 
   function go(next: ScreenId): void {
@@ -703,6 +711,24 @@ function initCostCalculator(): void {
   }
 
   // ── Events ──────────────────────────────────────────────────────────────
+
+  // Arrow keys move between the answers on a screen (and between the fee
+  // chips): down or right to the next, up or left to the previous, wrapping.
+  // Each set of answers is a role="group"; number inputs keep their own
+  // arrow behaviour because they aren't buttons.
+  root.addEventListener('keydown', (e) => {
+    const forward = e.key === 'ArrowDown' || e.key === 'ArrowRight';
+    const backward = e.key === 'ArrowUp' || e.key === 'ArrowLeft';
+    if (!forward && !backward) return;
+    const target = e.target as HTMLElement | null;
+    const group = target?.closest<HTMLElement>('[role="group"]');
+    if (!target || !group || target.tagName !== 'BUTTON' || group === screensEl) return;
+    const items = Array.from(group.querySelectorAll<HTMLButtonElement>('button:not([disabled])'));
+    const i = items.indexOf(target as HTMLButtonElement);
+    if (i === -1 || items.length < 2) return;
+    e.preventDefault();
+    items[(i + (forward ? 1 : -1) + items.length) % items.length].focus();
+  });
 
   root.addEventListener('click', (e) => {
     const target = e.target as HTMLElement | null;
