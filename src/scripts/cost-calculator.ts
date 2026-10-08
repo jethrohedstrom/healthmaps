@@ -379,7 +379,6 @@ function initCostCalculator(): void {
       chip.dataset.feeChip = String(values[i]);
       chip.textContent = `${chip.dataset.chipLabel} $${values[i]}`;
     });
-    f.input.placeholder = `e.g. ${values[1]}`;
   }
 
   // Highlight the chip whose value matches the fee exactly; a typed custom
