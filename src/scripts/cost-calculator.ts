@@ -401,8 +401,8 @@ function initCostCalculator(): void {
       setChips(single!, t.chips);
     }
     typicalBtn!.textContent = t?.firstVisit
-      ? 'No — use the most common fees'
-      : `No — use the most common fee ($${t?.chips[1] ?? DEFAULT_FEE})`;
+      ? 'No, use the most common fees'
+      : `No, use the most common fee ($${t?.chips[1] ?? DEFAULT_FEE})`;
     const note = state.assume ? ASSUME_NOTES[state.assume] : '';
     assumeNote!.textContent = note;
     assumeNote!.hidden = !note;
