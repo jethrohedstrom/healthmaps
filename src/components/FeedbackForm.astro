@@ -9,9 +9,10 @@ import Button from './Button.astro';
 interface Props {
   id: string;
   rows?: number;
+  align?: 'start' | 'center';
 }
 
-const { id, rows = 3 } = Astro.props;
+const { id, rows = 3, align = 'start' } = Astro.props;
 
 const textareaInput =
   'w-full border border-ink-green/16 rounded-[10px] px-4 py-2.5 text-base text-heading bg-white resize-y hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary';
@@ -24,7 +25,7 @@ const textareaInput =
     data-netlify="true"
     netlify-honeypot="bot-field"
     data-feedback-form
-    class="flex flex-col items-start gap-3"
+    class:list={['flex flex-col gap-3', align === 'center' ? 'items-center' : 'items-start']}
   >
     <input type="hidden" name="form-name" value="feedback" />
     <input type="hidden" name="page" value={Astro.url.pathname} />
