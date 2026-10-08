@@ -346,7 +346,7 @@ function initCostCalculator(): void {
 
   function field(id: string): FeeField | null {
     const wrap = root!.querySelector<HTMLElement>(`[data-fee-field="${id}"]`);
-    const input = wrap?.querySelector<HTMLInputElement>('input[type="number"]');
+    const input = wrap?.querySelector<HTMLInputElement>('input');
     const form = wrap?.closest<HTMLFormElement>('form[data-calc-screen]');
     const error = form?.querySelector<HTMLElement>('[data-fee-error]');
     const screen = form?.dataset.calcScreen;
@@ -368,7 +368,8 @@ function initCostCalculator(): void {
   const currentType = (): PractitionerType | null => typeById(state.typeId);
 
   function fieldValue(f: FeeField): number | null {
-    const v = parseFloat(f.input.value);
+    // Text boxes accept anything; "$1,200" still means 1200.
+    const v = parseFloat(f.input.value.replace(/[^0-9.]/g, ''));
     if (isNaN(v) || v <= 0) return null;
     return v;
   }
@@ -570,6 +571,10 @@ function initCostCalculator(): void {
     liveEl!.textContent = message;
   }
 
+  // True while the script moves focus on a screen change, so a fee box
+  // doesn't select (highlight) its contents the way it does on a click.
+  let scriptFocus = false;
+
   function showScreen(id: ScreenId, focus: boolean): void {
     const active = screenEl(id);
     if (!active) return;
@@ -598,8 +603,17 @@ function initCostCalculator(): void {
     const target =
       id === 'done'
         ? heading
-        : active.querySelector<HTMLElement>('input[type="number"], [data-calc-answer], [data-calc-typical]');
-    requestAnimationFrame(() => (target ?? heading)?.focus({ preventScroll: true }));
+        : active.querySelector<HTMLElement>('input, [data-calc-answer], [data-calc-typical]');
+    requestAnimationFrame(() => {
+      scriptFocus = true;
+      (target ?? heading)?.focus({ preventScroll: true });
+      // Caret after any existing figure, nothing highlighted.
+      if (target instanceof HTMLInputElement) {
+        const end = target.value.length;
+        target.setSelectionRange(end, end);
+      }
+      scriptFocus = false;
+    });
   }
 
   function go(next: ScreenId): void {
@@ -721,12 +735,28 @@ function initCostCalculator(): void {
     const backward = e.key === 'ArrowUp' || e.key === 'ArrowLeft';
     if (!forward && !backward) return;
     const target = e.target as HTMLElement | null;
-    const group = target?.closest<HTMLElement>('[role="group"]');
-    if (!target || !group || target.tagName !== 'BUTTON' || group === screensEl) return;
+    if (!target || target.tagName !== 'BUTTON') return;
+    // On a fee screen, back from Next lands on the last chip.
+    if (backward && target.matches('[data-calc-next]')) {
+      const chips = target.closest('form')?.querySelectorAll<HTMLButtonElement>('[data-fee-chip]');
+      const last = chips?.[chips.length - 1];
+      if (!last) return;
+      e.preventDefault();
+      last.focus();
+      return;
+    }
+    const group = target.closest<HTMLElement>('[role="group"]');
+    if (!group || group === screensEl) return;
     const items = Array.from(group.querySelectorAll<HTMLButtonElement>('button:not([disabled])'));
     const i = items.indexOf(target as HTMLButtonElement);
     if (i === -1 || items.length < 2) return;
     e.preventDefault();
+    // Forward off the last chip goes on to Next rather than wrapping.
+    const next = target.closest('form')?.querySelector<HTMLButtonElement>('[data-calc-next]');
+    if (forward && i === items.length - 1 && target.matches('[data-fee-chip]') && next) {
+      next.focus();
+      return;
+    }
     items[(i + (forward ? 1 : -1) + items.length) % items.length].focus();
   });
 
@@ -775,7 +805,9 @@ function initCostCalculator(): void {
 
 
   for (const f of allFields) {
-    f.input.addEventListener('focus', () => f.input.select());
+    f.input.addEventListener('focus', () => {
+      if (!scriptFocus) f.input.select();
+    });
     // Chips fill the field without moving focus into it (that would pop the
     // keyboard on mobile). render() isn't triggered by a programmatic value set.
     for (const chip of f.chips) {

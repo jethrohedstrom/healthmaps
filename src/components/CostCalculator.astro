@@ -41,9 +41,9 @@ const chipNames = ['Lower', 'Typical', 'Higher'] as const;
 // psychiatrists get `first` and `follow` instead (plus a length screen).
 // The script routes to the right one and skips the rest.
 const feeScreens = [
-  { screen: 'fee', id: 'session-fee', heading: 'What do they charge per session?', label: 'Fee per session ($)', chips: defaultType.chips, max: 1000 },
-  { screen: 'first', id: 'first-fee', heading: "What's their first appointment fee?", label: 'First appointment fee ($)', chips: psychiatrist?.firstVisit?.chips ?? defaultType.chips, max: 1500 },
-  { screen: 'follow', id: 'follow-up-fee', heading: "What's their follow-up fee?", label: 'Follow-up fee ($)', chips: psychiatrist?.chips ?? defaultType.chips, max: 1000 },
+  { screen: 'fee', id: 'session-fee', heading: 'What do they charge per session?', label: 'Fee per session ($)', chips: defaultType.chips },
+  { screen: 'first', id: 'first-fee', heading: "What's their first appointment fee?", label: 'First appointment fee ($)', chips: psychiatrist?.firstVisit?.chips ?? defaultType.chips },
+  { screen: 'follow', id: 'follow-up-fee', heading: "What's their follow-up fee?", label: 'Follow-up fee ($)', chips: psychiatrist?.chips ?? defaultType.chips },
 ];
 
 // Psychiatrist follow-up lengths: each has its own rebate. The first is the default.
@@ -146,14 +146,16 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
           <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>{f.heading}</h2>
           <div data-fee-field={f.id}>
             <label for={f.id} class="block text-sm font-semibold text-body mb-1">{f.label}</label>
+            <!-- type="text" with a numeric keypad hint: number inputs let the
+                 browser select the whole figure on focus and refuse to move the
+                 caret, so the script couldn't land focus without highlighting. -->
             <input
-              type="number"
+              type="text"
               id={f.id}
               name={f.id}
-              min="0"
-              max={f.max}
-              step="5"
               inputmode="decimal"
+              autocomplete="off"
+              maxlength="6"
               class={fieldInput}
             />
             <div class="mt-2 flex flex-wrap gap-2" role="group" aria-label="Typical fees">
