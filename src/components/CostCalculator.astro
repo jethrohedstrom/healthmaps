@@ -67,8 +67,11 @@ const receiptTotal = 'font-display font-semibold text-[30px] sm:text-[34px] lead
 // Summary row on the last screen.
 const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t border-hairline first:border-t-0';
 ---
-<div id="cost-calculator" class="bg-paper-cream border border-pencil rounded-[14px] p-6 sm:p-8 md:p-10">
-  <div class="grid gap-8 md:grid-cols-[1fr_minmax(280px,0.85fr)] md:gap-10">
+<!-- data-calc-phase is "questions" while answering and "done" on the results
+     screen. The script sets it in showScreen. While answering, the receipt
+     column is not rendered and the quiz fills the card. -->
+<div id="cost-calculator" class="bg-paper-cream border border-pencil rounded-[14px] p-6 sm:p-8 md:p-10" data-calc-phase="questions">
+  <div class="calc-grid grid gap-8 md:gap-10">
 
     <!-- Quiz: every screen is rendered; the script shows one at a time. -->
     <div class="calc-screens" data-calc-screens role="group" aria-label="Mental health cost calculator">
@@ -253,8 +256,10 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
       </section>
     </div>
 
-    <!-- Receipt: fills in as the answers arrive -->
-    <div class="md:self-start">
+    <!-- Receipt: the script fills it in as the answers arrive, but it only
+         shows on the results screen. Clarity recordings showed eyes drifting
+         to it mid-quiz. -->
+    <div class="calc-receipt-col md:self-start">
       <div id="calc-receipt" class="bg-white border border-ink-green/12 rounded-[10px] p-5 sm:p-6">
         <p class="text-[12.5px] font-semibold text-meta-sage">What you'll pay</p>
 
@@ -363,6 +368,23 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
     pointer-events: none;
   }
 
+  /* Receipt column: absent while answering, present on the results screen.
+     display:none (not visibility) so it takes no space and screen readers
+     skip it during the questions. */
+  .calc-receipt-col {
+    display: none;
+  }
+
+  [data-calc-phase='done'] .calc-receipt-col {
+    display: block;
+  }
+
+  @media (min-width: 48rem) {
+    [data-calc-phase='done'] .calc-grid {
+      grid-template-columns: 1fr minmax(280px, 0.85fr);
+    }
+  }
+
   /* Same screen typography as the pathway quiz (Switzer 600 23px / -0.012em). */
   .calc-heading {
     font-family: var(--font-display);
@@ -391,6 +413,24 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
         opacity 140ms ease-in,
         transform 140ms ease-in,
         visibility 0s 140ms;
+    }
+
+    /* The receipt rises in with the results screen. Only after the first
+       paint (.calc-animate): a restored session that opens on the results
+       screen shows it at once, with no fade. */
+    .calc-animate[data-calc-phase='done'] .calc-receipt-col {
+      animation: calc-receipt-in 240ms ease-out 110ms both;
+    }
+
+    @keyframes calc-receipt-in {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
     }
   }
 </style>

@@ -550,6 +550,8 @@ function initCostCalculator(): void {
   function showScreen(id: ScreenId, focus: boolean): void {
     const active = screenEl(id);
     if (!active) return;
+    // The receipt column only exists on the results screen (see the CSS).
+    root!.dataset.calcPhase = id === 'done' ? 'done' : 'questions';
     for (const el of screens) {
       const isActive = el === active;
       el.classList.toggle('calc-screen--hidden', !isActive);
@@ -752,6 +754,8 @@ function initCostCalculator(): void {
   applyType(currentType());
   render();
   showScreen(state.screen, false);
+  // Enable the receipt's fade only after the restored screen has painted.
+  requestAnimationFrame(() => root.classList.add('calc-animate'));
 }
 
 initCostCalculator();
