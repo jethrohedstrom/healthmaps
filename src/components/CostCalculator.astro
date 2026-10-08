@@ -406,6 +406,12 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
     }
   }
 
+  /* The heading takes focus on every screen change so screen readers read
+     the new question. It isn't interactive, so no focus ring. */
+  .calc-heading:focus {
+    outline: none;
+  }
+
   /* Same screen typography as the pathway quiz (Switzer 600 23px / -0.012em). */
   .calc-heading {
     font-family: var(--font-display);
