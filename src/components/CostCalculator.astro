@@ -3,11 +3,13 @@ import costsData from '../data/calculator-costs.json';
 import TermPopover from './TermPopover.astro';
 import type { PractitionerType } from '../scripts/cost-calculator';
 
-// One question per screen. The practitioner is decided by a short branching
-// quiz (who → general/clinical or which one → fee → GP), and the receipt
-// beside it fills in as answers arrive. src/scripts/cost-calculator.ts owns
-// the routing, the state (sessionStorage) and the receipt maths; this file
-// renders every screen up front, with only the first one visible.
+// One question per screen: who → general/clinical or which one → do you
+// know the fee? → one fee box per screen (psychiatrists: first fee,
+// follow-up fee, follow-up length) → GP → results. The receipt fills in as
+// answers arrive but only shows on the results screen.
+// src/scripts/cost-calculator.ts owns the routing, the state (sessionStorage)
+// and the receipt maths; this file renders every screen up front, with only
+// the first one visible.
 const types = costsData.practitionerTypes as PractitionerType[];
 const defaultType = types[0];
 const psychiatrist = types.find((t) => t.firstVisit);
@@ -24,7 +26,7 @@ const answerCard = 'flex w-full min-h-14 flex-col items-start justify-center gap
 const answerSub = 'text-[13.5px] leading-snug text-meta-sage';
 
 const stepLabel = 'text-sm font-medium text-primary';
-const backButton = 'text-sm font-medium text-body hover:text-heading transition-colors focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 cursor-pointer';
+const backButton = 'ml-auto text-sm font-medium text-body hover:text-heading transition-colors focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 cursor-pointer';
 const primaryButton = 'inline-flex min-h-11 items-center justify-center rounded-[10px] bg-primary hover:bg-primary-dark transition-colors duration-150 px-6 py-[13px] text-base font-semibold text-white focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 cursor-pointer';
 const changeLink = 'text-sm font-semibold text-primary underline underline-offset-[3px] hover:text-primary-mid focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 cursor-pointer';
 
@@ -35,20 +37,13 @@ const fieldInput = 'w-full border border-ink-green/16 rounded-[10px] px-4 py-2.5
 const feeChip = 'inline-flex min-h-9 items-center rounded-[10px] border border-ink-green/16 bg-white px-3 py-1.5 text-sm font-semibold text-heading transition-colors duration-150 hover:border-primary hover:bg-primary-light aria-pressed:border-primary aria-pressed:bg-primary-light aria-pressed:ring-1 aria-pressed:ring-primary cursor-pointer';
 const chipNames = ['Lower', 'Typical', 'Higher'] as const;
 
-// Most practitioners have one fee; psychiatrists have a first appointment
-// and follow-ups. Both groups are rendered and the script shows one.
-const feeGroups = [
-  {
-    name: 'single',
-    fields: [{ id: 'session-fee', label: 'Their fee per session ($)', chips: defaultType.chips, max: 1000 }],
-  },
-  {
-    name: 'psychiatrist',
-    fields: [
-      { id: 'first-fee', label: 'Their first appointment fee ($)', chips: psychiatrist?.firstVisit?.chips ?? defaultType.chips, max: 1500 },
-      { id: 'follow-up-fee', label: 'Their follow-up fee ($)', chips: psychiatrist?.chips ?? defaultType.chips, max: 1000 },
-    ],
-  },
+// One fee box per screen. Most practitioners use the `fee` screen;
+// psychiatrists get `first` and `follow` instead (plus a length screen).
+// The script routes to the right one and skips the rest.
+const feeScreens = [
+  { screen: 'fee', id: 'session-fee', heading: 'What do they charge per session?', label: 'Fee per session ($)', chips: defaultType.chips, max: 1000 },
+  { screen: 'first', id: 'first-fee', heading: "What's their first appointment fee?", label: 'First appointment fee ($)', chips: psychiatrist?.firstVisit?.chips ?? defaultType.chips, max: 1500 },
+  { screen: 'follow', id: 'follow-up-fee', heading: "What's their follow-up fee?", label: 'Follow-up fee ($)', chips: psychiatrist?.chips ?? defaultType.chips, max: 1000 },
 ];
 
 // Psychiatrist follow-up lengths: each has its own rebate. The first is the default.
@@ -74,15 +69,16 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
   <div class="calc-grid grid gap-8 md:gap-10">
 
     <!-- Quiz: every screen is rendered; the script shows one at a time. -->
+    <div>
+    <!-- Progress: a thin bar, no numbers. The live region below still
+         announces "Question n of m" for screen readers. -->
+    <div class="calc-progress" aria-hidden="true"><div class="calc-progress__bar" data-calc-bar style="width: 20%"></div></div>
     <div class="calc-screens" data-calc-screens role="group" aria-label="Mental health cost calculator">
       <p class="sr-only" aria-live="polite" aria-atomic="true" data-calc-live></p>
       <noscript><p class="text-sm text-body mb-4">This calculator needs JavaScript to work.</p></noscript>
 
       <!-- 1. Who: the screen the page opens on. -->
       <section class="calc-screen" data-calc-screen="who">
-        <div class="flex items-center justify-between gap-4 mb-3">
-          <p class={stepLabel} data-calc-progress>Question 1 of 4</p>
-        </div>
         <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>Who will you be seeing?</h2>
         <div class="grid gap-3" role="group" aria-label="Who will you be seeing?">
           <button type="button" class={answerCard} data-calc-answer data-branch="psychologist">Psychologist</button>
@@ -100,8 +96,7 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
 
       <!-- 2a. Psychologist: general or clinical -->
       <section class="calc-screen calc-screen--hidden" data-calc-screen="psych">
-        <div class="flex items-center justify-between gap-4 mb-3">
-          <p class={stepLabel} data-calc-progress>Question 2 of 4</p>
+        <div class="flex items-center gap-4 mb-3">
           <button type="button" class={backButton} data-calc-back>&larr; Back</button>
         </div>
         <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>Do you know if they're general or clinical?</h2>
@@ -116,8 +111,7 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
 
       <!-- 2b. Someone else: which one -->
       <section class="calc-screen calc-screen--hidden" data-calc-screen="other">
-        <div class="flex items-center justify-between gap-4 mb-3">
-          <p class={stepLabel} data-calc-progress>Question 2 of 4</p>
+        <div class="flex items-center gap-4 mb-3">
           <button type="button" class={backButton} data-calc-back>&larr; Back</button>
         </div>
         <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>Which one?</h2>
@@ -128,67 +122,71 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
         </div>
       </section>
 
-      <!-- 3. Fee: the one screen with typed input, so it's a form. -->
-      <form class="calc-screen calc-screen--hidden" data-calc-screen="fee" novalidate>
-        <div class="flex items-center justify-between gap-4 mb-3">
-          <p class={stepLabel} data-calc-progress>Question 3 of 4</p>
+      <!-- 3. Know fee: yes/no. "No" fills in the most common fee(s) and skips
+           the fee screens. The script retitles the No button per practitioner. -->
+      <section class="calc-screen calc-screen--hidden" data-calc-screen="knowfee">
+        <div class="flex items-center gap-4 mb-3">
           <button type="button" class={backButton} data-calc-back>&larr; Back</button>
         </div>
-        <h2 class="calc-heading mb-1" tabindex="-1" data-calc-heading data-calc-fee-heading>Do you know what they charge per session?</h2>
+        <h2 class="calc-heading mb-1" tabindex="-1" data-calc-heading>Do you know what they charge?</h2>
         <p class="text-[13.5px] leading-snug text-meta-sage mb-4" data-calc-assume-note hidden></p>
-
-        <!-- The no-number path comes first: nobody needs to know a fee. -->
-        <button type="button" class={`mb-5 ${answerCard}`} data-calc-typical>No &mdash; use the most common fee (${defFee})</button>
-
-        <p class="text-sm font-semibold text-body mb-3">Or, if you know their fee:</p>
-        {feeGroups.map((g) => (
-          <div class="space-y-6" data-fee-group={g.name} hidden={g.name !== 'single'}>
-            {g.fields.map((f) => (
-              <div data-fee-field={f.id}>
-                <label for={f.id} class="block text-sm font-semibold text-body mb-1">{f.label}</label>
-                <input
-                  type="number"
-                  id={f.id}
-                  name={f.id}
-                  min="0"
-                  max={f.max}
-                  step="5"
-                  inputmode="decimal"
-                  placeholder={`e.g. ${f.chips[1]}`}
-                  class={fieldInput}
-                />
-                <div class="mt-2 flex flex-wrap gap-2" role="group" aria-label="Typical fees">
-                  {chipNames.map((name, i) => (
-                    <button type="button" class={feeChip} data-fee-chip={f.chips[i]} data-chip-label={name} aria-pressed="false">{name} ${f.chips[i]}</button>
-                  ))}
-                </div>
-              </div>
-            ))}
-            <!-- Psychiatrist follow-ups: the length sets the rebate. -->
-            {g.name === 'psychiatrist' && followLengths.length > 0 && (
-              <div>
-                <p class="block text-sm font-semibold text-body mb-2" id="follow-length-label">Follow-up length</p>
-                <div class="flex flex-wrap gap-2" role="group" aria-labelledby="follow-length-label">
-                  {followLengths.map((l, i) => (
-                    <button type="button" class={feeChip} data-follow-length={l.id} aria-pressed={i === 0 ? 'true' : 'false'}>{l.label}</button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
-        <p class="mt-3 text-[13.5px] leading-snug text-meta-sage" data-calc-fee-hint>Their website or booking page will say. If not, ask when you call.</p>
-
-        <p class="mt-3 text-sm font-medium text-accent-red-soft" role="alert" data-fee-error hidden>Enter a fee to continue.</p>
-        <div class="mt-6">
-          <button type="submit" class={primaryButton} data-calc-next>Next</button>
+        <div class="grid gap-3 mt-4" role="group" aria-label="Do you know what they charge">
+          <button type="button" class={answerCard} data-calc-typical>No &mdash; use the most common fee (${defFee})</button>
+          <button type="button" class={answerCard} data-calc-answer data-know-fee>Yes, I know their fee</button>
         </div>
-      </form>
+        <p class="mt-4 text-[13.5px] leading-snug text-meta-sage">Their website or booking page will say. If not, ask when you call.</p>
+      </section>
+
+      <!-- 4. Fee screens: one box each, so each is its own form (Enter submits). -->
+      {feeScreens.map((f) => (
+        <form class="calc-screen calc-screen--hidden" data-calc-screen={f.screen} novalidate>
+          <div class="flex items-center gap-4 mb-3">
+            <button type="button" class={backButton} data-calc-back>&larr; Back</button>
+          </div>
+          <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>{f.heading}</h2>
+          <div data-fee-field={f.id}>
+            <label for={f.id} class="block text-sm font-semibold text-body mb-1">{f.label}</label>
+            <input
+              type="number"
+              id={f.id}
+              name={f.id}
+              min="0"
+              max={f.max}
+              step="5"
+              inputmode="decimal"
+              placeholder={`e.g. ${f.chips[1]}`}
+              class={fieldInput}
+            />
+            <div class="mt-2 flex flex-wrap gap-2" role="group" aria-label="Typical fees">
+              {chipNames.map((name, i) => (
+                <button type="button" class={feeChip} data-fee-chip={f.chips[i]} data-chip-label={name} aria-pressed="false">{name} ${f.chips[i]}</button>
+              ))}
+            </div>
+          </div>
+          <p class="mt-3 text-sm font-medium text-accent-red-soft" role="alert" data-fee-error hidden>Enter a fee to continue.</p>
+          <div class="mt-6">
+            <button type="submit" class={primaryButton} data-calc-next>Next</button>
+          </div>
+        </form>
+      ))}
+
+      <!-- 4d. Psychiatrist follow-up length: the length sets the rebate. -->
+      <section class="calc-screen calc-screen--hidden" data-calc-screen="length">
+        <div class="flex items-center gap-4 mb-3">
+          <button type="button" class={backButton} data-calc-back>&larr; Back</button>
+        </div>
+        <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>How long are their follow-up appointments?</h2>
+        <div class="grid gap-3" role="group" aria-label="Follow-up length">
+          {followLengths.map((l, i) => (
+            <button type="button" class={`${answerCard} aria-pressed:border-primary aria-pressed:bg-primary-light aria-pressed:text-heading`} data-calc-answer data-follow-length={l.id} aria-pressed={i === 0 ? 'true' : 'false'}>{l.label}</button>
+          ))}
+        </div>
+        <p class="mt-4 text-[13.5px] leading-snug text-meta-sage">Not sure? Pick the shortest. Medicare pays back more for longer appointments.</p>
+      </section>
 
       <!-- 4. GP: a form, because "a different amount" opens a typed input. -->
       <form class="calc-screen calc-screen--hidden" data-calc-screen="gp" novalidate>
-        <div class="flex items-center justify-between gap-4 mb-3">
-          <p class={stepLabel} data-calc-progress>Question 4 of 4</p>
+        <div class="flex items-center gap-4 mb-3">
           <button type="button" class={backButton} data-calc-back>&larr; Back</button>
         </div>
         <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>Do you pay anything to see your GP?</h2>
@@ -240,7 +238,7 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
               <dt class="text-[12.5px] font-semibold text-meta-sage" data-summary-fee-label>Session fee</dt>
               <dd class="text-base font-semibold text-heading tabular-nums" data-summary-fee>&mdash;</dd>
             </div>
-            <button type="button" class={changeLink} data-calc-goto="fee">Change</button>
+            <button type="button" class={changeLink} data-calc-goto="knowfee">Change</button>
           </div>
           <div class={summaryRow} data-summary-gp-row>
             <div class="min-w-0">
@@ -254,6 +252,7 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
           <button type="button" class={backButton} data-calc-reset>Start again</button>
         </div>
       </section>
+    </div>
     </div>
 
     <!-- Receipt: the script fills it in as the answers arrive, but it only
@@ -365,6 +364,25 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
     align-self: start;
   }
 
+  /* Progress bar: 3px track, fill width set by the script. Gone on results. */
+  .calc-progress {
+    height: 3px;
+    border-radius: 999px;
+    background: var(--color-primary-light);
+    overflow: hidden;
+    margin-bottom: 1.75rem;
+  }
+
+  .calc-progress__bar {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--color-primary);
+  }
+
+  [data-calc-phase='done'] .calc-progress {
+    display: none;
+  }
+
   .calc-screen--hidden {
     opacity: 0;
     visibility: hidden;
@@ -404,6 +422,10 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
      grid cell, so no layout moves. Reduced motion gets the instant swap from
      the base rules above. */
   @media (prefers-reduced-motion: no-preference) {
+    .calc-progress__bar {
+      transition: width 240ms ease-out;
+    }
+
     .calc-screen {
       transition:
         opacity 240ms ease-out 110ms,

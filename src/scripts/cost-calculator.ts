@@ -1,6 +1,7 @@
-// Cost calculator: a short branching quiz that picks the practitioner, asks
-// the fee and the GP cost one screen at a time, and fills in the receipt
-// beside it as answers arrive. Reads the same JSON the component renders
+// Cost calculator: a short branching quiz, one question per screen. It picks
+// the practitioner, asks whether the fee is known, takes one fee per screen
+// (psychiatrists: first, follow-up, follow-up length), asks the GP cost, then
+// shows the receipt it has been filling in as the answers arrived. Reads the same JSON the component renders
 // its SSR defaults from, so the first client render matches the server HTML.
 //
 // Seven practitioner types. Most have one fee and one rebate; psychiatrists
@@ -72,7 +73,7 @@ const SENTENCE_LABELS: Record<string, string> = {
 };
 const sentenceLabel = (t: PractitionerType): string => SENTENCE_LABELS[t.id] ?? t.label.toLowerCase();
 
-// One-line notes on the fee screen when the practitioner was assumed.
+// One-line notes on the "do you know the fee?" screen when the practitioner was assumed.
 const ASSUME_NOTES: Record<Assume & string, string> = {
   unknown: "Most people start with a general psychologist through a GP care plan. We'll use that — you can change it at the end.",
   'not-sure': "We'll use general. Most are, and their booking page will say “clinical” if not.",
@@ -101,7 +102,9 @@ const GP_RANGE = `Free to ${audWhole.format(GP_COST_PRIVATE)}`;
 
 // ── Flow ──────────────────────────────────────────────────────────────────
 
-const SCREENS = ['who', 'psych', 'other', 'fee', 'gp', 'done'] as const;
+const SCREENS = ['who', 'psych', 'other', 'knowfee', 'fee', 'first', 'follow', 'length', 'gp', 'done'] as const;
+/** Screens with a typed fee box. Which ones a path uses depends on the practitioner. */
+const FEE_SCREENS: readonly ScreenId[] = ['fee', 'first', 'follow'];
 type ScreenId = (typeof SCREENS)[number];
 const BRANCHES = ['psychologist', 'psychiatrist', 'other', 'unknown'] as const;
 type Branch = (typeof BRANCHES)[number];
@@ -126,7 +129,7 @@ interface CalcState {
   followLength: string | null;
 }
 
-const STORAGE_KEY = 'healthmaps:cost-calculator:v2';
+const STORAGE_KEY = 'healthmaps:cost-calculator:v3';
 const MAX_HISTORY = 12;
 
 /** An unanswered quiz at the first question: the landing state, and Start again. */
@@ -201,6 +204,13 @@ function clearState(): void {
 const feesComplete = (t: PractitionerType, s: CalcState): boolean =>
   t.firstVisit ? s.firstFee !== null && s.followFee !== null : s.fee !== null;
 
+/** The fee screens this practitioner uses, in order. */
+const feeScreensFor = (t: PractitionerType | null): ScreenId[] =>
+  t?.firstVisit ? ['first', 'follow', 'length'] : ['fee'];
+
+/** After the fees: the GP question, unless there's nothing to set up. */
+const afterFees = (t: PractitionerType | null): ScreenId => (t && t.setup === null ? 'done' : 'gp');
+
 /** The canonical path for this state. Undecided tails assume the longest path. */
 function pathFor(s: CalcState): ScreenId[] {
   const t = typeById(s.typeId);
@@ -208,7 +218,7 @@ function pathFor(s: CalcState): ScreenId[] {
   if (s.branch === 'psychologist') path.push('psych');
   else if (s.branch === 'other') path.push('other');
   else if (s.branch === null) path.push('psych');
-  path.push('fee');
+  path.push('knowfee', ...feeScreensFor(t));
   if (!(t && t.setup === null)) path.push('gp');
   return path;
 }
@@ -220,12 +230,19 @@ function nextAfter(screen: ScreenId, s: CalcState): ScreenId {
     case 'who':
       if (s.branch === 'psychologist') return 'psych';
       if (s.branch === 'other') return 'other';
-      return 'fee';
+      return 'knowfee';
     case 'psych':
     case 'other':
-      return 'fee';
+      return 'knowfee';
+    case 'knowfee':
+      return feeScreensFor(t)[0];
+    case 'first':
+      return 'follow';
+    case 'follow':
+      return 'length';
     case 'fee':
-      return t && t.setup === null ? 'done' : 'gp';
+    case 'length':
+      return afterFees(t);
     case 'gp':
       return 'done';
     default:
@@ -239,8 +256,12 @@ function clampScreen(s: CalcState): CalcState {
   let screen = s.screen;
   if (!t && screen !== 'who' && screen !== 'psych' && screen !== 'other') screen = 'who';
   if (!t && ((screen === 'psych' && s.branch !== 'psychologist') || (screen === 'other' && s.branch !== 'other'))) screen = 'who';
-  if (t && (screen === 'gp' || screen === 'done') && !feesComplete(t, s)) screen = 'fee';
-  if (t && screen === 'gp' && t.setup === null) screen = 'fee';
+  // A fee screen that belongs to a different practitioner shape.
+  if (t && (FEE_SCREENS.includes(screen) || screen === 'length') && !feeScreensFor(t).includes(screen)) screen = 'knowfee';
+  if (t && screen === 'follow' && s.firstFee === null) screen = 'first';
+  if (t && screen === 'length' && !feesComplete(t, s)) screen = 'first';
+  if (t && (screen === 'gp' || screen === 'done') && !feesComplete(t, s)) screen = 'knowfee';
+  if (t && screen === 'gp' && t.setup === null) screen = 'knowfee';
   // 'done' with the GP question unanswered is fine: the default scenario
   // starts there, and the GP row shows a range until it's answered.
   if (screen === s.screen) return s;
@@ -248,16 +269,24 @@ function clampScreen(s: CalcState): CalcState {
   return { ...s, screen, history: path.slice(0, Math.max(0, path.indexOf(screen))) };
 }
 
-function progressLabel(s: CalcState): string {
-  if (s.screen === 'done') return 'Your costs';
+/** Where this screen sits on the path: 1-based step and total. */
+function progress(s: CalcState): { n: number; of: number } {
   const path = pathFor(s);
-  const n = Math.max(1, path.indexOf(s.screen) + 1);
-  return `Question ${n} of ${path.length}`;
+  return { n: Math.max(1, path.indexOf(s.screen) + 1), of: path.length };
 }
 
-/** A fee input plus its quick-pick chips, wrapped in [data-fee-field]. */
+function progressLabel(s: CalcState): string {
+  if (s.screen === 'done') return 'Your costs';
+  const { n, of } = progress(s);
+  return `Question ${n} of ${of}`;
+}
+
+/** A fee input plus its quick-pick chips, wrapped in [data-fee-field] inside its own form. */
 interface FeeField {
+  screen: ScreenId;
+  form: HTMLFormElement;
   input: HTMLInputElement;
+  error: HTMLElement;
   chips: HTMLButtonElement[];
 }
 
@@ -269,17 +298,13 @@ function initCostCalculator(): void {
 
   const screensEl = q('[data-calc-screens]');
   const liveEl = q('[data-calc-live]');
-  const feeForm = q<HTMLFormElement>('form[data-calc-screen="fee"]');
+  const barEl = q('[data-calc-bar]');
   const gpForm = q<HTMLFormElement>('form[data-calc-screen="gp"]');
   const gpOtherBtn = q<HTMLButtonElement>('[data-calc-gp-other]');
   const gpCustomWrap = q('[data-gp-custom]');
   const gpInput = q<HTMLInputElement>('#gp-fee');
   const gpError = q('[data-gp-error]');
-  const feeHeading = q('[data-calc-fee-heading]');
   const assumeNote = q('[data-calc-assume-note]');
-  const feeError = q('[data-fee-error]');
-  const singleGroup = q('[data-fee-group="single"]');
-  const psychGroup = q('[data-fee-group="psychiatrist"]');
   const typicalBtn = q('[data-calc-typical]');
   const answerLine = q('[data-calc-answer-line]');
 
@@ -309,9 +334,9 @@ function initCostCalculator(): void {
   const lengthChips = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-follow-length]'));
 
   if (
-    !screensEl || !liveEl || !feeForm || !feeHeading ||
-    !gpForm || !gpOtherBtn || !gpCustomWrap || !gpInput || !gpError || !assumeNote || !feeError ||
-    !singleGroup || !psychGroup || !typicalBtn || !answerLine ||
+    !screensEl || !liveEl || !barEl ||
+    !gpForm || !gpOtherBtn || !gpCustomWrap || !gpInput || !gpError || !assumeNote ||
+    !typicalBtn || !answerLine ||
     !summaryType || !summaryFeeLabel || !summaryFee || !summaryGpRow || !summaryGp ||
     !bodySingle || !bodyPsych || !feesEl || !rebateEl || !totalEl ||
     !firstFeeEl || !firstRebateEl || !firstTotalEl ||
@@ -322,8 +347,11 @@ function initCostCalculator(): void {
   function field(id: string): FeeField | null {
     const wrap = root!.querySelector<HTMLElement>(`[data-fee-field="${id}"]`);
     const input = wrap?.querySelector<HTMLInputElement>('input[type="number"]');
-    if (!wrap || !input) return null;
-    return { input, chips: Array.from(wrap.querySelectorAll<HTMLButtonElement>('[data-fee-chip]')) };
+    const form = wrap?.closest<HTMLFormElement>('form[data-calc-screen]');
+    const error = form?.querySelector<HTMLElement>('[data-fee-error]');
+    const screen = form?.dataset.calcScreen;
+    if (!wrap || !input || !form || !error || !isScreen(screen)) return null;
+    return { screen, form, input, error, chips: Array.from(wrap.querySelectorAll<HTMLButtonElement>('[data-fee-chip]')) };
   }
 
   const single = field('session-fee');
@@ -363,19 +391,15 @@ function initCostCalculator(): void {
     }
   }
 
-  // Swap the fee screen's furniture for the selected practitioner: which
-  // fee field(s) show, their chips, the heading and the assumption note.
+  // Retune the fee screens for the selected practitioner: the chips, the
+  // "most common fee" button and the assumption note.
   function applyType(t: PractitionerType | null): void {
-    const twoFees = Boolean(t?.firstVisit);
-    singleGroup!.hidden = twoFees;
-    psychGroup!.hidden = !twoFees;
     if (t?.firstVisit) {
       setChips(first!, t.firstVisit.chips);
       setChips(follow!, t.chips);
     } else if (t) {
       setChips(single!, t.chips);
     }
-    feeHeading!.textContent = twoFees ? 'Do you know what they charge?' : 'Do you know what they charge per session?';
     typicalBtn!.textContent = t?.firstVisit
       ? 'No — use the most common fees'
       : `No — use the most common fee ($${t?.chips[1] ?? DEFAULT_FEE})`;
@@ -559,8 +583,10 @@ function initCostCalculator(): void {
       const progress = el.querySelector<HTMLElement>('[data-calc-progress]');
       if (isActive && progress) progress.textContent = progressLabel(state);
     }
-    feeError!.hidden = true;
+    for (const f of allFields) f.error.hidden = true;
     gpError!.hidden = true;
+    const { n, of } = progress(state);
+    barEl!.style.width = `${Math.round((n / of) * 100)}%`;
     // The GP amount box stays open when a typed amount is the current answer.
     if (id === 'gp') setGpCustomOpen(state.gpFree === false && state.gpCustom !== null);
     if (!focus) return;
@@ -624,6 +650,7 @@ function initCostCalculator(): void {
       state.gpFree = gp === 'free';
       state.gpCustom = null;
     }
+    if (button.dataset.followLength) state.followLength = button.dataset.followLength;
     applyType(currentType());
     render();
     go(nextAfter(state.screen, state));
@@ -641,22 +668,19 @@ function initCostCalculator(): void {
     }
     syncStateFromInputs();
     render();
-    feeError!.hidden = true;
-    go(nextAfter('fee', state));
+    go(afterFees(t));
   }
 
-  function handleFeeNext(): void {
-    const t = currentType();
-    if (!t) return;
+  // Next on a fee screen: that screen's box must have a number.
+  function handleFeeNext(f: FeeField): void {
     syncStateFromInputs();
-    if (!feesComplete(t, state)) {
-      feeError!.hidden = false;
-      const empty = (t.firstVisit ? [first!, follow!] : [single!]).find((f) => fieldValue(f) === null);
-      empty?.input.focus();
+    if (fieldValue(f) === null) {
+      f.error.hidden = false;
+      f.input.focus();
       return;
     }
-    feeError!.hidden = true;
-    go(nextAfter('fee', state));
+    f.error.hidden = true;
+    go(nextAfter(f.screen, state));
   }
 
   function setGpCustomOpen(open: boolean): void {
@@ -700,11 +724,19 @@ function initCostCalculator(): void {
     if (target.closest('[data-calc-reset]')) return reset();
   });
 
-  // Enter in a fee field submits the form; route it like the Next button.
-  feeForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    handleFeeNext();
-  });
+  // Enter in a fee field submits its form; route it like the Next button.
+  for (const f of allFields) {
+    f.form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      handleFeeNext(f);
+    });
+    f.form.addEventListener('input', () => {
+      syncStateFromInputs();
+      writeState(state);
+      render();
+      if (fieldValue(f) !== null) f.error.hidden = true;
+    });
+  }
 
   // Enter in the GP amount field, or its Next button.
   gpForm.addEventListener('submit', (e) => {
@@ -716,21 +748,6 @@ function initCostCalculator(): void {
     if (gpInput.value !== '') gpError.hidden = true;
   });
 
-  feeForm.addEventListener('input', () => {
-    syncStateFromInputs();
-    writeState(state);
-    render();
-    const t = currentType();
-    if (t && feesComplete(t, state)) feeError!.hidden = true;
-  });
-
-  for (const chip of lengthChips) {
-    chip.addEventListener('click', () => {
-      state.followLength = chip.dataset.followLength ?? null;
-      writeState(state);
-      render();
-    });
-  }
 
   for (const f of allFields) {
     f.input.addEventListener('focus', () => f.input.select());
@@ -742,8 +759,7 @@ function initCostCalculator(): void {
         syncStateFromInputs();
         writeState(state);
         render();
-        const t = currentType();
-        if (t && feesComplete(t, state)) feeError!.hidden = true;
+        f.error.hidden = true;
       });
     }
   }
