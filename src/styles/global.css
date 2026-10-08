@@ -32,6 +32,8 @@
   /* Colour palette: forest green, no warm accent */
   --color-primary: #1B6B4A;
   --color-primary-light: #E8F5EE;
+  /* The logo dot. Brand mark only: list bullets, the header dot. */
+  --color-brand-dot: #44EE70;
   --color-primary-mid: #3A8F68;
   --color-heading: #1e293b;
   --color-body: #475569;
@@ -179,6 +181,26 @@ h1, h2, h3, h4, h5, h6 {
 }
 .card-hover:hover {
   box-shadow: var(--shadow-hover);
+}
+
+/* Dot list: the logo dot as the bullet. Use on prose <ul>s instead of list-disc. */
+.dot-list {
+  list-style: none;
+  padding: 0;
+}
+.dot-list > li {
+  position: relative;
+  padding-left: 1.5rem;
+}
+.dot-list > li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 10px;
+  height: 10px;
+  border-radius: 9999px;
+  background: var(--color-brand-dot);
 }
 
 /* Details/summary base: pointer + marker suppression only. The CSS-drawn
