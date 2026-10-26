@@ -1,6 +1,6 @@
 // Cost calculator: a short branching quiz, one question per screen. It picks
 // the practitioner, asks whether the fee is known, takes one fee per screen
-// (psychiatrists: first, follow-up, follow-up length), asks the GP cost, then
+// (psychiatrists: first, follow-up length, follow-up), asks the GP cost, then
 // shows the receipt it has been filling in as the answers arrived. Reads the same JSON the component renders
 // its SSR defaults from, so the first client render matches the server HTML.
 //
@@ -23,6 +23,8 @@ export interface FollowUpLength {
   label: string;
   item: number;
   rebate: number;
+  /** Quick-pick follow-up fee chips for this length: lower / typical / higher. */
+  chips: [number, number, number];
 }
 
 export interface PractitionerType {
@@ -206,7 +208,7 @@ const feesComplete = (t: PractitionerType, s: CalcState): boolean =>
 
 /** The fee screens this practitioner uses, in order. */
 const feeScreensFor = (t: PractitionerType | null): ScreenId[] =>
-  t?.firstVisit ? ['first', 'follow', 'length'] : ['fee'];
+  t?.firstVisit ? ['first', 'length', 'follow'] : ['fee'];
 
 /** After the fees: the GP question, unless there's nothing to set up. */
 const afterFees = (t: PractitionerType | null): ScreenId => (t && t.setup === null ? 'done' : 'gp');
@@ -237,11 +239,11 @@ function nextAfter(screen: ScreenId, s: CalcState): ScreenId {
     case 'knowfee':
       return feeScreensFor(t)[0];
     case 'first':
-      return 'follow';
-    case 'follow':
       return 'length';
-    case 'fee':
     case 'length':
+      return 'follow';
+    case 'fee':
+    case 'follow':
       return afterFees(t);
     case 'gp':
       return 'done';
@@ -259,7 +261,7 @@ function clampScreen(s: CalcState): CalcState {
   // A fee screen that belongs to a different practitioner shape.
   if (t && (FEE_SCREENS.includes(screen) || screen === 'length') && !feeScreensFor(t).includes(screen)) screen = 'knowfee';
   if (t && screen === 'follow' && s.firstFee === null) screen = 'first';
-  if (t && screen === 'length' && !feesComplete(t, s)) screen = 'first';
+  if (t && screen === 'length' && s.firstFee === null) screen = 'first';
   if (t && (screen === 'gp' || screen === 'done') && !feesComplete(t, s)) screen = 'knowfee';
   if (t && screen === 'gp' && t.setup === null) screen = 'knowfee';
   // 'done' with the GP question unanswered is fine: the default scenario
@@ -396,7 +398,8 @@ function initCostCalculator(): void {
   function applyType(t: PractitionerType | null): void {
     if (t?.firstVisit) {
       setChips(first!, t.firstVisit.chips);
-      setChips(follow!, t.chips);
+      // The follow-up chips follow the chosen length, which is asked first.
+      setChips(follow!, followLength(t)?.chips ?? t.chips);
     } else if (t) {
       setChips(single!, t.chips);
     }
@@ -683,7 +686,7 @@ function initCostCalculator(): void {
     if (!t) return;
     if (t.firstVisit) {
       first!.input.value = String(t.firstVisit.chips[1]);
-      follow!.input.value = String(t.chips[1]);
+      follow!.input.value = String((followLength(t)?.chips ?? t.chips)[1]);
     } else {
       single!.input.value = String(t.chips[1]);
     }

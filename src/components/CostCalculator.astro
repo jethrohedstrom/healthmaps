@@ -5,7 +5,7 @@ import type { PractitionerType } from '../scripts/cost-calculator';
 
 // One question per screen: who → general/clinical or which one → do you
 // know the fee? → one fee box per screen (psychiatrists: first fee,
-// follow-up fee, follow-up length) → GP → results. The receipt fills in as
+// follow-up length, then a follow-up fee whose chips match that length) → GP → results. The receipt fills in as
 // answers arrive but only shows on the results screen.
 // src/scripts/cost-calculator.ts owns the routing, the state (sessionStorage)
 // and the receipt maths; this file renders every screen up front, with only
@@ -43,7 +43,7 @@ const chipNames = ['Lower', 'Typical', 'Higher'] as const;
 const feeScreens = [
   { screen: 'fee', id: 'session-fee', heading: 'What do they charge per session?', label: 'Fee per session ($)', chips: defaultType.chips },
   { screen: 'first', id: 'first-fee', heading: "What's their first appointment fee?", label: 'First appointment fee ($)', chips: psychiatrist?.firstVisit?.chips ?? defaultType.chips },
-  { screen: 'follow', id: 'follow-up-fee', heading: "What's their follow-up fee?", label: 'Follow-up fee ($)', chips: psychiatrist?.chips ?? defaultType.chips },
+  { screen: 'follow', id: 'follow-up-fee', heading: "What's their follow-up fee?", label: 'Follow-up fee ($)', chips: psychiatrist?.followUpLengths?.[0]?.chips ?? psychiatrist?.chips ?? defaultType.chips },
 ];
 
 // Psychiatrist follow-up lengths: each has its own rebate. The first is the default.
@@ -171,7 +171,8 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
         </form>
       ))}
 
-      <!-- 4d. Psychiatrist follow-up length: the length sets the rebate. -->
+      <!-- 4d. Psychiatrist follow-up length, asked before the follow-up fee:
+           the length sets the rebate and the follow-up fee chips. -->
       <section class="calc-screen calc-screen--hidden" data-calc-screen="length">
         <div class="flex items-center gap-4 mb-3">
           <button type="button" class={backButton} data-calc-back>&larr; Back</button>
