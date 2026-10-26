@@ -8,6 +8,46 @@ const lastVerified = new Date(costs.lastUpdated).toLocaleDateString('en-AU', {
   month: 'long',
   year: 'numeric',
 });
+
+// FAQ dollar figures come from the calculator data so they can't drift from it.
+const psychiatrist = costs.practitionerTypes.find((p) => p.id === 'psychiatrist')!;
+const dollars = (n: number) => `$${Math.round(n)}`;
+const [short, mid, long] = psychiatrist.followUpLengths!.map((l) => dollars(l.rebate));
+
+const faqs = [
+  {
+    q: 'Why do I still have to pay something?',
+    a: `<p>Medicare pays back a fixed amount for each session, called the <strong>rebate</strong>. Most practitioners charge more than that. The difference is your <strong>out-of-pocket cost</strong>, sometimes called the gap. That's the number the calculator shows.</p>`,
+  },
+  {
+    // REVIEW: AI-drafted claim — psychologists/social workers/OTs need an MHCP + GP referral; psychiatrists need a standard referral; counsellors and psychotherapists are outside Better Access, some extras cover part.
+    q: 'Do I need to see a GP first?',
+    a: `<ul class="dot-list space-y-2">
+      <li><strong>Psychologist, mental health social worker or OT:</strong> yes. A GP writes a <a href="/pathway/#through-gp" class="font-semibold text-primary underline underline-offset-2">Mental Health Care Plan</a> and a referral. Without them there's no rebate.</li>
+      <li><strong>Psychiatrist:</strong> yes, but a standard GP referral is enough. You don't need a plan.</li>
+      <li><strong>Counsellor or psychotherapist:</strong> no. Medicare doesn't cover them, so you pay the full fee. Some private health extras policies cover part of it.</li>
+    </ul>`,
+  },
+  {
+    // REVIEW: AI-drafted claim — 10 Better Access sessions per calendar year, GP review after 6; no yearly cap for psychiatrists.
+    q: 'How many sessions does Medicare cover?',
+    a: `<p>Up to ${costs.maxMedicareSessions} sessions per calendar year (January to December) with a psychologist, social worker or OT. After the first 6, you go back to the GP for a short review before sessions 7–${costs.maxMedicareSessions}. Psychiatrists have no yearly cap.</p>`,
+  },
+  {
+    // REVIEW: AI-drafted claim — Easyclaim rebates go only to eftpos debit cards; app/myGov claims go to the Medicare-registered bank account.
+    q: 'How do I get the money back?',
+    a: `<p>You pay the full fee on the day, and any card works. If the clinic claims the rebate for you, Medicare can only pay it onto a <strong>debit card</strong>, not a credit card. Otherwise you claim in the Medicare app, and the money goes to the bank account you've registered, usually within a day or two.</p>`,
+  },
+  {
+    q: 'Can I pay nothing at all?',
+    a: `<p>Yes, if the practitioner <strong>bulk-bills</strong>. They charge only the rebate, so you pay $0. Bulk-billing practitioners often have longer waits.</p>`,
+  },
+  {
+    // REVIEW: AI-drafted claim — psychiatrist first appointment item 296, follow-ups items 302/304/306 by length (see calculator-costs.json reviewNotes).
+    q: 'Why do psychiatrist rebates change?',
+    a: `<p>The first appointment has the biggest rebate, about ${dollars(psychiatrist.firstVisit!.rebate)}. After that, the rebate depends on how long the appointment runs: about ${short} for 15–30 minutes, ${mid} for 30–45, and ${long} for 45–75. That's why the calculator asks how long your sessions are.</p>`,
+  },
+];
 ---
 <BaseLayout
   title="Cost Calculator"
@@ -44,40 +84,14 @@ const lastVerified = new Date(costs.lastUpdated).toLocaleDateString('en-AU', {
   <!-- Explanation -->
   <section>
     <div class="max-w-body mx-auto px-4 py-16 md:py-20">
-      <h2 class="font-display font-semibold text-[24px] md:text-[28px] tracking-[-0.02em] text-heading mb-6">How Medicare Rebates Work</h2>
-      <div class="space-y-5 text-body">
-        <p>
-          When you see a psychologist, mental health social worker or occupational therapist with a valid <a href="/pathway/#through-gp" class="font-semibold text-primary underline underline-offset-2">Mental Health Care Plan (MHCP)</a> and GP referral,
-          Medicare pays back a fixed amount per session, called the <strong>rebate</strong>. The difference between
-          the session fee and the rebate is your <strong>out-of-pocket cost</strong> (also called the "gap").
-        </p>
-        <p>
-          You can receive up to <strong>10 Medicare-rebated sessions per calendar year</strong> (January–December).
-          After your first 6 sessions, your GP needs to do a brief review before you can access sessions 7–10.
-        </p>
-        <!-- REVIEW: AI-drafted claim — psychiatrists need a standard GP referral not an MHCP; no yearly cap; follow-up rebates by length (MBS items 302 $89.30 / 306 $189.70, 1 Jul 2026). -->
-        <p>
-          <strong>Psychiatrists</strong> work differently. You need a standard GP referral, not a Mental Health Care Plan,
-          and there's no yearly cap on rebated sessions. The first appointment has a higher rebate than follow-ups, and
-          follow-up rebates depend on how long the appointment is, from about $89 for 15–30 minutes up to about $190 for
-          45 minutes or more. The calculator uses the shorter follow-up rebate so it doesn't understate what you'll pay.
-        </p>
-        <!-- REVIEW: AI-drafted claim — counsellors and psychotherapists are outside Better Access; some private health extras cover part of the fee. -->
-        <p>
-          <strong>Counsellors and psychotherapists</strong> aren't covered by Medicare, so you pay the full fee and don't
-          need a GP visit first. Fees are often lower, and some private health extras policies cover part of the cost.
-        </p>
-        <!-- REVIEW: AI-drafted claim — Easyclaim rebates go only to eftpos debit cards; app/myGov claims go to the Medicare-registered bank account. -->
-        <p>
-          On the day, you pay the <strong>full session fee</strong> upfront — any card is fine. If the clinic
-          processes your rebate on the spot, Medicare can only pay it back onto a <strong>debit card</strong>, not a
-          credit card. Otherwise you can claim through the Medicare app and the rebate goes to the bank account
-          you've registered with Medicare, usually within a day or two.
-        </p>
-        <p>
-          Some psychologists <strong>bulk-bill</strong>, meaning they charge only the Medicare rebate amount, so your
-          out-of-pocket cost is $0. However, bulk-billing psychologists often have longer wait times.
-        </p>
+      <h2 class="font-display font-semibold text-[24px] md:text-[28px] tracking-[-0.02em] text-heading mb-6">How Medicare rebates work</h2>
+      <div class="bg-white border border-pencil rounded-xl px-6 md:px-10 py-2">
+        {faqs.map((faq, i) => (
+          <details class:list={['accordion-item', i > 0 && 'border-t border-border']}>
+            <summary class="summary-chevron">{faq.q}</summary>
+            <div class="accordion-content !px-0 !pt-0 space-y-3 leading-relaxed text-body" set:html={faq.a} />
+          </details>
+        ))}
       </div>
     </div>
   </section>
