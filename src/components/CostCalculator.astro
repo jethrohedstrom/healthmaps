@@ -3,6 +3,13 @@ import costsData from '../data/calculator-costs.json';
 import TermPopover from './TermPopover.astro';
 import type { PractitionerType } from '../scripts/cost-calculator';
 
+interface Props {
+  /** Show a quiet link to /pathway/ under the receipt on the results screen. Off by default. */
+  pathwayLink?: boolean;
+}
+
+const { pathwayLink = false } = Astro.props;
+
 // One question per screen: who → general/clinical or which one → do you
 // know the fee? → one fee box per screen (psychiatrists: first fee,
 // follow-up length, then a follow-up fee whose chips match that length) → GP → results. The receipt fills in as
@@ -342,6 +349,11 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
           Answer a few questions to see what you'll pay.
         </p>
       </div>
+      {pathwayLink && (
+        <p class="mt-5 text-center">
+          <a href="/pathway/" class={changeLink}>What happens next? See the steps</a>
+        </p>
+      )}
     </div>
   </div>
 </div>
