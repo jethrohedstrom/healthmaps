@@ -3,21 +3,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import CostCalculator from '../components/CostCalculator.astro';
 ---
 <BaseLayout title="Mental Health Support in Australia, Explained">
-  <!-- The homepage is the calculator: headline, then question 1. Mobile top
-       padding is tight so the first question shows without scrolling. -->
+  <!-- The homepage is the calculator: headline, then question 1. The headline
+       is one line on a laptop and the padding is tight on mobile, so the whole
+       first question shows without scrolling on both. -->
   <section>
-    <div class="max-w-4xl mx-auto px-4 pt-8 pb-24 md:pt-24 md:pb-32">
-      <h1 class="max-w-3xl mx-auto text-center text-3xl md:text-[56px] font-bold text-heading mb-6 md:mb-16 leading-[1.1] tracking-[-0.025em]">
+    <div class="group max-w-4xl mx-auto px-4 pt-8 pb-24 md:pt-16 md:pb-32">
+      <h1 class="text-center text-balance text-3xl md:text-[40px] font-bold text-heading mb-6 md:mb-12 leading-[1.1] tracking-[-0.025em]">
         Mental health support in Australia, explained
       </h1>
 
-      <CostCalculator pathwayLink />
+      <!-- While answering, the card hugs the single question column. On the
+           results screen it widens to fit the receipt beside the summary. -->
+      <div class="mx-auto max-w-[42rem] group-has-[[data-calc-phase=done]]:max-w-4xl">
+        <CostCalculator pathwayLink />
+      </div>
 
       <p class="mt-10 md:mt-12 text-center text-[15px] leading-relaxed text-pretty text-body">
         I run Health Maps independently. It aims to give you precise costs, and isn't a provider or booking service.
       </p>
       <!-- Hidden on the results screen, where the calculator shows the same link under the receipt. -->
-      <p class="mt-4 text-center [[data-calc-phase=done]~&]:hidden">
+      <p class="mt-4 text-center group-has-[[data-calc-phase=done]]:hidden">
         <a href="/pathway/" class="text-sm font-semibold text-primary underline underline-offset-[3px] hover:text-primary-mid focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3">What happens next? See the steps</a>
       </p>
     </div>
