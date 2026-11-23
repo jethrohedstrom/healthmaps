@@ -86,15 +86,15 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
 
       <!-- 1. Who: the screen the page opens on. -->
       <section class="calc-screen" data-calc-screen="who">
-        <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>Who will you be seeing?</h2>
-        <div class="grid gap-3" role="group" aria-label="Who will you be seeing?">
+        <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>Who are you thinking of seeing?</h2>
+        <div class="grid gap-3" role="group" aria-label="Who are you thinking of seeing?">
+          <button type="button" class={answerCard} data-calc-answer data-branch="unknown" data-type="general-psychologist" data-assume="unknown">I'm not sure yet</button>
           <button type="button" class={answerCard} data-calc-answer data-branch="psychologist">Psychologist</button>
           <button type="button" class={answerCard} data-calc-answer data-branch="psychiatrist" data-type="psychiatrist">Psychiatrist</button>
           <button type="button" class={answerCard} data-calc-answer data-branch="other">
             <span>Someone else</span>
             <span class={answerSub}>Social worker, OT, counsellor or psychotherapist</span>
           </button>
-          <button type="button" class={answerCard} data-calc-answer data-branch="unknown" data-type="general-psychologist" data-assume="unknown">I don't know yet</button>
         </div>
         <p class="mt-4 text-[13.5px] leading-snug text-meta-sage">
           Not sure who to see? <a href="/practitioners" class={changeLink}>Compare your options</a>
