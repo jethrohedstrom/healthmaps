@@ -30,9 +30,11 @@ const defFee = defaultType.chips[1];
 const audWhole = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 0 });
 const gpRange = `Free to ${audWhole.format(costsData.gpCostPrivate)}`;
 
-// Quiz answer: a full-width card, body-weight text, sub-label optional.
-const answerCard = 'flex w-full min-h-14 flex-col items-start justify-center gap-0.5 rounded-[10px] border border-ink-green/16 bg-white px-4 py-3 text-left text-base leading-snug text-body transition-colors duration-150 hover:border-primary hover:bg-primary-light hover:text-heading focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 disabled:cursor-wait disabled:opacity-70 cursor-pointer';
-const answerSub = 'text-[13.5px] leading-snug text-meta-sage';
+// Quiz answer: a full-width button. Heading-coloured medium text, a firmer
+// border and a hair of shadow, so it reads as something to press rather than
+// an empty text field with placeholder text.
+const answerCard = 'flex w-full min-h-14 flex-col items-start justify-center gap-0.5 rounded-[10px] border border-ink-green/25 bg-white px-4 py-3 text-left text-base font-medium leading-snug text-heading shadow-sm transition-colors duration-150 hover:border-primary hover:bg-primary-light focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 disabled:cursor-wait disabled:opacity-70 cursor-pointer';
+const answerSub = 'text-[13.5px] font-normal leading-snug text-meta-sage';
 
 const stepLabel = 'text-sm font-medium text-primary';
 const backButton = 'text-sm font-medium text-body hover:text-heading transition-colors focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 cursor-pointer';
@@ -80,11 +82,11 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
        The quiz underneath keeps its size, so the card doesn't resize. -->
   {intro && (
     <div class="calc-intro p-6 sm:p-8 md:p-10">
-      <div class="max-w-md text-center">
-        <h2 class="calc-heading">You don't need to know anything yet.</h2>
-        <p class="mt-3 text-base md:text-lg leading-relaxed text-pretty text-body">Answer what you can, and the calculator will work out what it costs.</p>
-        <div class="mt-8">
-          <button type="button" class={primaryButton} data-calc-start>Start</button>
+      <div>
+        <h2 class="calc-intro-heading text-balance">You don't need to know anything yet.</h2>
+        <p class="mt-4 md:mt-5 max-w-[26rem] text-lg md:text-xl leading-relaxed text-pretty text-body">Answer what you can, and the calculator will work out what it costs.</p>
+        <div class="mt-8 md:mt-10">
+          <button type="button" class={`${primaryButton} min-h-[52px] min-w-36 px-9 text-[17px]`} data-calc-start>Start</button>
         </div>
       </div>
     </div>
@@ -399,7 +401,26 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
     position: absolute;
     inset: 0;
     display: none;
-    place-items: center;
+    align-content: center;
+  }
+
+  /* The reassurance is the biggest type on the homepage: it is the welcome,
+     not a caption inside a box. Left-aligned like the questions that follow,
+     so Start hands over to question 1 on the same edge. */
+  .calc-intro-heading {
+    font-family: var(--font-display);
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    color: var(--color-heading);
+    max-width: 13em;
+  }
+
+  @media (min-width: 48rem) {
+    .calc-intro-heading {
+      font-size: 40px;
+    }
   }
 
   [data-calc-intro] .calc-intro {
