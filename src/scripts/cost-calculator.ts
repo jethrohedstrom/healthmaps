@@ -830,6 +830,16 @@ function initCostCalculator(): void {
   applyType(currentType());
   render();
   showScreen(state.screen, false);
+  // Reassurance screen (homepage): a session already under way skips it;
+  // otherwise Start reveals question 1 and moves focus into it.
+  if (root.hasAttribute('data-calc-intro')) {
+    if (state.screen !== 'who' || state.branch !== null) root.removeAttribute('data-calc-intro');
+    root.querySelector<HTMLElement>('[data-calc-start]')?.addEventListener('click', () => {
+      root.removeAttribute('data-calc-intro');
+      root.classList.add('calc-started');
+      showScreen(state.screen, true);
+    });
+  }
   // Enable the receipt's fade only after the restored screen has painted.
   requestAnimationFrame(() => root.classList.add('calc-animate'));
 }

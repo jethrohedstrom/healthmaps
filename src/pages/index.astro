@@ -3,23 +3,19 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import CostCalculator from '../components/CostCalculator.astro';
 ---
 <BaseLayout title="Mental Health Support in Australia, Explained">
-  <!-- The homepage is the calculator: headline, then question 1. The headline
-       is one line on a laptop and the padding is tight on mobile, so the whole
-       first question shows without scrolling on both. -->
+  <!-- The homepage is the calculator: headline, then the card, which opens on
+       a reassurance screen before question 1. The headline is one line on a
+       laptop so the whole card shows without scrolling. -->
   <section>
-    <div class="group max-w-4xl mx-auto px-4 pt-6 pb-24 md:pt-16 md:pb-32">
-      <h1 class="text-center text-balance text-3xl md:text-[40px] font-bold text-heading mb-2 md:mb-4 leading-[1.1] tracking-[-0.025em]">
+    <div class="group max-w-4xl mx-auto px-4 pt-8 pb-24 md:pt-16 md:pb-32">
+      <h1 class="text-center text-balance text-3xl md:text-[40px] font-bold text-heading mb-6 md:mb-12 leading-[1.1] tracking-[-0.025em]">
         Mental health support in Australia, explained
       </h1>
-      <!-- Reassurance before the first question: not knowing is expected. -->
-      <p class="text-center text-pretty text-[15px] md:text-lg leading-normal md:leading-relaxed text-body mb-5 md:mb-10">
-        You don't need to know anything yet. Answer what you can, and I'll work out what it costs.
-      </p>
 
       <!-- While answering, the card hugs the single question column. On the
            results screen it widens to fit the receipt beside the summary. -->
       <div class="mx-auto max-w-[42rem] group-has-[[data-calc-phase=done]]:max-w-4xl">
-        <CostCalculator pathwayLink />
+        <CostCalculator pathwayLink intro />
       </div>
 
       <p class="mt-10 md:mt-12 text-center text-[15px] leading-relaxed text-pretty text-body">

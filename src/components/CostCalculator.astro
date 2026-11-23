@@ -6,9 +6,11 @@ import type { PractitionerType } from '../scripts/cost-calculator';
 interface Props {
   /** Show a quiet link to /pathway/ under the receipt on the results screen. Off by default. */
   pathwayLink?: boolean;
+  /** Open on a reassurance screen with a Start button before question 1. Off by default. */
+  intro?: boolean;
 }
 
-const { pathwayLink = false } = Astro.props;
+const { pathwayLink = false, intro = false } = Astro.props;
 
 // One question per screen: who → general/clinical or which one → do you
 // know the fee? → one fee box per screen (psychiatrists: first fee,
@@ -72,7 +74,21 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
 <!-- data-calc-phase is "questions" while answering and "done" on the results
      screen. The script sets it in showScreen. While answering, the receipt
      column is not rendered and the quiz fills the card. -->
-<div id="cost-calculator" class="bg-paper-cream border border-pencil rounded-[14px] p-6 sm:p-8 md:p-10" data-calc-phase="questions">
+<div id="cost-calculator" class="relative bg-paper-cream border border-pencil rounded-[14px] p-6 sm:p-8 md:p-10" data-calc-phase="questions" data-calc-intro={intro ? '' : undefined}>
+  <!-- Optional reassurance screen. It covers the card until Start is pressed;
+       the script drops data-calc-intro (or skips it for a restored session).
+       The quiz underneath keeps its size, so the card doesn't resize. -->
+  {intro && (
+    <div class="calc-intro p-6 sm:p-8 md:p-10">
+      <div class="max-w-md text-center">
+        <h2 class="calc-heading">You don't need to know anything yet.</h2>
+        <p class="mt-3 text-base md:text-lg leading-relaxed text-pretty text-body">Answer what you can, and the calculator will work out what it costs.</p>
+        <div class="mt-8">
+          <button type="button" class={primaryButton} data-calc-start>Start</button>
+        </div>
+      </div>
+    </div>
+  )}
   <div class="calc-grid grid gap-8 md:gap-10">
 
     <!-- Quiz: every screen is rendered; the script shows one at a time. -->
@@ -378,6 +394,22 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
     align-self: start;
   }
 
+  /* Reassurance screen: laid over the card while data-calc-intro is set. */
+  .calc-intro {
+    position: absolute;
+    inset: 0;
+    display: none;
+    place-items: center;
+  }
+
+  [data-calc-intro] .calc-intro {
+    display: grid;
+  }
+
+  [data-calc-intro] .calc-grid {
+    visibility: hidden;
+  }
+
   /* Progress bar: 3px track, fill width set by the script. Gone on results. */
   .calc-progress {
     height: 3px;
@@ -459,6 +491,11 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
         opacity 140ms ease-in,
         transform 140ms ease-in,
         visibility 0s 140ms;
+    }
+
+    /* Question 1 rises in after Start on the reassurance screen. */
+    .calc-started .calc-grid {
+      animation: calc-receipt-in 240ms ease-out both;
     }
 
     /* The receipt rises in with the results screen. Only after the first
