@@ -22,7 +22,7 @@ const PATHS = [
   { name: 'general', answers: ['Psychologist', 'General'], fees: { 'session-fee': 250 }, gp: "No, it's free", progressOnFee: 'Question 3 of 4', total: '$148.45', rebate: '−$101.55', gpAmount: '$0.00', gpLabel: 'GP visit (care plan)' },
   { name: 'clinical', answers: ['Psychologist', 'Clinical'], fees: { 'session-fee': 280 }, gp: 'Yes, about $40', progressOnFee: 'Question 3 of 4', total: '$130.95', rebate: '−$149.05', gpAmount: '$40.00' },
   { name: 'not-sure', answers: ['Psychologist', 'Not sure'], fees: { 'session-fee': 250 }, gp: "No, it's free", progressOnFee: 'Question 3 of 4', total: '$148.45', assumeNote: true },
-  { name: 'unknown', answers: ["I'm not sure yet"], fees: { 'session-fee': 200 }, gp: "No, it's free", progressOnFee: 'Question 2 of 3', total: '$98.45', assumeNote: true },
+  { name: 'unknown', answers: ["I don't know yet"], fees: { 'session-fee': 200 }, gp: "No, it's free", progressOnFee: 'Question 2 of 3', total: '$98.45', assumeNote: true },
   { name: 'psychiatrist', answers: ['Psychiatrist'], fees: { 'first-fee': 600, 'follow-up-fee': 300 }, gp: "No, it's free", progressOnFee: 'Question 2 of 3', firstTotal: '$331.10', followTotal: '$210.70', gpLabel: 'GP visit (referral)', gpAmount: '$0.00' },
   { name: 'social-worker', answers: ['Someone else', 'Mental health social worker'], fees: { 'session-fee': 200 }, gp: 'Yes, about $40', progressOnFee: 'Question 3 of 4', total: '$110.50', gpAmount: '$40.00' },
   { name: 'ot', answers: ['Someone else', 'Mental health occupational therapist'], fees: { 'session-fee': 220 }, gp: 'Yes, about $40', progressOnFee: 'Question 3 of 4', total: '$130.50', gpAmount: '$40.00' },
@@ -127,11 +127,11 @@ async function runPath(page, p, viewport) {
 }
 
 async function runMostCommon(page) {
-  // The no-number path: "I'm not sure yet", then the most common fee.
+  // The no-number path: "I don't know yet", then the most common fee.
   await page.goto(URL, { waitUntil: 'load' });
   await page.evaluate(() => sessionStorage.clear());
   await page.reload({ waitUntil: 'load' });
-  await clickAnswer(page, "I'm not sure yet");
+  await clickAnswer(page, "I don't know yet");
   check((await activeScreen(page)) === 'fee', 'common: reached fee screen');
   const label = await text(page, '[data-calc-typical]');
   check(label === 'No — use the most common fee ($250)', `common: typical button says "${label}"`);

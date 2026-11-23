@@ -3,15 +3,6 @@ import costsData from '../data/calculator-costs.json';
 import TermPopover from './TermPopover.astro';
 import type { PractitionerType } from '../scripts/cost-calculator';
 
-interface Props {
-  /** Show a quiet link to /pathway/ under the receipt on the results screen. Off by default. */
-  pathwayLink?: boolean;
-  /** Open on a reassurance screen with a Start button before question 1. Off by default. */
-  intro?: boolean;
-}
-
-const { pathwayLink = false, intro = false } = Astro.props;
-
 // One question per screen: who → general/clinical or which one → do you
 // know the fee? → one fee box per screen (psychiatrists: first fee,
 // follow-up length, then a follow-up fee whose chips match that length) → GP → results. The receipt fills in as
@@ -30,14 +21,12 @@ const defFee = defaultType.chips[1];
 const audWhole = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 0 });
 const gpRange = `Free to ${audWhole.format(costsData.gpCostPrivate)}`;
 
-// Quiz answer: a full-width button. Heading-coloured medium text, a firmer
-// border and a hair of shadow, so it reads as something to press rather than
-// an empty text field with placeholder text.
-const answerCard = 'flex w-full min-h-14 flex-col items-start justify-center gap-0.5 rounded-[10px] border border-ink-green/25 bg-white px-4 py-3 text-left text-base font-medium leading-snug text-heading shadow-sm transition-colors duration-150 hover:border-primary hover:bg-primary-light focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 disabled:cursor-wait disabled:opacity-70 cursor-pointer';
-const answerSub = 'text-[13.5px] font-normal leading-snug text-meta-sage';
+// Quiz answer: a full-width card, body-weight text, sub-label optional.
+const answerCard = 'flex w-full min-h-14 flex-col items-start justify-center gap-0.5 rounded-[10px] border border-ink-green/16 bg-white px-4 py-3 text-left text-base leading-snug text-body transition-colors duration-150 hover:border-primary hover:bg-primary-light hover:text-heading focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 disabled:cursor-wait disabled:opacity-70 cursor-pointer';
+const answerSub = 'text-[13.5px] leading-snug text-meta-sage';
 
 const stepLabel = 'text-sm font-medium text-primary';
-const backButton = 'text-sm font-medium text-body hover:text-heading transition-colors focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 cursor-pointer';
+const backButton = 'ml-auto text-sm font-medium text-body hover:text-heading transition-colors focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 cursor-pointer';
 const primaryButton = 'inline-flex min-h-11 items-center justify-center rounded-[10px] bg-primary hover:bg-primary-dark transition-colors duration-150 px-6 py-[13px] text-base font-semibold text-white focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 cursor-pointer';
 const changeLink = 'text-sm font-semibold text-primary underline underline-offset-[3px] hover:text-primary-mid focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 cursor-pointer';
 
@@ -76,21 +65,7 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
 <!-- data-calc-phase is "questions" while answering and "done" on the results
      screen. The script sets it in showScreen. While answering, the receipt
      column is not rendered and the quiz fills the card. -->
-<div id="cost-calculator" class="relative bg-paper-cream border border-pencil rounded-[14px] p-6 sm:p-8 md:p-10" data-calc-phase="questions" data-calc-intro={intro ? '' : undefined}>
-  <!-- Optional reassurance screen. It covers the card until Start is pressed;
-       the script drops data-calc-intro (or skips it for a restored session).
-       The quiz underneath keeps its size, so the card doesn't resize. -->
-  {intro && (
-    <div class="calc-intro p-6 sm:p-8 md:p-10">
-      <div>
-        <h2 class="calc-intro-heading text-balance">You don't need to know anything yet.</h2>
-        <p class="mt-4 md:mt-5 max-w-[26rem] text-lg md:text-xl leading-relaxed text-pretty text-body">Answer what you can, and the calculator will work out what it costs.</p>
-        <div class="mt-8 md:mt-10">
-          <button type="button" class={`${primaryButton} min-h-[52px] min-w-36 px-9 text-[17px]`} data-calc-start>Start</button>
-        </div>
-      </div>
-    </div>
-  )}
+<div id="cost-calculator" class="bg-paper-cream border border-pencil rounded-[14px] p-6 sm:p-8 md:p-10" data-calc-phase="questions">
   <div class="calc-grid grid gap-8 md:gap-10">
 
     <!-- Quiz: every screen is rendered; the script shows one at a time. -->
@@ -104,15 +79,15 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
 
       <!-- 1. Who: the screen the page opens on. -->
       <section class="calc-screen" data-calc-screen="who">
-        <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>Who are you thinking of seeing?</h2>
-        <div class="grid gap-3" role="group" aria-label="Who are you thinking of seeing?">
-          <button type="button" class={answerCard} data-calc-answer data-branch="unknown" data-type="general-psychologist" data-assume="unknown">I'm not sure yet</button>
+        <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>Who will you be seeing?</h2>
+        <div class="grid gap-3" role="group" aria-label="Who will you be seeing?">
           <button type="button" class={answerCard} data-calc-answer data-branch="psychologist">Psychologist</button>
           <button type="button" class={answerCard} data-calc-answer data-branch="psychiatrist" data-type="psychiatrist">Psychiatrist</button>
           <button type="button" class={answerCard} data-calc-answer data-branch="other">
             <span>Someone else</span>
             <span class={answerSub}>Social worker, OT, counsellor or psychotherapist</span>
           </button>
+          <button type="button" class={answerCard} data-calc-answer data-branch="unknown" data-type="general-psychologist" data-assume="unknown">I don't know yet</button>
         </div>
         <p class="mt-4 text-[13.5px] leading-snug text-meta-sage">
           Not sure who to see? <a href="/practitioners" class={changeLink}>Compare your options</a>
@@ -367,11 +342,6 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
           Answer a few questions to see what you'll pay.
         </p>
       </div>
-      {pathwayLink && (
-        <p class="mt-5 text-center">
-          <a href="/pathway/" class={changeLink}>What happens next? See the steps</a>
-        </p>
-      )}
     </div>
   </div>
 </div>
@@ -394,41 +364,6 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
   .calc-screen {
     grid-area: 1 / 1;
     align-self: start;
-  }
-
-  /* Reassurance screen: laid over the card while data-calc-intro is set. */
-  .calc-intro {
-    position: absolute;
-    inset: 0;
-    display: none;
-    align-content: center;
-  }
-
-  /* The reassurance is the biggest type on the homepage: it is the welcome,
-     not a caption inside a box. Left-aligned like the questions that follow,
-     so Start hands over to question 1 on the same edge. */
-  .calc-intro-heading {
-    font-family: var(--font-display);
-    font-size: 30px;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    line-height: 1.12;
-    color: var(--color-heading);
-    max-width: 13em;
-  }
-
-  @media (min-width: 48rem) {
-    .calc-intro-heading {
-      font-size: 40px;
-    }
-  }
-
-  [data-calc-intro] .calc-intro {
-    display: grid;
-  }
-
-  [data-calc-intro] .calc-grid {
-    visibility: hidden;
   }
 
   /* Progress bar: 3px track, fill width set by the script. Gone on results. */
@@ -512,11 +447,6 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
         opacity 140ms ease-in,
         transform 140ms ease-in,
         visibility 0s 140ms;
-    }
-
-    /* Question 1 rises in after Start on the reassurance screen. */
-    .calc-started .calc-grid {
-      animation: calc-receipt-in 240ms ease-out both;
     }
 
     /* The receipt rises in with the results screen. Only after the first
