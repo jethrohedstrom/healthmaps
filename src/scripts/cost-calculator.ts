@@ -1,7 +1,9 @@
 // Cost calculator: a short branching quiz, one question per screen. It picks
-// the practitioner, asks whether the fee is known, takes one fee per screen
-// (psychiatrists: first, follow-up length, follow-up), asks the GP cost, then
-// shows the receipt it has been filling in as the answers arrived. Reads the same JSON the component renders
+// the practitioner, takes one fee per screen (psychiatrists: first, follow-up
+// length, follow-up), asks the GP cost, then shows the answer as one big
+// number beside the receipt it has been filling in as the answers arrived.
+// Each fee starts on the practitioner's most common fee and is changed with a
+// slider (or by typing in the number), on its own screen and on the results. Reads the same JSON the component renders
 // its SSR defaults from, so the first client render matches the server HTML.
 //
 // Seven practitioner types. Most have one fee and one rebate; psychiatrists
@@ -47,11 +49,6 @@ const types = costsData.practitionerTypes as PractitionerType[];
 const SESSIONS = costsData.maxMedicareSessions;
 const GP_COST_PRIVATE = costsData.gpCostPrivate;
 
-// Fallback for the "most common fee" button before a practitioner is chosen:
-// a general psychologist at the typical fee. Matches the SSR button text.
-const DEFAULT_TYPE_ID = 'general-psychologist';
-const DEFAULT_FEE = (types.find((t) => t.id === DEFAULT_TYPE_ID) ?? types[0]).chips[1];
-
 const EM_DASH = '—';
 const MINUS = '−';
 const NO_REBATE = 'No rebate';
@@ -75,9 +72,9 @@ const SENTENCE_LABELS: Record<string, string> = {
 };
 const sentenceLabel = (t: PractitionerType): string => SENTENCE_LABELS[t.id] ?? t.label.toLowerCase();
 
-// One-line notes on the "do you know the fee?" screen when the practitioner was assumed.
+// One-line notes on the fee screen when the practitioner was assumed.
 const ASSUME_NOTES: Record<Assume & string, string> = {
-  unknown: "Most people start with a general psychologist through a GP care plan. We'll use that — you can change it at the end.",
+  unknown: "We'll use a general psychologist, where most people start. You can change it at the end.",
   'not-sure': "We'll use general. Most are, and their booking page will say “clinical” if not.",
 };
 
@@ -96,15 +93,29 @@ const moneyAbout = (n: number) => audWhole.format(Math.round(n));
 
 // REVIEW: AI-drafted claim — Easyclaim at the clinic pays the rebate same day or overnight; app/myGov claims usually land in 1–3 business days (Services Australia says "usually within 7 days").
 const dayNote = (fee: number, rebate: number) =>
-  `On the day, have ${moneyShort(fee)} on your card. Medicare pays ${money(rebate)} back, usually within a few days. If the clinic claims it for you, it's often the same day or overnight. If you claim it yourself in the Medicare app, allow 1 to 3 business days.`;
+  `Have ${moneyShort(fee)} on your card on the day. Medicare pays ${money(rebate)} back, usually within a few days.`;
 
-// What the GP visit shows before that question is answered. Must match the
-// SSR markup in CostCalculator.astro.
-const GP_RANGE = `Free to ${audWhole.format(GP_COST_PRIVATE)}`;
+// The one-off GP visit (care plan or referral), as a sentence on the results.
+function gpLine(setup: Setup, gpFree: boolean | null, gpCustom: number | null): string {
+  const visit = `The GP visit for your ${setup === 'referral' ? 'referral' : 'care plan'}`;
+  if (gpFree === null) return `${visit} can be free, or cost about ${moneyShort(GP_COST_PRIVATE)}.`;
+  if (gpFree) return `${visit} is free.`;
+  return gpCustom !== null
+    ? `${visit} costs ${moneyShort(gpCustom)}. You pay that once.`
+    : `${visit} costs about ${moneyShort(GP_COST_PRIVATE)}. You pay that once.`;
+}
+
+// A fee slider runs from half the lower fee to 1.4 times the higher one.
+// Must match feeRange() in CostCalculator.astro.
+const feeRange = (fees: readonly number[]) => ({
+  min: Math.floor(fees[0] / 2 / 10) * 10,
+  max: Math.ceil((fees[2] * 1.4) / 10) * 10,
+  typical: fees[1],
+});
 
 // ── Flow ──────────────────────────────────────────────────────────────────
 
-const SCREENS = ['who', 'psych', 'other', 'knowfee', 'fee', 'first', 'follow', 'length', 'gp', 'done'] as const;
+const SCREENS = ['who', 'psych', 'other', 'fee', 'first', 'follow', 'length', 'gp', 'done'] as const;
 /** Screens with a typed fee box. Which ones a path uses depends on the practitioner. */
 const FEE_SCREENS: readonly ScreenId[] = ['fee', 'first', 'follow'];
 type ScreenId = (typeof SCREENS)[number];
@@ -131,7 +142,7 @@ interface CalcState {
   followLength: string | null;
 }
 
-const STORAGE_KEY = 'healthmaps:cost-calculator:v3';
+const STORAGE_KEY = 'healthmaps:cost-calculator:v4';
 const MAX_HISTORY = 12;
 
 /** An unanswered quiz at the first question: the landing state, and Start again. */
@@ -220,7 +231,7 @@ function pathFor(s: CalcState): ScreenId[] {
   if (s.branch === 'psychologist') path.push('psych');
   else if (s.branch === 'other') path.push('other');
   else if (s.branch === null) path.push('psych');
-  path.push('knowfee', ...feeScreensFor(t));
+  path.push(...feeScreensFor(t));
   if (!(t && t.setup === null)) path.push('gp');
   return path;
 }
@@ -232,11 +243,9 @@ function nextAfter(screen: ScreenId, s: CalcState): ScreenId {
     case 'who':
       if (s.branch === 'psychologist') return 'psych';
       if (s.branch === 'other') return 'other';
-      return 'knowfee';
+      return feeScreensFor(t)[0];
     case 'psych':
     case 'other':
-      return 'knowfee';
-    case 'knowfee':
       return feeScreensFor(t)[0];
     case 'first':
       return 'length';
@@ -259,11 +268,11 @@ function clampScreen(s: CalcState): CalcState {
   if (!t && screen !== 'who' && screen !== 'psych' && screen !== 'other') screen = 'who';
   if (!t && ((screen === 'psych' && s.branch !== 'psychologist') || (screen === 'other' && s.branch !== 'other'))) screen = 'who';
   // A fee screen that belongs to a different practitioner shape.
-  if (t && (FEE_SCREENS.includes(screen) || screen === 'length') && !feeScreensFor(t).includes(screen)) screen = 'knowfee';
+  if (t && (FEE_SCREENS.includes(screen) || screen === 'length') && !feeScreensFor(t).includes(screen)) screen = feeScreensFor(t)[0];
   if (t && screen === 'follow' && s.firstFee === null) screen = 'first';
   if (t && screen === 'length' && s.firstFee === null) screen = 'first';
-  if (t && (screen === 'gp' || screen === 'done') && !feesComplete(t, s)) screen = 'knowfee';
-  if (t && screen === 'gp' && t.setup === null) screen = 'knowfee';
+  if (t && (screen === 'gp' || screen === 'done') && !feesComplete(t, s)) screen = feeScreensFor(t)[0];
+  if (t && screen === 'gp' && t.setup === null) screen = 'done';
   // 'done' with the GP question unanswered is fine: the default scenario
   // starts there, and the GP row shows a range until it's answered.
   if (screen === s.screen) return s;
@@ -283,13 +292,25 @@ function progressLabel(s: CalcState): string {
   return `Question ${n} of ${of}`;
 }
 
-/** A fee input plus its quick-pick chips, wrapped in [data-fee-field] inside its own form. */
+/**
+ * One fee: the big number (a text box, the source of truth) and its slider,
+ * wrapped in [data-fee-field] inside its own form, plus the same fee's slider
+ * and readout on the results screen.
+ */
 interface FeeField {
   screen: ScreenId;
   form: HTMLFormElement;
   input: HTMLInputElement;
   error: HTMLElement;
-  chips: HTMLButtonElement[];
+  slider: HTMLInputElement;
+  note: HTMLElement;
+  minEl: HTMLElement;
+  maxEl: HTMLElement;
+  resultWrap: HTMLElement;
+  resultSlider: HTMLInputElement;
+  resultFee: HTMLElement;
+  /** The practitioner's most common fee for this box: where the slider starts. */
+  typical: number;
 }
 
 function initCostCalculator(): void {
@@ -306,15 +327,10 @@ function initCostCalculator(): void {
   const gpCustomWrap = q('[data-gp-custom]');
   const gpInput = q<HTMLInputElement>('#gp-fee');
   const gpError = q('[data-gp-error]');
-  const assumeNote = q('[data-calc-assume-note]');
-  const typicalBtn = q('[data-calc-typical]');
+  const assumeNotes = Array.from(root.querySelectorAll<HTMLElement>('[data-calc-assume-note]'));
   const answerLine = q('[data-calc-answer-line]');
-
-  const summaryType = q('[data-summary-type]');
-  const summaryFeeLabel = q('[data-summary-fee-label]');
-  const summaryFee = q('[data-summary-fee]');
-  const summaryGpRow = q('[data-summary-gp-row]');
-  const summaryGp = q('[data-summary-gp]');
+  const resultLabel = q('[data-result-label]');
+  const resultBig = q('[data-result-big]');
 
   const bodySingle = q('[data-receipt-body="single"]');
   const bodyPsych = q('[data-receipt-body="psychiatrist"]');
@@ -328,8 +344,6 @@ function initCostCalculator(): void {
   const followRebateEl = q('[data-receipt-follow-rebate]');
   const followTotalEl = q('[data-receipt-follow-total]');
   const gpPart = q('[data-receipt-gp-part]');
-  const gpLabelEl = q('[data-receipt-gp-label]');
-  const gpEl = q('[data-receipt-gp]');
   const noteEl = q('[data-receipt-note]');
   const dayEl = q('[data-receipt-day]');
   const followLabelEl = q('[data-receipt-follow-label]');
@@ -337,23 +351,35 @@ function initCostCalculator(): void {
 
   if (
     !screensEl || !liveEl || !barEl ||
-    !gpForm || !gpOtherBtn || !gpCustomWrap || !gpInput || !gpError || !assumeNote ||
-    !typicalBtn || !answerLine ||
-    !summaryType || !summaryFeeLabel || !summaryFee || !summaryGpRow || !summaryGp ||
+    !gpForm || !gpOtherBtn || !gpCustomWrap || !gpInput || !gpError ||
+    !answerLine || !resultLabel || !resultBig ||
     !bodySingle || !bodyPsych || !feesEl || !rebateEl || !totalEl ||
     !firstFeeEl || !firstRebateEl || !firstTotalEl ||
     !followFeeEl || !followRebateEl || !followTotalEl ||
-    !gpPart || !gpLabelEl || !gpEl || !noteEl || !dayEl || !followLabelEl
+    !gpPart || !noteEl || !dayEl || !followLabelEl
   ) return;
 
   function field(id: string): FeeField | null {
     const wrap = root!.querySelector<HTMLElement>(`[data-fee-field="${id}"]`);
-    const input = wrap?.querySelector<HTMLInputElement>('input');
+    const input = wrap?.querySelector<HTMLInputElement>('input[type="text"]');
+    const slider = wrap?.querySelector<HTMLInputElement>('[data-fee-slider]');
+    const note = wrap?.querySelector<HTMLElement>('[data-fee-note]');
+    const minEl = wrap?.querySelector<HTMLElement>('[data-fee-min]');
+    const maxEl = wrap?.querySelector<HTMLElement>('[data-fee-max]');
     const form = wrap?.closest<HTMLFormElement>('form[data-calc-screen]');
     const error = form?.querySelector<HTMLElement>('[data-fee-error]');
     const screen = form?.dataset.calcScreen;
-    if (!wrap || !input || !form || !error || !isScreen(screen)) return null;
-    return { screen, form, input, error, chips: Array.from(wrap.querySelectorAll<HTMLButtonElement>('[data-fee-chip]')) };
+    const resultWrap = root!.querySelector<HTMLElement>(`[data-result-slider="${id}"]`);
+    const resultSlider = resultWrap?.querySelector<HTMLInputElement>('input[type="range"]');
+    const resultFee = resultWrap?.querySelector<HTMLElement>('[data-result-fee]');
+    if (
+      !wrap || !input || !slider || !note || !minEl || !maxEl || !form || !error || !isScreen(screen) ||
+      !resultWrap || !resultSlider || !resultFee
+    ) return null;
+    return {
+      screen, form, input, error, slider, note, minEl, maxEl, resultWrap, resultSlider, resultFee,
+      typical: Number(slider.dataset.typical) || Number(slider.value),
+    };
   }
 
   const single = field('session-fee');
@@ -376,39 +402,57 @@ function initCostCalculator(): void {
     return v;
   }
 
-  // Re-label the chips for the selected practitioner's typical fee range.
-  function setChips(f: FeeField, values: [number, number, number]): void {
-    f.chips.forEach((chip, i) => {
-      chip.dataset.feeChip = String(values[i]);
-      chip.textContent = `${chip.dataset.chipLabel} $${values[i]}`;
-    });
-  }
-
-  // Highlight the chip whose value matches the fee exactly; a typed custom
-  // fee (or an empty field) clears every highlight.
-  function syncChips(f: FeeField, fee: number | null): void {
-    for (const chip of f.chips) {
-      const pressed = fee !== null && Number(chip.dataset.feeChip) === fee;
-      chip.setAttribute('aria-pressed', String(pressed));
+  // Retune a fee's sliders for the selected practitioner's fee range.
+  function setRange(f: FeeField, fees: readonly number[]): void {
+    const { min, max, typical } = feeRange(fees);
+    f.typical = typical;
+    for (const slider of [f.slider, f.resultSlider]) {
+      slider.min = String(min);
+      slider.max = String(max);
     }
+    f.minEl.textContent = audWhole.format(min);
+    f.maxEl.textContent = audWhole.format(max);
   }
 
-  // Retune the fee screens for the selected practitioner: the chips, the
-  // "most common fee" button and the assumption note.
+  // Put a slider's handle and green fill at the fee. A typed fee outside the
+  // range pins the handle to the nearest end; the typed number still counts.
+  function setSlider(slider: HTMLInputElement, fee: number | null): void {
+    const min = Number(slider.min);
+    const max = Number(slider.max);
+    if (fee !== null) slider.value = String(Math.min(max, Math.max(min, fee)));
+    const p = max > min ? (Number(slider.value) - min) / (max - min) : 0;
+    slider.closest<HTMLElement>('[data-slider]')?.style.setProperty('--p', p.toFixed(4));
+  }
+
+  // Bring everything that shows this fee into line with it: both sliders,
+  // the note beside the big number, the number's width and the results readout.
+  function syncFeeUi(f: FeeField, fee: number | null): void {
+    setSlider(f.slider, fee);
+    setSlider(f.resultSlider, fee);
+    f.input.style.width = `${Math.max(1, f.input.value.length)}ch`;
+    f.note.hidden = fee === null;
+    f.note.textContent =
+      fee === null ? '' : fee === f.typical ? 'most common' : fee < f.typical ? 'lower than most' : 'higher than most';
+    f.resultFee.textContent = fee === null ? EM_DASH : moneyShort(fee);
+  }
+
+  // Retune the fee screens for the selected practitioner: the slider ranges,
+  // which sliders the results screen shows, and the assumption note.
   function applyType(t: PractitionerType | null): void {
     if (t?.firstVisit) {
-      setChips(first!, t.firstVisit.chips);
-      // The follow-up chips follow the chosen length, which is asked first.
-      setChips(follow!, followLength(t)?.chips ?? t.chips);
+      setRange(first!, t.firstVisit.chips);
+      // The follow-up range follows the chosen length, which is asked first.
+      setRange(follow!, followLength(t)?.chips ?? t.chips);
     } else if (t) {
-      setChips(single!, t.chips);
+      setRange(single!, t.chips);
     }
-    typicalBtn!.textContent = t?.firstVisit
-      ? 'No, use the most common fees'
-      : `No, use the most common fee ($${t?.chips[1] ?? DEFAULT_FEE})`;
+    single!.resultWrap.hidden = !t || Boolean(t.firstVisit);
+    first!.resultWrap.hidden = follow!.resultWrap.hidden = !t?.firstVisit;
     const note = state.assume ? ASSUME_NOTES[state.assume] : '';
-    assumeNote!.textContent = note;
-    assumeNote!.hidden = !note;
+    for (const el of assumeNotes) {
+      el.textContent = note;
+      el.hidden = !note;
+    }
   }
 
   function syncInputsFromState(): void {
@@ -438,16 +482,20 @@ function initCostCalculator(): void {
 
   function renderSingle(t: PractitionerType): void {
     const fee = fieldValue(single!);
-    syncChips(single!, fee);
+    syncFeeUi(single!, fee);
     feesEl!.textContent = fee === null ? EM_DASH : money(fee);
     setRebateText(rebateEl!, t.rebate, fee);
+    resultLabel!.textContent = t.rebate > 0 ? 'Each session costs you about' : 'Each session costs you';
     if (fee === null) {
       totalEl!.textContent = EM_DASH;
+      resultBig!.textContent = EM_DASH;
       dayEl!.hidden = true;
       noteEl!.textContent = EMPTY_NOTE;
       return;
     }
-    totalEl!.textContent = money(Math.max(0, fee - t.rebate));
+    const cost = Math.max(0, fee - t.rebate);
+    totalEl!.textContent = money(cost);
+    resultBig!.textContent = moneyAbout(cost);
     const showDay = t.rebate > 0 && fee > t.rebate;
     dayEl!.textContent = showDay ? dayNote(fee, t.rebate) : '';
     dayEl!.hidden = !showDay;
@@ -464,8 +512,9 @@ function initCostCalculator(): void {
   function renderPsychiatrist(t: PractitionerType, fv: FirstVisit): void {
     const f1 = fieldValue(first!);
     const f2 = fieldValue(follow!);
-    syncChips(first!, f1);
-    syncChips(follow!, f2);
+    syncFeeUi(first!, f1);
+    syncFeeUi(follow!, f2);
+    dayEl!.hidden = true;
 
     const length = followLength(t);
     const followRebate = length?.rebate ?? t.rebate;
@@ -479,6 +528,9 @@ function initCostCalculator(): void {
     followFeeEl!.textContent = f2 === null ? EM_DASH : money(f2);
     setRebateText(followRebateEl!, followRebate, f2);
     followTotalEl!.textContent = f2 === null ? EM_DASH : money(Math.max(0, f2 - followRebate));
+    // The big number is the cost that repeats: a follow-up.
+    resultLabel!.textContent = 'Each follow-up costs you about';
+    resultBig!.textContent = f2 === null ? EM_DASH : moneyAbout(Math.max(0, f2 - followRebate));
 
     noteEl!.textContent = f1 === null || f2 === null ? EMPTY_NOTE_TWO_FEES : PSYCHIATRIST_NOTE;
   }
@@ -486,54 +538,37 @@ function initCostCalculator(): void {
   function renderEmpty(): void {
     bodySingle!.hidden = false;
     bodyPsych!.hidden = true;
-    syncChips(single!, null);
+    syncFeeUi(single!, null);
     feesEl!.textContent = EM_DASH;
     rebateEl!.textContent = EM_DASH;
     totalEl!.textContent = EM_DASH;
+    resultLabel!.textContent = 'Each session costs you about';
+    resultBig!.textContent = EM_DASH;
     dayEl!.hidden = true;
     gpPart!.hidden = true;
     noteEl!.textContent = START_NOTE;
   }
 
-  // The one-sentence answer on the final screen. Psychiatrists have two fees
-  // and are left to the receipt. SSR default text must match what this writes
-  // for the default state.
+  // The line under the big number: who it's for and why it's that much.
   function renderAnswerLine(t: PractitionerType | null): void {
-    if (!t || t.firstVisit || state.fee === null) {
+    if (!t) {
       answerLine!.hidden = true;
       return;
     }
-    const usual = state.fee === t.chips[1] ? 'usually costs about' : 'costs';
-    const opening = `Seeing a ${sentenceLabel(t)}${t.setup === 'plan' ? ' with a care plan' : ''} ${usual} ${moneyShort(state.fee)} per session.`;
+    if (t.firstVisit) {
+      const firstCost = state.firstFee === null ? null : Math.max(0, state.firstFee - t.firstVisit.rebate);
+      answerLine!.textContent =
+        `Seeing a ${sentenceLabel(t)}, after Medicare pays you back.` +
+        (firstCost === null ? '' : ` Your first appointment costs about ${moneyAbout(firstCost)}.`);
+      answerLine!.hidden = state.followFee === null;
+      return;
+    }
+    const seeing = `Seeing a ${sentenceLabel(t)}${t.setup === 'plan' ? ' with a GP care plan' : ''}`;
     answerLine!.textContent =
       t.rebate > 0
-        ? `${opening} You pay the full ${moneyShort(state.fee)} on the day, then Medicare pays ${money(t.rebate)} back to you, usually within a few days. So each session ends up costing you about ${moneyAbout(state.fee - t.rebate)}.`
-        : `${opening} There's no Medicare rebate, so you pay the full fee.`;
-    answerLine!.hidden = false;
-  }
-
-  function renderSummary(t: PractitionerType | null): void {
-    summaryType!.textContent = t ? t.label : EM_DASH;
-    if (t?.firstVisit) {
-      summaryFeeLabel!.textContent = 'Fees';
-      summaryFee!.textContent =
-        state.firstFee !== null && state.followFee !== null
-          ? `${moneyShort(state.firstFee)} first, then ${moneyShort(state.followFee)}`
-          : EM_DASH;
-    } else {
-      summaryFeeLabel!.textContent = 'Session fee';
-      summaryFee!.textContent = state.fee === null ? EM_DASH : moneyShort(state.fee);
-    }
-    const askedGp = Boolean(t && t.setup !== null);
-    summaryGpRow!.hidden = !askedGp;
-    summaryGp!.textContent =
-      state.gpFree === null
-        ? GP_RANGE
-        : state.gpFree
-          ? 'Free'
-          : state.gpCustom !== null
-            ? moneyShort(state.gpCustom)
-            : `About ${moneyShort(GP_COST_PRIVATE)}`;
+        ? `${seeing}, after Medicare pays you back.`
+        : `${seeing}. There's no Medicare rebate, so you pay the full fee.`;
+    answerLine!.hidden = state.fee === null;
   }
 
   function render(): void {
@@ -541,17 +576,14 @@ function initCostCalculator(): void {
     if (!t) {
       renderEmpty();
       renderAnswerLine(null);
-      renderSummary(null);
       return;
     }
 
     // The GP appointment (care plan or referral) is a one-off setup cost,
-    // shown separately from the per-session figure. Not needed at all for
-    // no-rebate types, and unknown until the GP question is answered.
-    const gpCost = t.setup === null || state.gpFree ? 0 : (state.gpCustom ?? GP_COST_PRIVATE);
+    // said in a sentence apart from the per-session figure. Not needed at all
+    // for no-rebate types, and a range until the GP question is answered.
     gpPart!.hidden = t.setup === null;
-    gpLabelEl!.textContent = t.setup === 'referral' ? 'GP visit (referral)' : 'GP visit (care plan)';
-    gpEl!.textContent = state.gpFree === null ? GP_RANGE : money(gpCost);
+    gpPart!.textContent = t.setup === null ? '' : gpLine(t.setup, state.gpFree, state.gpCustom);
 
     bodySingle!.hidden = Boolean(t.firstVisit);
     bodyPsych!.hidden = !t.firstVisit;
@@ -559,7 +591,6 @@ function initCostCalculator(): void {
     else renderSingle(t);
 
     renderAnswerLine(t);
-    renderSummary(t);
   }
 
   // ── Screens ─────────────────────────────────────────────────────────────
@@ -592,26 +623,36 @@ function initCostCalculator(): void {
     }
     for (const f of allFields) f.error.hidden = true;
     gpError!.hidden = true;
+    // A fee screen opens on the most common fee, stated, not as an empty box.
+    const feeField = allFields.find((f) => f.screen === id);
+    if (feeField && fieldValue(feeField) === null) {
+      feeField.input.value = String(feeField.typical);
+      syncStateFromInputs();
+      writeState(state);
+      render();
+    }
     const { n, of } = progress(state);
     barEl!.style.width = `${Math.round((n / of) * 100)}%`;
     // The GP amount box stays open when a typed amount is the current answer.
     if (id === 'gp') setGpCustomOpen(state.gpFree === false && state.gpCustom !== null);
     if (!focus) return;
     const heading = active.querySelector<HTMLElement>('[data-calc-heading]');
-    // Focus lands on the first answer (or the fee box) so Enter works at
-    // once. The live region carries the question, since the heading itself
-    // isn't focused. The results screen focuses its heading as before.
+    // Focus lands on the first answer (or the fee slider, which doesn't open
+    // a phone keyboard) so Enter and the arrow keys work at once. The live
+    // region carries the question, since the heading itself isn't focused.
+    // The results screen focuses its heading.
     const question = heading?.textContent?.trim() ?? '';
     announce(id === 'done' ? 'Your costs.' : `${progressLabel(state)}. ${question}`);
     const target =
       id === 'done'
         ? heading
-        : active.querySelector<HTMLElement>('input, [data-calc-answer], [data-calc-typical]');
+        : (active.querySelector<HTMLElement>('[data-fee-slider]') ??
+          active.querySelector<HTMLElement>('input, [data-calc-answer]'));
     requestAnimationFrame(() => {
       scriptFocus = true;
       (target ?? heading)?.focus({ preventScroll: true });
       // Caret after any existing figure, nothing highlighted.
-      if (target instanceof HTMLInputElement) {
+      if (target instanceof HTMLInputElement && target.type === 'text') {
         const end = target.value.length;
         target.setSelectionRange(end, end);
       }
@@ -680,21 +721,6 @@ function initCostCalculator(): void {
     go(nextAfter(state.screen, state));
   }
 
-  // "I'm just looking": fill the typical fee(s) and move on.
-  function handleTypical(): void {
-    const t = currentType();
-    if (!t) return;
-    if (t.firstVisit) {
-      first!.input.value = String(t.firstVisit.chips[1]);
-      follow!.input.value = String((followLength(t)?.chips ?? t.chips)[1]);
-    } else {
-      single!.input.value = String(t.chips[1]);
-    }
-    syncStateFromInputs();
-    render();
-    go(afterFees(t));
-  }
-
   // Next on a fee screen: that screen's box must have a number.
   function handleFeeNext(f: FeeField): void {
     syncStateFromInputs();
@@ -729,37 +755,22 @@ function initCostCalculator(): void {
 
   // ── Events ──────────────────────────────────────────────────────────────
 
-  // Arrow keys move between the answers on a screen (and between the fee
-  // chips): down or right to the next, up or left to the previous, wrapping.
-  // Each set of answers is a role="group"; number inputs keep their own
-  // arrow behaviour because they aren't buttons.
+  // Arrow keys move between the answers on a screen: down or right to the
+  // next, up or left to the previous, wrapping. Each set of answers is a
+  // role="group"; sliders and number inputs keep their own arrow behaviour
+  // because they aren't buttons.
   root.addEventListener('keydown', (e) => {
     const forward = e.key === 'ArrowDown' || e.key === 'ArrowRight';
     const backward = e.key === 'ArrowUp' || e.key === 'ArrowLeft';
     if (!forward && !backward) return;
     const target = e.target as HTMLElement | null;
     if (!target || target.tagName !== 'BUTTON') return;
-    // On a fee screen, back from Next lands on the last chip.
-    if (backward && target.matches('[data-calc-next]')) {
-      const chips = target.closest('form')?.querySelectorAll<HTMLButtonElement>('[data-fee-chip]');
-      const last = chips?.[chips.length - 1];
-      if (!last) return;
-      e.preventDefault();
-      last.focus();
-      return;
-    }
     const group = target.closest<HTMLElement>('[role="group"]');
     if (!group || group === screensEl) return;
     const items = Array.from(group.querySelectorAll<HTMLButtonElement>('button:not([disabled])'));
     const i = items.indexOf(target as HTMLButtonElement);
     if (i === -1 || items.length < 2) return;
     e.preventDefault();
-    // Forward off the last chip goes on to Next rather than wrapping.
-    const next = target.closest('form')?.querySelector<HTMLButtonElement>('[data-calc-next]');
-    if (forward && i === items.length - 1 && target.matches('[data-fee-chip]') && next) {
-      next.focus();
-      return;
-    }
     items[(i + (forward ? 1 : -1) + items.length) % items.length].focus();
   });
 
@@ -768,8 +779,6 @@ function initCostCalculator(): void {
     if (!target) return;
     const answer = target.closest<HTMLElement>('[data-calc-answer]');
     if (answer && !(answer as HTMLButtonElement).disabled) return handleAnswer(answer);
-    const typical = target.closest<HTMLButtonElement>('[data-calc-typical]');
-    if (typical && !typical.disabled) return handleTypical();
     const gpOther = target.closest<HTMLButtonElement>('[data-calc-gp-other]');
     if (gpOther && !gpOther.disabled) {
       setGpCustomOpen(true);
@@ -788,11 +797,21 @@ function initCostCalculator(): void {
       e.preventDefault();
       handleFeeNext(f);
     });
-    f.form.addEventListener('input', () => {
+    // Typing in the big number or dragging the slider under it. The number
+    // is the source of truth, so a drag writes the slider's value into it.
+    f.form.addEventListener('input', (e) => {
+      if (e.target === f.slider) f.input.value = f.slider.value;
       syncStateFromInputs();
       writeState(state);
       render();
       if (fieldValue(f) !== null) f.error.hidden = true;
+    });
+    // The same fee's slider on the results screen.
+    f.resultSlider.addEventListener('input', () => {
+      f.input.value = f.resultSlider.value;
+      syncStateFromInputs();
+      writeState(state);
+      render();
     });
   }
 
@@ -811,17 +830,6 @@ function initCostCalculator(): void {
     f.input.addEventListener('focus', () => {
       if (!scriptFocus) f.input.select();
     });
-    // Chips fill the field without moving focus into it (that would pop the
-    // keyboard on mobile). render() isn't triggered by a programmatic value set.
-    for (const chip of f.chips) {
-      chip.addEventListener('click', () => {
-        f.input.value = chip.dataset.feeChip ?? '';
-        syncStateFromInputs();
-        writeState(state);
-        render();
-        f.error.hidden = true;
-      });
-    }
   }
 
   // Initial render reconciles the SSR markup with any restored session.
@@ -830,7 +838,7 @@ function initCostCalculator(): void {
   applyType(currentType());
   render();
   showScreen(state.screen, false);
-  // Reassurance screen (homepage): a session already under way skips it;
+  // Opening screen (homepage): a session already under way skips it;
   // otherwise Start reveals question 1 and moves focus into it.
   if (root.hasAttribute('data-calc-intro')) {
     if (state.screen !== 'who' || state.branch !== null) root.removeAttribute('data-calc-intro');

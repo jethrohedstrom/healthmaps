@@ -4,7 +4,7 @@ import TermPopover from './TermPopover.astro';
 import type { PractitionerType } from '../scripts/cost-calculator';
 
 interface Props {
-  /** Show a quiet link to /pathway/ under the receipt on the results screen. Off by default. */
+  /** Show the "What happens next? See the steps" button on the results screen. Off by default. */
   pathwayLink?: boolean;
   /** Open on a screen that says what the quiz works out, with a Start button, before question 1. Off by default. */
   intro?: boolean;
@@ -12,49 +12,55 @@ interface Props {
 
 const { pathwayLink = false, intro = false } = Astro.props;
 
-// One question per screen: who → general/clinical or which one → do you
-// know the fee? → one fee box per screen (psychiatrists: first fee,
-// follow-up length, then a follow-up fee whose chips match that length) → GP → results. The receipt fills in as
-// answers arrive but only shows on the results screen.
+// One question per screen: who → general/clinical or which one → one fee per
+// screen, each a big number with a slider that starts on the most common fee
+// (psychiatrists: first fee, follow-up length, then a follow-up fee whose
+// range matches that length) → GP → results. The receipt fills in as answers
+// arrive but only shows on the results screen.
 // src/scripts/cost-calculator.ts owns the routing, the state (sessionStorage)
 // and the receipt maths; this file renders every screen up front, with only
 // the first one visible.
+// There is no card: the quiz sits straight on the page.
 const types = costsData.practitionerTypes as PractitionerType[];
 const defaultType = types[0];
 const psychiatrist = types.find((t) => t.firstVisit);
 
-// The page opens on the first question with an empty receipt. The most common
-// fee (a general psychologist's typical fee) is only quoted in the fee screen's
-// "most common fee" button — must match DEFAULT_FEE in cost-calculator.ts.
-const defFee = defaultType.chips[1];
-const audWhole = new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD', minimumFractionDigits: 0, maximumFractionDigits: 0 });
-const gpRange = `Free to ${audWhole.format(costsData.gpCostPrivate)}`;
-
 // Quiz answer: a full-width button. Heading-coloured medium text, a firmer
 // border and a hair of shadow, so it reads as something to press rather than
 // an empty text field with placeholder text.
-const answerCard = 'flex w-full min-h-14 flex-col items-start justify-center gap-0.5 rounded-[10px] border border-ink-green/25 bg-white px-4 py-3 text-left text-base font-medium leading-snug text-heading shadow-sm transition-colors duration-150 hover:border-primary hover:bg-primary-light focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 disabled:cursor-wait disabled:opacity-70 cursor-pointer';
-const answerSub = 'text-[13.5px] font-normal leading-snug text-meta-sage';
+const answerCard = 'flex w-full min-h-[62px] flex-col items-start justify-center gap-0.5 rounded-[10px] border border-ink-green/25 bg-white px-[18px] py-3 text-left text-lg font-medium leading-snug text-heading shadow-sm transition-colors duration-150 hover:border-primary hover:bg-primary-light focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 disabled:cursor-wait disabled:opacity-70 cursor-pointer';
+const answerSub = 'text-[15px] font-normal leading-snug text-meta-sage';
 
-const stepLabel = 'text-sm font-medium text-primary';
-const backButton = 'text-sm font-medium text-body hover:text-heading transition-colors focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 cursor-pointer';
-const primaryButton = 'inline-flex min-h-11 items-center justify-center rounded-[10px] bg-primary hover:bg-primary-dark transition-colors duration-150 px-6 py-[13px] text-base font-semibold text-white focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 cursor-pointer';
-const changeLink = 'text-sm font-semibold text-primary underline underline-offset-[3px] hover:text-primary-mid focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 cursor-pointer';
+// Supporting lines under a question: body size and colour, never small grey.
+const note = 'text-base leading-relaxed text-pretty text-body';
+const backButton = 'inline-flex min-h-11 items-center text-base font-medium text-body hover:text-heading transition-colors focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 cursor-pointer';
+// Buttons: one look, two sizes. Sizes live in their own strings so a call
+// site never stacks two paddings or two font sizes on the same element.
+const buttonBase = 'inline-flex items-center justify-center rounded-[10px] bg-primary hover:bg-primary-dark transition-colors duration-150 font-semibold text-white focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 cursor-pointer';
+const primaryButton = `${buttonBase} min-h-[58px] min-w-40 px-9 text-lg`;
+// The results button has a long label: full width and a touch smaller on a
+// phone so it stays on one line.
+const ctaButton = `${buttonBase} min-h-[58px] w-full px-3 text-[17px] sm:w-auto sm:px-7 sm:text-lg`;
+const changeLink = 'text-base font-semibold text-primary underline underline-offset-[3px] hover:text-primary-mid focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3 cursor-pointer';
 
 const fieldInput = 'w-full border border-ink-green/16 rounded-[10px] px-4 py-2.5 text-heading font-semibold bg-white hover:border-primary/50 transition-colors focus:ring-2 focus:ring-primary focus:border-primary';
 
-// Quick-pick fee chips. `aria-pressed` is the selected state, kept in sync
-// by src/scripts/cost-calculator.ts.
-const feeChip = 'inline-flex min-h-9 items-center rounded-[10px] border border-ink-green/16 bg-white px-3 py-1.5 text-sm font-semibold text-heading transition-colors duration-150 hover:border-primary hover:bg-primary-light aria-pressed:border-primary aria-pressed:bg-primary-light aria-pressed:ring-1 aria-pressed:ring-primary cursor-pointer';
-const chipNames = ['Lower', 'Typical', 'Higher'] as const;
+// A fee slider runs from half the lower fee to 1.4 times the higher one.
+// Must match feeRange() in src/scripts/cost-calculator.ts.
+const feeRange = (fees: readonly number[]) => ({
+  min: Math.floor(fees[0] / 2 / 10) * 10,
+  max: Math.ceil((fees[2] * 1.4) / 10) * 10,
+  typical: fees[1],
+});
 
-// One fee box per screen. Most practitioners use the `fee` screen;
-// psychiatrists get `first` and `follow` instead (plus a length screen).
-// The script routes to the right one and skips the rest.
+// One fee per screen. Most practitioners use the `fee` screen; psychiatrists
+// get `first` and `follow` instead (plus a length screen). The script routes
+// to the right one, skips the rest and retunes each slider's range.
+// `resultLabel` names the same slider on the results screen.
 const feeScreens = [
-  { screen: 'fee', id: 'session-fee', heading: 'What do they charge per session?', label: 'Fee per session ($)', chips: defaultType.chips },
-  { screen: 'first', id: 'first-fee', heading: "What's their first appointment fee?", label: 'First appointment fee ($)', chips: psychiatrist?.firstVisit?.chips ?? defaultType.chips },
-  { screen: 'follow', id: 'follow-up-fee', heading: "What's their follow-up fee?", label: 'Follow-up fee ($)', chips: psychiatrist?.followUpLengths?.[0]?.chips ?? psychiatrist?.chips ?? defaultType.chips },
+  { screen: 'fee', id: 'session-fee', heading: 'What do they charge per session?', label: 'Fee per session, in dollars', resultLabel: 'Different fee? Drag to change it', ...feeRange(defaultType.chips) },
+  { screen: 'first', id: 'first-fee', heading: "What's their first appointment fee?", label: 'First appointment fee, in dollars', resultLabel: 'First appointment fee', ...feeRange(psychiatrist?.firstVisit?.chips ?? defaultType.chips) },
+  { screen: 'follow', id: 'follow-up-fee', heading: "What's their follow-up fee?", label: 'Follow-up fee, in dollars', resultLabel: 'Follow-up fee', ...feeRange(psychiatrist?.followUpLengths?.[0]?.chips ?? psychiatrist?.chips ?? defaultType.chips) },
 ];
 
 // Psychiatrist follow-up lengths: each has its own rebate. The first is the default.
@@ -63,49 +69,44 @@ const followLengths = psychiatrist?.followUpLengths ?? [];
 // The four "someone else" practitioners, in JSON order.
 const otherTypes = types.filter((t) => !t.psychologist && !t.firstVisit);
 
-// Receipt row: label · dotted leader · amount. The empty leader span is a
-// baseline-aligned flex item, so its bottom border sits on the text baseline.
-const receiptRow = 'flex items-baseline gap-2 text-[15px] leading-snug';
-const receiptLeader = 'min-w-4 flex-1 border-b border-dotted border-ink-green/25';
-const receiptAmount = 'font-medium text-heading tabular-nums';
-const receiptTotal = 'font-display font-semibold text-[30px] sm:text-[34px] leading-none tracking-[-0.02em] text-heading tabular-nums';
-
-// Summary row on the last screen.
-const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t border-hairline first:border-t-0';
+// Receipt row: label on the left, amount on the right, a hairline under it.
+const receiptRow = 'flex items-baseline justify-between gap-4 border-b border-hairline py-3.5 text-[17px] leading-snug';
+const receiptAmount = 'text-heading tabular-nums';
+const receiptTotalRow = `${receiptRow} font-semibold text-heading`;
 ---
 <!-- data-calc-phase is "questions" while answering and "done" on the results
      screen. The script sets it in showScreen. While answering, the receipt
-     column is not rendered and the quiz fills the card. -->
-<div id="cost-calculator" class="relative bg-paper-cream border border-pencil rounded-[14px] p-6 sm:p-8 md:p-10" data-calc-phase="questions" data-calc-intro={intro ? '' : undefined}>
-  <!-- Optional opening screen: says the quiz is a cost calculator. It covers the card until Start is pressed;
-       the script drops data-calc-intro (or skips it for a restored session).
-       The quiz underneath keeps its size, so the card doesn't resize. -->
+     column is not rendered and the quiz has the column to itself. -->
+<div id="cost-calculator" class="relative" data-calc-phase="questions" data-calc-intro={intro ? '' : undefined}>
+  <!-- Optional opening screen: says the quiz is a cost calculator. It covers
+       the quiz until Start is pressed; the script drops data-calc-intro (or
+       skips it for a restored session). -->
   {intro && (
-    <div class="calc-intro p-6 sm:p-8 md:p-10">
-      <div>
+    <div class="calc-intro">
+      <div class="pt-8 md:pt-14">
         <h2 class="calc-intro-heading text-balance">Work out what your mental health appointments will cost you</h2>
-        <p class="mt-4 md:mt-5 max-w-[26rem] text-lg md:text-xl leading-relaxed text-pretty text-body">A short and easy quiz to give you a precise number for the cost. You don't need to know anything to get started.</p>
-        <div class="mt-6 md:mt-10">
-          <button type="button" class={`${primaryButton} min-h-[52px] min-w-36 px-9 text-[17px]`} data-calc-start>Start</button>
+        <p class="mt-5 max-w-[26rem] text-lg md:text-xl leading-relaxed text-pretty text-body">A short and easy quiz to give you a precise number for the cost. You don't need to know anything to get started.</p>
+        <div class="mt-9 md:mt-10">
+          <button type="button" class={primaryButton} data-calc-start>Start</button>
         </div>
-        <p class="mt-5 md:mt-8 max-w-[26rem] text-sm leading-relaxed text-pretty text-meta-sage">HealthMaps is an independent online service, not affiliated with any professional bodies or companies.</p>
+        <p class="mt-12 md:mt-16 max-w-[26rem] text-sm leading-relaxed text-pretty text-meta-sage">HealthMaps is an independent online service, not affiliated with any professional bodies or companies.</p>
       </div>
     </div>
   )}
-  <div class="calc-grid grid gap-8 md:gap-10">
+  <div class="calc-grid grid gap-x-16 gap-y-8">
 
     <!-- Quiz: every screen is rendered; the script shows one at a time. -->
     <div>
     <!-- Progress: a thin bar, no numbers. The live region below still
          announces "Question n of m" for screen readers. -->
-    <div class="calc-progress" aria-hidden="true"><div class="calc-progress__bar" data-calc-bar style="width: 20%"></div></div>
+    <div class="calc-progress" aria-hidden="true"><div class="calc-progress__bar" data-calc-bar style="width: 25%"></div></div>
     <div class="calc-screens" data-calc-screens role="group" aria-label="Mental health cost calculator">
       <p class="sr-only" aria-live="polite" aria-atomic="true" data-calc-live></p>
-      <noscript><p class="text-sm text-body mb-4">This calculator needs JavaScript to work.</p></noscript>
+      <noscript><p class={`${note} mb-4`}>This calculator needs JavaScript to work.</p></noscript>
 
       <!-- 1. Who: the screen the page opens on. -->
       <section class="calc-screen" data-calc-screen="who">
-        <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>Who are you thinking of seeing?</h2>
+        <h2 class="calc-heading mb-6" tabindex="-1" data-calc-heading>Who are you thinking of seeing?</h2>
         <div class="grid gap-3" role="group" aria-label="Who are you thinking of seeing?">
           <button type="button" class={answerCard} data-calc-answer data-branch="unknown" data-type="general-psychologist" data-assume="unknown">I'm not sure yet</button>
           <button type="button" class={answerCard} data-calc-answer data-branch="psychologist">Psychologist</button>
@@ -115,17 +116,17 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
             <span class={answerSub}>Social worker, OT, counsellor or psychotherapist</span>
           </button>
         </div>
-        <p class="mt-4 text-[13.5px] leading-snug text-meta-sage">
+        <p class={`${note} mt-6`}>
           Not sure who to see? <a href="/practitioners" class={changeLink}>Compare your options</a>
         </p>
       </section>
 
       <!-- 2a. Psychologist: general or clinical -->
       <section class="calc-screen calc-screen--hidden" data-calc-screen="psych">
-        <div class="flex items-center gap-4 mb-3">
+        <div class="mb-3">
           <button type="button" class={backButton} data-calc-back>&larr; Back</button>
         </div>
-        <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>Do you know if they're general or clinical?</h2>
+        <h2 class="calc-heading mb-6" tabindex="-1" data-calc-heading>Do you know if they're general or clinical?</h2>
         <div class="grid gap-3" role="group" aria-label="General or clinical">
           <button type="button" class={answerCard} data-calc-answer data-type="general-psychologist">General</button>
           <button type="button" class={answerCard} data-calc-answer data-type="clinical-psychologist">Clinical</button>
@@ -137,10 +138,10 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
 
       <!-- 2b. Someone else: which one -->
       <section class="calc-screen calc-screen--hidden" data-calc-screen="other">
-        <div class="flex items-center gap-4 mb-3">
+        <div class="mb-3">
           <button type="button" class={backButton} data-calc-back>&larr; Back</button>
         </div>
-        <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>Which one?</h2>
+        <h2 class="calc-heading mb-6" tabindex="-1" data-calc-heading>Which one?</h2>
         <div class="grid gap-3" role="group" aria-label="Which practitioner">
           {otherTypes.map((t) => (
             <button type="button" class={answerCard} data-calc-answer data-type={t.id}>{t.label}</button>
@@ -148,84 +149,87 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
         </div>
       </section>
 
-      <!-- 3. Know fee: yes/no. "No" fills in the most common fee(s) and skips
-           the fee screens. The script retitles the No button per practitioner. -->
-      <section class="calc-screen calc-screen--hidden" data-calc-screen="knowfee">
-        <div class="flex items-center gap-4 mb-3">
-          <button type="button" class={backButton} data-calc-back>&larr; Back</button>
-        </div>
-        <h2 class="calc-heading mb-1" tabindex="-1" data-calc-heading>Do you know what they charge?</h2>
-        <p class="text-[13.5px] leading-snug text-meta-sage mb-4" data-calc-assume-note hidden></p>
-        <div class="grid gap-3 mt-4" role="group" aria-label="Do you know what they charge">
-          <button type="button" class={answerCard} data-calc-typical>No, use the most common fee (${defFee})</button>
-          <button type="button" class={answerCard} data-calc-answer data-know-fee>Yes, I know their fee</button>
-        </div>
-        <p class="mt-4 text-[13.5px] leading-snug text-meta-sage">You can find the fee by calling the practice, or sometimes practices list this on their website.</p>
-      </section>
-
-      <!-- 4. Fee screens: one box each, so each is its own form (Enter submits). -->
+      <!-- 3. Fee screens: one fee each, so each is its own form (Enter
+           submits). The fee is stated first, as the most common one, and the
+           slider changes it. The big number is also a text box for an exact
+           figure; the script keeps the two in step. -->
       {feeScreens.map((f) => (
         <form class="calc-screen calc-screen--hidden" data-calc-screen={f.screen} novalidate>
-          <div class="flex items-center gap-4 mb-3">
+          <div class="mb-3">
             <button type="button" class={backButton} data-calc-back>&larr; Back</button>
           </div>
-          <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>{f.heading}</h2>
-          <div data-fee-field={f.id}>
-            <label for={f.id} class="block text-sm font-semibold text-body mb-1">{f.label}</label>
-            <!-- type="text" with a numeric keypad hint: number inputs let the
-                 browser select the whole figure on focus and refuse to move the
-                 caret, so the script couldn't land focus without highlighting. -->
-            <input
-              type="text"
-              id={f.id}
-              name={f.id}
-              inputmode="decimal"
-              autocomplete="off"
-              maxlength="6"
-              class={fieldInput}
-            />
-            <div class="mt-2 flex flex-wrap gap-2" role="group" aria-label="Typical fees">
-              {chipNames.map((name, i) => (
-                <button type="button" class={feeChip} data-fee-chip={f.chips[i]} data-chip-label={name} aria-pressed="false">{name} ${f.chips[i]}</button>
-              ))}
+          <h2 class="calc-heading mb-3" tabindex="-1" data-calc-heading>{f.heading}</h2>
+          <!-- Filled by the script when the practitioner was assumed. -->
+          <p class={note} data-calc-assume-note hidden></p>
+          <div class="mt-7" data-fee-field={f.id}>
+            <div class="flex flex-wrap items-baseline gap-x-3">
+              <label class="calc-fee-number">
+                <span class="sr-only">{f.label}</span>
+                <span aria-hidden="true">$</span>
+                <!-- type="text" with a numeric keypad hint: number inputs let the
+                     browser select the whole figure on focus and refuse to move the
+                     caret, so the script couldn't land focus without highlighting. -->
+                <input
+                  type="text"
+                  id={f.id}
+                  name={f.id}
+                  inputmode="decimal"
+                  autocomplete="off"
+                  maxlength="6"
+                  placeholder="0"
+                  class="calc-fee-input"
+                />
+              </label>
+              <span class="text-[17px] text-body" data-fee-note hidden></span>
+            </div>
+            <label for={`${f.id}-slider`} class="mt-4 block text-[17px] leading-relaxed text-body">Drag to change it, or tap the number to type it.</label>
+            <div class="calc-slider" data-slider>
+              <div class="calc-slider__track" aria-hidden="true"></div>
+              <div class="calc-slider__fill" aria-hidden="true"></div>
+              <input type="range" id={`${f.id}-slider`} class="calc-range" min={f.min} max={f.max} step="5" value={f.typical} data-typical={f.typical} data-fee-slider />
+            </div>
+            <div class="flex justify-between text-sm text-meta-sage tabular-nums" aria-hidden="true">
+              <span data-fee-min>${f.min}</span>
+              <span data-fee-max>${f.max}</span>
             </div>
           </div>
-          <p class="mt-3 text-sm font-medium text-accent-red-soft" role="alert" data-fee-error hidden>Enter a fee to continue.</p>
-          <div class="mt-6">
+          <p class="mt-3 text-base font-medium text-accent-red-soft" role="alert" data-fee-error hidden>Enter a fee to continue.</p>
+          <div class="mt-8">
             <button type="submit" class={primaryButton} data-calc-next>Next</button>
           </div>
+          <p class={`${note} mt-6`}>Don't know? Leave it on the most common fee. You can find the fee by calling the practice, or sometimes on their website.</p>
         </form>
       ))}
 
-      <!-- 4d. Psychiatrist follow-up length, asked before the follow-up fee:
-           the length sets the rebate and the follow-up fee chips. -->
+      <!-- 3d. Psychiatrist follow-up length, asked before the follow-up fee:
+           the length sets the rebate and the follow-up fee range. -->
       <section class="calc-screen calc-screen--hidden" data-calc-screen="length">
-        <div class="flex items-center gap-4 mb-3">
+        <div class="mb-3">
           <button type="button" class={backButton} data-calc-back>&larr; Back</button>
         </div>
-        <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>How long are their follow-up appointments?</h2>
+        <h2 class="calc-heading mb-6" tabindex="-1" data-calc-heading>How long are their follow-up appointments?</h2>
         <div class="grid gap-3" role="group" aria-label="Follow-up length">
           {followLengths.map((l, i) => (
             <button type="button" class={`${answerCard} aria-pressed:border-primary aria-pressed:bg-primary-light aria-pressed:text-heading`} data-calc-answer data-follow-length={l.id} aria-pressed={i === 0 ? 'true' : 'false'}>{l.label}</button>
           ))}
         </div>
-        <p class="mt-4 text-[13.5px] leading-snug text-meta-sage">Not sure? Pick the shortest. Medicare pays back more for longer appointments.</p>
+        <p class={`${note} mt-6`}>Not sure? Pick the shortest. Medicare pays back more for longer appointments.</p>
       </section>
 
       <!-- 4. GP: a form, because "a different amount" opens a typed input. -->
       <form class="calc-screen calc-screen--hidden" data-calc-screen="gp" novalidate>
-        <div class="flex items-center gap-4 mb-3">
+        <div class="mb-3">
           <button type="button" class={backButton} data-calc-back>&larr; Back</button>
         </div>
-        <h2 class="calc-heading mb-4" tabindex="-1" data-calc-heading>Do you pay anything to see your GP?</h2>
+        <h2 class="calc-heading mb-6" tabindex="-1" data-calc-heading>Do you pay anything to see your GP?</h2>
         <div class="grid gap-3" role="group" aria-label="Do you pay anything to see your GP">
           <button type="button" class={answerCard} data-calc-answer data-gp="free">No, it's free</button>
           <button type="button" class={answerCard} data-calc-answer data-gp="paid">Yes, about ${costsData.gpCostPrivate}</button>
           <button type="button" class={`${answerCard} aria-expanded:border-primary aria-expanded:bg-primary-light aria-expanded:text-heading`} data-calc-gp-other aria-expanded="false" aria-controls="gp-custom">Yes, a different amount</button>
         </div>
 
-        <div id="gp-custom" class="mt-5" data-gp-custom hidden>
-          <label for="gp-fee" class="block text-sm font-semibold text-body mb-1">How much do you pay? ($)</label>
+        <div id="gp-custom" class="mt-6" data-gp-custom hidden>
+          <label for="gp-fee" class="block text-base font-semibold text-heading mb-1.5">How much do you pay? ($)</label>
           <input
             type="number"
             id="gp-fee"
@@ -237,47 +241,38 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
             placeholder={`e.g. ${costsData.gpCostPrivate}`}
             class={fieldInput}
           />
-          <p class="mt-3 text-sm font-medium text-accent-red-soft" role="alert" data-gp-error hidden>Enter an amount to continue.</p>
+          <p class="mt-3 text-base font-medium text-accent-red-soft" role="alert" data-gp-error hidden>Enter an amount to continue.</p>
           <div class="mt-6">
             <button type="submit" class={primaryButton}>Next</button>
           </div>
         </div>
       </form>
 
-      <!-- 5. Done: the answer at the end of the questions. Every answer is
-           changeable. The script fills the placeholders before showing it. -->
+      <!-- 5. Done: the answer, as one big number. The heading holds the label
+           and the number so a screen reader hears them together. The script
+           fills the placeholders before showing it. -->
       <section class="calc-screen calc-screen--hidden" data-calc-screen="done">
-        <div class="flex items-center justify-between gap-4 mb-3">
-          <p class={stepLabel} data-calc-progress>Your costs</p>
-          <!-- No Back here: the Change links cover revisiting any answer. -->
-        </div>
-        <h2 class="calc-heading mb-3" tabindex="-1" data-calc-heading>What a session costs</h2>
-        <p class="text-body leading-relaxed mb-5" data-calc-answer-line hidden></p>
-        <dl class="rounded-[10px] border border-ink-green/16 bg-white px-4">
-          <div class={summaryRow}>
-            <div class="min-w-0">
-              <dt class="text-[12.5px] font-semibold text-meta-sage">Seeing</dt>
-              <dd class="text-base font-semibold text-heading" data-summary-type>&mdash;</dd>
+        <h2 class="calc-result" tabindex="-1" data-calc-heading>
+          <span class="calc-result__label" data-result-label>Each session costs you about</span>
+          <span class="calc-result__number" data-result-big>&mdash;</span>
+        </h2>
+        <p class="mt-4 max-w-[26rem] text-lg md:text-xl leading-relaxed text-pretty text-body" data-calc-answer-line hidden></p>
+        <!-- The same fees as the fee screens, still adjustable: drag and the
+             number above and the receipt follow. -->
+        <div class="mt-8 grid max-w-[26rem] gap-5">
+          {feeScreens.map((f) => (
+            <div data-result-slider={f.id} hidden>
+              <div class="flex items-baseline justify-between gap-4">
+                <label for={`${f.id}-result`} class="text-base font-semibold text-heading">{f.resultLabel}</label>
+                <span class="text-base font-semibold text-heading tabular-nums" data-result-fee>&mdash;</span>
+              </div>
+              <div class="calc-slider" data-slider>
+                <div class="calc-slider__track" aria-hidden="true"></div>
+                <div class="calc-slider__fill" aria-hidden="true"></div>
+                <input type="range" id={`${f.id}-result`} class="calc-range" min={f.min} max={f.max} step="5" value={f.typical} />
+              </div>
             </div>
-            <button type="button" class={changeLink} data-calc-goto="who">Change</button>
-          </div>
-          <div class={summaryRow}>
-            <div class="min-w-0">
-              <dt class="text-[12.5px] font-semibold text-meta-sage" data-summary-fee-label>Session fee</dt>
-              <dd class="text-base font-semibold text-heading tabular-nums" data-summary-fee>&mdash;</dd>
-            </div>
-            <button type="button" class={changeLink} data-calc-goto="knowfee">Change</button>
-          </div>
-          <div class={summaryRow} data-summary-gp-row>
-            <div class="min-w-0">
-              <dt class="text-[12.5px] font-semibold text-meta-sage">GP visit</dt>
-              <dd class="text-base font-semibold text-heading" data-summary-gp>{gpRange}</dd>
-            </div>
-            <button type="button" class={changeLink} data-calc-goto="gp">Change</button>
-          </div>
-        </dl>
-        <div class="mt-5">
-          <button type="button" class={backButton} data-calc-reset>Start again</button>
+          ))}
         </div>
       </section>
     </div>
@@ -285,110 +280,86 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
 
     <!-- Receipt: the script fills it in as the answers arrive, but it only
          shows on the results screen. Clarity recordings showed eyes drifting
-         to it mid-quiz. -->
-    <div class="calc-receipt-col md:self-start">
-      <div id="calc-receipt" class="bg-white border border-ink-green/12 rounded-[10px] p-5 sm:p-6">
-        <p class="text-[12.5px] font-semibold text-meta-sage">What you'll pay</p>
-
+         to it mid-quiz. Plain rows on the page, no box. -->
+    <div class="calc-receipt-col md:self-start md:pt-3">
+      <div id="calc-receipt">
         <!-- Most practitioners: one fee, one rebate. Empty until answers
              arrive — the page opens on the first question. -->
-        <div data-receipt-body="single">
-          <div class="mt-4 space-y-2.5">
-            <div class={receiptRow}>
-              <span class="text-body">You pay on the day</span>
-              <span class={receiptLeader} aria-hidden="true"></span>
-              <span class={receiptAmount} data-receipt-fees>&mdash;</span>
-            </div>
-            <div class={receiptRow}>
-              <span class="text-body"><TermPopover term="Medicare" heading="Medicare" body="Australia's public health system. For many appointments it pays part of the fee back to you after you've paid the therapist." id="term-pop-medicare-rebate" /> pays back</span>
-              <span class={receiptLeader} aria-hidden="true"></span>
-              <span class="font-medium text-primary tabular-nums" data-receipt-rebate>&mdash;</span>
-            </div>
+        <div class="border-t border-hairline" data-receipt-body="single">
+          <div class={receiptRow}>
+            <span class="text-body">You pay on the day</span>
+            <span class={receiptAmount} data-receipt-fees>&mdash;</span>
           </div>
-          <div class="mt-4 border-t border-hairline pt-4">
-            <div class="flex items-baseline justify-between gap-3" aria-live="polite" aria-atomic="true">
-              <span class="text-[15px] font-semibold text-heading">What it costs you</span>
-              <span class={receiptTotal} data-receipt-total>&mdash;</span>
-            </div>
-            <!-- 2. The pay-first, rebate-later sequence. Filled by the script
-                 when there's a fee and a rebate. -->
-            <p class="mt-3 text-[13px] leading-snug text-body" data-receipt-day hidden></p>
+          <div class={receiptRow}>
+            <span class="text-body"><TermPopover term="Medicare" heading="Medicare" body="Australia's public health system. For many appointments it pays part of the fee back to you after you've paid the therapist." id="term-pop-medicare-rebate" /> pays back</span>
+            <span class="text-primary tabular-nums" data-receipt-rebate>&mdash;</span>
+          </div>
+          <div class={receiptTotalRow} aria-live="polite" aria-atomic="true">
+            <span>What it costs you</span>
+            <span class="tabular-nums" data-receipt-total>&mdash;</span>
           </div>
         </div>
 
         <!-- Psychiatrists: first appointment, then follow-ups -->
-        <div data-receipt-body="psychiatrist" hidden>
-          <div class="mt-4 space-y-2.5">
-            <div class={receiptRow}>
-              <span class="text-body">First appointment</span>
-              <span class={receiptLeader} aria-hidden="true"></span>
-              <span class={receiptAmount} data-receipt-first-fee>&mdash;</span>
-            </div>
-            <div class={receiptRow}>
-              <span class="text-body"><TermPopover term="Medicare" heading="Medicare" body="Australia's public health system. For many appointments it pays part of the fee back to you after you've paid the therapist." id="term-pop-medicare-first-rebate" /> pays back</span>
-              <span class={receiptLeader} aria-hidden="true"></span>
-              <span class="font-medium text-primary tabular-nums" data-receipt-first-rebate>&mdash;</span>
-            </div>
+        <div class="border-t border-hairline" data-receipt-body="psychiatrist" hidden>
+          <div class={receiptRow}>
+            <span class="text-body">First appointment</span>
+            <span class={receiptAmount} data-receipt-first-fee>&mdash;</span>
           </div>
-          <div class="mt-3 flex items-baseline justify-between gap-3">
-            <span class="text-[14px] font-semibold text-heading">You pay, first appointment</span>
-            <span class="font-display font-semibold text-[22px] leading-none tracking-[-0.02em] text-heading tabular-nums" data-receipt-first-total>&mdash;</span>
+          <div class={receiptRow}>
+            <span class="text-body"><TermPopover term="Medicare" heading="Medicare" body="Australia's public health system. For many appointments it pays part of the fee back to you after you've paid the therapist." id="term-pop-medicare-first-rebate" /> pays back</span>
+            <span class="text-primary tabular-nums" data-receipt-first-rebate>&mdash;</span>
           </div>
-          <div class="mt-4 border-t border-hairline pt-4 space-y-2.5">
-            <div class={receiptRow}>
-              <span class="text-body" data-receipt-follow-label>Follow-up</span>
-              <span class={receiptLeader} aria-hidden="true"></span>
-              <span class={receiptAmount} data-receipt-follow-fee>&mdash;</span>
-            </div>
-            <div class={receiptRow}>
-              <span class="text-body"><TermPopover term="Medicare" heading="Medicare" body="Australia's public health system. For many appointments it pays part of the fee back to you after you've paid the therapist." id="term-pop-medicare-follow-rebate" /> pays back</span>
-              <span class={receiptLeader} aria-hidden="true"></span>
-              <span class="font-medium text-primary tabular-nums" data-receipt-follow-rebate>&mdash;</span>
-            </div>
+          <div class={receiptTotalRow}>
+            <span>You pay, first appointment</span>
+            <span class="tabular-nums" data-receipt-first-total>&mdash;</span>
           </div>
-          <div class="mt-3 flex items-baseline justify-between gap-3" aria-live="polite" aria-atomic="true">
-            <span class="text-[15px] font-semibold text-heading">You pay per follow-up</span>
-            <span class={receiptTotal} data-receipt-follow-total>&mdash;</span>
+          <div class={`${receiptRow} mt-4`}>
+            <span class="text-body" data-receipt-follow-label>Follow-up</span>
+            <span class={receiptAmount} data-receipt-follow-fee>&mdash;</span>
+          </div>
+          <div class={receiptRow}>
+            <span class="text-body"><TermPopover term="Medicare" heading="Medicare" body="Australia's public health system. For many appointments it pays part of the fee back to you after you've paid the therapist." id="term-pop-medicare-follow-rebate" /> pays back</span>
+            <span class="text-primary tabular-nums" data-receipt-follow-rebate>&mdash;</span>
+          </div>
+          <div class={receiptTotalRow} aria-live="polite" aria-atomic="true">
+            <span>You pay per follow-up</span>
+            <span class="tabular-nums" data-receipt-follow-total>&mdash;</span>
           </div>
         </div>
 
-        <!-- One-off GP visit (care plan or referral). Hidden until a
-             practitioner who needs one is chosen. -->
-        <div class="mt-4 border-t border-hairline pt-4" data-receipt-gp-part hidden>
-          <p class="text-[12.5px] font-semibold text-meta-sage">One-off to get started</p>
-          <div class={`mt-2.5 ${receiptRow}`}>
-            <span class="text-body" data-receipt-gp-label>GP visit (care plan)</span>
-            <span class={receiptLeader} aria-hidden="true"></span>
-            <span class={receiptAmount} data-receipt-gp>{gpRange}</span>
-          </div>
+        <div class="mt-6 grid gap-3 text-[17px] leading-relaxed text-pretty text-body">
+          <!-- The pay-first, rebate-later sequence. Filled by the script
+               when there's a fee and a rebate. -->
+          <p data-receipt-day hidden></p>
+          <!-- One-off GP visit (care plan or referral). Hidden until a
+               practitioner who needs one is chosen. -->
+          <p data-receipt-gp-part hidden></p>
+          <!-- Must match START_NOTE in src/scripts/cost-calculator.ts. -->
+          <p data-receipt-note>Answer a few questions to see what you'll pay.</p>
         </div>
-
-        <!-- Must match START_NOTE in src/scripts/cost-calculator.ts. -->
-        <p class="mt-3 text-[13px] leading-snug text-meta-sage" data-receipt-note>
-          Answer a few questions to see what you'll pay.
-        </p>
       </div>
-      {pathwayLink && (
-        <p class="mt-5 text-center">
-          <a href="/pathway/" class={changeLink}>What happens next? See the steps</a>
-        </p>
-      )}
+      <div class="mt-8 flex flex-wrap items-center gap-x-7 gap-y-3">
+        {pathwayLink && (
+          <a href="/pathway/" class={ctaButton}>What happens next? See the steps</a>
+        )}
+        <button type="button" class={`${changeLink} min-h-11`} data-calc-goto="who">Change my answers</button>
+      </div>
     </div>
   </div>
 </div>
 
 <style>
-  /* All screens share one grid cell, so the card takes the height of its
-     tallest screen and never resizes between questions — the receipt beside
-     it (and the page below) stays put. Inactive screens stay display: block
-     and hide via visibility, which also removes them from the a11y tree and
-     tab order. A class (not the hidden attribute) toggles them because
-     Tailwind's preflight forces [hidden] to display: none !important. */
+  /* All screens share one grid cell, so the quiz takes the height of its
+     tallest screen and never resizes between questions — the page below
+     stays put. Inactive screens stay display: block and hide via visibility,
+     which also removes them from the a11y tree and tab order. A class (not
+     the hidden attribute) toggles them because Tailwind's preflight forces
+     [hidden] to display: none !important. */
   .calc-screens {
     display: grid;
-    /* While answering, the quiz has the card to itself. Cap it so the answer
-       buttons don't stretch edge to edge on wide screens. On the results
-       screen the grid column is narrower than this anyway. */
+    /* Cap it so the answer buttons don't stretch edge to edge on wide
+       screens. On the results screen the grid column is narrower anyway. */
     max-width: 36rem;
   }
 
@@ -397,30 +368,30 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
     align-self: start;
   }
 
-  /* Opening screen: laid over the card while data-calc-intro is set. */
+  /* Opening screen: laid over the quiz while data-calc-intro is set. */
   .calc-intro {
     position: absolute;
     inset: 0;
     display: none;
-    align-content: center;
+    align-content: start;
   }
 
   /* The opening line (what the quiz works out) is the biggest type on the
-     homepage: it is the welcome, not a caption inside a box. Left-aligned like the questions that follow,
-     so Start hands over to question 1 on the same edge. */
+     homepage: it is the welcome. Left-aligned like the questions that
+     follow, so Start hands over to question 1 on the same edge. */
   .calc-intro-heading {
     font-family: var(--font-display);
-    font-size: 30px;
+    font-size: 36px;
     font-weight: 600;
     letter-spacing: -0.02em;
-    line-height: 1.12;
+    line-height: 1.08;
     color: var(--color-heading);
     max-width: 13em;
   }
 
   @media (min-width: 48rem) {
     .calc-intro-heading {
-      font-size: 40px;
+      font-size: 48px;
     }
   }
 
@@ -436,9 +407,10 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
   .calc-progress {
     height: 3px;
     border-radius: 999px;
-    background: var(--color-primary-light);
+    background: color-mix(in srgb, var(--color-ink-green) 12%, transparent);
     overflow: hidden;
-    margin-bottom: 1.75rem;
+    margin-bottom: 1.25rem;
+    max-width: 36rem;
   }
 
   .calc-progress__bar {
@@ -458,6 +430,13 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
     pointer-events: none;
   }
 
+  /* On the results screen the unseen questions give up their height, so the
+     receipt follows straight after the answer instead of after a gap as tall
+     as the longest question. */
+  [data-calc-phase='done'] .calc-screen--hidden {
+    display: none;
+  }
+
   /* Receipt column: absent while answering, present on the results screen.
      display:none (not visibility) so it takes no space and screen readers
      skip it during the questions. */
@@ -471,24 +450,192 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
 
   @media (min-width: 48rem) {
     [data-calc-phase='done'] .calc-grid {
-      grid-template-columns: 1fr minmax(280px, 0.85fr);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
   }
 
-  /* The heading takes focus on every screen change so screen readers read
-     the new question. It isn't interactive, so no focus ring. */
-  .calc-heading:focus {
+  /* The heading takes focus on the results screen so screen readers read
+     the answer. It isn't interactive, so no focus ring. */
+  .calc-heading:focus,
+  .calc-result:focus {
     outline: none;
   }
 
-  /* Same screen typography as the pathway quiz (Switzer 600 23px / -0.012em). */
+  /* Question type: big and bold, one question per screen. */
   .calc-heading {
     font-family: var(--font-display);
-    font-size: 23px;
+    font-size: 30px;
     font-weight: 600;
-    letter-spacing: -0.012em;
-    line-height: 1.375;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
     color: var(--color-heading);
+    text-wrap: balance;
+  }
+
+  @media (min-width: 48rem) {
+    .calc-heading {
+      font-size: 36px;
+    }
+  }
+
+  /* The fee, stated as a number first. It is also a text box. */
+  .calc-fee-number {
+    display: inline-flex;
+    align-items: baseline;
+    font-family: var(--font-display);
+    font-size: 76px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    color: var(--color-heading);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .calc-fee-input {
+    width: 3ch;
+    min-width: 1ch;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-bottom: 3px solid transparent;
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    font-variant-numeric: inherit;
+  }
+
+  .calc-fee-input:focus {
+    outline: none;
+    border-bottom-color: var(--color-primary);
+  }
+
+  .calc-fee-input::placeholder {
+    color: var(--color-meta-sage);
+    opacity: 0.5;
+  }
+
+  /* Slider: a thick track, a green fill up to the handle, and a large white
+     handle with a green ring. The range input sits on top with its own track
+     hidden; the script sets --p (0 to 1) on the wrapper for the fill. */
+  .calc-slider {
+    --p: 0.5;
+    position: relative;
+    height: 44px;
+  }
+
+  .calc-slider__track,
+  .calc-slider__fill {
+    position: absolute;
+    left: 0;
+    top: 18px;
+    height: 8px;
+    border-radius: 999px;
+  }
+
+  .calc-slider__track {
+    right: 0;
+    background: color-mix(in srgb, var(--color-ink-green) 16%, transparent);
+  }
+
+  .calc-slider__fill {
+    width: calc(16px + (100% - 32px) * var(--p));
+    background: var(--color-primary);
+  }
+
+  .calc-range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 44px;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .calc-range::-webkit-slider-runnable-track {
+    height: 44px;
+    background: transparent;
+  }
+
+  .calc-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    box-sizing: border-box;
+    width: 32px;
+    height: 32px;
+    margin-top: 6px;
+    border: 2px solid var(--color-primary);
+    border-radius: 999px;
+    background: white;
+    box-shadow: var(--shadow-md);
+  }
+
+  .calc-range::-moz-range-track {
+    height: 44px;
+    background: transparent;
+  }
+
+  .calc-range::-moz-range-thumb {
+    box-sizing: border-box;
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--color-primary);
+    border-radius: 999px;
+    background: white;
+    box-shadow: var(--shadow-md);
+  }
+
+  .calc-range:focus {
+    outline: none;
+  }
+
+  .calc-range:focus-visible::-webkit-slider-thumb {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+
+  .calc-range:focus-visible::-moz-range-thumb {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+
+  /* Results: a plain line, then the answer as the biggest thing on the page. */
+  .calc-result__label {
+    display: block;
+    font-family: var(--font-sans);
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--color-body);
+  }
+
+  .calc-result__number {
+    display: block;
+    margin-top: 0.25rem;
+    font-family: var(--font-display);
+    font-size: 96px;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    color: var(--color-heading);
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (min-width: 48rem) {
+    .calc-fee-number {
+      font-size: 88px;
+    }
+
+    .calc-result__label {
+      font-size: 20px;
+    }
+
+    .calc-result__number {
+      font-size: 136px;
+    }
   }
 
   /* Sequenced fade between screens: the outgoing screen fades out quickly,
@@ -515,7 +662,7 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
         visibility 0s 140ms;
     }
 
-    /* Question 1 rises in after Start on the reassurance screen. */
+    /* Question 1 rises in after Start on the opening screen. */
     .calc-started .calc-grid {
       animation: calc-receipt-in 240ms ease-out both;
     }
