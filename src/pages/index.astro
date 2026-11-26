@@ -1,94 +1,23 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Button from '../components/Button.astro';
-import Card from '../components/Card.astro';
+import CostCalculator from '../components/CostCalculator.astro';
 ---
 <BaseLayout title="Mental Health Support in Australia, Explained">
-  <!-- Hero -->
-  <section>
-    <div class="max-w-3xl mx-auto px-4 pt-20 pb-8 md:pt-32 md:pb-12 text-center">
-      <h1 class="text-3xl md:text-[56px] font-bold text-heading mb-8 leading-[1.1] tracking-[-0.025em]">
-        Mental health support in Australia, explained
-      </h1>
-      <p class="text-lg text-body mb-12 max-w-[580px] mx-auto">
-        A plain-language guide to your options, costs, and next steps.
-      </p>
-      <Button href="/pathway/" size="lg">Start exploring</Button>
-    </div>
-  </section>
+  <!-- The homepage is the calculator: one left-aligned column, no card. It
+       opens on a screen saying it's a cost calculator, and that line is the
+       visible welcome, so the page title is for screen readers and search
+       only. The button to the steps shows on the results screen (pathwayLink). -->
+  <!-- Cream, not the sage of the other pages: with no card, the page itself
+       is the surface the quiz sits on. -->
+  <section class="bg-paper-cream">
+    <div class="group px-6 pt-6 pb-16 md:pt-12 md:pb-24">
+      <!-- While answering, the column hugs the single question. On the results
+           screen it widens to fit the receipt beside the big number. -->
+      <div class="mx-auto max-w-[42rem] group-has-[[data-calc-phase=done]]:max-w-4xl">
+        <h1 class="sr-only">Mental health support in Australia, explained</h1>
 
-  <!-- Explore Tools -->
-  <section>
-    <div class="max-w-6xl mx-auto px-6 pt-0 pb-24 md:pt-4 md:pb-32">
-      <div class="grid md:grid-cols-3 gap-12">
-        <!-- Who should I see? -->
-        <Card href="/practitioners/" class="p-6 md:p-12 border border-pencil">
-          <div class="w-16 h-16 rounded-xl bg-primary-light flex items-center justify-center mb-8">
-            <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 0 0 2.625.372 9.337 9.337 0 0 0 4.121-.952 4.125 4.125 0 0 0-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 0 1 8.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0 1 11.964-3.07M12 6.375a3.375 3.375 0 1 1-6.75 0 3.375 3.375 0 0 1 6.75 0Zm8.25 2.25a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z" />
-            </svg>
-          </div>
-          <h2 class="text-2xl font-bold text-heading group-hover:text-primary transition-colors mb-2">
-            Who should I see?
-          </h2>
-          <p class="text-base text-body">
-            <span class="block">Not sure who does what?</span>
-            See how psychologists, psychiatrists and counsellors differ.
-          </p>
-          <span class="inline-flex items-center gap-1 text-primary font-semibold mt-8 group-hover:gap-2 transition-all">
-            Compare professionals
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
-          </span>
-        </Card>
-        <!-- What happens next? -->
-        <Card href="/pathway/" class="p-6 md:p-12 border border-pencil">
-          <div class="w-16 h-16 rounded-xl bg-primary-light flex items-center justify-center mb-8">
-            <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v-5.25m0 0a6.01 6.01 0 0 0 1.5-.189m-1.5.189a6.01 6.01 0 0 1-1.5-.189m3.75 7.478a12.06 12.06 0 0 1-4.5 0m3.75 2.383a14.406 14.406 0 0 1-3 0M14.25 18v-.192c0-.983.658-1.823 1.508-2.316a7.5 7.5 0 1 0-7.517 0c.85.493 1.509 1.333 1.509 2.316V18" />
-            </svg>
-          </div>
-          <h2 class="text-2xl font-bold text-heading group-hover:text-primary transition-colors mb-2">
-            What happens next?
-          </h2>
-          <p class="text-base text-body">
-            <span class="block">Don't know where to start?</span>
-            See the different ways to get care, and what to do first.
-          </p>
-          <span class="inline-flex items-center gap-1 text-primary font-semibold mt-8 group-hover:gap-2 transition-all">
-            See the steps
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
-          </span>
-        </Card>
-        <!-- How much will it cost? -->
-        <Card href="/calculator/" class="p-6 md:p-12 border border-pencil">
-          <div class="w-16 h-16 rounded-xl bg-primary-light flex items-center justify-center mb-8">
-            <svg class="w-7 h-7 text-primary" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25v-.008Zm0 2.25h.008v.008H8.25v-.008Zm2.498-6.75h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007v-.008Zm0 2.25h.007v.008h-.007v-.008Zm2.504-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008v-.008Zm2.498-6.75h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008v-.008ZM8.25 6h7.5v2.25h-7.5V6ZM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 0 0 2.25 2.25h10.5a2.25 2.25 0 0 0 2.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0 0 12 2.25Z" />
-            </svg>
-          </div>
-          <h2 class="text-2xl font-bold text-heading group-hover:text-primary transition-colors mb-2">
-            How much will it cost?
-          </h2>
-          <p class="text-base text-body">
-            <span class="block">What will a session actually cost?</span>
-            <span class="block">How much comes off your card?</span>
-            How much do you get back?
-          </p>
-          <span class="inline-flex items-center gap-1 text-primary font-semibold mt-8 group-hover:gap-2 transition-all">
-            See your costs
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" /></svg>
-          </span>
-        </Card>
+        <CostCalculator pathwayLink intro />
       </div>
-    </div>
-  </section>
-
-  <!-- Bottom CTA -->
-  <section>
-    <div class="max-w-3xl mx-auto px-4 py-24 md:py-32 text-center">
-      <h2 class="text-3xl md:text-4xl font-bold text-heading mb-6">Ready to get started?</h2>
-      <p class="text-body mb-8 max-w-lg mx-auto">Take the first step towards accessing Medicare-funded mental health support.</p>
-      <Button href="/pathway/" size="lg">Get Started</Button>
     </div>
   </section>
 
