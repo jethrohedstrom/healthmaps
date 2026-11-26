@@ -3,30 +3,19 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import CostCalculator from '../components/CostCalculator.astro';
 ---
 <BaseLayout title="Mental Health Support in Australia, Explained">
-  <!-- The homepage is the calculator. One left-aligned column: a quiet page
-       title, the card (which opens on a screen saying it's a cost calculator,
-       before question 1), then a footer row on the card's own edges. The title
-       is deliberately smaller than that opening line, which is the real welcome. -->
+  <!-- The homepage is the calculator: one left-aligned column holding just
+       the card. The card opens on a screen saying it's a cost calculator, and
+       that line is the visible welcome, so the page title is for screen
+       readers and search only. The link to the steps shows under the receipt
+       on the results screen (pathwayLink). -->
   <section>
     <div class="group px-4 pt-6 pb-16 md:pt-12 md:pb-24">
       <!-- While answering, the column hugs the single question. On the results
            screen it widens to fit the receipt beside the summary. -->
       <div class="mx-auto max-w-[42rem] group-has-[[data-calc-phase=done]]:max-w-4xl">
-        <h1 class="text-balance text-[21px] md:text-[26px] font-semibold text-heading mb-3 md:mb-6 leading-[1.2] tracking-[-0.015em]">
-          Mental health support in Australia, explained
-        </h1>
+        <h1 class="sr-only">Mental health support in Australia, explained</h1>
 
         <CostCalculator pathwayLink intro />
-
-        <div class="mt-5 md:mt-6 flex flex-col gap-4 md:flex-row md:items-baseline md:justify-between md:gap-10">
-          <!-- Hidden on the results screen, where the calculator shows the same link under the receipt. -->
-          <p class="md:order-2 md:shrink-0 group-has-[[data-calc-phase=done]]:hidden">
-            <a href="/pathway/" class="text-[15px] font-semibold text-primary underline underline-offset-[3px] hover:text-primary-mid focus-visible:outline-3 focus-visible:outline-primary focus-visible:outline-offset-3">What happens next? See the steps</a>
-          </p>
-          <p class="max-w-[26rem] text-sm leading-relaxed text-pretty text-meta-sage">
-            I run Health Maps independently. It aims to give you precise costs, and isn't a provider or booking service.
-          </p>
-        </div>
       </div>
     </div>
   </section>
