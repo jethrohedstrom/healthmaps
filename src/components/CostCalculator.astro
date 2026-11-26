@@ -6,7 +6,7 @@ import type { PractitionerType } from '../scripts/cost-calculator';
 interface Props {
   /** Show a quiet link to /pathway/ under the receipt on the results screen. Off by default. */
   pathwayLink?: boolean;
-  /** Open on a reassurance screen with a Start button before question 1. Off by default. */
+  /** Open on a screen that says what the quiz works out, with a Start button, before question 1. Off by default. */
   intro?: boolean;
 }
 
@@ -77,14 +77,14 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
      screen. The script sets it in showScreen. While answering, the receipt
      column is not rendered and the quiz fills the card. -->
 <div id="cost-calculator" class="relative bg-paper-cream border border-pencil rounded-[14px] p-6 sm:p-8 md:p-10" data-calc-phase="questions" data-calc-intro={intro ? '' : undefined}>
-  <!-- Optional reassurance screen. It covers the card until Start is pressed;
+  <!-- Optional opening screen: says the quiz is a cost calculator. It covers the card until Start is pressed;
        the script drops data-calc-intro (or skips it for a restored session).
        The quiz underneath keeps its size, so the card doesn't resize. -->
   {intro && (
     <div class="calc-intro p-6 sm:p-8 md:p-10">
       <div>
-        <h2 class="calc-intro-heading text-balance">You don't need to know anything yet.</h2>
-        <p class="mt-4 md:mt-5 max-w-[26rem] text-lg md:text-xl leading-relaxed text-pretty text-body">Answer what you can, and the calculator will work out what it costs.</p>
+        <h2 class="calc-intro-heading text-balance">Work out what your mental health appointments will cost you</h2>
+        <p class="mt-4 md:mt-5 max-w-[26rem] text-lg md:text-xl leading-relaxed text-pretty text-body">A short, easy quiz that gives you a precise cost. You don't need to know anything yet.</p>
         <div class="mt-8 md:mt-10">
           <button type="button" class={`${primaryButton} min-h-[52px] min-w-36 px-9 text-[17px]`} data-calc-start>Start</button>
         </div>
@@ -396,7 +396,7 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
     align-self: start;
   }
 
-  /* Reassurance screen: laid over the card while data-calc-intro is set. */
+  /* Opening screen: laid over the card while data-calc-intro is set. */
   .calc-intro {
     position: absolute;
     inset: 0;
@@ -404,8 +404,8 @@ const summaryRow = 'flex items-baseline justify-between gap-4 py-3 border-t bord
     align-content: center;
   }
 
-  /* The reassurance is the biggest type on the homepage: it is the welcome,
-     not a caption inside a box. Left-aligned like the questions that follow,
+  /* The opening line (what the quiz works out) is the biggest type on the
+     homepage: it is the welcome, not a caption inside a box. Left-aligned like the questions that follow,
      so Start hands over to question 1 on the same edge. */
   .calc-intro-heading {
     font-family: var(--font-display);
